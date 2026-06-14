@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
+import { ClientErrorProbe } from "@/components/ClientErrorProbe";
+import { BrowserCompatibilityNotice } from "@/components/BrowserCompatibilityNotice";
+import { LegacySafariNotice } from "@/components/LegacySafariNotice";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,6 +28,7 @@ export const viewport: Viewport = {
 const nav = [
   { href: "/today", label: "Today" },
   { href: "/dashboard", label: "Dashboard" },
+  { href: "/history", label: "History" },
   { href: "/kpis", label: "KPIs" },
   { href: "/exports", label: "Exports" },
 ];
@@ -33,6 +37,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className="min-h-screen">
+        <LegacySafariNotice />
+        <BrowserCompatibilityNotice />
         <header className="sticky top-0 z-20 border-b border-rink bg-white/95 backdrop-blur">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
             <Link href="/" className="font-black tracking-tight text-navy">
@@ -48,13 +54,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </div>
         </header>
         <main className="mx-auto max-w-6xl px-4 pb-24 pt-6 sm:pb-8">{children}</main>
-        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-rink bg-white p-2 sm:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-rink bg-white p-2 sm:hidden">
           {nav.map((item) => (
             <Link key={item.href} href={item.href} className="rounded-xl px-1 py-3 text-center text-xs font-bold hover:bg-ice">
               {item.label}
             </Link>
           ))}
         </nav>
+        <ClientErrorProbe />
       </body>
     </html>
   );

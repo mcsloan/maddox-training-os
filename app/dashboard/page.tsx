@@ -9,7 +9,7 @@ import { SessionLog } from "@/lib/types";
 
 export default function DashboardPage() {
   const [sessions, setSessions] = useState<SessionLog[]>([]);
-  useEffect(() => setSessions(localSessionRepository.getAll()), []);
+  useEffect(() => setSessions(localSessionRepository.listAllSessions()), []);
   const completed = sessions.filter((session) => session.status === "completed");
   const readiness = sessions[0]?.readiness;
   const energy = readiness?.energy ? `${readiness.energy}/5` : "—";
@@ -30,10 +30,10 @@ export default function DashboardPage() {
           </div>
         </article>
         <article className="card">
-          <h2 className="text-xl font-black">Recent session logs</h2>
+          <div className="flex items-center justify-between"><h2 className="text-xl font-black">Recent session logs</h2><Link href="/history" className="text-sm font-bold text-blue">View all</Link></div>
           <div className="mt-4 space-y-3">
             {sessions.length === 0 && <p className="rounded-2xl bg-ice p-4 text-slate-500">Session activity saved on this device will appear here.</p>}
-            {sessions.slice(0, 5).map((session) => <div key={session.id} className="rounded-2xl border border-rink p-4"><div className="flex justify-between gap-3"><p className="font-black">{workouts.find((workout) => workout.id === session.workoutId)?.dayFocus}</p><span className="text-sm font-bold capitalize text-blue">{session.status}</span></div><p className="mt-1 text-sm text-slate-500">{session.date} · {Object.values(session.exercises).filter((item) => item.done).length} drills done</p></div>)}
+            {sessions.slice(0, 5).map((session) => <Link href={`/session/${session.workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=${session.status === "completed" ? "view" : "resume"}`} key={session.id} className="block rounded-2xl border border-rink p-4 hover:border-blue"><div className="flex justify-between gap-3"><p className="font-black">{workouts.find((workout) => workout.id === session.workoutId)?.dayFocus}</p><span className="text-sm font-bold capitalize text-blue">{session.status}</span></div><p className="mt-1 text-sm text-slate-500">{session.date} · {Object.values(session.exercises).filter((item) => item.done).length} drills done</p></Link>)}
           </div>
         </article>
       </section>

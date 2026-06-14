@@ -101,9 +101,10 @@ export interface SessionLog {
   startedAt: string;
   completedAt: string | null;
   currentStep: number;
-  status: "active" | "completed";
+  status: "in-progress" | "completed" | "reopened";
   readiness: Readiness;
   exercises: Record<string, ExerciseCompletion>;
+  kpiResults: Record<string, KPIResult>;
   reflection: Reflection;
 }
 
