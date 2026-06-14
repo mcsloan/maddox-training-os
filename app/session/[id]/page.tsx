@@ -12,6 +12,7 @@ import { SessionSummary } from "@/components/SessionSummary";
 import { getWorkout, getWorkoutDrills, kpis as allKpis } from "@/lib/trainingData";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
+import { saveCompletedSession } from "@/lib/storage/completedSessionRepository";
 import { SessionStorageDiagnostics } from "@/lib/storage/sessionRepository";
 import { SessionLog } from "@/lib/types";
 
@@ -57,6 +58,7 @@ export default function SessionPage() {
   const [mode, setMode] = useState<PageMode>("loading");
   const [error, setError] = useState("");
   const [saveFeedback, setSaveFeedback] = useState("Ready");
+  const [isCompleting, setIsCompleting] = useState(false);
   const [diagnostics, setDiagnostics] = useState<InitDiagnostics>({
     currentStage: "Component render",
     routeId,
@@ -320,13 +322,24 @@ export default function SessionPage() {
     }
   }
 
-  function complete() {
+  async function complete() {
+    if (isCompleting) return;
     if (!window.confirm("Finish and submit this training session? You can reopen it later if needed.")) return;
+    setIsCompleting(true);
     const completed = { ...session!, status: "completed" as const, completedAt: new Date().toISOString() };
     Object.values(completed.kpiResults).forEach((result) => localKpiRepository.save({ ...result, enteredAt: result.enteredAt || new Date().toISOString() }));
     update(completed);
+    setSaveFeedback("Saving completed session...");
+    try {
+      const result = await saveCompletedSession(completed, workout!);
+      setSaveFeedback(result.mode === "cloud" ? "Cloud Synced" : "Local Backup Mode");
+    } catch (reason) {
+      console.error("Completed session cloud save failed; local backup retained.", reason);
+      setSaveFeedback("Local backup saved; cloud sync failed");
+    }
     setSessionUrl(completed, "view");
     setMode("view");
+    setIsCompleting(false);
   }
 
   return (
@@ -344,7 +357,7 @@ export default function SessionPage() {
       {isReflection && <ReflectionForm value={session.reflection} onChange={(reflection) => update({ ...session!, reflection })} />}
       <div className="sticky bottom-16 mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice/95 py-3 backdrop-blur sm:bottom-0">
         <button className="btn-secondary min-h-16 text-base" disabled={step === 0} onClick={() => move(step - 1)}>{drill ? "Previous Drill" : "Back"}</button>
-        {isReflection ? <button className="btn-primary min-h-16 text-lg" onClick={complete}>Finish Session</button> : <button className="btn-primary min-h-16 text-lg" onClick={() => move(step + 1)}>{drill ? "Next Drill" : "Continue"}</button>}
+        {isReflection ? <button className="btn-primary min-h-16 text-lg" disabled={isCompleting} onClick={complete}>{isCompleting ? "Saving..." : "Finish Session"}</button> : <button className="btn-primary min-h-16 text-lg" onClick={() => move(step + 1)}>{drill ? "Next Drill" : "Continue"}</button>}
       </div>
     </div>
   );

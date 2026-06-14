@@ -123,3 +123,23 @@ export interface KPIResult {
   bestResult: number | null;
   notes: string;
 }
+
+export interface CompletedSessionSnapshot {
+  schemaVersion: number;
+  appVersion: string;
+  planVersion: string;
+  athlete: { id: string; name: string };
+  workout: Workout;
+  plannedDrills: Drill[];
+  completedSession: SessionLog;
+  drillLogs: Record<string, ExerciseCompletion>;
+  kpiResults: Record<string, KPIResult>;
+  readiness: Readiness;
+  reflection: Reflection;
+  timestamps: {
+    sessionDate: string;
+    startedAt: string;
+    completedAt: string | null;
+    snapshotCreatedAt: string;
+  };
+}

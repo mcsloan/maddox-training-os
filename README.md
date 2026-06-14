@@ -1,8 +1,8 @@
 # Maddox Training OS
 
-Maddox Training OS is a private, web-first youth hockey training Progressive Web App. Phase 1 provides the architecture, responsive screens, live session workflow, mock training data, local autosave, KPI entry, parent review, and export placeholders.
+Maddox Training OS is a private, web-first youth hockey training Progressive Web App. Phase 1 provides the architecture, responsive screens, live session workflow, mock training data, local autosave, KPI entry, parent review, export placeholders, and minimal Supabase persistence for completed training history.
 
-The app is designed for iPhone and iPad use during training, with expanded parent/coach dashboards on iPad and desktop. It requires no backend or paid service in Phase 1 and is ready for a later Vercel Hobby deployment.
+The app is designed for iPhone and iPad use during training, with expanded parent/coach dashboards on iPad and desktop. It remains compatible with Vercel Hobby and Supabase free-tier hosting.
 
 ## Tech Stack
 
@@ -11,6 +11,7 @@ The app is designed for iPhone and iPad use during training, with expanded paren
 - Tailwind CSS
 - Local JSON training data
 - Browser `localStorage` behind repository interfaces
+- Supabase for completed session snapshots when configured
 - Web manifest and mobile metadata
 
 ## Browser Compatibility
@@ -68,7 +69,7 @@ On the iPhone or iPad, open:
 http://YOUR-MAC-IP:3000/today
 ```
 
-Phase 1 local storage is separate for each browser and device. Sessions created in Mac Chrome, iPhone Safari, iPhone Chrome, or iPad Safari do not sync with each other.
+Active drafts and KPI entries remain separate for each browser and device. Completed sessions sync across devices when Supabase is configured.
 
 Local and Vercel production builds use the production build path. The project currently uses `next build --webpack` for build stability, and this is compatible with Vercel. Validate iPhone/iPad behavior with `npm run ios:test` or the deployed Vercel URL, not Next dev/Turbopack mode.
 
@@ -104,7 +105,7 @@ Phase 1 is ready for the Vercel Hobby/free plan and requires no paid services.
 3. Confirm Vercel detects the framework as Next.js.
 4. Use `npm run build` as the build command.
 5. Use Vercel's default output and deployment settings for Next.js.
-6. Do not add environment variables for Phase 1.
+6. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to enable cloud-synced completed history.
 7. Deploy, then open the generated Vercel URL on iPhone and iPad.
 8. In Safari, use **Share → Add to Home Screen**.
 
@@ -112,13 +113,27 @@ The optional `npm run vercel:build` script runs the same production build comman
 
 ## Important: Phase 1 Data Storage
 
-Phase 1 stores session logs and KPI entries in browser-local storage on the device where they are entered.
+Supabase is the source of truth for completed training history when configured. Every finished session is saved as an immutable snapshot containing its workout plan, planned drills, completed drill logs, KPI results, reflection, and timestamps. A local backup is also retained.
 
-- Data entered on Maddox's iPhone will not automatically appear on a parent iPad or desktop.
-- Data entered in Safari will not automatically appear in Chrome.
-- This separation is expected in Phase 1.
-- Cross-device and cross-browser sync will come later through Supabase or another backend.
-- Clearing browser/site data removes the Phase 1 training logs stored in that browser.
+Active session drafts and standalone KPI entries remain browser-local. They do not automatically sync between Maddox's iPhone, a parent iPad, desktop, Safari, and Chrome. If Supabase is not configured or cannot be reached, completed sessions remain available in Local Backup Mode. Clearing browser/site data removes local drafts, KPI entries, and backup copies.
+
+See [MIGRATION_NOTES.md](MIGRATION_NOTES.md) for the snapshot compatibility rules.
+
+## Supabase Setup
+
+1. Create a Supabase project.
+2. Open the Supabase SQL Editor and run `supabase/schema.sql` once.
+3. Copy `.env.example` to `.env.local`.
+4. Set the project's public URL and anon key:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+```
+
+5. Add the same two public environment variables to the Vercel project and redeploy.
+
+Never expose or add a Supabase service-role key to this client application. The current row-level security policies assume one private family user and the stable Maddox athlete ID.
 
 ## Add to Home Screen
 
@@ -129,7 +144,7 @@ After deploying to Vercel:
 3. Tap **Add to Home Screen**.
 4. Launch Maddox Training OS from the new Home Screen icon.
 
-The app uses its manifest, theme color, standalone display mode, `/today` start URL, and current basic icon. It opens like a standalone web app, but Phase 1 data remains browser-local on that device.
+The app uses its manifest, theme color, standalone display mode, `/today` start URL, and current basic icon. It opens like a standalone web app. Completed history is cloud-synced when Supabase is configured; drafts remain local to that browser.
 
 ## Deployment Checklist
 
@@ -147,8 +162,8 @@ Before deploying:
 
 - `/today`: today's workout, focus, phase, cues, and session start
 - `/session/[id]`: live one-drill-at-a-time training mode with autosave
-- `/dashboard`: weekly plan, readiness, completion, and recent logs
-- `/history`: all local session attempts with view, resume, reopen, and fresh-attempt actions
+- `/dashboard`: weekly plan, readiness, completion, and cloud-first recent logs
+- `/history`: cloud-first completed history plus local drafts, with view, resume, reopen, and fresh-attempt actions
 - `/kpis`: six KPI test forms with attempts and best result summaries
 - `/exports`: structured placeholders for future PDF and Excel exports
 
@@ -169,18 +184,18 @@ Pages and components load training content through `lib/trainingData.ts`. Replac
 
 ## Local Storage
 
-Active sessions, completed session logs, and KPI results save in the browser. UI components call repository APIs rather than using `localStorage` directly:
+Active sessions, completed-session backup copies, and KPI results save in the browser. UI components call repository APIs rather than using `localStorage` directly:
 
 - `lib/storage/sessionRepository.ts`
 - `lib/storage/localSessionRepository.ts`
 - `lib/storage/kpiRepository.ts`
 - `lib/storage/localKpiRepository.ts`
 
-This boundary allows a future Supabase repository to replace the local implementation without rewriting page components. Phase 1 data remains on the device and browser where it was entered.
+Completed sessions also pass through `lib/storage/completedSessionRepository.ts`, which saves immutable Supabase snapshots when configured and falls back to local history when cloud access is unavailable.
 
 ### Browser and Device Storage
 
-Phase 1 storage is browser-local. Mac Chrome, Mac Safari, iPhone Safari, and iPhone Chrome each maintain separate local storage. A session completed in one browser or device will not appear in another until shared Supabase sync is added in a future phase.
+Mac Chrome, Mac Safari, iPhone Safari, and iPhone Chrome each maintain separate local storage for active drafts, KPI entries, and completed-session backups. Completed history appears across devices when Supabase is configured.
 
 Completed workouts can have multiple session attempts. Opening a completed workout offers options to view the latest attempt, reopen it for editing, or start fresh. The Export Center also contains a confirmed **Clear Local Training Data** developer tool for Phase 1 testing.
 
@@ -264,7 +279,7 @@ For iPhone/iPad validation, run `npm run ios:test`. Next dev mode is not the val
 - Replace mock data with the full Maddox training library
 - Add real Excel export
 - Add real PDF printouts
-- Add Supabase sync so iPhone, iPad, and desktop share the same data
+- Add authentication and expand Supabase sync beyond completed session history
 - Add parent authentication
 - Add long-term KPI trend charts
 - Add hockey IQ video library

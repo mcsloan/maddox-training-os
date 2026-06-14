@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { DataStatus } from "@/components/DataStatus";
 import { ParentDashboardCard } from "@/components/ParentDashboardCard";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
-import { localSessionRepository } from "@/lib/storage/localSessionRepository";
+import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
 import { kpis, workouts } from "@/lib/trainingData";
 import { kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
 import { KPIResult, SessionLog } from "@/lib/types";
@@ -12,7 +13,19 @@ import { KPIResult, SessionLog } from "@/lib/types";
 export default function DashboardPage() {
   const [sessions, setSessions] = useState<SessionLog[]>([]);
   const [results, setResults] = useState<KPIResult[]>([]);
-  useEffect(() => { setSessions(localSessionRepository.listAllSessions()); setResults(localKpiRepository.getAll()); }, []);
+  const [dataMode, setDataMode] = useState<DataMode>("local");
+  const [warning, setWarning] = useState("Checking completed training history...");
+  useEffect(() => {
+    let active = true;
+    setResults(localKpiRepository.getAll());
+    loadTrainingHistory().then((result) => {
+      if (!active) return;
+      setSessions(result.sessions);
+      setDataMode(result.mode);
+      setWarning(result.warning);
+    });
+    return () => { active = false; };
+  }, []);
   const completed = sessions.filter((session) => session.status === "completed");
   const active = sessions.filter((session) => session.status !== "completed");
   const latest = sessions[0];
@@ -27,8 +40,9 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="mb-6"><p className="label">Parent / coach view</p><h1 className="text-4xl font-black">Dashboard</h1></div>
+      <DataStatus mode={dataMode} warning={warning} />
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <ParentDashboardCard label="Weekly summary" value={`${completed.length} complete`} detail={`${sessions.length} total attempts on this device`} />
+        <ParentDashboardCard label="Weekly summary" value={`${completed.length} complete`} detail={`${sessions.length} available attempts`} />
         <ParentDashboardCard label="Planned vs completed" value={`${completed.length} / ${workouts.length}`} detail={`${missed.length} workouts not started`} />
         <ParentDashboardCard label="Latest energy" value={latest?.readiness.energy ? `${latest.readiness.energy}/5` : "—"} detail="Pre-session readiness" />
         <ParentDashboardCard label="Latest confidence" value={latest?.reflection.confidence ? `${latest.reflection.confidence}/5` : "—"} detail="Post-session reflection" />
