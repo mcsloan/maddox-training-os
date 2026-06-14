@@ -17,7 +17,7 @@ export function TodayCard({ workout, phase, parentCue }: { workout: Workout; pha
       <div className="grid gap-5 p-6 sm:grid-cols-[1fr_auto] sm:items-end sm:p-8">
         <div>
           <p className="label">Parent cue</p>
-          <p className="font-semibold">{parentCue?.cue}</p>
+          <p className="font-semibold">{parentCue?.sayThis}</p>
           <p className="mt-3 text-sm text-slate-500">{workout.sessionType} · {workout.campContext}</p>
         </div>
         <Link href={`/session/${workout.id}`} className="btn-primary text-lg sm:min-w-48">

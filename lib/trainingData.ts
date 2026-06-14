@@ -3,13 +3,19 @@ import kpisJson from "@/data/kpis.json";
 import parentCuesJson from "@/data/parentCues.json";
 import phasesJson from "@/data/phases.json";
 import workoutsJson from "@/data/workouts.json";
-import { Drill, KPI, ParentCue, Phase, Workout } from "@/lib/types";
+import campRulesJson from "@/data/campRules.json";
+import hockeyIqJson from "@/data/hockeyIq.json";
+import videosJson from "@/data/videos.json";
+import { CampRule, Drill, HockeyIqHabit, KPI, ParentCue, Phase, TrainingVideo, Workout } from "@/lib/types";
 
 export const drills = drillsJson as Drill[];
 export const workouts = workoutsJson as Workout[];
 export const kpis = kpisJson as KPI[];
 export const phases = phasesJson as Phase[];
 export const parentCues = parentCuesJson as ParentCue[];
+export const campRules = campRulesJson as CampRule[];
+export const hockeyIq = hockeyIqJson as HockeyIqHabit[];
+export const videos = videosJson as TrainingVideo[];
 
 export function getWorkout(id: string) {
   return workouts.find((workout) => workout.id === id);

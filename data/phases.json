@@ -1,4 +1,70 @@
 [
-  { "id": "phase-1", "name": "Foundation & Control", "goal": "Build clean movement patterns, puck control, and confidence.", "weeks": "Weeks 1-4" },
-  { "id": "phase-2", "name": "Speed & Decisions", "goal": "Add pace and game-like decisions.", "weeks": "Weeks 5-8" }
+  {
+    "id": "phase-1",
+    "name": "Foundation & Athleticism",
+    "dateRange": "TODO source-needed",
+    "purpose": "TODO source-needed",
+    "primaryGoals": [
+      "TODO source-needed"
+    ],
+    "trainingEmphasis": [
+      "TODO source-needed"
+    ],
+    "intensityGuidance": "TODO source-needed",
+    "recoveryGuidance": "TODO source-needed",
+    "parentFocus": "TODO source-needed",
+    "playerIdentityCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "phase-2",
+    "name": "Hockey-Specific Explosion",
+    "dateRange": "TODO source-needed",
+    "purpose": "TODO source-needed",
+    "primaryGoals": [
+      "TODO source-needed"
+    ],
+    "trainingEmphasis": [
+      "TODO source-needed"
+    ],
+    "intensityGuidance": "TODO source-needed",
+    "recoveryGuidance": "TODO source-needed",
+    "parentFocus": "TODO source-needed",
+    "playerIdentityCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "phase-3",
+    "name": "Game Speed & Dominance",
+    "dateRange": "TODO source-needed",
+    "purpose": "TODO source-needed",
+    "primaryGoals": [
+      "TODO source-needed"
+    ],
+    "trainingEmphasis": [
+      "TODO source-needed"
+    ],
+    "intensityGuidance": "TODO source-needed",
+    "recoveryGuidance": "TODO source-needed",
+    "parentFocus": "TODO source-needed",
+    "playerIdentityCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "phase-4",
+    "name": "Tryout Killer Mode",
+    "dateRange": "TODO source-needed",
+    "purpose": "TODO source-needed",
+    "primaryGoals": [
+      "TODO source-needed"
+    ],
+    "trainingEmphasis": [
+      "TODO source-needed"
+    ],
+    "intensityGuidance": "TODO source-needed",
+    "recoveryGuidance": "TODO source-needed",
+    "parentFocus": "TODO source-needed",
+    "playerIdentityCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  }
 ]

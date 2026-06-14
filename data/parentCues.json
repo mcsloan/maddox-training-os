@@ -1,5 +1,101 @@
 [
-  { "id": "parent-cue-1", "cue": "Praise focus and effort. Ask what felt smoother today." },
-  { "id": "parent-cue-2", "cue": "Keep feedback to one clear cue and one question." },
-  { "id": "parent-cue-3", "cue": "Notice good recovery habits before discussing results." }
+  {
+    "id": "parent-before-training",
+    "situation": "Before training",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-during-training",
+    "situation": "During training",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-after-training",
+    "situation": "After training",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-after-camp",
+    "situation": "After camp",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-after-poor-session",
+    "situation": "After poor session",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-after-strong-session",
+    "situation": "After strong session",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-before-tryout",
+    "situation": "Before tryout",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-after-tryout",
+    "situation": "After tryout",
+    "sayThis": "TODO source-needed",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm, confidence-building support without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-cue-1",
+    "situation": "After training",
+    "sayThis": "Praise focus and effort. Ask what felt smoother today.",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Calm reflection without overcoaching.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-cue-2",
+    "situation": "During training",
+    "sayThis": "Keep feedback to one clear cue and one question.",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Keep feedback simple.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "parent-cue-3",
+    "situation": "After training",
+    "sayThis": "Notice good recovery habits before discussing results.",
+    "avoidSaying": "TODO source-needed",
+    "purpose": "Reinforce recovery habits.",
+    "confidenceGoal": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  }
 ]

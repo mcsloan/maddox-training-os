@@ -1,5 +1,135 @@
 [
-  { "id": "rule-ready", "title": "Ready means ready", "description": "Equipment set, water filled, and training area clear before starting." },
-  { "id": "rule-quality", "title": "Quality before quantity", "description": "Stop and reset when movement quality drops." },
-  { "id": "rule-pain", "title": "Pain is a stop sign", "description": "Stop and tell a parent if anything hurts." }
+  {
+    "id": "chae-hull-camp",
+    "name": "Chae Hull camp",
+    "dateRange": "TODO source-needed",
+    "context": "TODO source-needed",
+    "do": [
+      "TODO source-needed"
+    ],
+    "doNot": [
+      "TODO source-needed"
+    ],
+    "trainingAdjustment": "TODO source-needed",
+    "recoveryPriority": "TODO source-needed",
+    "hydrationNotes": "TODO source-needed",
+    "nutritionNotes": "TODO source-needed",
+    "sleepNotes": "TODO source-needed",
+    "parentCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "carleton-ravens-camp",
+    "name": "Carleton Ravens camp",
+    "dateRange": "TODO source-needed",
+    "context": "TODO source-needed",
+    "do": [
+      "TODO source-needed"
+    ],
+    "doNot": [
+      "TODO source-needed"
+    ],
+    "trainingAdjustment": "TODO source-needed",
+    "recoveryPriority": "TODO source-needed",
+    "hydrationNotes": "TODO source-needed",
+    "nutritionNotes": "TODO source-needed",
+    "sleepNotes": "TODO source-needed",
+    "parentCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "sensplex-camp",
+    "name": "Sensplex camp",
+    "dateRange": "TODO source-needed",
+    "context": "TODO source-needed",
+    "do": [
+      "TODO source-needed"
+    ],
+    "doNot": [
+      "TODO source-needed"
+    ],
+    "trainingAdjustment": "TODO source-needed",
+    "recoveryPriority": "TODO source-needed",
+    "hydrationNotes": "TODO source-needed",
+    "nutritionNotes": "TODO source-needed",
+    "sleepNotes": "TODO source-needed",
+    "parentCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "marc-oconnor-on-ice",
+    "name": "Marc O’Connor on-ice sessions",
+    "dateRange": "TODO source-needed",
+    "context": "TODO source-needed",
+    "do": [
+      "TODO source-needed"
+    ],
+    "doNot": [
+      "TODO source-needed"
+    ],
+    "trainingAdjustment": "TODO source-needed",
+    "recoveryPriority": "TODO source-needed",
+    "hydrationNotes": "TODO source-needed",
+    "nutritionNotes": "TODO source-needed",
+    "sleepNotes": "TODO source-needed",
+    "parentCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "general-camp-recovery",
+    "name": "General camp recovery day",
+    "dateRange": "TODO source-needed",
+    "context": "TODO source-needed",
+    "do": [
+      "TODO source-needed"
+    ],
+    "doNot": [
+      "TODO source-needed"
+    ],
+    "trainingAdjustment": "TODO source-needed",
+    "recoveryPriority": "TODO source-needed",
+    "hydrationNotes": "TODO source-needed",
+    "nutritionNotes": "TODO source-needed",
+    "sleepNotes": "TODO source-needed",
+    "parentCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "day-before-tryout",
+    "name": "Day before tryout",
+    "dateRange": "TODO source-needed",
+    "context": "TODO source-needed",
+    "do": [
+      "TODO source-needed"
+    ],
+    "doNot": [
+      "TODO source-needed"
+    ],
+    "trainingAdjustment": "TODO source-needed",
+    "recoveryPriority": "TODO source-needed",
+    "hydrationNotes": "TODO source-needed",
+    "nutritionNotes": "TODO source-needed",
+    "sleepNotes": "TODO source-needed",
+    "parentCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "tryout-week",
+    "name": "Tryout week",
+    "dateRange": "TODO source-needed",
+    "context": "TODO source-needed",
+    "do": [
+      "TODO source-needed"
+    ],
+    "doNot": [
+      "TODO source-needed"
+    ],
+    "trainingAdjustment": "TODO source-needed",
+    "recoveryPriority": "TODO source-needed",
+    "hydrationNotes": "TODO source-needed",
+    "nutritionNotes": "TODO source-needed",
+    "sleepNotes": "TODO source-needed",
+    "parentCue": "TODO source-needed",
+    "sourceTag": "TODO source-needed"
+  }
 ]

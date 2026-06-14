@@ -1,3 +1,288 @@
 [
-  { "id": "video-placeholder-1", "title": "Head-up puck control example", "category": "Puck Control", "url": "", "drillIds": ["stickhandle-box"] }
+  {
+    "id": "video-dynamic-skate-warmup",
+    "title": "Dynamic Hockey Warm-up video TODO",
+    "category": "Warm-up",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "dynamic-skate-warmup"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-ten-yard-sprint",
+    "title": "10-Yard Sprint video TODO",
+    "category": "Speed",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "ten-yard-sprint"
+    ],
+    "relatedKpiIds": [
+      "kpi-10-yard"
+    ],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-quick-feet-5105",
+    "title": "5-10-5 Agility Shuttle video TODO",
+    "category": "Agility",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "quick-feet-5105"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-split-squat",
+    "title": "Bodyweight Split Squat video TODO",
+    "category": "Strength",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "split-squat"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-lateral-bound",
+    "title": "Lateral Bound and Stick video TODO",
+    "category": "Power",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "lateral-bound"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-stickhandle-box",
+    "title": "Head-Up Stickhandling video TODO",
+    "category": "Puck Control",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "stickhandle-box"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-target-shooting",
+    "title": "50-Shot Accuracy video TODO",
+    "category": "Shooting",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "target-shooting"
+    ],
+    "relatedKpiIds": [
+      "kpi-shot-accuracy"
+    ],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-puck-control-weave",
+    "title": "Puck-Control Weave video TODO",
+    "category": "Puck Control",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "puck-control-weave"
+    ],
+    "relatedKpiIds": [
+      "kpi-puck-weave"
+    ],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-falling-start-sprint",
+    "title": "Falling Start Sprint video TODO",
+    "category": "Speed",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "falling-start-sprint"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-wall-sit",
+    "title": "Wall Sit video TODO",
+    "category": "Strength",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "wall-sit"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-dead-bug",
+    "title": "Dead Bug video TODO",
+    "category": "Core",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "dead-bug"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-plank",
+    "title": "Plank video TODO",
+    "category": "Core",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "plank"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-bear-crawl",
+    "title": "Bear Crawl video TODO",
+    "category": "Movement",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "bear-crawl"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-numbered-callout-stickhandling",
+    "title": "Numbered Callout Stickhandling video TODO",
+    "category": "Puck Control",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "numbered-callout-stickhandling"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-fake-outside-cut-middle",
+    "title": "Fake Outside, Cut Middle video TODO",
+    "category": "Puck Control",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "fake-outside-cut-middle"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-pull-push-deke",
+    "title": "Pull-Push Deke video TODO",
+    "category": "Puck Control",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "pull-push-deke"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-backhand-toe-drag-escape",
+    "title": "Backhand Toe-Drag Escape video TODO",
+    "category": "Puck Control",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "backhand-toe-drag-escape"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-shooting-in-stride",
+    "title": "Shooting in Stride video TODO",
+    "category": "Shooting",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "shooting-in-stride"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-mobility-recovery",
+    "title": "Mobility Recovery video TODO",
+    "category": "Recovery",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "mobility-recovery"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  },
+  {
+    "id": "video-post-camp-recovery",
+    "title": "Post-Camp Recovery video TODO",
+    "category": "Recovery",
+    "url": "",
+    "provider": "TODO source-needed",
+    "relatedDrillIds": [
+      "post-camp-recovery"
+    ],
+    "relatedKpiIds": [],
+    "qrUrl": "",
+    "sourceTag": "TODO source-needed",
+    "notes": "TODO: Add a reviewed source-backed video reference."
+  }
 ]

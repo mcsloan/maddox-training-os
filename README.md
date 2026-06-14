@@ -167,6 +167,27 @@ All mock training content lives in `/data`:
 
 Pages and components load training content through `lib/trainingData.ts`. Replace or expand these JSON files later without hardcoding the professional training library into UI components. Keep IDs stable when records reference each other.
 
+## Training Library Source Traceability
+
+The training library data files are structured to support source-backed content. Every phase, camp rule, workout, drill, KPI, hockey IQ habit, parent cue, and video reference includes a `sourceTag`.
+
+- A named `sourceTag` identifies the origin that should support the record.
+- `TODO source-needed` means the app structure is ready, but reviewed source content still needs to be loaded.
+- Existing working Phase 1 content has been retained where possible, but should still be reviewed against the future Maddox source library.
+- Future prompts can continue enriching the JSON files from approved source documents without rewriting the UI.
+
+No source-library folder or approved source documents were present during Prompt 4. New detailed methodology, dates, camp adjustments, loading, and video URLs were therefore not invented.
+
+To add source materials later:
+
+1. Place reviewable source notes or documents outside the deployed app bundle, or in a temporary local `/source-library` or `/docs/source-library` working folder.
+2. Extract approved content into the matching structured `/data/*.json` files.
+3. Replace `TODO source-needed` fields with source-backed content.
+4. Update each record's `sourceTag`.
+5. Validate that all referenced IDs resolve, then run `npm run lint` and `npm run build`.
+
+Avoid committing large raw PDFs into the application bundle. Prefer concise structured JSON derived from reviewed sources.
+
 ## Local Storage
 
 Active sessions, completed session logs, and KPI results save in the browser. UI components call repository APIs rather than using `localStorage` directly:

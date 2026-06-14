@@ -6,14 +6,30 @@
     "dayFocus": "Head-up puck control and quick direction changes",
     "sessionType": "Off-ice skill session",
     "totalEstimatedMinutes": 42,
-    "warmupDrillIds": ["dynamic-skate-warmup"],
-    "mainDrillIds": ["stickhandle-box", "quick-feet-5105", "split-squat", "lateral-bound", "target-shooting", "puck-control-weave"],
-    "kpiTestIds": ["kpi-head-up-callout"],
+    "warmupDrillIds": [
+      "dynamic-skate-warmup"
+    ],
+    "mainDrillIds": [
+      "stickhandle-box",
+      "quick-feet-5105",
+      "split-squat",
+      "lateral-bound",
+      "target-shooting",
+      "puck-control-weave"
+    ],
+    "kpiTestIds": [
+      "kpi-head-up-callout"
+    ],
     "recoveryNotes": "Hydrate, eat a balanced snack, and aim for a calm evening.",
     "parentCueId": "parent-cue-1",
     "confidenceCue": "Smooth first. Speed follows.",
     "campContext": "Foundation week",
-    "intensityLevel": 3
+    "intensityLevel": 3,
+    "weekNumber": 1,
+    "iqHabitIds": [
+      "iq-scan-before-puck"
+    ],
+    "sourceTag": "TODO source-needed"
   },
   {
     "id": "foundation-speed-b",
@@ -22,14 +38,30 @@
     "dayFocus": "Acceleration and accurate shooting",
     "sessionType": "Off-ice performance",
     "totalEstimatedMinutes": 38,
-    "warmupDrillIds": ["dynamic-skate-warmup"],
-    "mainDrillIds": ["ten-yard-sprint", "quick-feet-5105", "split-squat", "lateral-bound", "target-shooting"],
-    "kpiTestIds": ["kpi-10-yard", "kpi-shot-accuracy"],
+    "warmupDrillIds": [
+      "dynamic-skate-warmup"
+    ],
+    "mainDrillIds": [
+      "ten-yard-sprint",
+      "quick-feet-5105",
+      "split-squat",
+      "lateral-bound",
+      "target-shooting"
+    ],
+    "kpiTestIds": [
+      "kpi-10-yard",
+      "kpi-shot-accuracy"
+    ],
     "recoveryNotes": "Easy movement and hydration after training.",
     "parentCueId": "parent-cue-2",
     "confidenceCue": "Attack every rep with a clear plan.",
     "campContext": "Foundation week",
-    "intensityLevel": 4
+    "intensityLevel": 4,
+    "weekNumber": 1,
+    "iqHabitIds": [
+      "iq-scan-before-puck"
+    ],
+    "sourceTag": "TODO source-needed"
   },
   {
     "id": "foundation-control-c",
@@ -38,13 +70,135 @@
     "dayFocus": "Puck control under light pressure",
     "sessionType": "Skill session",
     "totalEstimatedMinutes": 35,
-    "warmupDrillIds": ["dynamic-skate-warmup"],
-    "mainDrillIds": ["stickhandle-box", "puck-control-weave", "lateral-bound", "target-shooting"],
-    "kpiTestIds": ["kpi-puck-weave"],
+    "warmupDrillIds": [
+      "dynamic-skate-warmup"
+    ],
+    "mainDrillIds": [
+      "stickhandle-box",
+      "puck-control-weave",
+      "lateral-bound",
+      "target-shooting"
+    ],
+    "kpiTestIds": [
+      "kpi-puck-weave"
+    ],
     "recoveryNotes": "Light stretch and a full night of sleep.",
     "parentCueId": "parent-cue-3",
     "confidenceCue": "See it, decide, execute.",
     "campContext": "Foundation week",
-    "intensityLevel": 3
+    "intensityLevel": 3,
+    "weekNumber": 1,
+    "iqHabitIds": [
+      "iq-scan-before-puck"
+    ],
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "camp-adjusted-week-placeholder",
+    "date": "TODO",
+    "weekNumber": 4,
+    "phaseId": "phase-1",
+    "dayFocus": "Camp-adjusted week placeholder",
+    "sessionType": "Recovery-adjusted training",
+    "totalEstimatedMinutes": 0,
+    "warmupDrillIds": [],
+    "mainDrillIds": [
+      "post-camp-recovery"
+    ],
+    "kpiTestIds": [],
+    "iqHabitIds": [
+      "iq-talk-early"
+    ],
+    "recoveryNotes": "TODO source-needed",
+    "parentCueId": "parent-after-camp",
+    "confidenceCue": "TODO source-needed",
+    "campContext": "TODO: connect to confirmed camp dates.",
+    "intensityLevel": 1,
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "speed-power-week-placeholder",
+    "date": "TODO",
+    "weekNumber": 6,
+    "phaseId": "phase-2",
+    "dayFocus": "Speed and power week placeholder",
+    "sessionType": "TODO source-needed",
+    "totalEstimatedMinutes": 0,
+    "warmupDrillIds": [
+      "dynamic-skate-warmup"
+    ],
+    "mainDrillIds": [
+      "ten-yard-sprint",
+      "falling-start-sprint",
+      "lateral-bound"
+    ],
+    "kpiTestIds": [
+      "kpi-10-yard",
+      "kpi-broad-jump"
+    ],
+    "iqHabitIds": [
+      "iq-attack-with-pace"
+    ],
+    "recoveryNotes": "TODO source-needed",
+    "parentCueId": "parent-before-training",
+    "confidenceCue": "TODO source-needed",
+    "campContext": "Normal week",
+    "intensityLevel": 3,
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "game-speed-week-placeholder",
+    "date": "TODO",
+    "weekNumber": 8,
+    "phaseId": "phase-3",
+    "dayFocus": "Game-speed week placeholder",
+    "sessionType": "TODO source-needed",
+    "totalEstimatedMinutes": 0,
+    "warmupDrillIds": [
+      "dynamic-skate-warmup"
+    ],
+    "mainDrillIds": [
+      "numbered-callout-stickhandling",
+      "shooting-in-stride"
+    ],
+    "kpiTestIds": [
+      "kpi-head-up-callout"
+    ],
+    "iqHabitIds": [
+      "iq-first-touch-space",
+      "iq-quick-decision-retrieval"
+    ],
+    "recoveryNotes": "TODO source-needed",
+    "parentCueId": "parent-after-strong-session",
+    "confidenceCue": "TODO source-needed",
+    "campContext": "Normal week",
+    "intensityLevel": 3,
+    "sourceTag": "TODO source-needed"
+  },
+  {
+    "id": "tryout-taper-week-placeholder",
+    "date": "TODO",
+    "weekNumber": 11,
+    "phaseId": "phase-4",
+    "dayFocus": "Tryout taper week placeholder",
+    "sessionType": "TODO source-needed",
+    "totalEstimatedMinutes": 0,
+    "warmupDrillIds": [
+      "dynamic-skate-warmup"
+    ],
+    "mainDrillIds": [
+      "mobility-recovery"
+    ],
+    "kpiTestIds": [],
+    "iqHabitIds": [
+      "iq-talk-early",
+      "iq-support-middle"
+    ],
+    "recoveryNotes": "TODO source-needed",
+    "parentCueId": "parent-before-tryout",
+    "confidenceCue": "TODO source-needed",
+    "campContext": "Tryout week",
+    "intensityLevel": 1,
+    "sourceTag": "TODO source-needed"
   }
 ]

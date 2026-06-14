@@ -5,12 +5,12 @@ export interface Drill {
   name: string;
   category: string;
   purpose: string;
-  setup: string;
   setupChecklist: string[];
-  instructions: string[];
+  stepByStepInstructions: string[];
   plannedSets: number | null;
   plannedReps: number | null;
   plannedDuration: number | null;
+  plannedRest: number | null;
   equipment: string[];
   coachingCues: string[];
   commonMistakes: string[];
@@ -18,6 +18,7 @@ export interface Drill {
   regression: string;
   safetyNotes: string;
   videoUrl: string | null;
+  videoTitle: string;
   qrUrl: string | null;
   sourceTag: string;
 }
@@ -25,6 +26,7 @@ export interface Drill {
 export interface Workout {
   id: string;
   date: string;
+  weekNumber: number;
   phaseId: string;
   dayFocus: string;
   sessionType: string;
@@ -32,11 +34,13 @@ export interface Workout {
   warmupDrillIds: string[];
   mainDrillIds: string[];
   kpiTestIds: string[];
+  iqHabitIds: string[];
   recoveryNotes: string;
   parentCueId: string;
   confidenceCue: string;
   campContext: string;
   intensityLevel: number;
+  sourceTag: string;
 }
 
 export interface KPIField {
@@ -50,25 +54,85 @@ export interface KPI {
   id: string;
   name: string;
   category: string;
+  purpose: string;
   instructions: string[];
+  setup: string;
   units: string;
   attempts: number;
   scoringMethod: "lowest" | "highest";
+  bestResultLogic: string;
+  trendDirectionLogic: string;
   fields: KPIField[];
   coachingNotes: string[];
   safetyNotes: string;
+  sourceTag: string;
 }
 
 export interface Phase {
   id: string;
   name: string;
-  goal: string;
-  weeks: string;
+  dateRange: string;
+  purpose: string;
+  primaryGoals: string[];
+  trainingEmphasis: string[];
+  intensityGuidance: string;
+  recoveryGuidance: string;
+  parentFocus: string;
+  playerIdentityCue: string;
+  sourceTag: string;
 }
 
 export interface ParentCue {
   id: string;
-  cue: string;
+  situation: string;
+  sayThis: string;
+  avoidSaying: string;
+  purpose: string;
+  confidenceGoal: string;
+  sourceTag: string;
+}
+
+export interface HockeyIqHabit {
+  id: string;
+  name: string;
+  category: string;
+  simpleDefinition: string;
+  whyItMatters: string;
+  whatMaddoxShouldDo: string;
+  practiceCue: string;
+  gameCue: string;
+  parentObservationCue: string;
+  reflectionQuestion: string;
+  sourceTag: string;
+}
+
+export interface CampRule {
+  id: string;
+  name: string;
+  dateRange: string;
+  context: string;
+  do: string[];
+  doNot: string[];
+  trainingAdjustment: string;
+  recoveryPriority: string;
+  hydrationNotes: string;
+  nutritionNotes: string;
+  sleepNotes: string;
+  parentCue: string;
+  sourceTag: string;
+}
+
+export interface TrainingVideo {
+  id: string;
+  title: string;
+  category: string;
+  url: string;
+  provider: string;
+  relatedDrillIds: string[];
+  relatedKpiIds: string[];
+  qrUrl: string;
+  sourceTag: string;
+  notes: string;
 }
 
 export interface ExerciseCompletion {

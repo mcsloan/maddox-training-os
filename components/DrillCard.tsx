@@ -17,9 +17,10 @@ export function DrillCard({ drill, completion, onChange }: { drill: Drill; compl
         {completion.done && <span className="rounded-full bg-lime px-3 py-1 text-sm font-black">DONE</span>}
       </div>
 
-      <div className="mb-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice p-4 sm:grid-cols-3">
+      <div className="mb-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice p-4 sm:grid-cols-4">
         <div><p className="label">Plan</p><p className="font-bold">{drill.plannedSets ? `${drill.plannedSets} sets` : "Quality reps"}{drill.plannedReps ? ` × ${drill.plannedReps}` : ""}</p></div>
         <div><p className="label">Time</p><p className="font-bold">{drill.plannedDuration ? `${drill.plannedDuration} sec` : "Untimed"}</p></div>
+        <div><p className="label">Rest</p><p className="font-bold">{drill.plannedRest ? `${drill.plannedRest} sec` : "As needed"}</p></div>
         <div><p className="label">Equipment</p><p className="font-bold">{drill.equipment.join(", ")}</p></div>
       </div>
 
@@ -31,10 +32,9 @@ export function DrillCard({ drill, completion, onChange }: { drill: Drill; compl
           <ul className="space-y-2">
             {drill.setupChecklist.map((item) => <li key={item} className="flex gap-2"><span className="font-black text-blue">□</span><span>{item}</span></li>)}
           </ul>
-          <p className="mt-3 text-sm text-slate-500">{drill.setup}</p>
           <p className="label mt-5">Do it</p>
           <ol className="list-inside list-decimal space-y-2">
-            {drill.instructions.map((instruction) => <li key={instruction}>{instruction}</li>)}
+            {drill.stepByStepInstructions.map((instruction) => <li key={instruction}>{instruction}</li>)}
           </ol>
           <p className="label mt-5">Coach cues</p>
           <div className="flex flex-wrap gap-2">
@@ -51,7 +51,8 @@ export function DrillCard({ drill, completion, onChange }: { drill: Drill; compl
             <p className="label mt-3">Safety</p>
             <p>{drill.safetyNotes}</p>
           </details>
-          {(drill.videoUrl || drill.qrUrl) && <div className="mt-4 grid gap-2 sm:grid-cols-2">{drill.videoUrl && <a className="btn-secondary" href={drill.videoUrl} target="_blank" rel="noreferrer">Open Video Demo</a>}{drill.qrUrl && <a className="btn-secondary" href={drill.qrUrl} target="_blank" rel="noreferrer">Open QR-Ready Link</a>}</div>}
+          {(drill.videoUrl || drill.qrUrl) && <div className="mt-4 grid gap-2 sm:grid-cols-2">{drill.videoUrl && <a className="btn-secondary" href={drill.videoUrl} target="_blank" rel="noreferrer">Open {drill.videoTitle || "Video Demo"}</a>}{drill.qrUrl && <a className="btn-secondary" href={drill.qrUrl} target="_blank" rel="noreferrer">Open QR-Ready Link</a>}</div>}
+          <p className="mt-4 text-xs font-semibold text-slate-400">Source: {drill.sourceTag}</p>
         </div>
         <div className="space-y-4">
           {drill.plannedDuration && <SessionTimer initialSeconds={completion.actualDuration || 0} onChange={(actualDuration) => update({ actualDuration })} />}
