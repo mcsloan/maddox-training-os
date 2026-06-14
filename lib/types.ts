@@ -89,6 +89,9 @@ export interface PlanWeek {
   recoveryDays: string;
   objective: string;
   parentWatchOut: string;
+  loadLabel?: string;
+  loadLevel?: Rating;
+  tags?: string[];
 }
 
 export interface PlanDay {
@@ -108,6 +111,9 @@ export interface PlanDay {
   parentCue: string;
   doNotDo: string;
   recoveryRule: string;
+  tags?: string[];
+  warnings?: string[];
+  externalLoadIds?: string[];
 }
 
 export interface TrainingPlan {
@@ -116,6 +122,32 @@ export interface TrainingPlan {
   overview: PlanOverview;
   weeks: PlanWeek[];
   days: PlanDay[];
+}
+
+export type ExternalLoadType = "lacrosse" | "hockey_camp" | "on_ice" | "tryout" | "other";
+
+export interface PlannedExternalLoad {
+  id: string;
+  date: string;
+  type: ExternalLoadType;
+  title: string;
+  provider: string;
+  startTime: string;
+  endTime: string;
+  plannedDurationMinutes: number | null;
+  plannedIntensity: Rating;
+  notes: string;
+  recoveryRule: string;
+  doNotDoRule: string;
+  trackingQuestions: string[];
+}
+
+export interface LoadRule {
+  id: string;
+  title: string;
+  appliesTo: string;
+  rules: string[];
+  warning: string;
 }
 
 export interface WorkoutBlock {

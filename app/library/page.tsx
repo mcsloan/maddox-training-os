@@ -1,4 +1,4 @@
-import { drills, equipmentSetups, parentCues, videos, workoutBlocks } from "@/lib/trainingData";
+import { drills, equipmentSetups, loadRules, parentCues, videos, workoutBlocks } from "@/lib/trainingData";
 
 export default function LibraryPage() {
   const warmups = drills.filter((drill) => drill.category === "Warm-up");
@@ -14,6 +14,7 @@ export default function LibraryPage() {
       <LibrarySection title="Stick / Shot Drills">{stickShot.map((drill) => <DrillLibraryCard key={drill.id} drill={drill} />)}</LibrarySection>
       <LibrarySection title="Video Library">{videos.map((video) => <article className="rounded-2xl border border-rink p-4" key={video.id}><p className="label">{video.category} · {video.provider || "Provider pending"}</p><h3 className="font-black">{video.title}</h3><p className="mt-2 text-sm">{video.bestUse}</p><p className="mt-2 text-xs text-slate-500">{video.notes}</p>{video.url ? <a className="mt-3 inline-block text-sm font-bold text-blue" href={video.url} target="_blank" rel="noreferrer">Open video ↗</a> : <p className="mt-3 text-sm font-semibold text-slate-400">Approved link pending</p>}</article>)}</LibrarySection>
       <LibrarySection title="Equipment Setup">{equipmentSetups.map((setup) => <article className="rounded-2xl border border-rink p-4" key={setup.id}><h3 className="font-black">{setup.name}</h3><ul className="mt-2 list-inside list-disc text-sm">{setup.items.map((item) => <li key={item}>{item}</li>)}</ul><p className="mt-3 text-sm text-slate-500">{setup.setupNotes}</p></article>)}</LibrarySection>
+      <LibrarySection title="External Loads / Recovery Rules">{loadRules.map((rule) => <article className="rounded-2xl border border-rink p-4" key={rule.id}><p className="label">{rule.appliesTo}</p><h3 className="font-black">{rule.title}</h3><ul className="mt-3 list-inside list-disc space-y-1 text-sm">{rule.rules.map((item) => <li key={item}>{item}</li>)}</ul><p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900">{rule.warning}</p></article>)}</LibrarySection>
       <LibrarySection title="Parent Cues">{parentCues.map((cue) => <LibraryCard key={cue.id} eyebrow="Parent cue" title={cue.cue} body="Use one calm cue, then let the player own the session." />)}</LibrarySection>
     </div>
   );

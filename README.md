@@ -169,7 +169,7 @@ Before deploying:
 - `/today`: today's workout, focus, phase, cues, and session start
 - `/plan`: 11-week plan overview, weekly objectives, loads, and parent watch-outs
 - `/calendar`: all currently modeled scheduled training days grouped by week
-- `/day/[date]`: read-only any-day preview with blocks, drills, rules, equipment, and start action
+- `/day/[date]`: read-only any-day preview with training, external loads, blocks, drills, rules, equipment, and start action
 - `/library`: workout blocks, warmups, exercises, stick/shot drills, video references, equipment, and parent cues
 - `/session/[id]`: live one-drill-at-a-time training mode with autosave
 - `/dashboard`: weekly plan, readiness, completion, and cloud-first recent logs
@@ -197,6 +197,8 @@ The browseable workbook-shaped seed also uses:
 - `plan.json`: versioned 11-week overview, weekly summaries, and scheduled training days
 - `workoutBlocks.json`: named workbook block definitions and drill references
 - `equipmentSetup.json`: reusable equipment and safety setup guidance
+- `externalLoads.json`: planned lacrosse, camp, on-ice, and tryout loads with recovery rules and future logging questions
+- `loadRules.json`: reusable camp, Marc session, lacrosse, deload, and tryout-taper rules
 
 The source workbook itself is not currently present in this repository. The modeled seed is intentionally traceable as a starting structure; approved workbook details and video URLs should replace or extend it when source materials are available.
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { formatPlanDate, trainingPlan } from "@/lib/trainingData";
+import { ExternalLoadChip, PlanTagChip } from "@/components/LoadChips";
+import { formatPlanDate, getCalendarDates, getDayTags, getExternalLoadsForDate, getPlanDay, getWeekLoadLabel, trainingPlan } from "@/lib/trainingData";
 
 export default function CalendarPage() {
   return (
@@ -11,21 +12,27 @@ export default function CalendarPage() {
       </div>
       <div className="space-y-8">
         {trainingPlan.weeks.map((week) => {
-          const days = trainingPlan.days.filter((day) => day.weekNumber === week.weekNumber);
+          const dates = getCalendarDates().filter((date) => date >= week.startDate && date <= week.endDate);
           return (
             <section id={`week-${week.weekNumber}`} className="scroll-mt-24" key={week.weekNumber}>
-              <div className="mb-3 flex flex-wrap items-end justify-between gap-2"><div><p className="label">Week {week.weekNumber}</p><h2 className="text-2xl font-black">{week.phase}</h2></div><p className="text-sm font-semibold text-slate-500">{formatPlanDate(week.startDate)} to {formatPlanDate(week.endDate)}</p></div>
+              <div className="mb-3 flex flex-wrap items-end justify-between gap-2"><div><p className="label">Week {week.weekNumber} · {week.phase}</p><h2 className="text-2xl font-black">{getWeekLoadLabel(week.weekNumber)}</h2></div><p className="text-sm font-semibold text-slate-500">{formatPlanDate(week.startDate)} to {formatPlanDate(week.endDate)}</p></div>
               <div className="grid gap-4 lg:grid-cols-2">
-                {days.map((day) => (
-                  <Link href={`/day/${day.date}`} className="card block border-2 border-transparent transition hover:border-blue" key={day.date}>
-                    <div className="flex items-start justify-between gap-3"><div><p className="label">{formatPlanDate(day.date, { weekday: "long", month: "short", day: "numeric" })} · Week {day.weekNumber}</p><h3 className="text-xl font-black">{day.primarySession}</h3></div><span className="rounded-full bg-ice px-3 py-1 text-xs font-black text-blue">{day.dayRole}</span></div>
+                {dates.map((date) => {
+                  const day = getPlanDay(date);
+                  const loads = getExternalLoadsForDate(date);
+                  const tags = getDayTags(date);
+                  const intensity = Math.max(day?.intensity || 0, ...loads.map((load) => load.plannedIntensity));
+                  return <Link href={`/day/${date}`} className="card block border-2 border-transparent transition hover:border-blue" key={date}>
+                    <div className="flex items-start justify-between gap-3"><div><p className="label">{formatPlanDate(date, { weekday: "long", month: "short", day: "numeric" })} · Week {week.weekNumber}</p><h3 className="text-xl font-black">{day?.primarySession || loads[0]?.title || "Recovery / planning day"}</h3></div>{day && <span className="rounded-full bg-ice px-3 py-1 text-xs font-black text-blue">{day.dayRole}</span>}</div>
+                    <div className="mt-3 flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}{tags.filter((tag) => tag === "recovery" || tag === "deload" || tag === "taper").map((tag) => <PlanTagChip key={tag} tag={tag} />)}</div>
                     <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
-                      <p><strong>Phase:</strong> {day.phase}</p><p><strong>Duration:</strong> {day.durationMinutes} min · {day.intensity}/5</p>
-                      <p><strong>Micro-skill:</strong> {day.dailyMicroSkill}</p><p><strong>Puck/shot:</strong> {day.shootingPuckDetail}</p>
-                      <p><strong>Recovery:</strong> {day.recovery}</p><p><strong>External load:</strong> {day.externalLoad || "None scheduled"}</p>
+                      <p><strong>Phase:</strong> {day?.phase || week.phase}</p><p><strong>Load:</strong> {intensity}/5</p>
+                      <p><strong>Off-ice:</strong> {day?.primarySession || "None planned"}</p><p><strong>External:</strong> {loads.length ? `${loads.length} planned` : "None planned"}</p>
+                      <p><strong>Recovery:</strong> {day?.recovery || loads[0]?.recoveryRule || "Recovery as needed"}</p><p><strong>Parent cue:</strong> {day?.parentCue || "Protect recovery and ask about energy."}</p>
                     </div>
-                  </Link>
-                ))}
+                    <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900"><strong>Do not do:</strong> {loads[0]?.doNotDoRule || day?.doNotDo || "Do not add unplanned hard work."}</p>
+                  </Link>;
+                })}
               </div>
             </section>
           );

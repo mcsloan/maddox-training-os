@@ -6,7 +6,7 @@ import { DataStatus } from "@/components/DataStatus";
 import { ParentDashboardCard } from "@/components/ParentDashboardCard";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
-import { kpis, workouts } from "@/lib/trainingData";
+import { getCurrentPlanWeek, getWeekExternalLoads, getWeekLoadLabel, kpis, trainingPlan, workouts } from "@/lib/trainingData";
 import { kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
 import { KPIResult, SessionLog } from "@/lib/types";
 
@@ -36,11 +36,30 @@ export default function DashboardPage() {
     ...sessions.filter((session) => session.readiness.energy !== null && session.readiness.energy <= 2).map(() => "Low pre-session energy recorded"),
     ...sessions.filter((session) => session.reflection.confidence !== null && session.reflection.confidence <= 2).map(() => "Low confidence reflection recorded"),
   ];
+  const currentPlanWeek = getCurrentPlanWeek();
+  const currentWeekDays = trainingPlan.days.filter((day) => day.weekNumber === currentPlanWeek.weekNumber);
+  const currentWeekLoads = getWeekExternalLoads(currentPlanWeek);
+  const recoveryDays = currentWeekDays.filter((day) => day.dayRole.toLowerCase().includes("recovery")).length;
+  const highLoadDates = new Set([
+    ...currentWeekDays.filter((day) => day.intensity >= 4).map((day) => day.date),
+    ...currentWeekLoads.filter((load) => load.plannedIntensity >= 4).map((load) => load.date),
+  ]).size;
+  const loadWarnings = currentWeekLoads.map((load) => `${load.title}: ${load.doNotDoRule}`);
 
   return (
     <div>
       <div className="mb-6"><p className="label">Parent / coach view</p><h1 className="text-4xl font-black">Dashboard</h1></div>
       <DataStatus mode={dataMode} warning={warning} />
+      <section className="card mb-6">
+        <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">Current plan week · Week {currentPlanWeek.weekNumber}</p><h2 className="text-2xl font-black">{getWeekLoadLabel(currentPlanWeek.weekNumber)}</h2></div><Link className="text-sm font-bold text-blue" href={`/calendar#week-${currentPlanWeek.weekNumber}`}>Open week</Link></div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <ParentDashboardCard label="Training sessions" value={`${currentWeekDays.length}`} detail="Planned off-ice days" />
+          <ParentDashboardCard label="External loads" value={`${currentWeekLoads.length}`} detail="Camp, ice, lacrosse, or tryout" />
+          <ParentDashboardCard label="Recovery days" value={`${recoveryDays}`} detail="Explicit recovery-focused days" />
+          <ParentDashboardCard label="High-load days" value={`${highLoadDates}`} detail="Intensity 4-5 load dates" />
+        </div>
+        {loadWarnings.length > 0 && <div className="mt-4 space-y-2">{loadWarnings.map((item) => <p className="rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-800" key={item}>{item}</p>)}</div>}
+      </section>
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <ParentDashboardCard label="Weekly summary" value={`${completed.length} complete`} detail={`${sessions.length} available attempts`} />
         <ParentDashboardCard label="Planned vs completed" value={`${completed.length} / ${workouts.length}`} detail={`${missed.length} workouts not started`} />
