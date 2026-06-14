@@ -71,6 +71,80 @@ export interface ParentCue {
   cue: string;
 }
 
+export interface PlanOverview {
+  startDate: string;
+  endDate: string;
+  primaryGoal: string;
+  trainingBias: string[];
+  externalLoads: string[];
+}
+
+export interface PlanWeek {
+  weekNumber: number;
+  startDate: string;
+  endDate: string;
+  phase: string;
+  hardDays: string;
+  skillDays: string;
+  recoveryDays: string;
+  objective: string;
+  parentWatchOut: string;
+}
+
+export interface PlanDay {
+  date: string;
+  weekNumber: number;
+  phase: string;
+  dayRole: string;
+  primarySession: string;
+  workoutId: string;
+  workoutBlockIds: string[];
+  dailyMicroSkill: string;
+  shootingPuckDetail: string;
+  recovery: string;
+  durationMinutes: number;
+  intensity: number;
+  externalLoad: string;
+  parentCue: string;
+  doNotDo: string;
+  recoveryRule: string;
+}
+
+export interface TrainingPlan {
+  version: string;
+  sourceTag: string;
+  overview: PlanOverview;
+  weeks: PlanWeek[];
+  days: PlanDay[];
+}
+
+export interface WorkoutBlock {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  bestUse: string;
+  relatedDrillIds: string[];
+}
+
+export interface EquipmentSetup {
+  id: string;
+  name: string;
+  items: string[];
+  setupNotes: string;
+}
+
+export interface VideoReference {
+  id: string;
+  title: string;
+  category: string;
+  url: string;
+  drillIds?: string[];
+  provider?: string;
+  bestUse?: string;
+  notes?: string;
+}
+
 export interface ExerciseCompletion {
   drillId: string;
   done: boolean;

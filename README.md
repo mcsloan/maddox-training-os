@@ -167,6 +167,10 @@ Before deploying:
 ## Main Screens
 
 - `/today`: today's workout, focus, phase, cues, and session start
+- `/plan`: 11-week plan overview, weekly objectives, loads, and parent watch-outs
+- `/calendar`: all currently modeled scheduled training days grouped by week
+- `/day/[date]`: read-only any-day preview with blocks, drills, rules, equipment, and start action
+- `/library`: workout blocks, warmups, exercises, stick/shot drills, video references, equipment, and parent cues
 - `/session/[id]`: live one-drill-at-a-time training mode with autosave
 - `/dashboard`: weekly plan, readiness, completion, and cloud-first recent logs
 - `/history`: cloud-first completed history plus local drafts, with view, resume, reopen, and fresh-attempt actions
@@ -187,6 +191,14 @@ All mock training content lives in `/data`:
 - `videos.json`
 
 Pages and components load training content through `lib/trainingData.ts`. Replace or expand these JSON files later without hardcoding the professional training library into UI components. Keep IDs stable when records reference each other.
+
+The browseable workbook-shaped seed also uses:
+
+- `plan.json`: versioned 11-week overview, weekly summaries, and scheduled training days
+- `workoutBlocks.json`: named workbook block definitions and drill references
+- `equipmentSetup.json`: reusable equipment and safety setup guidance
+
+The source workbook itself is not currently present in this repository. The modeled seed is intentionally traceable as a starting structure; approved workbook details and video URLs should replace or extend it when source materials are available.
 
 ## Local Storage
 

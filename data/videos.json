@@ -1,3 +1,6 @@
 [
-  { "id": "video-placeholder-1", "title": "Head-up puck control example", "category": "Puck Control", "url": "", "drillIds": ["stickhandle-box"] }
+  { "id": "video-placeholder-1", "title": "Head-up puck control reference", "category": "Puck Control", "url": "", "drillIds": ["stickhandle-box", "puck-control-weave"], "provider": "Source link pending", "bestUse": "Before head-up puck-control blocks", "notes": "Workbook-aligned video slot; add the approved source URL when available." },
+  { "id": "video-placeholder-2", "title": "Acceleration mechanics reference", "category": "Speed", "url": "", "drillIds": ["ten-yard-sprint"], "provider": "Source link pending", "bestUse": "Before acceleration blocks", "notes": "Approved source URL still required." },
+  { "id": "video-placeholder-3", "title": "5-10-5 direction-change reference", "category": "Agility", "url": "", "drillIds": ["quick-feet-5105"], "provider": "Source link pending", "bestUse": "Before KPI testing or agility blocks", "notes": "Approved source URL still required." },
+  { "id": "video-placeholder-4", "title": "Shooting accuracy reference", "category": "Shooting", "url": "", "drillIds": ["target-shooting"], "provider": "Source link pending", "bestUse": "Before planned shooting blocks", "notes": "Approved source URL still required." }
 ]

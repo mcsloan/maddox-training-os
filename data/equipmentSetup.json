@@ -1,0 +1,5 @@
+[
+  { "id": "off-ice-basic", "name": "Basic Off-Ice Setup", "items": ["Training shoes", "Water", "2-6 cones", "Timer", "Clear non-slip space"], "setupNotes": "Leave enough room to accelerate, change direction, and slow down safely." },
+  { "id": "stick-skill", "name": "Stick Skill Setup", "items": ["Hockey stick", "Puck or ball", "Cones", "Callout cards"], "setupNotes": "Keep all people and breakable objects outside stick range." },
+  { "id": "shooting", "name": "Shooting Setup", "items": ["Stick", "Pucks", "Secured net or shooting tarp", "Targets"], "setupNotes": "Confirm nobody can enter behind or beside the target while shooting." }
+]

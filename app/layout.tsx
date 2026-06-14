@@ -28,6 +28,9 @@ export const viewport: Viewport = {
 
 const nav = [
   { href: "/today", label: "Today" },
+  { href: "/plan", label: "Plan" },
+  { href: "/calendar", label: "Calendar" },
+  { href: "/library", label: "Library" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/history", label: "History" },
   { href: "/kpis", label: "KPIs" },
@@ -48,7 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </Link>
               <BuildBadge />
             </div>
-            <nav className="hidden gap-1 sm:flex">
+            <nav className="hidden flex-wrap justify-end gap-1 sm:flex">
               {nav.map((item) => (
                 <Link key={item.href} href={item.href} className="rounded-xl px-3 py-2 text-sm font-bold hover:bg-ice">
                   {item.label}
@@ -58,9 +61,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </div>
         </header>
         <main className="mx-auto max-w-6xl px-4 pb-24 pt-6 sm:pb-8">{children}</main>
-        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-rink bg-white p-2 sm:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 flex gap-1 overflow-x-auto border-t border-rink bg-white p-2 sm:hidden">
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="rounded-xl px-1 py-3 text-center text-xs font-bold hover:bg-ice">
+            <Link key={item.href} href={item.href} className="min-w-20 rounded-xl px-2 py-3 text-center text-xs font-bold hover:bg-ice">
               {item.label}
             </Link>
           ))}

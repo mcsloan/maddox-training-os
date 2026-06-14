@@ -1,6 +1,7 @@
 "use client";
 
 import { Drill, ExerciseCompletion, Rating } from "@/lib/types";
+import { isUsableExternalUrl } from "@/lib/trainingData";
 import { SessionTimer } from "./SessionTimer";
 
 export function DrillCard({ drill, completion, onChange }: { drill: Drill; completion: ExerciseCompletion; onChange: (next: ExerciseCompletion) => void }) {
@@ -51,7 +52,7 @@ export function DrillCard({ drill, completion, onChange }: { drill: Drill; compl
             <p className="label mt-3">Safety</p>
             <p>{drill.safetyNotes}</p>
           </details>
-          {(drill.videoUrl || drill.qrUrl) && <div className="mt-4 grid gap-2 sm:grid-cols-2">{drill.videoUrl && <a className="btn-secondary" href={drill.videoUrl} target="_blank" rel="noreferrer">Open Video Demo</a>}{drill.qrUrl && <a className="btn-secondary" href={drill.qrUrl} target="_blank" rel="noreferrer">Open QR-Ready Link</a>}</div>}
+          {(isUsableExternalUrl(drill.videoUrl) || isUsableExternalUrl(drill.qrUrl)) && <div className="mt-4 grid gap-2 sm:grid-cols-2">{isUsableExternalUrl(drill.videoUrl) && <a className="btn-secondary" href={drill.videoUrl!} target="_blank" rel="noreferrer">Open Video Demo</a>}{isUsableExternalUrl(drill.qrUrl) && <a className="btn-secondary" href={drill.qrUrl!} target="_blank" rel="noreferrer">Open QR-Ready Link</a>}</div>}
         </div>
         <div className="space-y-4">
           {drill.plannedDuration && <SessionTimer initialSeconds={completion.actualDuration || 0} onChange={(actualDuration) => update({ actualDuration })} />}
