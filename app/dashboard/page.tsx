@@ -56,6 +56,7 @@ export default function DashboardPage() {
   };
   const sorenessPainFlags = currentWeekExternalLogs.filter((log) => log.painFlag || log.soreness >= 3).length;
   const recoveryReminders = currentWeekExternalLogs.filter((log) => !log.recoveryCompleted).length;
+  const currentWeekKpiDays = currentWeekDays.filter((day) => day.kpiTestIds?.length);
 
   return (
     <div>
@@ -68,6 +69,7 @@ export default function DashboardPage() {
           <ParentDashboardCard label="External loads" value={`${currentWeekLoads.length}`} detail="Camp, ice, lacrosse, or tryout" />
           <ParentDashboardCard label="Recovery days" value={`${recoveryDays}`} detail="Explicit recovery-focused days" />
           <ParentDashboardCard label="High-load days" value={`${highLoadDates}`} detail="Intensity 4-5 load dates" />
+          <ParentDashboardCard label="KPI checkpoints" value={`${currentWeekKpiDays.length}`} detail={currentWeekKpiDays[0]?.primarySession || "None planned this week"} />
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <ParentDashboardCard label="Logged external" value={`${currentWeekExternalLogs.length} / ${currentWeekLoads.length}`} detail="Latest log per planned event" />

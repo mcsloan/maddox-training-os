@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { getTodayWorkout, getWorkoutDrills } from "@/lib/trainingData";
+import { getNextWorkout, getTodayWorkout, getWorkoutDrills } from "@/lib/trainingData";
 
 export default function Home() {
-  const workout = getTodayWorkout();
+  const workout = getTodayWorkout() || getNextWorkout("0000-00-00");
+  if (!workout) return null;
   const drillCount = getWorkoutDrills(workout).length;
   return (
     <div className="grid min-h-[70vh] items-center gap-8 lg:grid-cols-2">

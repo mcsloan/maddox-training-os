@@ -3,6 +3,7 @@ import { ExternalLoadType } from "@/lib/types";
 const loadStyles: Record<ExternalLoadType, string> = {
   lacrosse_practice: "bg-purple-100 text-purple-800",
   lacrosse_game: "bg-purple-200 text-purple-900",
+  lacrosse_playoff: "bg-fuchsia-200 text-fuchsia-900",
   hockey_camp: "bg-red-100 text-red-800",
   on_ice: "bg-blue-100 text-blue-800",
   tryout: "bg-amber-100 text-amber-900",
@@ -17,6 +18,7 @@ const tagStyles: Record<string, string> = {
   "on-ice": "bg-blue-100 text-blue-800",
   tryout: "bg-amber-100 text-amber-900",
   lacrosse: "bg-purple-100 text-purple-800",
+  kpi: "bg-cyan-100 text-cyan-900",
 };
 
 export function ExternalLoadChip({ type, title }: { type: ExternalLoadType; title: string }) {

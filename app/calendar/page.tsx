@@ -31,7 +31,7 @@ export default function CalendarPage() {
                   const intensity = Math.max(day?.intensity || 0, ...loads.map((load) => load.plannedIntensity));
                   return <article className="card border-2 border-transparent transition hover:border-blue" key={date}>
                     <Link href={`/day/${date}`} className="block"><div className="flex items-start justify-between gap-3"><div><p className="label">{formatPlanDate(date, { weekday: "long", month: "short", day: "numeric" })} · Week {week.weekNumber}</p><h3 className="text-xl font-black">{day?.primarySession || loads[0]?.title || "Recovery / planning day"}</h3></div>{day && <span className="rounded-full bg-ice px-3 py-1 text-xs font-black text-blue">{day.dayRole}</span>}</div>
-                    <div className="mt-3 flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}{tags.filter((tag) => tag === "recovery" || tag === "deload" || tag === "taper").map((tag) => <PlanTagChip key={tag} tag={tag} />)}</div>
+                    <div className="mt-3 flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}{tags.filter((tag) => tag === "recovery" || tag === "deload" || tag === "taper" || tag === "kpi").map((tag) => <PlanTagChip key={tag} tag={tag} />)}</div>
                     <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                       <p><strong>Phase:</strong> {day?.phase || week.phase}</p><p><strong>Load:</strong> {intensity}/5</p>
                       <p><strong>Off-ice:</strong> {day?.primarySession || "None planned"}</p><p><strong>External:</strong> {loads.length ? `${loads.length} planned` : "None planned"}</p>

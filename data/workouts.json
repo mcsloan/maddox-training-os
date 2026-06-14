@@ -46,5 +46,21 @@
     "confidenceCue": "See it, decide, execute.",
     "campContext": "Foundation week",
     "intensityLevel": 3
+  },
+  {
+    "id": "post-playoff-kpi-retest",
+    "date": "2026-06-29",
+    "phaseId": "phase-1",
+    "dayFocus": "Week 2 Retest / Post-Playoffs Confidence Marker",
+    "sessionType": "Conditional KPI checkpoint",
+    "totalEstimatedMinutes": 45,
+    "warmupDrillIds": ["dynamic-skate-warmup"],
+    "mainDrillIds": ["ten-yard-sprint", "quick-feet-5105", "stickhandle-box", "puck-control-weave", "target-shooting"],
+    "kpiTestIds": ["kpi-10-yard", "kpi-5105", "kpi-broad-jump", "kpi-head-up-callout", "kpi-puck-weave", "kpi-shot-accuracy", "kpi-quick-hands", "kpi-plank-quality"],
+    "recoveryNotes": "Test only if energy and soreness are acceptable. Use a technique check or move to June 30 if not ready.",
+    "parentCueId": "parent-cue-2",
+    "confidenceCue": "This checkpoint is information, not a judgment.",
+    "campContext": "Post-playoff confidence marker",
+    "intensityLevel": 3
   }
 ]

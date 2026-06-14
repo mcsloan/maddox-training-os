@@ -167,7 +167,7 @@ Before deploying:
 ## Main Screens
 
 - `/today`: today's workout, focus, phase, cues, and session start
-- `/plan`: 11-week plan overview, weekly objectives, loads, and parent watch-outs
+- `/plan`: 12-week plan overview, weekly objectives, loads, KPI checkpoints, and parent watch-outs
 - `/calendar`: all currently modeled scheduled training days grouped by week
 - `/day/[date]`: read-only any-day preview with training, external loads, blocks, drills, rules, equipment, and start action
 - `/external-load/[id]`: mobile external-load reflection and recovery logging
@@ -195,7 +195,7 @@ Pages and components load training content through `lib/trainingData.ts`. Replac
 
 The browseable workbook-shaped seed also uses:
 
-- `plan.json`: versioned 11-week overview, weekly summaries, and scheduled training days
+- `plan.json`: versioned 12-week overview, weekly summaries, scheduled training days, and KPI checkpoints
 - `workoutBlocks.json`: named workbook block definitions and drill references
 - `equipmentSetup.json`: reusable equipment and safety setup guidance
 - `externalLoads.json`: planned lacrosse, camp, on-ice, and tryout loads with recovery rules and future logging questions
@@ -208,6 +208,8 @@ Lacrosse, hockey camp, Marc O'Connor on-ice, and tryout events can be logged fro
 Each save keeps a local backup and, when Supabase is configured, inserts a new immutable `session_logs` snapshot with `source = external_load` and `kind = external_load`. Updating a log creates a new snapshot rather than rewriting older history. No Supabase schema migration is required.
 
 The source workbook itself is not currently present in this repository. The modeled seed is intentionally traceable as a starting structure; approved workbook details and video URLs should replace or extend it when source materials are available.
+
+The current plan window is Monday June 15, 2026 through Sunday September 6, 2026. Today is date-aware: before the plan it previews the next session, on external-load or recovery days it shows the appropriate rules, and after the plan it links to review screens instead of silently selecting a fallback workout.
 
 ## Local Storage
 

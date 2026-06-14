@@ -45,6 +45,14 @@ export function getPlanDay(date: string) {
   return trainingPlan.days.find((day) => day.date === date);
 }
 
+export function getNextPlanDay(afterDate: string) {
+  return trainingPlan.days.find((day) => day.date > afterDate);
+}
+
+export function getNextScheduledDate(afterDate: string) {
+  return getCalendarDates().find((date) => date > afterDate);
+}
+
 export function getPlanWeek(weekNumber: number) {
   return trainingPlan.weeks.find((week) => week.weekNumber === weekNumber);
 }
@@ -64,16 +72,17 @@ export function getCalendarDates() {
 export function getWeekLoadLabel(weekNumber: number) {
   const labels: Record<number, string> = {
     1: "Phase 1 Foundation",
-    2: "Phase 1 Foundation",
-    3: "Chase Hull Camp Load",
-    4: "Phase 2 Speed + Power",
+    2: "High / Playoff",
+    3: "Phase 1 Foundation + KPI Checkpoint",
+    4: "Chase Hull Camp Load",
     5: "Phase 2 Speed + Power",
-    6: "Deload / Consolidation",
-    7: "Carleton Camp Load",
-    8: "Phase 3 Game-Speed Dominance",
-    9: "Deload / Consolidation",
-    10: "Sensplex Camp Load",
-    11: "Tryout Taper",
+    6: "Phase 2 Speed + Power",
+    7: "Deload / Consolidation",
+    8: "Carleton Camp Load",
+    9: "Phase 3 Game-Speed Dominance",
+    10: "Deload / Consolidation",
+    11: "Sensplex Camp Load",
+    12: "Tryout Taper",
   };
   return labels[weekNumber] || "Offseason Plan";
 }
@@ -81,7 +90,7 @@ export function getWeekLoadLabel(weekNumber: number) {
 export function getWeekLoadLevel(week: PlanWeek) {
   const loads = getWeekExternalLoads(week);
   if (loads.some((load) => load.plannedIntensity === 5)) return 5;
-  if (week.weekNumber === 6 || week.weekNumber === 9 || week.weekNumber === 11) return 2;
+  if (week.weekNumber === 7 || week.weekNumber === 10 || week.weekNumber === 12) return 2;
   return 4;
 }
 
@@ -92,10 +101,11 @@ export function getDayTags(date: string) {
   if (loads.some((load) => load.type === "hockey_camp")) tags.push("camp");
   if (loads.some((load) => load.type === "on_ice")) tags.push("on-ice");
   if (loads.some((load) => load.type === "tryout")) tags.push("tryout");
-  if (loads.some((load) => load.type === "lacrosse_practice" || load.type === "lacrosse_game")) tags.push("lacrosse");
+  if (loads.some((load) => load.type === "lacrosse_practice" || load.type === "lacrosse_game" || load.type === "lacrosse_playoff")) tags.push("lacrosse");
   if (day?.dayRole.toLowerCase().includes("recovery")) tags.push("recovery");
-  if (day?.weekNumber === 6 || day?.weekNumber === 9) tags.push("deload");
-  if (day?.weekNumber === 11) tags.push("taper");
+  if (day?.weekNumber === 7 || day?.weekNumber === 10) tags.push("deload");
+  if (day?.weekNumber === 12) tags.push("taper");
+  if (day?.kpiTestIds?.length) tags.push("kpi");
   return Array.from(new Set(tags));
 }
 
@@ -129,7 +139,12 @@ export function formatPlanDate(date: string, options?: Intl.DateTimeFormatOption
     .format(new Date(`${date}T12:00:00`));
 }
 
-export function getTodayWorkout() {
-  const today = new Date().toISOString().slice(0, 10);
-  return workouts.find((workout) => workout.date === today) || workouts[0];
+export function getTodayWorkout(date = new Date().toISOString().slice(0, 10)) {
+  const day = getPlanDay(date);
+  return day?.workoutId ? getWorkout(day.workoutId) : undefined;
+}
+
+export function getNextWorkout(afterDate = new Date().toISOString().slice(0, 10)) {
+  const day = trainingPlan.days.find((item) => item.date > afterDate && item.workoutId);
+  return day?.workoutId ? getWorkout(day.workoutId) : undefined;
 }

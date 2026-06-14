@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ParentCue, Phase, Workout } from "@/lib/types";
 
-export function TodayCard({ workout, phase, parentCue }: { workout: Workout; phase?: Phase; parentCue?: ParentCue }) {
+export function TodayCard({ workout, phase, parentCue, focusLabel = "Today's focus" }: { workout: Workout; phase?: Phase; parentCue?: ParentCue; focusLabel?: string }) {
   return (
     <article className="card overflow-hidden p-0">
       <div className="bg-navy p-6 text-white sm:p-8">
@@ -10,7 +10,7 @@ export function TodayCard({ workout, phase, parentCue }: { workout: Workout; pha
           <span className="rounded-full bg-white/15 px-3 py-1">{workout.totalEstimatedMinutes} min</span>
           <span className="rounded-full bg-white/15 px-3 py-1">Intensity {workout.intensityLevel}/5</span>
         </div>
-        <p className="text-sm font-bold text-lime">Today&apos;s focus</p>
+        <p className="text-sm font-bold text-lime">{focusLabel}</p>
         <h2 className="mt-1 text-3xl font-black leading-tight sm:text-5xl">{workout.dayFocus}</h2>
         <p className="mt-4 text-lg text-slate-200">{workout.confidenceCue}</p>
       </div>

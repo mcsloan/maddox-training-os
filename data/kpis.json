@@ -1,7 +1,7 @@
 [
   {
     "id": "kpi-5105",
-    "name": "5-10-5 Agility Test",
+    "name": "5-10-5 Pro Agility",
     "category": "Agility",
     "instructions": ["Complete a full 5-10-5 shuttle.", "Record each timed attempt."],
     "units": "seconds",
@@ -37,7 +37,7 @@
   },
   {
     "id": "kpi-shot-accuracy",
-    "name": "50-Shot Accuracy",
+    "name": "50-Shot Target Hits",
     "category": "Shooting",
     "instructions": ["Take 50 shots at called targets.", "Record successful target hits."],
     "units": "hits",
@@ -61,14 +61,38 @@
   },
   {
     "id": "kpi-head-up-callout",
-    "name": "Head-Up Callout Score",
+    "name": "Head-Up Callout %",
     "category": "Hockey IQ",
     "instructions": ["Stickhandle for 45 seconds.", "Record correct visual callouts."],
-    "units": "correct callouts",
+    "units": "percent",
     "attempts": 3,
     "scoringMethod": "highest",
-    "fields": [{ "id": "result", "label": "Correct callouts", "type": "number", "unit": "score" }],
+    "fields": [{ "id": "result", "label": "Correct callouts", "type": "number", "unit": "%" }],
     "coachingNotes": ["Keep callout pace consistent."],
     "safetyNotes": "Use a clear training space."
+  },
+  {
+    "id": "kpi-quick-hands",
+    "name": "30-Second Quick Hands Touch Count",
+    "category": "Puck Control",
+    "instructions": ["Stickhandle for 30 seconds using the same setup.", "Count clean controlled touches."],
+    "units": "touches",
+    "attempts": 2,
+    "scoringMethod": "highest",
+    "fields": [{ "id": "result", "label": "Clean touches", "type": "number", "unit": "touches"}],
+    "coachingNotes": ["Use the same puck or ball and stance each time."],
+    "safetyNotes": "Use a clear stick-safe area."
+  },
+  {
+    "id": "kpi-plank-quality",
+    "name": "Plank Quality",
+    "category": "Core Control",
+    "instructions": ["Hold a strong plank with a straight body line.", "Stop when position quality can no longer be maintained."],
+    "units": "seconds",
+    "attempts": 2,
+    "scoringMethod": "highest",
+    "fields": [{ "id": "result", "label": "Quality hold", "type": "number", "unit": "sec"}],
+    "coachingNotes": ["Quality matters more than maximum time."],
+    "safetyNotes": "Stop for back, shoulder, or wrist pain."
   }
 ]

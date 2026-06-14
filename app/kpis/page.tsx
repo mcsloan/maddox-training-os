@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { KPIEntryForm } from "@/components/KPIEntryForm";
-import { kpis } from "@/lib/trainingData";
+import Link from "next/link";
+import { formatPlanDate, kpis, trainingPlan } from "@/lib/trainingData";
 import { kpiBest, kpiTrend } from "@/lib/trainingMetrics";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { KPIResult } from "@/lib/types";
@@ -22,6 +23,7 @@ export default function KpisPage() {
   return (
     <div>
       <div className="mb-6"><p className="label">Measure progress</p><h1 className="text-4xl font-black">KPI Dashboard</h1><p className="mt-2 text-slate-500">History and trends are stored on this browser. Use the same setup each time.</p></div>
+      <section className="card mb-6 border-2 border-cyan-200"><h2 className="text-xl font-black">Planned KPI Checkpoints</h2><div className="mt-4 space-y-3">{trainingPlan.days.filter((day) => day.kpiTestIds?.length).map((day) => <Link className="block rounded-2xl bg-ice p-4 hover:ring-2 hover:ring-blue" href={`/day/${day.date}`} key={day.date}><p className="label">{formatPlanDate(day.date)} · Week {day.weekNumber}</p><p className="font-black">{day.primarySession}</p><p className="mt-2 text-sm text-amber-900">{day.recoveryRule}</p></Link>)}</div></section>
       <div className="space-y-6">
         {kpis.map((kpi) => {
           const entries = results.filter((result) => result.kpiId === kpi.id);
