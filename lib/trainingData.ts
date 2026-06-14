@@ -49,6 +49,10 @@ export function getNextPlanDay(afterDate: string) {
   return trainingPlan.days.find((day) => day.date > afterDate);
 }
 
+export function getNextKpiDay(afterDate: string) {
+  return trainingPlan.days.find((day) => day.date > afterDate && Boolean(day.kpiTestIds?.length));
+}
+
 export function getNextScheduledDate(afterDate: string) {
   return getCalendarDates().find((date) => date > afterDate);
 }
@@ -99,7 +103,7 @@ export function getDayTags(date: string) {
   const loads = getExternalLoadsForDate(date);
   const tags = [...(day?.tags || [])];
   if (loads.some((load) => load.type === "hockey_camp")) tags.push("camp");
-  if (loads.some((load) => load.type === "on_ice")) tags.push("on-ice");
+  if (loads.some((load) => load.type === "on_ice" || load.type === "on_ice_4v4")) tags.push("on-ice");
   if (loads.some((load) => load.type === "tryout")) tags.push("tryout");
   if (loads.some((load) => load.type === "lacrosse_practice" || load.type === "lacrosse_game" || load.type === "lacrosse_playoff")) tags.push("lacrosse");
   if (day?.dayRole.toLowerCase().includes("recovery")) tags.push("recovery");

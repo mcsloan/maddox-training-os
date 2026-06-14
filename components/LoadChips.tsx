@@ -6,6 +6,7 @@ const loadStyles: Record<ExternalLoadType, string> = {
   lacrosse_playoff: "bg-fuchsia-200 text-fuchsia-900",
   hockey_camp: "bg-red-100 text-red-800",
   on_ice: "bg-blue-100 text-blue-800",
+  on_ice_4v4: "bg-sky-200 text-sky-900",
   tryout: "bg-amber-100 text-amber-900",
   other: "bg-slate-100 text-slate-700",
 };

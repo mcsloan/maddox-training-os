@@ -16,12 +16,12 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   const videos = getRelatedVideos(drills.map((drill) => drill.id));
   const tags = getDayTags(date);
   const intensity = Math.max(day?.intensity || 0, ...externalLoads.map((load) => load.plannedIntensity));
-  const externalLoadReplacesTraining = externalLoads.some((load) => load.type === "hockey_camp" || load.type === "tryout");
+  const externalLoadReplacesTraining = externalLoads.some((load) => load.type === "hockey_camp" || load.type === "tryout" || load.type === "on_ice_4v4" || load.type === "lacrosse_game" || load.type === "lacrosse_playoff");
   const plannedKpis = (day?.kpiTestIds || workout?.kpiTestIds || []).map((id) => kpis.find((kpi) => kpi.id === id)).filter((kpi) => Boolean(kpi));
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="mb-5 flex flex-wrap gap-3"><Link className="text-sm font-bold text-blue" href="/calendar">← Calendar</Link><Link className="text-sm font-bold text-blue" href="/plan">11-Week Plan</Link></div>
+      <div className="mb-5 flex flex-wrap gap-3"><Link className="text-sm font-bold text-blue" href="/calendar">← Calendar</Link><Link className="text-sm font-bold text-blue" href="/plan">12-Week Plan</Link></div>
       <section className="card bg-navy text-white">
         <p className="label text-lime">{day ? `Week ${day.weekNumber} · ${day.phase} · ${day.dayRole}` : "External load day"}</p>
         <h1 className="text-3xl font-black sm:text-5xl">{day?.primarySession || externalLoads[0]?.title}</h1>

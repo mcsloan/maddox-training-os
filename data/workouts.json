@@ -32,6 +32,22 @@
     "intensityLevel": 4
   },
   {
+    "id": "baseline-kpi-2026-06-16",
+    "date": "2026-06-16",
+    "phaseId": "phase-1",
+    "dayFocus": "Fresh Baseline KPI + speed mechanics",
+    "sessionType": "Baseline KPI checkpoint",
+    "totalEstimatedMinutes": 62,
+    "warmupDrillIds": ["dynamic-skate-warmup"],
+    "mainDrillIds": ["ten-yard-sprint", "quick-feet-5105", "stickhandle-box", "puck-control-weave", "target-shooting"],
+    "kpiTestIds": ["kpi-10-yard", "kpi-5105", "kpi-broad-jump", "kpi-head-up-callout", "kpi-puck-weave", "kpi-shot-accuracy", "kpi-quick-hands", "kpi-plank-quality"],
+    "recoveryNotes": "Use full recovery between attempts. Stop testing if sore, tired, or technique breaks.",
+    "parentCueId": "parent-cue-2",
+    "confidenceCue": "Beat your best cleanly. Clean technique beats ugly numbers.",
+    "campContext": "Fresh baseline checkpoint",
+    "intensityLevel": 3
+  },
+  {
     "id": "foundation-control-c",
     "date": "2026-06-17",
     "phaseId": "phase-1",

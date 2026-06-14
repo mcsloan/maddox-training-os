@@ -24,22 +24,22 @@
       "startDate": "2026-06-15",
       "endDate": "2026-06-21",
       "phase": "Foundation & Control",
-      "hardDays": "Monday",
-      "skillDays": "Wednesday and Friday",
-      "recoveryDays": "Tuesday, Thursday, weekend",
-      "objective": "Open the plan with controlled foundation work and establish readiness habits.",
-      "parentWatchOut": "Start smoothly and leave room for the final lacrosse week."
+      "hardDays": "Monday 4v4 hockey, Tuesday baseline KPI, Wednesday lacrosse game",
+      "skillDays": "Friday",
+      "recoveryDays": "Thursday and weekend",
+      "objective": "Launch with protected 4v4 hockey, establish a fresh baseline, and recover around the lacrosse game.",
+      "parentWatchOut": "Hockey and lacrosse are the hard work; protect the fresh Jun16 baseline and recovery."
     },
     {
       "weekNumber": 2,
       "startDate": "2026-06-22",
       "endDate": "2026-06-28",
       "phase": "Foundation & Control",
-      "hardDays": "Lacrosse practice Monday, game Wednesday, playoff games Saturday and Sunday",
+      "hardDays": "Monday 4v4 hockey, lacrosse game Wednesday, playoff games Saturday and Sunday",
       "skillDays": "Friday recovery-support skill only",
       "recoveryDays": "Tuesday, Thursday, and external-load protected weekend",
-      "objective": "Protect quality and recovery through the final lacrosse week and playoff weekend.",
-      "parentWatchOut": "No hard dryland after playoff games; move KPI to Jun29 if fresh.",
+      "objective": "Protect quality and recovery through 4v4 hockey, the final lacrosse game, and playoff weekend.",
+      "parentWatchOut": "No hard dryland after 4v4 or playoff games; move KPI to Jun29 if fresh.",
       "loadLabel": "High / Playoff",
       "loadLevel": 5,
       "tags": [
@@ -166,47 +166,87 @@
       "date": "2026-06-15",
       "weekNumber": 1,
       "phase": "Foundation & Control",
-      "dayRole": "Foundation opener",
-      "primarySession": "Foundation movement and head-up control",
-      "workoutId": "foundation-control-a",
+      "dayRole": "On-ice 4v4 + launch support",
+      "primarySession": "On-ice 4v4 plus mobility and optional light touches",
+      "workoutBlockIds": [
+        "MOB-15",
+        "SKL-HU10"
+      ],
+      "dailyMicroSkill": "Optional head-up touches only",
+      "shootingPuckDetail": "No baseline testing or fatigue shooting",
+      "recovery": "Fluids, recovery snack, light mobility, and early bed",
+      "durationMinutes": 15,
+      "intensity": 1,
+      "externalLoad": "4v4 Hockey — Two 22-Minute Games",
+      "parentCue": "Hockey is the work today. Log energy after and protect tomorrow's baseline.",
+      "doNotDo": "No KPI baseline after hockey; no hard dryland after 4v4.",
+      "recoveryRule": "External Load Protected",
+      "tags": [
+        "external-load-protected",
+        "on-ice"
+      ]
+    },
+    {
+      "date": "2026-06-16",
+      "weekNumber": 1,
+      "phase": "Foundation & Control",
+      "dayRole": "Fresh baseline KPI + speed mechanics",
+      "primarySession": "Baseline KPI testing + short speed mechanics + controlled shooting",
+      "workoutId": "baseline-kpi-2026-06-16",
       "workoutBlockIds": [
         "WUP-10",
+        "TEST",
         "SS-A",
-        "SKL-HU20",
+        "SHOT-50",
         "CD-8"
       ],
-      "dailyMicroSkill": "Scan before puck",
-      "shootingPuckDetail": "Smooth touches before speed",
-      "recovery": "Hydrate and easy evening movement",
-      "durationMinutes": 42,
+      "kpiTestIds": [
+        "kpi-10-yard",
+        "kpi-5105",
+        "kpi-broad-jump",
+        "kpi-head-up-callout",
+        "kpi-puck-weave",
+        "kpi-shot-accuracy",
+        "kpi-quick-hands",
+        "kpi-plank-quality"
+      ],
+      "dailyMicroSkill": "Fast, clean first steps",
+      "shootingPuckDetail": "Controlled 50-shot accuracy baseline",
+      "recovery": "Full recovery between attempts; finish fresh",
+      "durationMinutes": 62,
       "intensity": 3,
       "externalLoad": "",
-      "parentCue": "Start smooth and finish confident.",
-      "doNotDo": "Do not chase fatigue in the first plan session.",
-      "recoveryRule": "Stop while movement quality is strong."
+      "parentCue": "Create the scoreboard while fresh. Beat clean technique later.",
+      "doNotDo": "No ugly PRs; stop testing if sore, tired, or technique breaks.",
+      "recoveryRule": "Clean technique beats ugly numbers.",
+      "tags": [
+        "kpi",
+        "baseline"
+      ]
     },
     {
       "date": "2026-06-17",
       "weekNumber": 1,
       "phase": "Foundation & Control",
-      "dayRole": "Skill day",
-      "primarySession": "Puck control under light pressure",
-      "workoutId": "foundation-control-c",
+      "dayRole": "Lacrosse game + recovery support",
+      "primarySession": "Mobility and light puck touches around the lacrosse game",
       "workoutBlockIds": [
-        "WUP-10",
-        "SKL-HU20",
-        "SKL-DEKE",
-        "CD-8"
+        "MOB-20",
+        "SKL-HU10"
       ],
-      "dailyMicroSkill": "Shoulder check before receiving",
-      "shootingPuckDetail": "Soft hands through the weave",
-      "recovery": "Light stretch and full sleep",
-      "durationMinutes": 35,
-      "intensity": 3,
-      "externalLoad": "",
-      "parentCue": "Ask what felt smoother.",
-      "doNotDo": "Do not rush head-up reps.",
-      "recoveryRule": "Finish while technique is clean."
+      "dailyMicroSkill": "Optional light head-up touches",
+      "shootingPuckDetail": "No fatigue shooting",
+      "recovery": "Fluids, recovery snack, mobility, and full sleep",
+      "durationMinutes": 20,
+      "intensity": 1,
+      "externalLoad": "Lacrosse Game",
+      "parentCue": "Game is the hard work today.",
+      "doNotDo": "No hard dryland after game.",
+      "recoveryRule": "External Load Protected",
+      "tags": [
+        "external-load-protected",
+        "lacrosse"
+      ]
     },
     {
       "date": "2026-06-19",
@@ -235,47 +275,50 @@
       "date": "2026-06-22",
       "weekNumber": 2,
       "phase": "Foundation & Control",
-      "dayRole": "Lacrosse practice + adjusted training",
-      "primarySession": "Foundation movement and control",
-      "workoutId": "foundation-control-a",
+      "dayRole": "On-ice 4v4 + recovery support",
+      "primarySession": "On-ice 4v4 plus activation, mobility, and optional light skill",
       "workoutBlockIds": [
         "WUP-10",
-        "SS-A",
-        "SKL-HU20",
-        "CD-8"
+        "MOB-15",
+        "SKL-HU10"
       ],
-      "dailyMicroSkill": "Scan before touching the puck",
-      "shootingPuckDetail": "Head-up control before speed",
-      "recovery": "Hydrate and easy evening movement",
-      "durationMinutes": 42,
-      "intensity": 2,
-      "externalLoad": "",
-      "parentCue": "Lacrosse is the hard work today; keep off-ice quality easy.",
-      "doNotDo": "No extra hard conditioning after lacrosse practice.",
-      "recoveryRule": "Hydrate and adjust off-ice work if legs are heavy."
+      "dailyMicroSkill": "Optional light head-up touches",
+      "shootingPuckDetail": "No fatigue shooting",
+      "recovery": "Fluids, recovery snack, light mobility, and sleep priority",
+      "durationMinutes": 20,
+      "intensity": 1,
+      "externalLoad": "4v4 Hockey — Two 22-Minute Games",
+      "parentCue": "Hockey is the hard work today. Preserve the playoff week.",
+      "doNotDo": "No lacrosse practice; no hard dryland after 4v4.",
+      "recoveryRule": "External Load Protected",
+      "tags": [
+        "external-load-protected",
+        "on-ice"
+      ]
     },
     {
       "date": "2026-06-24",
       "weekNumber": 2,
       "phase": "Foundation & Control",
-      "dayRole": "Lacrosse game + adjusted skill",
-      "primarySession": "Puck control under light pressure",
-      "workoutId": "foundation-control-c",
+      "dayRole": "Final lacrosse game + recovery support",
+      "primarySession": "Mobility and light puck touches around the final lacrosse game",
       "workoutBlockIds": [
-        "WUP-10",
-        "SKL-HU20",
-        "SKL-DEKE",
-        "CD-8"
+        "MOB-20",
+        "SKL-HU10"
       ],
-      "dailyMicroSkill": "Shoulder check before receiving",
-      "shootingPuckDetail": "Soft hands through the weave",
-      "recovery": "Light stretch and full sleep",
-      "durationMinutes": 35,
-      "intensity": 2,
-      "externalLoad": "",
-      "parentCue": "The game is the hard work today; protect recovery.",
-      "doNotDo": "No extra hard dryland or conditioning after the game.",
-      "recoveryRule": "Use Thursday for recovery if needed."
+      "dailyMicroSkill": "Optional light head-up touches",
+      "shootingPuckDetail": "No fatigue shooting",
+      "recovery": "Hydrate, recover, and use Thursday as needed",
+      "durationMinutes": 20,
+      "intensity": 1,
+      "externalLoad": "Lacrosse Game - Final",
+      "parentCue": "The final lacrosse game is the hard work today; protect recovery.",
+      "doNotDo": "No hard dryland after game.",
+      "recoveryRule": "External Load Protected",
+      "tags": [
+        "external-load-protected",
+        "lacrosse"
+      ]
     },
     {
       "date": "2026-06-26",

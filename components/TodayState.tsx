@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ExternalLoadActions } from "@/components/ExternalLoadActions";
 import { ExternalLoadChip, PlanTagChip } from "@/components/LoadChips";
 import { TodayCard } from "@/components/TodayCard";
-import { formatPlanDate, getExternalLoadsForDate, getNextScheduledDate, getParentCue, getPhase, getPlanDay, getTodayWorkout, getWorkoutDrills, trainingPlan } from "@/lib/trainingData";
+import { formatPlanDate, getExternalLoadsForDate, getNextKpiDay, getNextScheduledDate, getParentCue, getPhase, getPlanDay, getTodayWorkout, getWorkoutDrills, trainingPlan } from "@/lib/trainingData";
 
 function localDate() {
   const now = new Date();
@@ -33,7 +33,7 @@ export function TodayState() {
     <div>
       {workout && <><TodayCard workout={workout} phase={getPhase(workout.phaseId)} parentCue={getParentCue(workout.parentCueId)} /><SessionMap workoutId={workout.id} /></>}
       {!workout && day && <section className="card"><p className="label">{day.dayRole}</p><h2 className="text-3xl font-black">{day.primarySession}</h2><p className="mt-3">{day.recovery}</p><p className="mt-3 font-semibold text-red-700">{day.doNotDo}</p><Link className="btn-secondary mt-5" href={`/day/${today}`}>Open Today&apos;s Plan</Link></section>}
-      {loads.length > 0 && <section className="card mt-6"><p className="label">External load today</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}</div><p className="mt-4 font-semibold text-red-700">{loads[0].doNotDoRule}</p><ExternalLoadActions loads={loads} /></section>}
+      {loads.length > 0 && <section className="card mt-6"><p className="label">External load today</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}</div><p className="mt-4 font-semibold text-red-700">{loads[0].doNotDoRule}</p><ExternalLoadActions loads={loads} /><NextKpiNotice afterDate={today} /></section>}
     </div>
   );
 }
@@ -46,7 +46,13 @@ function PrePlanState({ today }: { today: string }) {
 
 function ExternalOnlyState({ date }: { date: string }) {
   const loads = getExternalLoadsForDate(date);
-  return <section className="card"><p className="label">External Load Day</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}</div><h2 className="mt-4 text-3xl font-black">{loads[0].title}</h2><p className="mt-3 text-green-800"><strong>Recovery:</strong> {loads[0].recoveryRule}</p><p className="mt-3 text-red-700"><strong>Do not do:</strong> {loads[0].doNotDoRule}</p><ExternalLoadActions loads={loads} /><Link className="btn-secondary mt-4" href={`/day/${date}`}>Open Full Day</Link></section>;
+  return <section className="card"><p className="label">External Load Day</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}</div><h2 className="mt-4 text-3xl font-black">{loads[0].title}</h2><p className="mt-3 text-green-800"><strong>Recovery:</strong> {loads[0].recoveryRule}</p><p className="mt-3 text-red-700"><strong>Do not do:</strong> {loads[0].doNotDoRule}</p><ExternalLoadActions loads={loads} /><NextKpiNotice afterDate={date} /><Link className="btn-secondary mt-4" href={`/day/${date}`}>Open Full Day</Link></section>;
+}
+
+function NextKpiNotice({ afterDate }: { afterDate: string }) {
+  const nextKpiDay = getNextKpiDay(afterDate);
+  if (!nextKpiDay) return null;
+  return <div className="mt-5 rounded-2xl bg-cyan-50 p-4"><p className="label">Next KPI checkpoint · {formatPlanDate(nextKpiDay.date)}</p><p className="font-black">{nextKpiDay.primarySession}</p><Link className="mt-2 inline-block text-sm font-bold text-blue" href={`/day/${nextKpiDay.date}`}>Preview checkpoint →</Link></div>;
 }
 
 function NoSessionState({ nextDate }: { nextDate?: string }) {

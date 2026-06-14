@@ -125,7 +125,7 @@ export interface TrainingPlan {
   days: PlanDay[];
 }
 
-export type ExternalLoadType = "lacrosse_practice" | "lacrosse_game" | "lacrosse_playoff" | "hockey_camp" | "on_ice" | "tryout" | "other";
+export type ExternalLoadType = "lacrosse_practice" | "lacrosse_game" | "lacrosse_playoff" | "hockey_camp" | "on_ice" | "on_ice_4v4" | "tryout" | "other";
 
 export interface PlannedExternalLoad {
   id: string;
