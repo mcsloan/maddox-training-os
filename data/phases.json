@@ -1,0 +1,4 @@
+[
+  { "id": "phase-1", "name": "Foundation & Control", "goal": "Build clean movement patterns, puck control, and confidence.", "weeks": "Weeks 1-4" },
+  { "id": "phase-2", "name": "Speed & Decisions", "goal": "Add pace and game-like decisions.", "weeks": "Weeks 5-8" }
+]

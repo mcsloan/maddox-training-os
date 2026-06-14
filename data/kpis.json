@@ -1,0 +1,74 @@
+[
+  {
+    "id": "kpi-5105",
+    "name": "5-10-5 Agility Test",
+    "category": "Agility",
+    "instructions": ["Complete a full 5-10-5 shuttle.", "Record each timed attempt."],
+    "units": "seconds",
+    "attempts": 3,
+    "scoringMethod": "lowest",
+    "fields": [{ "id": "result", "label": "Time", "type": "number", "unit": "sec" }],
+    "coachingNotes": ["Use the same surface and setup each time."],
+    "safetyNotes": "Use a flat, non-slip surface."
+  },
+  {
+    "id": "kpi-10-yard",
+    "name": "10-Yard Sprint",
+    "category": "Speed",
+    "instructions": ["Sprint ten yards from a consistent start.", "Record each attempt."],
+    "units": "seconds",
+    "attempts": 3,
+    "scoringMethod": "lowest",
+    "fields": [{ "id": "result", "label": "Time", "type": "number", "unit": "sec" }],
+    "coachingNotes": ["Run through the finish."],
+    "safetyNotes": "Allow enough space to slow down."
+  },
+  {
+    "id": "kpi-broad-jump",
+    "name": "Broad Jump",
+    "category": "Power",
+    "instructions": ["Jump forward from two feet.", "Measure heel position on landing."],
+    "units": "centimeters",
+    "attempts": 3,
+    "scoringMethod": "highest",
+    "fields": [{ "id": "result", "label": "Distance", "type": "number", "unit": "cm" }],
+    "coachingNotes": ["Stick the landing."],
+    "safetyNotes": "Land on a clear, forgiving surface."
+  },
+  {
+    "id": "kpi-shot-accuracy",
+    "name": "50-Shot Accuracy",
+    "category": "Shooting",
+    "instructions": ["Take 50 shots at called targets.", "Record successful target hits."],
+    "units": "hits",
+    "attempts": 1,
+    "scoringMethod": "highest",
+    "fields": [{ "id": "result", "label": "Accurate shots", "type": "number", "unit": "/ 50" }],
+    "coachingNotes": ["Use the same distance each test."],
+    "safetyNotes": "Use a secured net or shooting tarp."
+  },
+  {
+    "id": "kpi-puck-weave",
+    "name": "Puck-Control Weave",
+    "category": "Puck Control",
+    "instructions": ["Weave through the same cone course.", "Record clean timed attempts."],
+    "units": "seconds",
+    "attempts": 3,
+    "scoringMethod": "lowest",
+    "fields": [{ "id": "result", "label": "Time", "type": "number", "unit": "sec" }],
+    "coachingNotes": ["Only count clean runs."],
+    "safetyNotes": "Keep the course clear."
+  },
+  {
+    "id": "kpi-head-up-callout",
+    "name": "Head-Up Callout Score",
+    "category": "Hockey IQ",
+    "instructions": ["Stickhandle for 45 seconds.", "Record correct visual callouts."],
+    "units": "correct callouts",
+    "attempts": 3,
+    "scoringMethod": "highest",
+    "fields": [{ "id": "result", "label": "Correct callouts", "type": "number", "unit": "score" }],
+    "coachingNotes": ["Keep callout pace consistent."],
+    "safetyNotes": "Use a clear training space."
+  }
+]

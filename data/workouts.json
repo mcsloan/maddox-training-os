@@ -1,0 +1,50 @@
+[
+  {
+    "id": "foundation-control-a",
+    "date": "2026-06-13",
+    "phaseId": "phase-1",
+    "dayFocus": "Head-up puck control and quick direction changes",
+    "sessionType": "Off-ice skill session",
+    "totalEstimatedMinutes": 42,
+    "warmupDrillIds": ["dynamic-skate-warmup"],
+    "mainDrillIds": ["stickhandle-box", "quick-feet-5105", "target-shooting", "recovery-mobility"],
+    "kpiTestIds": ["kpi-head-up-callout"],
+    "recoveryNotes": "Hydrate, eat a balanced snack, and aim for a calm evening.",
+    "parentCueId": "parent-cue-1",
+    "confidenceCue": "Smooth first. Speed follows.",
+    "campContext": "Foundation week",
+    "intensityLevel": 3
+  },
+  {
+    "id": "foundation-speed-b",
+    "date": "2026-06-15",
+    "phaseId": "phase-1",
+    "dayFocus": "Acceleration and accurate shooting",
+    "sessionType": "Off-ice performance",
+    "totalEstimatedMinutes": 38,
+    "warmupDrillIds": ["dynamic-skate-warmup"],
+    "mainDrillIds": ["quick-feet-5105", "target-shooting", "recovery-mobility"],
+    "kpiTestIds": ["kpi-10-yard", "kpi-shot-accuracy"],
+    "recoveryNotes": "Easy movement and hydration after training.",
+    "parentCueId": "parent-cue-2",
+    "confidenceCue": "Attack every rep with a clear plan.",
+    "campContext": "Foundation week",
+    "intensityLevel": 4
+  },
+  {
+    "id": "foundation-control-c",
+    "date": "2026-06-17",
+    "phaseId": "phase-1",
+    "dayFocus": "Puck control under light pressure",
+    "sessionType": "Skill session",
+    "totalEstimatedMinutes": 35,
+    "warmupDrillIds": ["dynamic-skate-warmup"],
+    "mainDrillIds": ["stickhandle-box", "target-shooting", "recovery-mobility"],
+    "kpiTestIds": ["kpi-puck-weave"],
+    "recoveryNotes": "Light stretch and a full night of sleep.",
+    "parentCueId": "parent-cue-3",
+    "confidenceCue": "See it, decide, execute.",
+    "campContext": "Foundation week",
+    "intensityLevel": 3
+  }
+]

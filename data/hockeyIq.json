@@ -1,0 +1,4 @@
+[
+  { "id": "iq-scan-1", "name": "Scan before receiving", "habit": "Check both shoulders before the puck arrives.", "sourceTag": "phase-1-mock" },
+  { "id": "iq-middle-1", "name": "Protect the middle", "habit": "Defend from inside to outside.", "sourceTag": "phase-1-mock" }
+]
