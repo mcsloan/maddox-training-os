@@ -113,9 +113,9 @@ The optional `npm run vercel:build` script runs the same production build comman
 
 ### Build Badge
 
-The shared app header displays a small build badge with the `package.json` version, short git commit SHA, and deployment environment. Local builds fall back to `local` for the commit and environment.
+The shared app header displays a small build badge with the `package.json` version, short git commit SHA, and deployment environment. The `dev` and `build` scripts automatically read the current local Git short SHA; if Git metadata is unavailable, the commit falls back to `local`. The local environment label remains `local`.
 
-Vercel deployments use `NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA` and `NEXT_PUBLIC_VERCEL_ENV` when available. In the Vercel project settings, enable automatically exposed system environment variables if these values do not appear in the deployed badge. These variables are public deployment metadata and must not contain secrets.
+Vercel deployments prefer `NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA` and `NEXT_PUBLIC_VERCEL_ENV` when available. In the Vercel project settings, enable automatically exposed system environment variables if these values do not appear in the deployed badge. These variables are public deployment metadata and must not contain secrets.
 
 ## Important: Phase 1 Data Storage
 
