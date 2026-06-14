@@ -7,7 +7,7 @@ import { ParentDashboardCard } from "@/components/ParentDashboardCard";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
-import { getCurrentPlanWeek, getWeekExternalLoads, getWeekLoadLabel, kpis, trainingPlan, workouts } from "@/lib/trainingData";
+import { getCurrentPlanWeek, getWeekExternalLoads, getWeekLoadLabel, getWeekPlanSummary, kpis, trainingPlan, workouts } from "@/lib/trainingData";
 import { kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
 import { ExternalLoadLog, KPIResult, SessionLog } from "@/lib/types";
 
@@ -42,11 +42,7 @@ export default function DashboardPage() {
   const currentPlanWeek = getCurrentPlanWeek();
   const currentWeekDays = trainingPlan.days.filter((day) => day.weekNumber === currentPlanWeek.weekNumber);
   const currentWeekLoads = getWeekExternalLoads(currentPlanWeek);
-  const recoveryDays = currentWeekDays.filter((day) => day.dayRole.toLowerCase().includes("recovery")).length;
-  const highLoadDates = new Set([
-    ...currentWeekDays.filter((day) => day.intensity >= 4).map((day) => day.date),
-    ...currentWeekLoads.filter((load) => load.plannedIntensity >= 4).map((load) => load.date),
-  ]).size;
+  const weekSummary = getWeekPlanSummary(currentPlanWeek);
   const loadWarnings = currentWeekLoads.map((load) => `${load.title}: ${load.doNotDoRule}`);
   const currentWeekExternalIds = new Set(currentWeekLoads.map((load) => load.id));
   const currentWeekExternalLogs = externalLogs.filter((log) => currentWeekExternalIds.has(log.externalLoadId));
@@ -64,12 +60,13 @@ export default function DashboardPage() {
       <DataStatus mode={dataMode} warning={warning} />
       <section className="card mb-6">
         <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">Current plan week · Week {currentPlanWeek.weekNumber}</p><h2 className="text-2xl font-black">{getWeekLoadLabel(currentPlanWeek.weekNumber)}</h2></div><Link className="text-sm font-bold text-blue" href={`/calendar#week-${currentPlanWeek.weekNumber}`}>Open week</Link></div>
+        <div className="mt-4 rounded-2xl bg-ice p-4"><div className="flex justify-between gap-3 text-sm font-black"><span>Planned load meter</span><span>{weekSummary.loadLevel}/5</span></div><div className="mt-2 h-3 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-blue" style={{ width: `${weekSummary.loadLevel * 20}%` }} /></div><p className="mt-3 text-sm font-semibold text-amber-900"><strong>Parent watch-out:</strong> {currentPlanWeek.parentWatchOut}</p></div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <ParentDashboardCard label="Training sessions" value={`${currentWeekDays.length}`} detail="Planned off-ice days" />
-          <ParentDashboardCard label="External loads" value={`${currentWeekLoads.length}`} detail="Camp, ice, lacrosse, or tryout" />
-          <ParentDashboardCard label="Recovery days" value={`${recoveryDays}`} detail="Explicit recovery-focused days" />
-          <ParentDashboardCard label="High-load days" value={`${highLoadDates}`} detail="Intensity 4-5 load dates" />
-          <ParentDashboardCard label="KPI checkpoints" value={`${currentWeekKpiDays.length}`} detail={currentWeekKpiDays[0]?.primarySession || "None planned this week"} />
+          <ParentDashboardCard label="Training days" value={`${weekSummary.trainingDays}`} detail="Startable planned sessions" />
+          <ParentDashboardCard label="External load days" value={`${weekSummary.externalLoadDays}`} detail="Camp, ice, lacrosse, or tryout" />
+          <ParentDashboardCard label="Recovery / protected" value={`${weekSummary.recoveryProtectedDays}`} detail="Explicit protected plan days" />
+          <ParentDashboardCard label="High-load days" value={`${weekSummary.highLoadDays}`} detail="Intensity 4-5 load dates" />
+          <ParentDashboardCard label="KPI days" value={`${currentWeekKpiDays.length}`} detail={currentWeekKpiDays[0]?.primarySession || "None planned this week"} />
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <ParentDashboardCard label="Logged external" value={`${currentWeekExternalLogs.length} / ${currentWeekLoads.length}`} detail="Latest log per planned event" />

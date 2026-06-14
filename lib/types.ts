@@ -57,6 +57,9 @@ export interface KPI {
   fields: KPIField[];
   coachingNotes: string[];
   safetyNotes: string;
+  targetValue?: number;
+  targetLabel?: string;
+  motivationalCue?: string;
 }
 
 export interface Phase {
@@ -92,6 +95,16 @@ export interface PlanWeek {
   loadLabel?: string;
   loadLevel?: Rating;
   tags?: string[];
+}
+
+export interface WeekPlanSummary {
+  trainingDays: number;
+  externalLoadDays: number;
+  kpiDays: number;
+  recoveryProtectedDays: number;
+  highLoadDays: number;
+  loadLevel: Rating;
+  loadEmphasis: string;
 }
 
 export interface PlanDay {

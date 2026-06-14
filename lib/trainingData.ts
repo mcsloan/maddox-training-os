@@ -9,7 +9,7 @@ import phasesJson from "@/data/phases.json";
 import videosJson from "@/data/videos.json";
 import workoutBlocksJson from "@/data/workoutBlocks.json";
 import workoutsJson from "@/data/workouts.json";
-import { Drill, EquipmentSetup, KPI, LoadRule, ParentCue, Phase, PlannedExternalLoad, PlanWeek, TrainingPlan, VideoReference, Workout, WorkoutBlock } from "@/lib/types";
+import { Drill, EquipmentSetup, KPI, LoadRule, ParentCue, Phase, PlannedExternalLoad, PlanWeek, TrainingPlan, VideoReference, WeekPlanSummary, Workout, WorkoutBlock } from "@/lib/types";
 
 export const drills = drillsJson as Drill[];
 export const workouts = workoutsJson as Workout[];
@@ -84,7 +84,7 @@ export function getWeekLoadLabel(weekNumber: number) {
     7: "Deload / Consolidation",
     8: "Carleton Camp Load",
     9: "Phase 3 Game-Speed Dominance",
-    10: "Deload / Consolidation",
+    10: "Game-Speed / Peak Consolidation",
     11: "Sensplex Camp Load",
     12: "Tryout Taper",
   };
@@ -96,6 +96,28 @@ export function getWeekLoadLevel(week: PlanWeek) {
   if (loads.some((load) => load.plannedIntensity === 5)) return 5;
   if (week.weekNumber === 7 || week.weekNumber === 10 || week.weekNumber === 12) return 2;
   return 4;
+}
+
+export function getWeekPlanSummary(week: PlanWeek): WeekPlanSummary {
+  const days = trainingPlan.days.filter((day) => day.weekNumber === week.weekNumber);
+  const loads = getWeekExternalLoads(week);
+  const recoveryProtectedDates = new Set(days.filter((day) =>
+    day.tags?.some((tag) => tag === "external-load-protected" || tag === "recovery")
+    || day.dayRole.toLowerCase().includes("recovery"),
+  ).map((day) => day.date));
+  const highLoadDates = new Set([
+    ...days.filter((day) => day.intensity >= 4).map((day) => day.date),
+    ...loads.filter((load) => load.plannedIntensity >= 4).map((load) => load.date),
+  ]);
+  return {
+    trainingDays: days.filter((day) => Boolean(day.workoutId)).length,
+    externalLoadDays: new Set(loads.map((load) => load.date)).size,
+    kpiDays: days.filter((day) => Boolean(day.kpiTestIds?.length)).length,
+    recoveryProtectedDays: recoveryProtectedDates.size,
+    highLoadDays: highLoadDates.size,
+    loadLevel: getWeekLoadLevel(week),
+    loadEmphasis: getWeekLoadLabel(week.weekNumber),
+  };
 }
 
 export function getDayTags(date: string) {

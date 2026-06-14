@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { KPIEntryForm } from "@/components/KPIEntryForm";
 import Link from "next/link";
 import { formatPlanDate, kpis, trainingPlan } from "@/lib/trainingData";
-import { kpiBest, kpiTrend } from "@/lib/trainingMetrics";
+import { kpiBaseline, kpiBest, kpiTargetProgress, kpiTrend } from "@/lib/trainingMetrics";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { KPIResult } from "@/lib/types";
 
@@ -24,21 +24,38 @@ export default function KpisPage() {
     <div>
       <div className="mb-6"><p className="label">Measure progress</p><h1 className="text-4xl font-black">KPI Dashboard</h1><p className="mt-2 text-slate-500">History and trends are stored on this browser. Use the same setup each time.</p></div>
       <section className="card mb-6 border-2 border-cyan-200"><h2 className="text-xl font-black">Planned KPI Checkpoints</h2><div className="mt-4 rounded-2xl bg-cyan-50 p-4 text-sm"><p className="font-black">Beat your best cleanly.</p><p>Clean technique beats ugly numbers.</p><p className="font-semibold text-red-700">Do not test hard if sore, sick, tired, or low energy.</p></div><div className="mt-4 space-y-3">{trainingPlan.days.filter((day) => day.kpiTestIds?.length).map((day) => <Link className="block rounded-2xl bg-ice p-4 hover:ring-2 hover:ring-blue" href={`/day/${day.date}`} key={day.date}><p className="label">{formatPlanDate(day.date)} · Week {day.weekNumber}</p><p className="font-black">{day.primarySession}</p><p className="mt-2 text-sm text-amber-900">{day.recoveryRule}</p></Link>)}</div></section>
+      <section className="card mb-6">
+        <p className="label">Plan vs actual</p><h2 className="text-2xl font-black">Offseason KPI Scoreboard</h2>
+        <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[760px] text-left text-sm"><thead><tr className="border-b border-rink"><th className="p-2">KPI</th><th className="p-2">Direction</th><th className="p-2">Baseline</th><th className="p-2">Current best</th><th className="p-2">Target</th><th className="p-2">Next test</th><th className="p-2">Progress</th></tr></thead><tbody>{kpis.map((kpi) => {
+          const entries = results.filter((result) => result.kpiId === kpi.id);
+          const baseline = kpiBaseline(entries);
+          const best = kpiBest(kpi, entries);
+          const progress = kpiTargetProgress(kpi, baseline, best);
+          const nextTest = trainingPlan.days.find((day) => day.date >= new Date().toISOString().slice(0, 10) && day.kpiTestIds?.includes(kpi.id));
+          return <tr className="border-b border-rink/70" key={kpi.id}><td className="p-2 font-black">{kpi.name}</td><td className="p-2">{kpi.scoringMethod === "lowest" ? "Lower is better" : "Higher is better"}</td><td className="p-2">{valueLabel(baseline, kpi.units)}</td><td className="p-2">{valueLabel(best, kpi.units)}</td><td className="p-2">{valueLabel(kpi.targetValue ?? null, kpi.units)}</td><td className="p-2">{nextTest ? formatPlanDate(nextTest.date) : "No future test"}</td><td className="p-2"><ProgressBar progress={progress} /></td></tr>;
+        })}</tbody></table></div>
+      </section>
       <div className="space-y-6">
         {kpis.map((kpi) => {
           const entries = results.filter((result) => result.kpiId === kpi.id);
           const recent = entries[0];
+          const baseline = kpiBaseline(entries);
           const best = kpiBest(kpi, entries);
           const trend = kpiTrend(kpi, entries);
+          const progress = kpiTargetProgress(kpi, baseline, best);
+          const nextTest = trainingPlan.days.find((day) => day.date >= new Date().toISOString().slice(0, 10) && day.kpiTestIds?.includes(kpi.id));
           return (
             <article className="card" key={kpi.id}>
-              <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{kpi.category}</p><h2 className="text-2xl font-black">{kpi.name}</h2></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black">{entries.length} entries</span></div>
-              <div className="mt-4 grid grid-cols-2 gap-2 rounded-2xl bg-navy p-4 text-white sm:grid-cols-4">
+              <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{kpi.category} · {kpi.scoringMethod === "lowest" ? "Lower is better" : "Higher is better"}</p><h2 className="text-2xl font-black">{kpi.name}</h2><p className="mt-1 text-sm font-semibold text-blue">{kpi.motivationalCue}</p></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black">{entries.length} entries</span></div>
+              <div className="mt-4 grid grid-cols-2 gap-2 rounded-2xl bg-navy p-4 text-white sm:grid-cols-3 lg:grid-cols-6">
+                <div><p className="label text-slate-300">Baseline</p><p className="font-black">{baseline ?? "—"}</p></div>
                 <div><p className="label text-slate-300">Recent</p><p className="font-black">{recent?.bestResult ?? "—"}</p></div>
                 <div><p className="label text-slate-300">Best</p><p className="font-black">{best ?? "—"}</p></div>
+                <div><p className="label text-slate-300">Target</p><p className="font-black">{kpi.targetValue ?? "Set later"}</p></div>
                 <div><p className="label text-slate-300">Trend</p><p className="font-black">{trend}</p></div>
-                <div><p className="label text-slate-300">Units</p><p className="font-black">{kpi.units}</p></div>
+                <div><p className="label text-slate-300">Next test</p><p className="font-black">{nextTest ? formatPlanDate(nextTest.date, { month: "short", day: "numeric" }) : "—"}</p></div>
               </div>
+              <div className="mt-4 rounded-2xl bg-cyan-50 p-4"><div className="flex justify-between gap-3 text-sm font-bold"><span>Baseline-to-target progress</span><span>{progress}%</span></div><ProgressBar progress={progress} /><p className="mt-2 text-xs text-slate-600">{kpi.targetLabel}. Target values are planning settings and can be adjusted without changing historical results.</p></div>
               <details><summary className="mt-4 cursor-pointer font-bold text-blue">Add a new KPI result</summary><KPIEntryForm kpi={kpi} onSaved={refresh} /></details>
               <div className="mt-5 overflow-x-auto">
                 <table className="w-full min-w-[620px] text-left text-sm"><thead><tr className="border-b border-rink"><th className="p-2">Date/time</th><th className="p-2">Best</th><th className="p-2">Attempts</th><th className="p-2">Notes</th><th className="p-2">Actions</th></tr></thead><tbody>
@@ -53,4 +70,12 @@ export default function KpisPage() {
       </div>
     </div>
   );
+}
+
+function valueLabel(value: number | null, units: string) {
+  return value === null ? "—" : `${value} ${units}`;
+}
+
+function ProgressBar({ progress }: { progress: number }) {
+  return <div className="mt-1 h-2 min-w-24 overflow-hidden rounded-full bg-slate-200" aria-label={`${progress}% toward target`}><div className="h-full rounded-full bg-cyan-600" style={{ width: `${progress}%` }} /></div>;
 }

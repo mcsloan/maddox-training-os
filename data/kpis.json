@@ -9,7 +9,10 @@
     "scoringMethod": "lowest",
     "fields": [{ "id": "result", "label": "Time", "type": "number", "unit": "sec" }],
     "coachingNotes": ["Use the same surface and setup each time."],
-    "safetyNotes": "Use a flat, non-slip surface."
+    "safetyNotes": "Use a flat, non-slip surface.",
+    "targetValue": 5.5,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "Fast feet and clean turns."
   },
   {
     "id": "kpi-10-yard",
@@ -21,7 +24,10 @@
     "scoringMethod": "lowest",
     "fields": [{ "id": "result", "label": "Time", "type": "number", "unit": "sec" }],
     "coachingNotes": ["Run through the finish."],
-    "safetyNotes": "Allow enough space to slow down."
+    "safetyNotes": "Allow enough space to slow down.",
+    "targetValue": 2,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "Win the first three steps cleanly."
   },
   {
     "id": "kpi-broad-jump",
@@ -33,7 +39,10 @@
     "scoringMethod": "highest",
     "fields": [{ "id": "result", "label": "Distance", "type": "number", "unit": "cm" }],
     "coachingNotes": ["Stick the landing."],
-    "safetyNotes": "Land on a clear, forgiving surface."
+    "safetyNotes": "Land on a clear, forgiving surface.",
+    "targetValue": 150,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "Jump strong and stick the landing."
   },
   {
     "id": "kpi-shot-accuracy",
@@ -45,7 +54,10 @@
     "scoringMethod": "highest",
     "fields": [{ "id": "result", "label": "Accurate shots", "type": "number", "unit": "/ 50" }],
     "coachingNotes": ["Use the same distance each test."],
-    "safetyNotes": "Use a secured net or shooting tarp."
+    "safetyNotes": "Use a secured net or shooting tarp.",
+    "targetValue": 30,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "Pick the target before the release."
   },
   {
     "id": "kpi-puck-weave",
@@ -57,7 +69,10 @@
     "scoringMethod": "lowest",
     "fields": [{ "id": "result", "label": "Time", "type": "number", "unit": "sec" }],
     "coachingNotes": ["Only count clean runs."],
-    "safetyNotes": "Keep the course clear."
+    "safetyNotes": "Keep the course clear.",
+    "targetValue": 12,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "Clean control makes speed count."
   },
   {
     "id": "kpi-head-up-callout",
@@ -69,7 +84,10 @@
     "scoringMethod": "highest",
     "fields": [{ "id": "result", "label": "Correct callouts", "type": "number", "unit": "%" }],
     "coachingNotes": ["Keep callout pace consistent."],
-    "safetyNotes": "Use a clear training space."
+    "safetyNotes": "Use a clear training space.",
+    "targetValue": 85,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "See the cue without losing the puck."
   },
   {
     "id": "kpi-quick-hands",
@@ -81,7 +99,10 @@
     "scoringMethod": "highest",
     "fields": [{ "id": "result", "label": "Clean touches", "type": "number", "unit": "touches"}],
     "coachingNotes": ["Use the same puck or ball and stance each time."],
-    "safetyNotes": "Use a clear stick-safe area."
+    "safetyNotes": "Use a clear stick-safe area.",
+    "targetValue": 100,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "Quick hands stay controlled."
   },
   {
     "id": "kpi-plank-quality",
@@ -93,6 +114,9 @@
     "scoringMethod": "highest",
     "fields": [{ "id": "result", "label": "Quality hold", "type": "number", "unit": "sec"}],
     "coachingNotes": ["Quality matters more than maximum time."],
-    "safetyNotes": "Stop for back, shoulder, or wrist pain."
+    "safetyNotes": "Stop for back, shoulder, or wrist pain.",
+    "targetValue": 60,
+    "targetLabel": "Adjustable offseason target",
+    "motivationalCue": "Quality position beats extra seconds."
   }
 ]

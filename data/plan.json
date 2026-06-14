@@ -23,7 +23,7 @@
       "weekNumber": 1,
       "startDate": "2026-06-15",
       "endDate": "2026-06-21",
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "hardDays": "Monday 4v4 hockey, Tuesday baseline KPI, Wednesday lacrosse game",
       "skillDays": "Friday",
       "recoveryDays": "Thursday and weekend",
@@ -34,7 +34,7 @@
       "weekNumber": 2,
       "startDate": "2026-06-22",
       "endDate": "2026-06-28",
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "hardDays": "Monday 4v4 hockey, lacrosse game Wednesday, playoff games Saturday and Sunday",
       "skillDays": "Friday recovery-support skill only",
       "recoveryDays": "Tuesday, Thursday, and external-load protected weekend",
@@ -51,7 +51,7 @@
       "weekNumber": 3,
       "startDate": "2026-06-29",
       "endDate": "2026-07-05",
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "hardDays": "Monday and Friday",
       "skillDays": "Wednesday",
       "recoveryDays": "Tuesday, Thursday, Sunday",
@@ -65,7 +65,7 @@
       "weekNumber": 4,
       "startDate": "2026-07-06",
       "endDate": "2026-07-12",
-      "phase": "Foundation & Control",
+      "phase": "Foundation / Chase Hull Camp",
       "hardDays": "Monday",
       "skillDays": "Wednesday and Friday",
       "recoveryDays": "Around external hockey",
@@ -76,7 +76,7 @@
       "weekNumber": 5,
       "startDate": "2026-07-13",
       "endDate": "2026-07-19",
-      "phase": "Foundation & Control",
+      "phase": "Speed + Power",
       "hardDays": "Monday and Friday",
       "skillDays": "Wednesday",
       "recoveryDays": "Tuesday, Thursday, Sunday",
@@ -87,7 +87,7 @@
       "weekNumber": 6,
       "startDate": "2026-07-20",
       "endDate": "2026-07-26",
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power",
       "hardDays": "Monday and Friday",
       "skillDays": "Wednesday",
       "recoveryDays": "Tuesday, Thursday, Sunday",
@@ -98,7 +98,7 @@
       "weekNumber": 7,
       "startDate": "2026-07-27",
       "endDate": "2026-08-02",
-      "phase": "Speed & Decisions",
+      "phase": "Deload / Consolidation",
       "hardDays": "Monday",
       "skillDays": "Wednesday and Friday",
       "recoveryDays": "Around external hockey",
@@ -109,7 +109,7 @@
       "weekNumber": 8,
       "startDate": "2026-08-03",
       "endDate": "2026-08-09",
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power / Carleton Camp",
       "hardDays": "Monday and Friday",
       "skillDays": "Wednesday",
       "recoveryDays": "Tuesday, Thursday, Sunday",
@@ -120,7 +120,7 @@
       "weekNumber": 9,
       "startDate": "2026-08-10",
       "endDate": "2026-08-16",
-      "phase": "Game Speed",
+      "phase": "Game-Speed",
       "hardDays": "Monday and Friday",
       "skillDays": "Wednesday",
       "recoveryDays": "Tuesday, Thursday, Sunday",
@@ -131,7 +131,7 @@
       "weekNumber": 10,
       "startDate": "2026-08-17",
       "endDate": "2026-08-23",
-      "phase": "Game Speed",
+      "phase": "Game-Speed / Peak Tryout Prep",
       "hardDays": "Monday",
       "skillDays": "Wednesday and Friday",
       "recoveryDays": "Around external hockey",
@@ -142,7 +142,7 @@
       "weekNumber": 11,
       "startDate": "2026-08-24",
       "endDate": "2026-08-30",
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Sensplex Camp",
       "hardDays": "Monday",
       "skillDays": "Wednesday and Friday",
       "recoveryDays": "Tuesday, Thursday, weekend",
@@ -153,7 +153,7 @@
       "weekNumber": 12,
       "startDate": "2026-08-31",
       "endDate": "2026-09-06",
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Tryout Prep",
       "hardDays": "Early week only",
       "skillDays": "Short primers",
       "recoveryDays": "Most days",
@@ -165,7 +165,7 @@
     {
       "date": "2026-06-15",
       "weekNumber": 1,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "On-ice 4v4 + launch support",
       "primarySession": "On-ice 4v4 plus mobility and optional light touches",
       "workoutBlockIds": [
@@ -189,7 +189,7 @@
     {
       "date": "2026-06-16",
       "weekNumber": 1,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Fresh baseline KPI + speed mechanics",
       "primarySession": "Baseline KPI testing + short speed mechanics + controlled shooting",
       "workoutId": "baseline-kpi-2026-06-16",
@@ -227,7 +227,7 @@
     {
       "date": "2026-06-17",
       "weekNumber": 1,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Lacrosse game + recovery support",
       "primarySession": "Mobility and light puck touches around the lacrosse game",
       "workoutBlockIds": [
@@ -251,7 +251,7 @@
     {
       "date": "2026-06-19",
       "weekNumber": 1,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Skill day",
       "primarySession": "Acceleration and accurate shooting",
       "workoutId": "foundation-speed-b",
@@ -274,7 +274,7 @@
     {
       "date": "2026-06-22",
       "weekNumber": 2,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "On-ice 4v4 + recovery support",
       "primarySession": "On-ice 4v4 plus activation, mobility, and optional light skill",
       "workoutBlockIds": [
@@ -299,7 +299,7 @@
     {
       "date": "2026-06-24",
       "weekNumber": 2,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Final lacrosse game + recovery support",
       "primarySession": "Mobility and light puck touches around the final lacrosse game",
       "workoutBlockIds": [
@@ -323,7 +323,7 @@
     {
       "date": "2026-06-26",
       "weekNumber": 2,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Skill day",
       "primarySession": "Acceleration and accurate shooting",
       "workoutId": "foundation-speed-b",
@@ -346,7 +346,7 @@
     {
       "date": "2026-06-27",
       "weekNumber": 2,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Playoff external load + recovery support",
       "primarySession": "Mobility and optional light puck touches",
       "workoutBlockIds": [
@@ -370,7 +370,7 @@
     {
       "date": "2026-06-28",
       "weekNumber": 2,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Playoff external load + recovery / KPI moved",
       "primarySession": "Recovery only; optional light stickhandling if fresh",
       "workoutBlockIds": [
@@ -395,7 +395,7 @@
     {
       "date": "2026-06-29",
       "weekNumber": 3,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "KPI checkpoint",
       "primarySession": "Week 2 Retest / Post-Playoffs Confidence Marker",
       "workoutId": "post-playoff-kpi-retest",
@@ -431,7 +431,7 @@
     {
       "date": "2026-06-30",
       "weekNumber": 3,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Optional KPI technique check",
       "primarySession": "KPI Technique Check if Jun29 is missed or body is not ready",
       "workoutBlockIds": [
@@ -466,7 +466,7 @@
     {
       "date": "2026-07-01",
       "weekNumber": 3,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Skill day",
       "primarySession": "Head-up control",
       "workoutId": "foundation-control-a",
@@ -489,7 +489,7 @@
     {
       "date": "2026-07-03",
       "weekNumber": 3,
-      "phase": "Foundation & Control",
+      "phase": "Foundation",
       "dayRole": "Hard day",
       "primarySession": "Shooting and direction change",
       "workoutId": "foundation-speed-b",
@@ -512,7 +512,7 @@
     {
       "date": "2026-07-06",
       "weekNumber": 4,
-      "phase": "Foundation & Control",
+      "phase": "Foundation / Chase Hull Camp",
       "dayRole": "Adjusted hard day",
       "primarySession": "Short quality foundation session",
       "workoutId": "foundation-control-a",
@@ -535,7 +535,7 @@
     {
       "date": "2026-07-08",
       "weekNumber": 4,
-      "phase": "Foundation & Control",
+      "phase": "Foundation / Chase Hull Camp",
       "dayRole": "Skill day",
       "primarySession": "Puck-control quality",
       "workoutId": "foundation-control-c",
@@ -558,7 +558,7 @@
     {
       "date": "2026-07-10",
       "weekNumber": 4,
-      "phase": "Foundation & Control",
+      "phase": "Foundation / Chase Hull Camp",
       "dayRole": "Recovery skill",
       "primarySession": "Mobility and light touches",
       "workoutId": "foundation-control-c",
@@ -580,7 +580,7 @@
     {
       "date": "2026-07-13",
       "weekNumber": 5,
-      "phase": "Foundation & Control",
+      "phase": "Speed + Power",
       "dayRole": "Hard day",
       "primarySession": "Foundation benchmark preparation",
       "workoutId": "foundation-speed-b",
@@ -603,7 +603,7 @@
     {
       "date": "2026-07-15",
       "weekNumber": 5,
-      "phase": "Foundation & Control",
+      "phase": "Speed + Power",
       "dayRole": "Skill day",
       "primarySession": "Control and confidence",
       "workoutId": "foundation-control-a",
@@ -626,7 +626,7 @@
     {
       "date": "2026-07-17",
       "weekNumber": 5,
-      "phase": "Foundation & Control",
+      "phase": "Speed + Power",
       "dayRole": "Testing day",
       "primarySession": "Foundation KPI check",
       "workoutId": "foundation-speed-b",
@@ -648,7 +648,7 @@
     {
       "date": "2026-07-20",
       "weekNumber": 6,
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power",
       "dayRole": "Hard day",
       "primarySession": "Reaction speed and decisions",
       "workoutId": "foundation-speed-b",
@@ -671,7 +671,7 @@
     {
       "date": "2026-07-22",
       "weekNumber": 6,
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power",
       "dayRole": "Skill day",
       "primarySession": "Head-up decision skill",
       "workoutId": "foundation-control-a",
@@ -694,7 +694,7 @@
     {
       "date": "2026-07-24",
       "weekNumber": 6,
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power",
       "dayRole": "Hard day",
       "primarySession": "Fast shift conditioning",
       "workoutId": "foundation-speed-b",
@@ -717,7 +717,7 @@
     {
       "date": "2026-07-27",
       "weekNumber": 7,
-      "phase": "Speed & Decisions",
+      "phase": "Deload / Consolidation",
       "dayRole": "Adjusted hard day",
       "primarySession": "Short speed maintenance",
       "workoutId": "foundation-speed-b",
@@ -739,7 +739,7 @@
     {
       "date": "2026-07-29",
       "weekNumber": 7,
-      "phase": "Speed & Decisions",
+      "phase": "Deload / Consolidation",
       "dayRole": "Skill day",
       "primarySession": "Light decision touches",
       "workoutId": "foundation-control-c",
@@ -761,7 +761,7 @@
     {
       "date": "2026-07-31",
       "weekNumber": 7,
-      "phase": "Speed & Decisions",
+      "phase": "Deload / Consolidation",
       "dayRole": "Recovery skill",
       "primarySession": "Post-camp recovery",
       "workoutId": "foundation-control-c",
@@ -783,7 +783,7 @@
     {
       "date": "2026-08-03",
       "weekNumber": 8,
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power / Carleton Camp",
       "dayRole": "Hard day",
       "primarySession": "Speed into puck control",
       "workoutId": "foundation-control-a",
@@ -806,7 +806,7 @@
     {
       "date": "2026-08-05",
       "weekNumber": 8,
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power / Carleton Camp",
       "dayRole": "Skill day",
       "primarySession": "Deke and escape decisions",
       "workoutId": "foundation-control-c",
@@ -829,7 +829,7 @@
     {
       "date": "2026-08-07",
       "weekNumber": 8,
-      "phase": "Speed & Decisions",
+      "phase": "Speed + Power / Carleton Camp",
       "dayRole": "Hard day",
       "primarySession": "Fast shooting decisions",
       "workoutId": "foundation-speed-b",
@@ -852,7 +852,7 @@
     {
       "date": "2026-08-10",
       "weekNumber": 9,
-      "phase": "Game Speed",
+      "phase": "Game-Speed",
       "dayRole": "Hard day",
       "primarySession": "Game-speed shift work",
       "workoutId": "foundation-speed-b",
@@ -876,7 +876,7 @@
     {
       "date": "2026-08-12",
       "weekNumber": 9,
-      "phase": "Game Speed",
+      "phase": "Game-Speed",
       "dayRole": "Skill day",
       "primarySession": "Game-speed puck decisions",
       "workoutId": "foundation-control-a",
@@ -899,7 +899,7 @@
     {
       "date": "2026-08-14",
       "weekNumber": 9,
-      "phase": "Game Speed",
+      "phase": "Game-Speed",
       "dayRole": "Hard day",
       "primarySession": "Compete and execute",
       "workoutId": "foundation-speed-b",
@@ -922,7 +922,7 @@
     {
       "date": "2026-08-17",
       "weekNumber": 10,
-      "phase": "Game Speed",
+      "phase": "Game-Speed / Peak Tryout Prep",
       "dayRole": "Adjusted hard day",
       "primarySession": "Short game-speed maintenance",
       "workoutId": "foundation-speed-b",
@@ -945,7 +945,7 @@
     {
       "date": "2026-08-19",
       "weekNumber": 10,
-      "phase": "Game Speed",
+      "phase": "Game-Speed / Peak Tryout Prep",
       "dayRole": "Skill day",
       "primarySession": "Puck-control confidence",
       "workoutId": "foundation-control-c",
@@ -967,7 +967,7 @@
     {
       "date": "2026-08-21",
       "weekNumber": 10,
-      "phase": "Game Speed",
+      "phase": "Game-Speed / Peak Tryout Prep",
       "dayRole": "Recovery skill",
       "primarySession": "Recovery and light touches",
       "workoutId": "foundation-control-c",
@@ -989,7 +989,7 @@
     {
       "date": "2026-08-24",
       "weekNumber": 11,
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Sensplex Camp",
       "dayRole": "Hard day",
       "primarySession": "Tryout-strength rehearsal",
       "workoutId": "foundation-speed-b",
@@ -1012,7 +1012,7 @@
     {
       "date": "2026-08-26",
       "weekNumber": 11,
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Sensplex Camp",
       "dayRole": "Skill day",
       "primarySession": "Confidence skill session",
       "workoutId": "foundation-control-a",
@@ -1035,7 +1035,7 @@
     {
       "date": "2026-08-28",
       "weekNumber": 11,
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Sensplex Camp",
       "dayRole": "Primer",
       "primarySession": "Short tryout primer",
       "workoutId": "foundation-control-c",
@@ -1057,7 +1057,7 @@
     {
       "date": "2026-08-31",
       "weekNumber": 12,
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Tryout Prep",
       "dayRole": "Primer",
       "primarySession": "Early-week sharpness",
       "workoutId": "foundation-speed-b",
@@ -1079,7 +1079,7 @@
     {
       "date": "2026-09-02",
       "weekNumber": 12,
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Tryout Prep",
       "dayRole": "Recovery skill",
       "primarySession": "Light touches and mobility",
       "workoutId": "foundation-control-c",
@@ -1101,7 +1101,7 @@
     {
       "date": "2026-09-04",
       "weekNumber": 12,
-      "phase": "Tryout Preparation",
+      "phase": "Peak / Tryout Prep",
       "dayRole": "Tryout primer",
       "primarySession": "Confidence primer only",
       "workoutId": "foundation-control-a",

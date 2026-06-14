@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ExternalLoadChip, PlanTagChip } from "@/components/LoadChips";
+import { ExternalLoadChip, LoadChip, PhaseChip, PlanTagChip } from "@/components/LoadChips";
 import { formatPlanDate, getCalendarDates, getDayTags, getExternalLoadsForDate, getPlanDay, getWeekLoadLabel, trainingPlan } from "@/lib/trainingData";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 import { ExternalLoadLog } from "@/lib/types";
@@ -31,7 +31,7 @@ export default function CalendarPage() {
                   const intensity = Math.max(day?.intensity || 0, ...loads.map((load) => load.plannedIntensity));
                   return <article className="card border-2 border-transparent transition hover:border-blue" key={date}>
                     <Link href={`/day/${date}`} className="block"><div className="flex items-start justify-between gap-3"><div><p className="label">{formatPlanDate(date, { weekday: "long", month: "short", day: "numeric" })} · Week {week.weekNumber}</p><h3 className="text-xl font-black">{day?.primarySession || loads[0]?.title || "Recovery / planning day"}</h3></div>{day && <span className="rounded-full bg-ice px-3 py-1 text-xs font-black text-blue">{day.dayRole}</span>}</div>
-                    <div className="mt-3 flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} title={load.title} />)}{tags.filter((tag) => tag === "recovery" || tag === "deload" || tag === "taper" || tag === "kpi").map((tag) => <PlanTagChip key={tag} tag={tag} />)}</div>
+                    <div className="mt-3 flex flex-wrap gap-2"><PhaseChip phase={day?.phase || week.phase} />{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} provider={load.provider} title={load.title} />)}{tags.filter((tag) => tag === "recovery" || tag === "external-load-protected" || tag === "deload" || tag === "taper" || tag === "kpi").map((tag) => <PlanTagChip key={tag} tag={tag} />)}{(loads[0]?.doNotDoRule || day?.doNotDo || "").toLowerCase().includes("hard dryland") && <LoadChip kind="no-hard-dryland" />}{(loads[0]?.doNotDoRule || day?.doNotDo || "").toLowerCase().includes("kpi") && <LoadChip kind="no-kpi-testing" />}</div>
                     <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                       <p><strong>Phase:</strong> {day?.phase || week.phase}</p><p><strong>Load:</strong> {intensity}/5</p>
                       <p><strong>Off-ice:</strong> {day?.primarySession || "None planned"}</p><p><strong>External:</strong> {loads.length ? `${loads.length} planned` : "None planned"}</p>
