@@ -39,6 +39,37 @@ npm run build
 npm start
 ```
 
+## iPhone/iPad Testing
+
+Use production mode for iPhone and iPad testing. Do not rely on Next dev/Turbopack mode for iOS validation.
+
+Run the production build and LAN server:
+
+```bash
+npm run build
+npx next start --hostname 0.0.0.0 --port 3000
+```
+
+Or use the combined command:
+
+```bash
+npm run ios:test
+```
+
+Keep Terminal running while testing. Find the Mac Wi-Fi IP address:
+
+```bash
+ipconfig getifaddr en0
+```
+
+On the iPhone or iPad, open:
+
+```text
+http://YOUR-MAC-IP:3000/today
+```
+
+Phase 1 local storage is separate for each browser and device. Sessions created in Mac Chrome, iPhone Safari, iPhone Chrome, or iPad Safari do not sync with each other.
+
 ## Main Screens
 
 - `/today`: today's workout, focus, phase, cues, and session start
