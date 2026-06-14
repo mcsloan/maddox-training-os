@@ -111,6 +111,12 @@ Phase 1 is ready for the Vercel Hobby/free plan and requires no paid services.
 
 The optional `npm run vercel:build` script runs the same production build command. No Vercel CLI setup is required.
 
+### Build Badge
+
+The shared app header displays a small build badge with the `package.json` version, short git commit SHA, and deployment environment. Local builds fall back to `local` for the commit and environment.
+
+Vercel deployments use `NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA` and `NEXT_PUBLIC_VERCEL_ENV` when available. In the Vercel project settings, enable automatically exposed system environment variables if these values do not appear in the deployed badge. These variables are public deployment metadata and must not contain secrets.
+
 ## Important: Phase 1 Data Storage
 
 Supabase is the source of truth for completed training history when configured. Every finished session is saved as an immutable snapshot containing its workout plan, planned drills, completed drill logs, KPI results, reflection, and timestamps. A local backup is also retained.
