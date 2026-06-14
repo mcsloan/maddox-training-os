@@ -70,6 +70,79 @@ http://YOUR-MAC-IP:3000/today
 
 Phase 1 local storage is separate for each browser and device. Sessions created in Mac Chrome, iPhone Safari, iPhone Chrome, or iPad Safari do not sync with each other.
 
+Local and Vercel production builds use the production build path. The project currently uses `next build --webpack` for build stability, and this is compatible with Vercel. Validate iPhone/iPad behavior with `npm run ios:test` or the deployed Vercel URL, not Next dev/Turbopack mode.
+
+## GitHub Setup
+
+Check the current repository and configured remotes:
+
+```bash
+git status
+git remote -v
+```
+
+Add a GitHub repository and push the current `master` branch:
+
+```bash
+git remote add origin YOUR_GITHUB_REPO_URL
+git push -u origin master
+```
+
+If using `main` instead of `master`:
+
+```bash
+git branch -M main
+git push -u origin main
+```
+
+## Deploying to Vercel
+
+Phase 1 is ready for the Vercel Hobby/free plan and requires no paid services.
+
+1. Create or use a GitHub repository and push this project.
+2. Sign in to Vercel and import the GitHub repository.
+3. Confirm Vercel detects the framework as Next.js.
+4. Use `npm run build` as the build command.
+5. Use Vercel's default output and deployment settings for Next.js.
+6. Do not add environment variables for Phase 1.
+7. Deploy, then open the generated Vercel URL on iPhone and iPad.
+8. In Safari, use **Share → Add to Home Screen**.
+
+The optional `npm run vercel:build` script runs the same production build command. No Vercel CLI setup is required.
+
+## Important: Phase 1 Data Storage
+
+Phase 1 stores session logs and KPI entries in browser-local storage on the device where they are entered.
+
+- Data entered on Maddox's iPhone will not automatically appear on a parent iPad or desktop.
+- Data entered in Safari will not automatically appear in Chrome.
+- This separation is expected in Phase 1.
+- Cross-device and cross-browser sync will come later through Supabase or another backend.
+- Clearing browser/site data removes the Phase 1 training logs stored in that browser.
+
+## Add to Home Screen
+
+After deploying to Vercel:
+
+1. Open the Vercel URL in Safari on iPhone or iPad.
+2. Tap **Share**.
+3. Tap **Add to Home Screen**.
+4. Launch Maddox Training OS from the new Home Screen icon.
+
+The app uses its manifest, theme color, standalone display mode, `/today` start URL, and current basic icon. It opens like a standalone web app, but Phase 1 data remains browser-local on that device.
+
+## Deployment Checklist
+
+Before deploying:
+
+- [ ] Run `npm run lint`
+- [ ] Run `npm run build`
+- [ ] Confirm `git status` is clean
+- [ ] Push the repository to GitHub
+- [ ] Import the repository into Vercel
+- [ ] Test the Vercel URL on iPhone and iPad
+- [ ] Test Today, Start Session, KPIs, History, Dashboard, and Exports
+
 ## Main Screens
 
 - `/today`: today's workout, focus, phase, cues, and session start
@@ -145,18 +218,11 @@ Test these routes in order:
 
 In development, the global client error probe displays uncaught client errors and unhandled promise rejections in a red fixed box with a **Copy Error** button.
 
-## PWA and Vercel
+## PWA Structure
 
 The app includes mobile viewport metadata, Apple web-app metadata, theme colors, and a generated web manifest. It is web-first and does not require Xcode, native iOS tooling, or App Store deployment.
 
-To deploy later:
-
-1. Push the project to a Git provider.
-2. Import it into Vercel.
-3. Accept the detected Next.js defaults.
-4. Deploy with no environment variables or backend services.
-
-The project fits Vercel Hobby hosting for Phase 1. More install polish, icons, and offline caching can be added in a later PWA pass.
+More install polish, platform-specific icons, and offline caching can be added in a later PWA pass.
 
 ## Phase 1 Scope
 
