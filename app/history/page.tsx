@@ -5,10 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DataStatus } from "@/components/DataStatus";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
+import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
 import { workouts } from "@/lib/trainingData";
 import { sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
-import { SessionLog } from "@/lib/types";
+import { ExternalLoadLog, SessionLog } from "@/lib/types";
 
 function statusLabel(status: SessionLog["status"]) {
   if (status === "in-progress") return "In Progress";
@@ -19,6 +20,7 @@ function statusLabel(status: SessionLog["status"]) {
 export default function HistoryPage() {
   const router = useRouter();
   const [sessions, setSessions] = useState<SessionLog[]>([]);
+  const [externalLogs, setExternalLogs] = useState<ExternalLoadLog[]>([]);
   const [dataMode, setDataMode] = useState<DataMode>("local");
   const [warning, setWarning] = useState("Checking completed training history...");
   useEffect(() => {
@@ -28,6 +30,9 @@ export default function HistoryPage() {
       setSessions(result.sessions);
       setDataMode(result.mode);
       setWarning(result.warning);
+    });
+    loadExternalLoadLogs().then((result) => {
+      if (active) setExternalLogs(result.logs);
     });
     return () => { active = false; };
   }, []);
@@ -47,6 +52,10 @@ export default function HistoryPage() {
     <div>
       <div className="mb-6"><p className="label">Completed history and active drafts</p><h1 className="text-4xl font-black">Session History</h1></div>
       <DataStatus mode={dataMode} warning={warning} />
+      <section className="card mb-6">
+        <div className="flex items-center justify-between gap-3"><div><p className="label">Separate from training sessions</p><h2 className="text-2xl font-black">External Load Logs</h2></div><Link className="text-sm font-bold text-blue" href="/calendar">Calendar</Link></div>
+        <div className="mt-4 space-y-3">{externalLogs.slice(0, 8).map((log) => <Link className="block rounded-2xl border border-rink p-4 hover:border-blue" href={`/external-load/${log.externalLoadId}`} key={log.id}><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{new Date(`${log.date}T12:00:00`).toLocaleDateString()} · External Load Log</p><p className="font-black">{log.title}</p></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black text-blue">{log.attended ? "Attended" : "Did not attend"}</span></div><p className="mt-2 text-sm">Effort {log.effort ?? "—"}/5 · Energy {log.energyAfter ?? "—"}/5 · Confidence {log.confidence ?? "—"}/5 · Soreness {log.soreness}/5{log.painFlag ? " · Pain flagged" : ""}</p></Link>)}{!externalLogs.length && <p className="text-slate-500">No external load logs saved yet.</p>}</div>
+      </section>
       <div className="space-y-4">
         {sessions.map((session) => {
           const workout = workouts.find((item) => item.id === session.workoutId);

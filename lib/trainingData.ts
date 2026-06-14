@@ -65,7 +65,7 @@ export function getWeekLoadLabel(weekNumber: number) {
   const labels: Record<number, string> = {
     1: "Phase 1 Foundation",
     2: "Phase 1 Foundation",
-    3: "Chae Hull Camp Load",
+    3: "Chase Hull Camp Load",
     4: "Phase 2 Speed + Power",
     5: "Phase 2 Speed + Power",
     6: "Deload / Consolidation",
@@ -92,7 +92,7 @@ export function getDayTags(date: string) {
   if (loads.some((load) => load.type === "hockey_camp")) tags.push("camp");
   if (loads.some((load) => load.type === "on_ice")) tags.push("on-ice");
   if (loads.some((load) => load.type === "tryout")) tags.push("tryout");
-  if (loads.some((load) => load.type === "lacrosse")) tags.push("lacrosse");
+  if (loads.some((load) => load.type === "lacrosse_practice" || load.type === "lacrosse_game")) tags.push("lacrosse");
   if (day?.dayRole.toLowerCase().includes("recovery")) tags.push("recovery");
   if (day?.weekNumber === 6 || day?.weekNumber === 9) tags.push("deload");
   if (day?.weekNumber === 11) tags.push("taper");

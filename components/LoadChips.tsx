@@ -1,7 +1,8 @@
 import { ExternalLoadType } from "@/lib/types";
 
 const loadStyles: Record<ExternalLoadType, string> = {
-  lacrosse: "bg-purple-100 text-purple-800",
+  lacrosse_practice: "bg-purple-100 text-purple-800",
+  lacrosse_game: "bg-purple-200 text-purple-900",
   hockey_camp: "bg-red-100 text-red-800",
   on_ice: "bg-blue-100 text-blue-800",
   tryout: "bg-amber-100 text-amber-900",

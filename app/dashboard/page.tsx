@@ -6,18 +6,21 @@ import { DataStatus } from "@/components/DataStatus";
 import { ParentDashboardCard } from "@/components/ParentDashboardCard";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
+import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 import { getCurrentPlanWeek, getWeekExternalLoads, getWeekLoadLabel, kpis, trainingPlan, workouts } from "@/lib/trainingData";
 import { kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
-import { KPIResult, SessionLog } from "@/lib/types";
+import { ExternalLoadLog, KPIResult, SessionLog } from "@/lib/types";
 
 export default function DashboardPage() {
   const [sessions, setSessions] = useState<SessionLog[]>([]);
   const [results, setResults] = useState<KPIResult[]>([]);
+  const [externalLogs, setExternalLogs] = useState<ExternalLoadLog[]>([]);
   const [dataMode, setDataMode] = useState<DataMode>("local");
   const [warning, setWarning] = useState("Checking completed training history...");
   useEffect(() => {
     let active = true;
     setResults(localKpiRepository.getAll());
+    loadExternalLoadLogs().then((result) => { if (active) setExternalLogs(result.logs); });
     loadTrainingHistory().then((result) => {
       if (!active) return;
       setSessions(result.sessions);
@@ -45,6 +48,14 @@ export default function DashboardPage() {
     ...currentWeekLoads.filter((load) => load.plannedIntensity >= 4).map((load) => load.date),
   ]).size;
   const loadWarnings = currentWeekLoads.map((load) => `${load.title}: ${load.doNotDoRule}`);
+  const currentWeekExternalIds = new Set(currentWeekLoads.map((load) => load.id));
+  const currentWeekExternalLogs = externalLogs.filter((log) => currentWeekExternalIds.has(log.externalLoadId));
+  const average = (values: Array<number | null>) => {
+    const usable = values.filter((value): value is number => value !== null);
+    return usable.length ? (usable.reduce((sum, value) => sum + value, 0) / usable.length).toFixed(1) : "—";
+  };
+  const sorenessPainFlags = currentWeekExternalLogs.filter((log) => log.painFlag || log.soreness >= 3).length;
+  const recoveryReminders = currentWeekExternalLogs.filter((log) => !log.recoveryCompleted).length;
 
   return (
     <div>
@@ -57,6 +68,13 @@ export default function DashboardPage() {
           <ParentDashboardCard label="External loads" value={`${currentWeekLoads.length}`} detail="Camp, ice, lacrosse, or tryout" />
           <ParentDashboardCard label="Recovery days" value={`${recoveryDays}`} detail="Explicit recovery-focused days" />
           <ParentDashboardCard label="High-load days" value={`${highLoadDates}`} detail="Intensity 4-5 load dates" />
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <ParentDashboardCard label="Logged external" value={`${currentWeekExternalLogs.length} / ${currentWeekLoads.length}`} detail="Latest log per planned event" />
+          <ParentDashboardCard label="Average effort" value={average(currentWeekExternalLogs.map((log) => log.effort))} detail="External loads this week" />
+          <ParentDashboardCard label="Average energy" value={average(currentWeekExternalLogs.map((log) => log.energyAfter))} detail="Energy after external load" />
+          <ParentDashboardCard label="Soreness / pain" value={`${sorenessPainFlags}`} detail="Pain or soreness 3+" />
+          <ParentDashboardCard label="Recovery reminders" value={`${recoveryReminders}`} detail="Logged recovery incomplete" />
         </div>
         {loadWarnings.length > 0 && <div className="mt-4 space-y-2">{loadWarnings.map((item) => <p className="rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-800" key={item}>{item}</p>)}</div>}
       </section>

@@ -3,14 +3,16 @@
 import { useState } from "react";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
+import { clearLocalExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 
 export function ClearLocalDataButton() {
   const [cleared, setCleared] = useState(false);
 
   function clear() {
-    if (!window.confirm("Clear all local session logs and KPI results from this browser? This cannot be undone.")) return;
+    if (!window.confirm("Clear all local session logs, KPI results, and external load logs from this browser? This cannot be undone.")) return;
     localSessionRepository.clearAll();
     localKpiRepository.clearAll();
+    clearLocalExternalLoadLogs();
     setCleared(true);
   }
 

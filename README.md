@@ -170,6 +170,7 @@ Before deploying:
 - `/plan`: 11-week plan overview, weekly objectives, loads, and parent watch-outs
 - `/calendar`: all currently modeled scheduled training days grouped by week
 - `/day/[date]`: read-only any-day preview with training, external loads, blocks, drills, rules, equipment, and start action
+- `/external-load/[id]`: mobile external-load reflection and recovery logging
 - `/library`: workout blocks, warmups, exercises, stick/shot drills, video references, equipment, and parent cues
 - `/session/[id]`: live one-drill-at-a-time training mode with autosave
 - `/dashboard`: weekly plan, readiness, completion, and cloud-first recent logs
@@ -199,6 +200,12 @@ The browseable workbook-shaped seed also uses:
 - `equipmentSetup.json`: reusable equipment and safety setup guidance
 - `externalLoads.json`: planned lacrosse, camp, on-ice, and tryout loads with recovery rules and future logging questions
 - `loadRules.json`: reusable camp, Marc session, lacrosse, deload, and tryout-taper rules
+
+### External Load Logs
+
+Lacrosse, hockey camp, Marc O'Connor on-ice, and tryout events can be logged from Calendar or Day Detail. Logs capture attendance, duration, effort, energy, confidence, difficulty, soreness/pain, reflections, parent notes, and recovery completion. Camp logs also include optional compete, pace, puck-confidence, communication, and attack/passive prompts.
+
+Each save keeps a local backup and, when Supabase is configured, inserts a new immutable `session_logs` snapshot with `source = external_load` and `kind = external_load`. Updating a log creates a new snapshot rather than rewriting older history. No Supabase schema migration is required.
 
 The source workbook itself is not currently present in this repository. The modeled seed is intentionally traceable as a starting structure; approved workbook details and video URLs should replace or extend it when source materials are available.
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { getWorkoutDrills } from "@/lib/trainingData";
+import { readableError } from "@/lib/errorMessage";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { CompletedSessionSnapshot, SessionLog, Workout } from "@/lib/types";
@@ -74,7 +75,7 @@ export async function saveCompletedSession(session: SessionLog, workout: Workout
     id: MADDOX_ATHLETE_ID,
     name: MADDOX_ATHLETE_NAME,
   }, { onConflict: "id" });
-  if (athleteError) throw athleteError;
+  if (athleteError) throw new Error(readableError(athleteError));
 
   const immutableId = `${session.id}:${session.completedAt || snapshot.timestamps.snapshotCreatedAt}`;
   const { error } = await supabase.from("session_logs").insert({
@@ -93,7 +94,7 @@ export async function saveCompletedSession(session: SessionLog, workout: Workout
     source: "web",
     session_snapshot: snapshot,
   });
-  if (error) throw error;
+  if (error) throw new Error(readableError(error));
   return { mode: "cloud" as const, snapshot };
 }
 
@@ -141,7 +142,7 @@ export async function loadTrainingHistory(): Promise<HistoryLoadResult> {
     return {
       sessions: local,
       mode: "local",
-      warning: `Cloud history unavailable. Showing local backup. ${reason instanceof Error ? reason.message : String(reason)}`,
+      warning: `Cloud history unavailable. Showing local backup. ${readableError(reason)}`,
     };
   }
 }

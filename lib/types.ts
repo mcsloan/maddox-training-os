@@ -124,7 +124,7 @@ export interface TrainingPlan {
   days: PlanDay[];
 }
 
-export type ExternalLoadType = "lacrosse" | "hockey_camp" | "on_ice" | "tryout" | "other";
+export type ExternalLoadType = "lacrosse_practice" | "lacrosse_game" | "hockey_camp" | "on_ice" | "tryout" | "other";
 
 export interface PlannedExternalLoad {
   id: string;
@@ -140,6 +140,49 @@ export interface PlannedExternalLoad {
   recoveryRule: string;
   doNotDoRule: string;
   trackingQuestions: string[];
+}
+
+export interface ExternalLoadLog {
+  id: string;
+  athleteId: string;
+  externalLoadId: string;
+  date: string;
+  title: string;
+  type: ExternalLoadType;
+  provider: string;
+  plannedDuration: number | null;
+  actualDuration: number | null;
+  plannedIntensity: Rating;
+  attended: boolean;
+  effort: Rating | null;
+  energyAfter: Rating | null;
+  confidence: Rating | null;
+  difficulty: Rating | null;
+  soreness: 0 | Rating;
+  painFlag: boolean;
+  whatWentWell: string;
+  whatToAdjust: string;
+  parentNotes: string;
+  recoveryCompleted: boolean;
+  campReflection?: {
+    competeLevel: Rating | null;
+    skatingPace: Rating | null;
+    puckConfidence: Rating | null;
+    communication: Rating | null;
+    attackedOrPassive: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  schemaVersion: number;
+  appVersion: string;
+  planVersion: string;
+  source: "external_load";
+}
+
+export interface ExternalLoadSnapshot {
+  kind: "external_load";
+  externalLoadLog: ExternalLoadLog;
+  plannedExternalLoad: PlannedExternalLoad;
 }
 
 export interface LoadRule {
