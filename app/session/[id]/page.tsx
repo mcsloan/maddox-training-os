@@ -56,6 +56,7 @@ export default function SessionPage() {
   const [completedSessions, setCompletedSessions] = useState<SessionLog[]>([]);
   const [mode, setMode] = useState<PageMode>("loading");
   const [error, setError] = useState("");
+  const [saveFeedback, setSaveFeedback] = useState("Ready");
   const [diagnostics, setDiagnostics] = useState<InitDiagnostics>({
     currentStage: "Component render",
     routeId,
@@ -195,6 +196,8 @@ export default function SessionPage() {
   function update(next: SessionLog) {
     setSession(next);
     localSessionRepository.updateSession(next);
+    setSaveFeedback("Saved just now");
+    window.setTimeout(() => setSaveFeedback("Autosave on"), 1200);
   }
 
   function setSessionUrl(next: SessionLog, nextMode: "resume" | "view") {
@@ -318,7 +321,9 @@ export default function SessionPage() {
   }
 
   function complete() {
+    if (!window.confirm("Finish and submit this training session? You can reopen it later if needed.")) return;
     const completed = { ...session!, status: "completed" as const, completedAt: new Date().toISOString() };
+    Object.values(completed.kpiResults).forEach((result) => localKpiRepository.save({ ...result, enteredAt: result.enteredAt || new Date().toISOString() }));
     update(completed);
     setSessionUrl(completed, "view");
     setMode("view");
@@ -327,14 +332,19 @@ export default function SessionPage() {
   return (
     <div className="mx-auto max-w-4xl">
       {diagnostics.repository.lastError && <div className="mb-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm font-semibold text-amber-900">Browser storage warning: {diagnostics.repository.lastError}. This session can continue in memory, but autosave may be unavailable.</div>}
-      <div className="mb-5"><SessionProgress current={step + 1} total={totalSteps} /><p className="mt-3 text-sm font-semibold text-slate-500">{session.status === "reopened" ? "Reopened for editing" : "In progress"} · Autosaved on this device</p></div>
+      <div className="card mb-5 bg-navy text-white">
+        <p className="label text-lime">{workout.sessionType}</p>
+        <h1 className="text-3xl font-black">{workout.dayFocus}</h1>
+        <div className="mt-4"><SessionProgress current={step + 1} total={totalSteps} /></div>
+        <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm font-bold text-slate-200"><span>{drill ? `Drill ${step} of ${drills.length}` : kpi ? `KPI test ${kpiIndex + 1} of ${workoutKpis.length}` : isReflection ? "Final reflection" : "Readiness check"}</span><span>About {Math.max(0, Math.ceil(workout.totalEstimatedMinutes * (totalSteps - step - 1) / totalSteps))} min remaining</span><span>{saveFeedback}</span></div>
+      </div>
       {step === 0 && <ReadinessCheck value={session.readiness} onChange={(readiness) => update({ ...session!, readiness })} />}
       {drill && <DrillCard drill={drill} completion={session.exercises[drill.id]} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
       {kpi && <SessionKPIForm kpi={kpi} result={session.kpiResults[kpi.id]} onChange={(result) => update({ ...session!, kpiResults: { ...session!.kpiResults, [kpi.id]: result } })} />}
       {isReflection && <ReflectionForm value={session.reflection} onChange={(reflection) => update({ ...session!, reflection })} />}
       <div className="sticky bottom-16 mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice/95 py-3 backdrop-blur sm:bottom-0">
-        <button className="btn-secondary" disabled={step === 0} onClick={() => move(step - 1)}>Back</button>
-        {isReflection ? <button className="btn-primary" onClick={complete}>Finish Session</button> : <button className="btn-primary" onClick={() => move(step + 1)}>Next</button>}
+        <button className="btn-secondary min-h-16 text-base" disabled={step === 0} onClick={() => move(step - 1)}>{drill ? "Previous Drill" : "Back"}</button>
+        {isReflection ? <button className="btn-primary min-h-16 text-lg" onClick={complete}>Finish Session</button> : <button className="btn-primary min-h-16 text-lg" onClick={() => move(step + 1)}>{drill ? "Next Drill" : "Continue"}</button>}
       </div>
     </div>
   );

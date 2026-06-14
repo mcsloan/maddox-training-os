@@ -7,12 +7,13 @@ export default function ExportsPage() {
   const todayWorkout = getTodayWorkout();
   return (
     <div className="mx-auto max-w-4xl">
-      <div className="mb-6"><p className="label">Parent tools</p><h1 className="text-4xl font-black">Export Center</h1><p className="mt-2 text-slate-500">Phase 1 buttons show a clear placeholder. Real file generation is planned next.</p></div>
+      <div className="mb-6"><p className="label">Parent tools</p><h1 className="text-4xl font-black">Export Center</h1><p className="mt-2 text-slate-500">Preview what reports will contain. File generation remains a Phase 2 placeholder.</p></div>
       <ExportButtons />
+      <section className="card mt-6"><h2 className="text-xl font-black">Review before exporting</h2><p className="my-3 text-sm text-slate-500">Check saved attempts and KPI results before creating future reports.</p><div className="grid gap-3 sm:grid-cols-2"><Link className="btn-secondary" href="/history">Open Session History</Link><Link className="btn-secondary" href="/kpis">Open KPI Dashboard</Link></div></section>
       <section className="card mt-6 border border-red-100">
         <p className="label">Phase 1 developer tool</p>
         <h2 className="text-xl font-black">Reset browser data</h2>
-        <p className="my-3 text-sm text-slate-500">Useful during testing. This only clears sessions and KPI results stored in this browser.</p>
+        <p className="my-3 text-sm font-semibold text-red-700">Warning: clearing data only affects this current browser/device, and cannot be undone.</p>
         <ClearLocalDataButton />
       </section>
       <section className="card mt-6 border border-amber-200">

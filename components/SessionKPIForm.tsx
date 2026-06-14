@@ -12,6 +12,7 @@ export function SessionKPIForm({ kpi, result, onChange }: { kpi: KPI; result?: K
       id: result?.id || `${kpi.id}-${Date.now()}`,
       kpiId: kpi.id,
       date: result?.date || new Date().toISOString().slice(0, 10),
+      enteredAt: result?.enteredAt || new Date().toISOString(),
       attempts: nextAttempts,
       bestResult: (() => {
         const nextValues = nextAttempts.map((attempt) => Number(attempt.result)).filter((value) => Number.isFinite(value) && value > 0);

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
 import { workouts } from "@/lib/trainingData";
+import { sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
 import { SessionLog } from "@/lib/types";
 
 function statusLabel(status: SessionLog["status"]) {
@@ -23,13 +24,20 @@ export default function HistoryPage() {
     if (session) router.push(`/session/${workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=resume`);
   }
 
+  function remove(sessionId: string) {
+    if (!window.confirm("Delete this session attempt? This cannot be undone.")) return;
+    localSessionRepository.delete(sessionId);
+    setSessions(localSessionRepository.listAllSessions());
+  }
+
   return (
     <div>
       <div className="mb-6"><p className="label">Saved on this browser</p><h1 className="text-4xl font-black">Session History</h1></div>
       <div className="space-y-4">
         {sessions.map((session) => {
           const workout = workouts.find((item) => item.id === session.workoutId);
-          return <article className="card" key={session.id}><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{new Date(session.startedAt).toLocaleString()}</p><h2 className="text-xl font-black">{workout?.dayFocus || "Unknown workout"}</h2></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black text-blue">{statusLabel(session.status)}</span></div><div className="mt-5 flex flex-wrap gap-2">{session.status === "completed" ? <><Link className="btn-secondary" href={`/session/${session.workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=view`}>View</Link><Link className="btn-secondary" href={`/session/${session.workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=reopen`}>Reopen / Edit</Link></> : <Link className="btn-primary" href={`/session/${session.workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=resume`}>Resume</Link>}<button className="btn-secondary" onClick={() => fresh(session.workoutId)}>Start Fresh Attempt</button></div></article>;
+          const percent = sessionCompletionPercent(session);
+          return <article className="card" key={session.id}><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{new Date(session.startedAt).toLocaleString()}</p><h2 className="text-xl font-black">{workoutName(workout)}</h2></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black text-blue">{statusLabel(session.status)}</span></div><div className="mt-4"><div className="mb-1 flex justify-between text-sm font-bold"><span>Completion</span><span>{percent}%</span></div><div className="h-2 overflow-hidden rounded-full bg-rink"><div className="h-full bg-blue" style={{ width: `${percent}%` }} /></div></div><div className="mt-4 grid gap-3 text-sm sm:grid-cols-2"><p><strong>Reflection:</strong> {session.reflection.improvement || (session.status === "completed" ? "No improvement note entered" : "Not completed")}</p><p><strong>KPI tests:</strong> {Object.keys(session.kpiResults).length ? `${Object.keys(session.kpiResults).length} completed` : "None completed"}</p></div><div className="mt-5 flex flex-wrap gap-2">{session.status === "completed" ? <><Link className="btn-secondary" href={`/session/${session.workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=view`}>View</Link><Link className="btn-secondary" href={`/session/${session.workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=reopen`}>Reopen / Edit</Link></> : <Link className="btn-primary" href={`/session/${session.workoutId}?sessionId=${encodeURIComponent(session.id)}&mode=resume`}>Resume</Link>}<button className="btn-secondary" onClick={() => fresh(session.workoutId)}>Start Fresh Attempt</button><button className="btn-secondary border-red-200 text-red-700" onClick={() => remove(session.id)}>Delete Attempt</button></div></article>;
         })}
         {workouts.filter((workout) => !sessions.some((session) => session.workoutId === workout.id)).map((workout) => <article className="card" key={workout.id}><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{workout.date}</p><h2 className="text-xl font-black">{workout.dayFocus}</h2></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black text-slate-500">Not Started</span></div><Link className="btn-primary mt-5" href={`/session/${workout.id}`}>Start Session</Link></article>)}
       </div>

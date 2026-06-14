@@ -4,10 +4,10 @@ import { useState } from "react";
 import { KPI, KPIAttempt, KPIResult } from "@/lib/types";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 
-export function KPIEntryForm({ kpi, onSaved }: { kpi: KPI; onSaved: () => void }) {
+export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: () => void; existing?: KPIResult }) {
   const empty = Array.from({ length: kpi.attempts }, () => ({ result: "" }));
-  const [attempts, setAttempts] = useState<KPIAttempt[]>(empty);
-  const [notes, setNotes] = useState("");
+  const [attempts, setAttempts] = useState<KPIAttempt[]>(existing?.attempts || empty);
+  const [notes, setNotes] = useState(existing?.notes || "");
   const [saved, setSaved] = useState(false);
 
   const values = attempts.map((attempt) => Number(attempt.result)).filter((value) => Number.isFinite(value) && value > 0);
@@ -15,9 +15,10 @@ export function KPIEntryForm({ kpi, onSaved }: { kpi: KPI; onSaved: () => void }
 
   function save() {
     localKpiRepository.save({
-      id: `${kpi.id}-${Date.now()}`,
+      id: existing?.id || `${kpi.id}-${Date.now()}`,
       kpiId: kpi.id,
-      date: new Date().toISOString().slice(0, 10),
+      date: existing?.date || new Date().toISOString().slice(0, 10),
+      enteredAt: existing?.enteredAt || new Date().toISOString(),
       attempts,
       bestResult: best,
       notes,
@@ -37,7 +38,7 @@ export function KPIEntryForm({ kpi, onSaved }: { kpi: KPI; onSaved: () => void }
       <label className="mt-3 block"><span className="label">Notes</span><input className="field" value={notes} onChange={(event) => setNotes(event.target.value)} /></label>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <p className="font-black">Best: {best ?? "—"} {best !== null ? kpi.units : ""}</p>
-        <button className="btn-primary" disabled={best === null} onClick={save}>{saved ? "Saved" : "Save Result"}</button>
+        <button className="btn-primary" disabled={best === null} onClick={save}>{saved ? "Saved" : existing ? "Update Result" : "Save Result"}</button>
       </div>
     </div>
   );

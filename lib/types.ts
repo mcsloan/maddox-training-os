@@ -6,6 +6,7 @@ export interface Drill {
   category: string;
   purpose: string;
   setup: string;
+  setupChecklist: string[];
   instructions: string[];
   plannedSets: number | null;
   plannedReps: number | null;
@@ -17,6 +18,7 @@ export interface Drill {
   regression: string;
   safetyNotes: string;
   videoUrl: string | null;
+  qrUrl: string | null;
   sourceTag: string;
 }
 
@@ -116,6 +118,7 @@ export interface KPIResult {
   id: string;
   kpiId: string;
   date: string;
+  enteredAt?: string;
   attempts: KPIAttempt[];
   bestResult: number | null;
   notes: string;

@@ -170,6 +170,29 @@ The project fits Vercel Hobby hosting for Phase 1. More install polish, icons, a
 - Export center placeholders
 - Mock JSON data and replaceable repository architecture
 
+## Prompt 2 Usability Upgrade
+
+- Rich live-session drill instructions, progress, estimated remaining time, save feedback, and completion confirmation
+- Eight detailed mock hockey/off-ice drills with video and QR-ready links
+- KPI history with trend labels, attempts, editing, and deletion
+- Session history with completion percentages, reflections, KPI summaries, reopen, fresh-attempt, and deletion actions
+- Parent dashboard with weekly summary, readiness/reflection review, KPI summaries, attention flags, and quick links
+- Export previews and clearer current-device storage warnings
+
+For iPhone/iPad validation, run `npm run ios:test`. Next dev mode is not the validation path for iOS.
+
+### Manual iPhone/iPad Test Checklist
+
+1. Confirm Today loads.
+2. Start a session.
+3. Complete a drill and confirm save feedback.
+4. Enter a KPI result.
+5. Finish the reflection and session.
+6. View the completed attempt in History.
+7. Reopen the completed session.
+8. Start a fresh attempt.
+9. Confirm KPI trends show saved history.
+
 ## Planned Future Phases
 
 - Replace mock data with the full Maddox training library
