@@ -21,7 +21,7 @@ export function TodayCard({ workout, phase, parentCue, focusLabel = "Today's foc
           <p className="mt-3 text-sm text-slate-500">{workout.sessionType} · {workout.campContext}</p>
         </div>
         <Link href={`/session/${workout.id}`} className="btn-primary text-lg sm:min-w-48">
-          Start Session
+          Start Training Work
         </Link>
       </div>
     </article>

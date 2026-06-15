@@ -17,8 +17,8 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   const tags = getDayTags(date);
   const display = getPlanDayDisplayModel(date);
   const intensity = Math.max(day?.intensity || 0, ...externalLoads.map((load) => load.plannedIntensity));
-  const externalLoadReplacesTraining = externalLoads.some((load) => load.type === "hockey_camp" || load.type === "tryout" || load.type === "on_ice_4v4" || load.type === "lacrosse_game" || load.type === "lacrosse_playoff");
   const plannedKpis = (day?.kpiTestIds || workout?.kpiTestIds || []).map((id) => kpis.find((kpi) => kpi.id === id)).filter((kpi) => Boolean(kpi));
+  const hasPlannedTrainingWork = Boolean(workout);
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -28,12 +28,28 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
         <h1 className="text-3xl font-black sm:text-5xl">{day?.primarySession || externalLoads[0]?.title}</h1>
         <p className="mt-3 text-slate-200">{formatPlanDate(date, { weekday: "long", month: "long", day: "numeric", year: "numeric" })} · Load {intensity}/5</p>
         <div className="mt-4 flex flex-wrap gap-2">{day && <PhaseChip phase={display.methodologyPhase} />}{externalLoads.map((load) => <ExternalLoadChip key={load.id} type={load.type} />)}{tags.map((tag) => <PlanTagChip key={tag} tag={tag} />)}</div>
-        <div className="mt-6 flex flex-wrap gap-3">{workout && !externalLoadReplacesTraining && <Link className="btn-primary bg-blue text-lg" href={`/session/${workout.id}`}>Start Training Session</Link>}{workout && externalLoadReplacesTraining && <span className="rounded-2xl bg-red-100 px-5 py-3 font-bold text-red-800">Limit Extra Off-Ice Work Today</span>}<Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link></div>
+        <div className="mt-6 flex flex-wrap gap-3">{workout && <Link className="btn-primary bg-blue text-lg" href={`/session/${workout.id}`}>Start Training Work</Link>}{!workout && externalLoads.length > 0 && <span className="rounded-2xl bg-red-100 px-5 py-3 font-bold text-red-800">Reduced Off-Ice Work Today</span>}<Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link></div>
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-2">
-        <article className="card"><p className="label">Planned training work</p><h2 className="text-xl font-black">{day?.primarySession || "No off-ice session planned"}</h2><p className="mt-3"><strong>Daily micro-skill:</strong> {day?.dailyMicroSkill || "Recovery and sport-load focus"}</p><p className="mt-3"><strong>Shooting/puck:</strong> {day?.shootingPuckDetail || "None planned"}</p><p className="mt-3"><strong>Duration:</strong> {day ? `${day.durationMinutes} minutes` : "No off-ice duration"}</p></article>
-        <article className="card"><p className="label">Parent cue</p><h2 className="text-xl font-black">{day?.parentCue || "Prioritize recovery and ask about energy."}</h2><p className="mt-3 text-amber-800"><strong>Load rule:</strong> {userFacingLoadRule(externalLoads[0]?.doNotDoRule || day?.doNotDo, externalLoads.length > 0)}</p><p className="mt-3 text-green-800"><strong>Recovery:</strong> {userFacingLoadRule(externalLoads[0]?.recoveryRule || day?.recoveryRule, externalLoads.length > 0)}</p></article>
+        <article className="card">
+          <p className="label">Planned training work</p>
+          <h2 className="text-xl font-black">{hasPlannedTrainingWork ? day?.primarySession : "No planned training work today — recovery only."}</h2>
+          {hasPlannedTrainingWork ? (
+            <>
+              <p className="mt-3"><strong>Daily micro-skill:</strong> {day?.dailyMicroSkill || "Recovery and sport-load focus"}</p>
+              <p className="mt-3"><strong>Shooting/puck:</strong> {day?.shootingPuckDetail || "None planned"}</p>
+              <p className="mt-3"><strong>Duration:</strong> {day ? `${day.durationMinutes} minutes` : "No off-ice duration"}</p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Link className="btn-primary bg-blue" href={`/session/${workout!.id}`}>Log Training Work</Link>
+                <p className="text-sm font-semibold text-slate-600">Training work is logged separately from sport-load logging.</p>
+              </div>
+            </>
+          ) : (
+            <p className="mt-3 text-slate-600">Focus on recovery, mobility, and getting ready for the next planned training day.</p>
+          )}
+        </article>
+        <article className="card"><p className="label">Parent cue</p><h2 className="text-xl font-black">{userFacingPlanText(day?.parentCue || "Prioritize recovery and ask about energy.")}</h2><p className="mt-3 text-amber-800"><strong>Load rule:</strong> {userFacingLoadRule(externalLoads[0]?.doNotDoRule || day?.doNotDo, externalLoads.length > 0)}</p><p className="mt-3 text-green-800"><strong>Recovery:</strong> {userFacingLoadRule(externalLoads[0]?.recoveryRule || day?.recoveryRule, externalLoads.length > 0)}</p></article>
       </section>
 
       {externalLoads.length > 0 && <section className="card mt-6"><h2 className="text-2xl font-black">Sport Loads</h2><p className="mt-2 text-sm font-semibold text-slate-600">On camp, lacrosse, or heavy on-ice days, dryland is reduced to mobility, light puck touches, and recovery.</p><div className="mt-4 grid gap-4 md:grid-cols-2">{externalLoads.map((load) => <article className="rounded-2xl border border-rink p-4" key={load.id}><ExternalLoadChip type={load.type} /><p className="mt-3 font-black">{load.title}</p><p className="mt-1 text-sm">{load.provider} · {load.startTime}{load.endTime ? `-${load.endTime}` : ""} · {load.plannedDurationMinutes ? `${load.plannedDurationMinutes} min` : "Duration to confirm"} · Intensity {load.plannedIntensity}/5</p><p className="mt-3 text-sm">{userFacingPlanText(load.notes)}</p><p className="mt-3 text-sm text-green-800"><strong>Recovery:</strong> {userFacingLoadRule(load.recoveryRule, true)}</p><p className="label mt-4">Track after</p><ul className="list-inside list-disc text-sm">{load.trackingQuestions.map((question) => <li key={question}>{question}</li>)}</ul></article>)}</div><ExternalLoadActions loads={externalLoads} /></section>}
