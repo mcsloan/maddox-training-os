@@ -253,6 +253,23 @@ export interface ExerciseCompletion {
   difficulty: Rating | null;
 }
 
+export interface TrainingWorkLog {
+  id: string;
+  date: string;
+  workoutId: string | null;
+  title: string;
+  plannedBlockIds: string[];
+  plannedDurationMinutes: number | null;
+  completed: boolean;
+  actualDuration: number | null;
+  effort: Rating | null;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+  schemaVersion: number;
+  source: "training_work";
+}
+
 export interface Reflection {
   energy: Rating | null;
   confidence: Rating | null;

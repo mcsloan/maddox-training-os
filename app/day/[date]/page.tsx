@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLoadActions } from "@/components/ExternalLoadActions";
 import { ExternalLoadChip, PhaseChip, PlanTagChip } from "@/components/LoadChips";
+import { TrainingWorkActions } from "@/components/TrainingWorkActions";
 import { formatPlanDate, getDayTags, getExternalLoadsForDate, getPlanDay, getPlanDayDisplayModel, getRelatedVideos, getWorkout, getWorkoutBlock, getWorkoutDrills, isUsableExternalUrl, kpis, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
 
 export default async function DayPreviewPage({ params }: { params: Promise<{ date: string }> }) {
@@ -26,8 +27,8 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
     : "No planned training work today — recovery only.";
   const plannedTrainingWorkDetails = hasPlannedTrainingWork
     ? blocks.length > 0
-      ? `Blocks: ${blocks.map((block) => block!.id).join(", ")}`
-      : "Focus on recovery, mobility, and getting ready for the next planned training day."
+      ? `Complete the planned warmup, mobility, and light skill blocks around today's sport load. Blocks: ${blocks.map((block) => block!.id).join(", ")}`
+      : "Complete the planned warmup, mobility, and light skill blocks around today's sport load."
     : "Focus on recovery, mobility, and getting ready for the next planned training day.";
 
   return (
@@ -49,14 +50,10 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
           {hasPlannedTrainingWork ? (
             <>
               <p className="mt-3 text-slate-600">{plannedTrainingWorkDetails}</p>
-              {blocks.length > 0 && <p className="mt-3"><strong>Blocks:</strong> {blocks.map((block) => block!.id).join(", ")}</p>}
               <p className="mt-3"><strong>Daily micro-skill:</strong> {day?.dailyMicroSkill || "Recovery and sport-load focus"}</p>
               <p className="mt-3"><strong>Shooting/puck:</strong> {day?.shootingPuckDetail || "None planned"}</p>
               <p className="mt-3"><strong>Duration:</strong> {day ? `${day.durationMinutes} minutes` : "No off-ice duration"}</p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                {workout ? <Link className="btn-primary bg-blue" href={`/session/${workout.id}`}>Log Training Work</Link> : <span className="rounded-2xl bg-blue px-5 py-3 font-bold text-white">Log Training Work</span>}
-                <p className="text-sm font-semibold text-slate-600">Training work is logged separately from sport-load logging.</p>
-              </div>
+              <TrainingWorkActions blockSummary={blocks.map((block) => block!.id)} date={date} />
             </>
           ) : (
             <p className="mt-3 text-slate-600">Focus on recovery, mobility, and getting ready for the next planned training day.</p>
