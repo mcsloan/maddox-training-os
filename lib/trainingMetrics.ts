@@ -1,4 +1,4 @@
-import { KPI, KPIResult, SessionLog, Workout } from "@/lib/types";
+import { ExternalLoadLog, KPI, KPIResult, PlanWeek, SessionLog, Workout } from "@/lib/types";
 
 export function sessionCompletionPercent(session: SessionLog) {
   const exercises = Object.values(session.exercises);
@@ -39,4 +39,23 @@ export function kpiTrend(kpi: KPI, entries: KPIResult[]) {
 
 export function workoutName(workout?: Workout) {
   return workout?.dayFocus || "Unknown workout";
+}
+
+export function estimateWeeklyActualLoad(week: PlanWeek, sessions: SessionLog[], sportLoads: ExternalLoadLog[], workouts: Workout[]) {
+  const sessionLoads = sessions
+    .filter((session) => session.date >= week.startDate && session.date <= week.endDate)
+    .map((session) => {
+      const workout = workouts.find((item) => item.id === session.workoutId);
+      const actualMinutes = Object.values(session.exercises).reduce((sum, exercise) => sum + (exercise.actualDuration || 0), 0) / 60;
+      return {
+        load: session.reflection.difficulty ?? workout?.intensityLevel ?? null,
+        minutes: actualMinutes > 0 ? actualMinutes : workout?.totalEstimatedMinutes ?? 1,
+      };
+    });
+  const sportLoadValues = sportLoads
+    .filter((load) => load.date >= week.startDate && load.date <= week.endDate && load.attended)
+    .map((load) => ({ load: load.effort, minutes: load.actualDuration ?? load.plannedDuration ?? 1 }));
+  const values = [...sessionLoads, ...sportLoadValues].filter((value): value is { load: number; minutes: number } => value.load !== null);
+  const totalMinutes = values.reduce((sum, value) => sum + value.minutes, 0);
+  return values.length && totalMinutes > 0 ? Math.round((values.reduce((sum, value) => sum + value.load * value.minutes, 0) / totalMinutes) * 10) / 10 : null;
 }

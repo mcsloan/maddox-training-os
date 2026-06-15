@@ -257,6 +257,9 @@ export interface Readiness {
   energy: Rating | null;
   soreness: Rating | null;
   focus: Rating | null;
+  restingHeartRate?: number | null;
+  sleepHours?: number | null;
+  notes?: string;
 }
 
 export interface SessionLog {

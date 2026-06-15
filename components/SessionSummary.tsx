@@ -21,6 +21,12 @@ export function SessionSummary({ workout, session, drills, kpis, onReopen, onFre
         </div>
       </article>
       <article className="card">
+        <h2 className="text-2xl font-black">Readiness</h2>
+        <p className="mt-3">Energy {display(session.readiness.energy)} / 5 · Soreness {display(session.readiness.soreness)} / 5 · Focus {display(session.readiness.focus)} / 5</p>
+        <p className="mt-2">Resting heart rate: {session.readiness.restingHeartRate ? `${session.readiness.restingHeartRate} BPM` : "—"} · Sleep: {session.readiness.sleepHours ? `${session.readiness.sleepHours} hours` : "—"}</p>
+        {session.readiness.notes && <p className="mt-2"><strong>Notes:</strong> {session.readiness.notes}</p>}
+      </article>
+      <article className="card">
         <h2 className="text-2xl font-black">Drill summary</h2>
         <div className="mt-4 space-y-3">
           {drills.map((drill) => {

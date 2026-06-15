@@ -8,7 +8,7 @@ import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 import { getCurrentPlanWeek, getWeekExternalLoads, getWeekLoadLabel, getWeekPlanSummary, kpis, trainingPlan, workouts } from "@/lib/trainingData";
-import { kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
+import { estimateWeeklyActualLoad, kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
 import { ExternalLoadLog, KPIResult, SessionLog } from "@/lib/types";
 
 export default function DashboardPage() {
@@ -53,6 +53,15 @@ export default function DashboardPage() {
   const sorenessPainFlags = currentWeekExternalLogs.filter((log) => log.painFlag || log.soreness >= 3).length;
   const recoveryReminders = currentWeekExternalLogs.filter((log) => !log.recoveryCompleted).length;
   const currentWeekKpiDays = currentWeekDays.filter((day) => day.kpiTestIds?.length);
+  const actualWeekLoad = estimateWeeklyActualLoad(currentPlanWeek, sessions, externalLogs, workouts);
+  const latestRestingHeartRateSession = sessions.find((session) => session.readiness.restingHeartRate);
+  const latestRestingHeartRate = latestRestingHeartRateSession?.readiness.restingHeartRate ?? null;
+  const priorRestingHeartRates = sessions.filter((session) => session.id !== latestRestingHeartRateSession?.id).map((session) => session.readiness.restingHeartRate).filter((value): value is number => typeof value === "number" && value > 0);
+  const restingHeartRateBaseline = priorRestingHeartRates.length ? Math.round(priorRestingHeartRates.reduce((sum, value) => sum + value, 0) / priorRestingHeartRates.length) : null;
+  const readinessWarning = latestRestingHeartRate !== null && restingHeartRateBaseline !== null
+    && latestRestingHeartRate >= restingHeartRateBaseline + 5
+    && Boolean((latestRestingHeartRateSession?.readiness.energy !== null && latestRestingHeartRateSession?.readiness.energy !== undefined && latestRestingHeartRateSession.readiness.energy <= 2)
+      || (latestRestingHeartRateSession?.readiness.soreness !== null && latestRestingHeartRateSession?.readiness.soreness !== undefined && latestRestingHeartRateSession.readiness.soreness >= 3));
 
   return (
     <div>
@@ -60,18 +69,18 @@ export default function DashboardPage() {
       <DataStatus mode={dataMode} warning={warning} />
       <section className="card mb-6">
         <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">Current plan week · Week {currentPlanWeek.weekNumber}</p><h2 className="text-2xl font-black">{getWeekLoadLabel(currentPlanWeek.weekNumber)}</h2></div><Link className="text-sm font-bold text-blue" href={`/calendar#week-${currentPlanWeek.weekNumber}`}>Open week</Link></div>
-        <div className="mt-4 rounded-2xl bg-ice p-4"><div className="flex justify-between gap-3 text-sm font-black"><span>Planned load meter</span><span>{weekSummary.loadLevel}/5</span></div><div className="mt-2 h-3 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-blue" style={{ width: `${weekSummary.loadLevel * 20}%` }} /></div><p className="mt-3 text-sm font-semibold text-amber-900"><strong>Parent watch-out:</strong> {currentPlanWeek.parentWatchOut}</p></div>
+        <div className="mt-4 rounded-2xl bg-ice p-4"><div className="flex justify-between gap-3 text-sm font-black"><span>Planned load meter</span><span>{weekSummary.loadLevel}/5</span></div><div className="mt-2 h-3 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-blue" style={{ width: `${weekSummary.loadLevel * 20}%` }} /></div><p className="mt-2 text-sm"><strong>Actual perceived load:</strong> {actualWeekLoad === null ? "Actual load pending" : `${actualWeekLoad}/5`}</p><p className="mt-3 text-sm font-semibold text-amber-900"><strong>Parent watch-out:</strong> {currentPlanWeek.parentWatchOut}</p></div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <ParentDashboardCard label="Training days" value={`${weekSummary.trainingDays}`} detail="Startable planned sessions" />
-          <ParentDashboardCard label="External load days" value={`${weekSummary.externalLoadDays}`} detail="Camp, ice, lacrosse, or tryout" />
-          <ParentDashboardCard label="Recovery / protected" value={`${weekSummary.recoveryProtectedDays}`} detail="Explicit protected plan days" />
+          <ParentDashboardCard label="Sport load days" value={`${weekSummary.externalLoadDays}`} detail="Camp, ice, lacrosse, or tryout" />
+          <ParentDashboardCard label="Recovery / limited" value={`${weekSummary.recoveryProtectedDays}`} detail="Days that limit extra work" />
           <ParentDashboardCard label="High-load days" value={`${weekSummary.highLoadDays}`} detail="Intensity 4-5 load dates" />
           <ParentDashboardCard label="KPI days" value={`${currentWeekKpiDays.length}`} detail={currentWeekKpiDays[0]?.primarySession || "None planned this week"} />
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          <ParentDashboardCard label="Logged external" value={`${currentWeekExternalLogs.length} / ${currentWeekLoads.length}`} detail="Latest log per planned event" />
-          <ParentDashboardCard label="Average effort" value={average(currentWeekExternalLogs.map((log) => log.effort))} detail="External loads this week" />
-          <ParentDashboardCard label="Average energy" value={average(currentWeekExternalLogs.map((log) => log.energyAfter))} detail="Energy after external load" />
+          <ParentDashboardCard label="Logged sport loads" value={`${currentWeekExternalLogs.length} / ${currentWeekLoads.length}`} detail="Latest log per planned event" />
+          <ParentDashboardCard label="Average effort" value={average(currentWeekExternalLogs.map((log) => log.effort))} detail="Sport loads this week" />
+          <ParentDashboardCard label="Average energy" value={average(currentWeekExternalLogs.map((log) => log.energyAfter))} detail="Energy after sport load" />
           <ParentDashboardCard label="Soreness / pain" value={`${sorenessPainFlags}`} detail="Pain or soreness 3+" />
           <ParentDashboardCard label="Recovery reminders" value={`${recoveryReminders}`} detail="Logged recovery incomplete" />
         </div>
@@ -81,8 +90,9 @@ export default function DashboardPage() {
         <ParentDashboardCard label="Weekly summary" value={`${completed.length} complete`} detail={`${sessions.length} available attempts`} />
         <ParentDashboardCard label="Planned vs completed" value={`${completed.length} / ${workouts.length}`} detail={`${missed.length} workouts not started`} />
         <ParentDashboardCard label="Latest energy" value={latest?.readiness.energy ? `${latest.readiness.energy}/5` : "—"} detail="Pre-session readiness" />
-        <ParentDashboardCard label="Latest confidence" value={latest?.reflection.confidence ? `${latest.reflection.confidence}/5` : "—"} detail="Post-session reflection" />
+        <ParentDashboardCard label="Latest resting HR" value={latestRestingHeartRate ? `${latestRestingHeartRate} BPM` : "—"} detail={restingHeartRateBaseline ? `Current baseline trend: ${restingHeartRateBaseline} BPM` : "Optional readiness trend"} />
       </section>
+      <p className={`mt-4 rounded-xl p-3 text-sm font-semibold ${readinessWarning ? "bg-amber-50 text-amber-900" : "bg-ice text-slate-700"}`}>{readinessWarning ? "Readiness trend: resting heart rate is above the current baseline with low energy or higher soreness. Consider reducing load and review with a parent." : "Resting heart rate is a trend signal, not a diagnosis. Review it alongside energy, soreness, sleep, and how Maddox feels."}</p>
       <section className="mt-6 grid gap-6 lg:grid-cols-2">
         <article className="card"><h2 className="text-xl font-black">Needs attention</h2><div className="mt-4 space-y-2">{needsAttention.slice(0, 6).map((item, index) => <p className="rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900" key={`${item}-${index}`}>{item}</p>)}{!needsAttention.length && <p className="rounded-xl bg-lime/30 p-3 font-semibold">No current attention flags.</p>}</div></article>
         <article className="card"><h2 className="text-xl font-black">Quick links</h2><div className="mt-4 grid grid-cols-2 gap-3"><Link className="btn-primary" href="/today">Today</Link><Link className="btn-secondary" href="/history">History</Link><Link className="btn-secondary" href="/kpis">KPIs</Link><Link className="btn-secondary" href="/exports">Exports</Link><Link className="btn-secondary col-span-2" href="/compatibility">Debug / Compatibility</Link></div></article>

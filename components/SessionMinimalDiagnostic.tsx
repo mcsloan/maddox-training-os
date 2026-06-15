@@ -38,7 +38,7 @@ export function SessionMinimalDiagnostic({ routeId }: { routeId: string }) {
         exercises[drillId] = { drillId, done: false, actualSets: null, actualReps: null, actualDuration: null, actualDistance: null, notes: "", difficulty: null };
       });
       const now = new Date();
-      const next: SessionLog = { id: createId(workout.id), workoutId: workout.id, date: now.toISOString().slice(0, 10), startedAt: now.toISOString(), completedAt: null, currentStep: 0, status: "in-progress", readiness: { energy: null, soreness: null, focus: null }, exercises, kpiResults: {}, reflection: { energy: null, confidence: null, difficulty: null, improvement: "", notes: "" } };
+      const next: SessionLog = { id: createId(workout.id), workoutId: workout.id, date: now.toISOString().slice(0, 10), startedAt: now.toISOString(), completedAt: null, currentStep: 0, status: "in-progress", readiness: { energy: null, soreness: null, focus: null, restingHeartRate: null, sleepHours: null, notes: "" }, exercises, kpiResults: {}, reflection: { energy: null, confidence: null, difficulty: null, improvement: "", notes: "" } };
       setSession(next);
       return next;
     });

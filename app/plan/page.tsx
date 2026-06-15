@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExternalLoadChip, LoadChip, LoadChipLegend, PhaseChip, PlanTagChip } from "@/components/LoadChips";
+import { WeeklyLoadChart } from "@/components/WeeklyLoadChart";
 import { formatPlanDate, getWeekExternalLoads, getWeekPlanSummary, trainingPlan } from "@/lib/trainingData";
 
 export default function PlanPage() {
@@ -18,7 +19,7 @@ export default function PlanPage() {
         <h2 className="max-w-4xl text-2xl font-black">{overview.primaryGoal}</h2>
         <div className="mt-6 grid gap-5 md:grid-cols-2">
           <div><p className="label text-lime">Training bias</p><ul className="list-inside list-disc space-y-1 text-slate-200">{overview.trainingBias.map((item) => <li key={item}>{item}</li>)}</ul></div>
-          <div><p className="label text-lime">External loads</p><ul className="list-inside list-disc space-y-1 text-slate-200">{overview.externalLoads.map((item) => <li key={item}>{item}</li>)}</ul></div>
+          <div><p className="label text-lime">Sport loads</p><ul className="list-inside list-disc space-y-1 text-slate-200">{overview.externalLoads.map((item) => <li key={item}>{item}</li>)}</ul></div>
         </div>
         <div className="mt-6 flex flex-wrap gap-3"><Link className="btn-primary bg-blue" href="/calendar">Open Calendar</Link><Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link></div>
       </section>
@@ -30,22 +31,8 @@ export default function PlanPage() {
         <div className="mt-5"><LoadChipLegend /></div>
       </section>
 
-      <section className="card mt-6">
-        <div><p className="label">Visual load overview</p><h2 className="text-2xl font-black">12-Week Strategy</h2><p className="mt-2 text-sm text-slate-600">Build the foundation, absorb camps and external loads, add game speed, then taper into tryouts.</p></div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-          {weeks.map((week) => {
-            const summary = getWeekPlanSummary(week);
-            return <Link href={`/calendar#week-${week.weekNumber}`} className={`rounded-2xl border-2 p-4 ${summary.loadLevel >= 5 ? "border-red-300 bg-red-50" : summary.loadLevel <= 2 ? "border-teal-300 bg-teal-50" : "border-rink bg-ice"}`} key={week.weekNumber}>
-              <p className="label">Week {week.weekNumber} · {formatPlanDate(week.startDate, { month: "short", day: "numeric" })}-{formatPlanDate(week.endDate, { month: "short", day: "numeric" })}</p>
-              <PhaseChip phase={week.phase} />
-              <h3 className="mt-2 font-black">{summary.loadEmphasis}</h3>
-              <div className="mt-3 h-2 overflow-hidden rounded-full bg-white"><div className="h-full rounded-full bg-blue" style={{ width: `${summary.loadLevel * 20}%` }} /></div>
-              <p className="mt-1 text-xs font-bold">Overall load {summary.loadLevel}/5</p>
-              <p className="mt-2 text-xs text-slate-600">{summary.trainingDays} training · {summary.externalLoadDays} external · {summary.recoveryProtectedDays} protected</p>
-            </Link>;
-          })}
-        </div>
-      </section>
+      <PhaseGantt />
+      <WeeklyLoadChart />
 
       <section className="mt-6 grid gap-4 lg:grid-cols-2">
         {weeks.map((week) => {
@@ -60,15 +47,15 @@ export default function PlanPage() {
             <p className="mt-3 font-semibold">{week.objective}</p>
             <div className="mt-4 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
               <Metric label="Training days" value={summary.trainingDays} />
-              <Metric label="External load days" value={summary.externalLoadDays} />
+              <Metric label="Sport load days" value={summary.externalLoadDays} />
               <Metric label="KPI days" value={summary.kpiDays} />
-              <Metric label="Recovery / protected" value={summary.recoveryProtectedDays} />
+              <Metric label="Recovery / limited" value={summary.recoveryProtectedDays} />
               <Metric label="High-load days" value={summary.highLoadDays} />
               <Metric label="Overall load" value={`${summary.loadLevel}/5`} />
             </div>
             <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3"><div className="rounded-xl bg-ice p-3"><p className="label">Hard days</p><p className="font-semibold">{week.hardDays}</p></div><div className="rounded-xl bg-ice p-3"><p className="label">Skill days</p><p className="font-semibold">{week.skillDays}</p></div><div className="rounded-xl bg-ice p-3"><p className="label">Recovery days</p><p className="font-semibold">{week.recoveryDays}</p></div></div>
-            {loads.length > 0 && <div className="mt-4"><p className="label">External load summary</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} provider={load.provider} title={`${formatPlanDate(load.date, { month: "short", day: "numeric" })}: ${load.title}`} />)}</div></div>}
-            {kpiDays.length > 0 && <div className="mt-4"><p className="label">KPI events</p><div className="flex flex-wrap gap-2">{kpiDays.map((day) => <Link href={`/day/${day.date}`} key={day.date}><PlanTagChip tag="kpi" label={`${formatPlanDate(day.date, { month: "short", day: "numeric" })}: KPI checkpoint`} /></Link>)}</div></div>}
+            {loads.length > 0 && <div className="mt-4"><p className="label">Sport load summary</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} provider={load.provider} title={`${formatPlanDate(load.date, { month: "short", day: "numeric" })}: ${load.title}`} />)}</div></div>}
+            {kpiDays.length > 0 && <div className="mt-4"><p className="label">Testing</p><div className="flex flex-wrap gap-2">{kpiDays.map((day) => <Link href={`/day/${day.date}`} key={day.date}><PlanTagChip tag={day.tags?.includes("baseline") ? "baseline" : day.tags?.includes("optional") ? "optional" : "conditional"} label={`${formatPlanDate(day.date, { month: "short", day: "numeric" })}: ${day.primarySession}`} /></Link>)}</div></div>}
             <p className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900"><strong>Parent watch-out:</strong> {week.parentWatchOut}</p>
           </article>;
         })}
@@ -76,6 +63,20 @@ export default function PlanPage() {
       <p className="mt-6 text-xs text-slate-500">Plan seed {version}. {sourceTag}.</p>
     </div>
   );
+}
+
+function PhaseGantt() {
+  const rows = [
+    { label: "Foundation", start: 1, span: 3, kind: "foundation" as const },
+    { label: "Chase Hull Camp Load", start: 4, span: 1, kind: "chase-hull-camp" as const },
+    { label: "Speed + Power", start: 5, span: 2, kind: "speed-power" as const },
+    { label: "Deload / Consolidation", start: 7, span: 1, kind: "deload" as const },
+    { label: "Carleton Camp Load", start: 8, span: 1, kind: "carleton-camp" as const },
+    { label: "Game-Speed / Peak Build", start: 9, span: 2, kind: "game-speed" as const },
+    { label: "Sensplex Camp Load", start: 11, span: 1, kind: "sensplex-camp" as const },
+    { label: "Tryout Taper", start: 12, span: 1, kind: "taper" as const },
+  ];
+  return <section className="card mt-6"><p className="label">12-week strategy</p><h2 className="text-2xl font-black">Phase Gantt</h2><p className="mt-2 text-sm text-slate-600">The plan builds capacity, protects camp weeks, adds game pace, and finishes fresh.</p><div className="mt-5 overflow-x-auto"><div className="min-w-[760px]"><div className="mb-2 grid grid-cols-12 gap-1">{trainingPlan.weeks.map((week) => <Link className="text-center text-xs font-black text-blue" href={`/calendar#week-${week.weekNumber}`} key={week.weekNumber}>W{week.weekNumber}</Link>)}</div><div className="space-y-2">{rows.map((row) => <div className="grid grid-cols-12 gap-1" key={row.label}><div className="rounded-xl py-2 text-center" style={{ gridColumn: `${row.start} / span ${row.span}` }}><LoadChip kind={row.kind} label={row.label} /></div></div>)}</div></div></div></section>;
 }
 
 function Metric({ label, value }: { label: string; value: string | number }) {

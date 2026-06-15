@@ -9,7 +9,7 @@ export function ClearLocalDataButton() {
   const [cleared, setCleared] = useState(false);
 
   function clear() {
-    if (!window.confirm("Clear all local session logs, KPI results, and external load logs from this browser? This cannot be undone.")) return;
+    if (!window.confirm("Clear all local session logs, KPI results, and sport load logs from this browser? This cannot be undone.")) return;
     localSessionRepository.clearAll();
     localKpiRepository.clearAll();
     clearLocalExternalLoadLogs();

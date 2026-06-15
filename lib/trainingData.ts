@@ -91,11 +91,12 @@ export function getWeekLoadLabel(weekNumber: number) {
   return labels[weekNumber] || "Offseason Plan";
 }
 
-export function getWeekLoadLevel(week: PlanWeek) {
-  const loads = getWeekExternalLoads(week);
-  if (loads.some((load) => load.plannedIntensity === 5)) return 5;
-  if (week.weekNumber === 7 || week.weekNumber === 10 || week.weekNumber === 12) return 2;
-  return 4;
+export function getWeekLoadLevel(week: PlanWeek): 1 | 2 | 3 | 4 | 5 {
+  const plannedLevels: Record<number, 1 | 2 | 3 | 4 | 5> = {
+    1: 4, 2: 5, 3: 3, 4: 5, 5: 4, 6: 4,
+    7: 2, 8: 5, 9: 5, 10: 4, 11: 5, 12: 2,
+  };
+  return plannedLevels[week.weekNumber] || 3;
 }
 
 export function getWeekPlanSummary(week: PlanWeek): WeekPlanSummary {
@@ -122,16 +123,12 @@ export function getWeekPlanSummary(week: PlanWeek): WeekPlanSummary {
 
 export function getDayTags(date: string) {
   const day = getPlanDay(date);
-  const loads = getExternalLoadsForDate(date);
-  const tags = [...(day?.tags || [])];
-  if (loads.some((load) => load.type === "hockey_camp")) tags.push("camp");
-  if (loads.some((load) => load.type === "on_ice" || load.type === "on_ice_4v4")) tags.push("on-ice");
-  if (loads.some((load) => load.type === "tryout")) tags.push("tryout");
-  if (loads.some((load) => load.type === "lacrosse_practice" || load.type === "lacrosse_game" || load.type === "lacrosse_playoff")) tags.push("lacrosse");
+  const visibleKeys = new Set(["recovery", "external-load-protected", "deload", "taper", "baseline", "conditional", "optional", "kpi"]);
+  const tags = (day?.tags || []).filter((tag) => visibleKeys.has(tag));
   if (day?.dayRole.toLowerCase().includes("recovery")) tags.push("recovery");
   if (day?.weekNumber === 7 || day?.weekNumber === 10) tags.push("deload");
   if (day?.weekNumber === 12) tags.push("taper");
-  if (day?.kpiTestIds?.length) tags.push("kpi");
+  if (day?.kpiTestIds?.length && !tags.some((tag) => tag === "baseline" || tag === "conditional" || tag === "optional")) tags.push("kpi");
   return Array.from(new Set(tags));
 }
 
