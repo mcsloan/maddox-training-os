@@ -119,7 +119,8 @@ export function userFacingPlanText(text: string) {
   return text
     .replace(/Deload\s*\/\s*Consolidation/gi, "Deload")
     .replace(/external[- ]load[- ]protected/gi, "Recovery")
-    .replace(/external load/gi, "sport load")
+    .replace(/external[- ]load/gi, "sport-load")
+    .replace(/external load/gi, "sport-load")
     .replace(/treat external hockey as training load\.?/gi, "Treat hockey as planned sport load.")
     .replace(/\bexternal\b/gi, "sport")
     .replace(/recovery protected/gi, "Recovery")

@@ -18,7 +18,17 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   const display = getPlanDayDisplayModel(date);
   const intensity = Math.max(day?.intensity || 0, ...externalLoads.map((load) => load.plannedIntensity));
   const plannedKpis = (day?.kpiTestIds || workout?.kpiTestIds || []).map((id) => kpis.find((kpi) => kpi.id === id)).filter((kpi) => Boolean(kpi));
-  const hasPlannedTrainingWork = Boolean(workout);
+  const hasPlannedTrainingWork = Boolean(workout || blocks.length > 0 || (day?.durationMinutes || 0) > 0);
+  const plannedTrainingWorkSummary = hasPlannedTrainingWork
+    ? externalLoads.length > 0
+      ? "Recovery-adjusted training work"
+      : "Planned training work"
+    : "No planned training work today — recovery only.";
+  const plannedTrainingWorkDetails = hasPlannedTrainingWork
+    ? blocks.length > 0
+      ? `Blocks: ${blocks.map((block) => block!.id).join(", ")}`
+      : "Focus on recovery, mobility, and getting ready for the next planned training day."
+    : "Focus on recovery, mobility, and getting ready for the next planned training day.";
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -34,14 +44,17 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
       <section className="mt-6 grid gap-4 md:grid-cols-2">
         <article className="card">
           <p className="label">Planned training work</p>
-          <h2 className="text-xl font-black">{hasPlannedTrainingWork ? day?.primarySession : "No planned training work today — recovery only."}</h2>
+          <h2 className="text-xl font-black">{plannedTrainingWorkSummary}</h2>
+          {hasPlannedTrainingWork && day?.primarySession && <p className="mt-2 font-semibold">{day.primarySession}</p>}
           {hasPlannedTrainingWork ? (
             <>
+              <p className="mt-3 text-slate-600">{plannedTrainingWorkDetails}</p>
+              {blocks.length > 0 && <p className="mt-3"><strong>Blocks:</strong> {blocks.map((block) => block!.id).join(", ")}</p>}
               <p className="mt-3"><strong>Daily micro-skill:</strong> {day?.dailyMicroSkill || "Recovery and sport-load focus"}</p>
               <p className="mt-3"><strong>Shooting/puck:</strong> {day?.shootingPuckDetail || "None planned"}</p>
               <p className="mt-3"><strong>Duration:</strong> {day ? `${day.durationMinutes} minutes` : "No off-ice duration"}</p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <Link className="btn-primary bg-blue" href={`/session/${workout!.id}`}>Log Training Work</Link>
+                {workout ? <Link className="btn-primary bg-blue" href={`/session/${workout.id}`}>Log Training Work</Link> : <span className="rounded-2xl bg-blue px-5 py-3 font-bold text-white">Log Training Work</span>}
                 <p className="text-sm font-semibold text-slate-600">Training work is logged separately from sport-load logging.</p>
               </div>
             </>
