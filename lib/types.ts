@@ -107,6 +107,14 @@ export interface WeekPlanSummary {
   loadEmphasis: string;
 }
 
+export interface PlanDayDisplayModel {
+  methodologyPhase: "Foundation + Acceleration" | "Speed + Power" | "Deload" | "Game-Speed + Reactive Agility" | "Training Camp / Tryout Simulation" | "Taper + Peak";
+  sportLoads: Array<"On-Ice" | "Camp" | "Lacrosse">;
+  loadRule: "Recovery" | "Deload" | null;
+  testingEvent: "Perf Testing" | null;
+  displayTags: string[];
+}
+
 export interface PlanDay {
   date: string;
   weekNumber: number;

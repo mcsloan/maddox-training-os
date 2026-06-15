@@ -9,7 +9,7 @@ import phasesJson from "@/data/phases.json";
 import videosJson from "@/data/videos.json";
 import workoutBlocksJson from "@/data/workoutBlocks.json";
 import workoutsJson from "@/data/workouts.json";
-import { Drill, EquipmentSetup, KPI, LoadRule, ParentCue, Phase, PlannedExternalLoad, PlanWeek, TrainingPlan, VideoReference, WeekPlanSummary, Workout, WorkoutBlock } from "@/lib/types";
+import { Drill, EquipmentSetup, KPI, LoadRule, ParentCue, Phase, PlannedExternalLoad, PlanDayDisplayModel, PlanWeek, TrainingPlan, VideoReference, WeekPlanSummary, Workout, WorkoutBlock } from "@/lib/types";
 
 export const drills = drillsJson as Drill[];
 export const workouts = workoutsJson as Workout[];
@@ -75,20 +75,60 @@ export function getCalendarDates() {
 
 export function getWeekLoadLabel(weekNumber: number) {
   const labels: Record<number, string> = {
-    1: "Phase 1 Foundation",
-    2: "High / Playoff",
-    3: "Phase 1 Foundation + KPI Checkpoint",
-    4: "Chase Hull Camp Load",
-    5: "Phase 2 Speed + Power",
-    6: "Phase 2 Speed + Power",
-    7: "Deload / Consolidation",
-    8: "Carleton Camp Load",
-    9: "Phase 3 Game-Speed Dominance",
-    10: "Game-Speed / Peak Consolidation",
-    11: "Sensplex Camp Load",
-    12: "Tryout Taper",
+    1: "Foundation + Acceleration",
+    2: "Foundation + Acceleration",
+    3: "Foundation + Acceleration",
+    4: "Foundation + Acceleration",
+    5: "Speed + Power",
+    6: "Speed + Power",
+    7: "Deload",
+    8: "Game-Speed + Reactive Agility",
+    9: "Game-Speed + Reactive Agility",
+    10: "Game-Speed + Reactive Agility",
+    11: "Training Camp / Tryout Simulation",
+    12: "Taper + Peak",
   };
   return labels[weekNumber] || "Offseason Plan";
+}
+
+export function getPlanDayDisplayModel(date: string): PlanDayDisplayModel {
+  const day = getPlanDay(date);
+  const loads = getExternalLoadsForDate(date);
+  const weekNumber = day?.weekNumber || trainingPlan.weeks.find((week) => date >= week.startDate && date <= week.endDate)?.weekNumber || 1;
+  const methodologyPhase = getWeekLoadLabel(weekNumber) as PlanDayDisplayModel["methodologyPhase"];
+  const sportLoads = Array.from(new Set(loads.map((load) =>
+    load.type === "hockey_camp" ? "Camp" : load.type.startsWith("lacrosse") ? "Lacrosse" : "On-Ice",
+  ))) as PlanDayDisplayModel["sportLoads"];
+  const loadRule = weekNumber === 7 ? "Deload" : sportLoads.length || day?.dayRole.toLowerCase().includes("recovery") ? "Recovery" : null;
+  const testingEvent = day?.kpiTestIds?.length ? "Perf Testing" : null;
+  return {
+    methodologyPhase,
+    sportLoads,
+    loadRule,
+    testingEvent,
+    displayTags: [methodologyPhase, ...sportLoads, ...(loadRule ? [loadRule] : []), ...(testingEvent ? [testingEvent] : [])],
+  };
+}
+
+export function userFacingLoadRule(rule: string | undefined, hasSportLoad = false) {
+  if (hasSportLoad) return "On camp, lacrosse, or heavy on-ice days, dryland is reduced to mobility, light puck touches, and recovery.";
+  return userFacingPlanText(rule || "Follow the planned recovery and training limits.");
+}
+
+export function userFacingPlanText(text: string) {
+  return text
+    .replace(/Deload\s*\/\s*Consolidation/gi, "Deload")
+    .replace(/external[- ]load[- ]protected/gi, "Recovery")
+    .replace(/external load/gi, "sport load")
+    .replace(/\bexternal\b/gi, "sport")
+    .replace(/recovery protected/gi, "Recovery")
+    .replace(/camp protection/gi, "Camp")
+    .replace(/limit extra work/gi, "Recovery")
+    .replace(/No hard dryland/gi, "Recovery")
+    .replace(/No KPI testing/gi, "Skip performance testing")
+    .replace(/external[- ]load[- ]protected/gi, "Recovery")
+    .replace(/protection/gi, "recovery")
+    .replace(/consolidation/gi, "Deload");
 }
 
 export function getWeekLoadLevel(week: PlanWeek): 1 | 2 | 3 | 4 | 5 {
@@ -126,7 +166,7 @@ export function getDayTags(date: string) {
   const visibleKeys = new Set(["recovery", "external-load-protected", "deload", "taper", "baseline", "conditional", "optional", "kpi"]);
   const tags = (day?.tags || []).filter((tag) => visibleKeys.has(tag));
   if (day?.dayRole.toLowerCase().includes("recovery")) tags.push("recovery");
-  if (day?.weekNumber === 7 || day?.weekNumber === 10) tags.push("deload");
+  if (day?.weekNumber === 7) tags.push("deload");
   if (day?.weekNumber === 12) tags.push("taper");
   if (day?.kpiTestIds?.length && !tags.some((tag) => tag === "baseline" || tag === "conditional" || tag === "optional")) tags.push("kpi");
   return Array.from(new Set(tags));
