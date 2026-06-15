@@ -282,11 +282,12 @@ type GanttPerfRow = {
 
 function GanttRow({ row }: { row: GanttGroupRow }) {
   const style = ganttStyleFor(row.kind, row.isPrimary);
+  const fillStyle = ganttFillStyleFor(row.kind, row.isPrimary);
   return (
     <div className="grid grid-cols-[12rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-1">
       <div className={`pr-3 text-sm font-black text-slate-800 ${row.isPrimary ? "uppercase tracking-wide text-slate-950" : ""}`}>{row.label}</div>
       <div className="min-w-0" style={{ gridColumn: `${row.startWeek + 1} / ${row.endWeek + 2}` }}>
-        <div className={`${style} w-full min-w-0 overflow-hidden border border-slate-900/10 px-2 py-2 text-xs font-black leading-tight shadow-sm`} title={row.label}>
+        <div className={`${style} w-full min-w-0 overflow-hidden border px-2 py-2 text-xs font-black leading-tight shadow-sm`} style={fillStyle} title={row.label}>
           <span className="block truncate">{row.shortLabel}</span>
         </div>
       </div>
@@ -318,13 +319,13 @@ function ganttStyleFor(kind: GanttGroupRow["kind"], primary = false) {
   if (primary) {
     switch (kind) {
       case "phase":
-        return "bg-blue-800 text-white";
+        return "";
       case "deload":
-        return "bg-teal-700 text-white";
+        return "";
       case "taper":
-        return "bg-amber-400 text-amber-950";
+        return "";
       default:
-        return "bg-blue-800 text-white";
+        return "";
     }
   }
 
@@ -341,6 +342,36 @@ function ganttStyleFor(kind: GanttGroupRow["kind"], primary = false) {
       return "bg-amber-200 text-amber-950";
     default:
       return "bg-slate-200 text-slate-950";
+  }
+}
+
+function ganttFillStyleFor(kind: GanttGroupRow["kind"], primary = false): React.CSSProperties {
+  if (primary) {
+    switch (kind) {
+      case "phase":
+        return { backgroundColor: "#0f6f9f", borderColor: "#075985", color: "#ffffff", fontWeight: 800, borderRadius: 0 };
+      case "deload":
+        return { backgroundColor: "#0f766e", borderColor: "#115e59", color: "#ffffff", fontWeight: 800, borderRadius: 0 };
+      case "taper":
+        return { backgroundColor: "#f59e0b", borderColor: "#b45309", color: "#111827", fontWeight: 800, borderRadius: 0 };
+      default:
+        return { backgroundColor: "#0f6f9f", borderColor: "#075985", color: "#ffffff", fontWeight: 800, borderRadius: 0 };
+    }
+  }
+
+  switch (kind) {
+    case "sport":
+      return { backgroundColor: "#ddd6fe", borderColor: "#7c3aed", color: "#3b0764", fontWeight: 700, borderRadius: 0 };
+    case "camp":
+      return { backgroundColor: "#fdba74", borderColor: "#ea580c", color: "#7c2d12", fontWeight: 700, borderRadius: 0 };
+    case "onIce":
+      return { backgroundColor: "#c7d2fe", borderColor: "#4338ca", color: "#312e81", fontWeight: 700, borderRadius: 0 };
+    case "deload":
+      return { backgroundColor: "#99f6e4", borderColor: "#0f766e", color: "#134e4a", fontWeight: 700, borderRadius: 0 };
+    case "taper":
+      return { backgroundColor: "#fde68a", borderColor: "#d97706", color: "#78350f", fontWeight: 700, borderRadius: 0 };
+    default:
+      return { backgroundColor: "#e2e8f0", borderColor: "#94a3b8", color: "#0f172a", fontWeight: 700, borderRadius: 0 };
   }
 }
 
