@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { DataStatus } from "@/components/DataStatus";
 import { ParentDashboardCard } from "@/components/ParentDashboardCard";
+import { getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
-import { getCurrentPlanWeek, getWeekExternalLoads, getWeekLoadLabel, getWeekPlanSummary, kpis, trainingPlan, userFacingLoadRule, userFacingPlanText, workouts } from "@/lib/trainingData";
+import { getCurrentPlanWeek, getWeekLoadLabel, getWeekPlanSummary, kpis, trainingPlan, userFacingLoadRule, userFacingPlanText, workouts } from "@/lib/trainingData";
 import { estimateWeeklyActualLoad, kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
 import { ExternalLoadLog, KPIResult, SessionLog } from "@/lib/types";
 
@@ -41,7 +42,7 @@ export default function DashboardPage() {
   ];
   const currentPlanWeek = getCurrentPlanWeek();
   const currentWeekDays = trainingPlan.days.filter((day) => day.weekNumber === currentPlanWeek.weekNumber);
-  const currentWeekLoads = getWeekExternalLoads(currentPlanWeek);
+  const currentWeekLoads = currentWeekDays.flatMap((day) => getV84SportLoadsForDate(day.date));
   const weekSummary = getWeekPlanSummary(currentPlanWeek);
   const loadWarnings = currentWeekLoads.map((load) => `${load.title}: ${userFacingLoadRule(load.doNotDoRule, true)}`);
   const currentWeekExternalIds = new Set(currentWeekLoads.map((load) => load.id));
