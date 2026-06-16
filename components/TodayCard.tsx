@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ParentCue, Phase, Workout } from "@/lib/types";
 
-export function TodayCard({ workout, phase, parentCue, focusLabel = "Today's focus" }: { workout: Workout; phase?: Phase; parentCue?: ParentCue; focusLabel?: string }) {
+export function TodayCard({ workout, phase, parentCue, focusLabel = "Today's focus", sessionHref }: { workout: Workout; phase?: Phase; parentCue?: ParentCue; focusLabel?: string; sessionHref?: string }) {
   return (
     <article className="card overflow-hidden p-0">
       <div className="bg-navy p-6 text-white sm:p-8">
@@ -20,7 +20,7 @@ export function TodayCard({ workout, phase, parentCue, focusLabel = "Today's foc
           <p className="font-semibold">{parentCue?.cue}</p>
           <p className="mt-3 text-sm text-slate-500">{workout.sessionType} · {workout.campContext}</p>
         </div>
-        <Link href={`/session/${workout.id}`} className="btn-primary text-lg sm:min-w-48">
+        <Link href={sessionHref || `/session/${workout.id}`} className="btn-primary text-lg sm:min-w-48">
           Start Training Work
         </Link>
       </div>

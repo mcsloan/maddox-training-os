@@ -5,6 +5,7 @@ import { ExternalLoadActions } from "@/components/ExternalLoadActions";
 import { ExternalLoadChip, PhaseChip, PlanTagChip } from "@/components/LoadChips";
 import { TrainingWorkActions } from "@/components/TrainingWorkActions";
 import { getV84DayExecutionEntries, getV84SportLoadsForDate, getV84TrainingWorkEntries } from "@/lib/imports/v8_4/daily";
+import { getV84SessionByDate } from "@/lib/imports/v8_4/session";
 import { formatPlanDate, getDayTags, getPlanDay, getPlanDayDisplayModel, getRelatedVideos, getWorkout, getWorkoutBlock, getWorkoutDrills, isUsableExternalUrl, kpis, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
 
 export default async function DayPreviewPage({ params }: { params: Promise<{ date: string }> }) {
@@ -13,8 +14,10 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   const executionEntries = getV84DayExecutionEntries(date);
   const trainingWorkEntries = getV84TrainingWorkEntries(date);
   const externalLoads = getV84SportLoadsForDate(date);
+  const v84Session = getV84SessionByDate(date);
   if (!day && !externalLoads.length && !executionEntries.length) notFound();
   const workout = day?.workoutId ? getWorkout(day.workoutId) : undefined;
+  const trainingWorkHref = workout ? v84Session ? `/session/${v84Session.sessionId}` : `/session/${workout.id}` : "";
   const blocks = day ? day.workoutBlockIds.map(getWorkoutBlock).filter((block) => Boolean(block)) : [];
   const drills = workout ? getWorkoutDrills(workout) : [];
   const equipment = Array.from(new Set(drills.flatMap((drill) => drill.equipment)));
@@ -46,7 +49,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
         <h1 className="text-3xl font-black sm:text-5xl">{day?.primarySession || externalLoads[0]?.title}</h1>
         <p className="mt-3 text-slate-200">{formatPlanDate(date, { weekday: "long", month: "long", day: "numeric", year: "numeric" })} · Load {intensity}/5</p>
         <div className="mt-4 flex flex-wrap gap-2">{day && <PhaseChip phase={display.methodologyPhase} />}{externalLoads.map((load) => <ExternalLoadChip key={load.id} type={load.type} />)}{tags.map((tag) => <PlanTagChip key={tag} tag={tag} />)}</div>
-        <div className="mt-6 flex flex-wrap gap-3">{workout && <Link className="btn-primary bg-blue text-lg" href={`/session/${workout.id}`}>Start Training Work</Link>}{!workout && externalLoads.length > 0 && <span className="rounded-2xl bg-red-100 px-5 py-3 font-bold text-red-800">Reduced Off-Ice Work Today</span>}<Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link></div>
+        <div className="mt-6 flex flex-wrap gap-3">{workout && <Link className="btn-primary bg-blue text-lg" href={trainingWorkHref}>Start Training Work</Link>}{!workout && externalLoads.length > 0 && <span className="rounded-2xl bg-red-100 px-5 py-3 font-bold text-red-800">Reduced Off-Ice Work Today</span>}<Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link></div>
       </section>
 
       <DayExecutionSequence entries={executionEntries} />

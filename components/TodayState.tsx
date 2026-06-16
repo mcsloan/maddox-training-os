@@ -7,6 +7,7 @@ import { ExternalLoadActions } from "@/components/ExternalLoadActions";
 import { ExternalLoadChip, PlanTagChip } from "@/components/LoadChips";
 import { TodayCard } from "@/components/TodayCard";
 import { getV84DayExecutionEntries, getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
+import { getV84SessionByDate } from "@/lib/imports/v8_4/session";
 import { formatPlanDate, getNextKpiDay, getNextScheduledDate, getParentCue, getPhase, getPlanDay, getTodayWorkout, getWorkoutDrills, trainingPlan, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
 
 function localDate() {
@@ -25,6 +26,7 @@ export function TodayState() {
   const day = getPlanDay(today);
   const executionEntries = getV84DayExecutionEntries(today);
   const loads = getV84SportLoadsForDate(today);
+  const v84Session = getV84SessionByDate(today);
   const workout = getTodayWorkout(today);
   const nextDate = getNextScheduledDate(today);
 
@@ -33,7 +35,7 @@ export function TodayState() {
 
   return (
     <div>
-      {workout && <><TodayCard workout={workout} phase={getPhase(workout.phaseId)} parentCue={getParentCue(workout.parentCueId)} /><SessionMap workoutId={workout.id} /></>}
+      {workout && <><TodayCard workout={workout} phase={getPhase(workout.phaseId)} parentCue={getParentCue(workout.parentCueId)} sessionHref={v84Session ? `/session/${v84Session.sessionId}` : undefined} /><SessionMap workoutId={workout.id} /></>}
       {!workout && day && <section className="card"><p className="label">{userFacingPlanText(day.dayRole)}</p><h2 className="text-3xl font-black">{day.primarySession}</h2><p className="mt-3">{userFacingPlanText(day.recovery)}</p><p className="mt-3 font-semibold text-amber-800">{userFacingLoadRule(day.doNotDo, loads.length > 0)}</p><Link className="btn-secondary mt-5" href={`/day/${today}`}>Open Today&apos;s Plan</Link></section>}
       <DayExecutionSequence entries={executionEntries} compact />
       {loads.length > 0 && <section className="card mt-6"><p className="label">Sport load today</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} />)}</div><p className="mt-4 font-semibold text-amber-800">{userFacingLoadRule(loads[0].doNotDoRule, true)}</p><ExternalLoadActions loads={loads} /><NextKpiNotice afterDate={today} /></section>}

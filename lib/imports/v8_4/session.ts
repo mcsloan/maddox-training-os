@@ -18,6 +18,10 @@ export function getV84SessionById(sessionId: string) {
   return sessions.find((session) => session.sessionId === sessionId) || null;
 }
 
+export function getV84SessionByDate(date: string) {
+  return sessions.find((session) => session.date === date) || null;
+}
+
 export function getV84VideoForDrillId(drillId: string): V84DrillVideoState | null {
   const video = exerciseVideoMap.find((item) => item.canonicalExerciseId === drillId);
   return video ? toVideoState(video) : null;
