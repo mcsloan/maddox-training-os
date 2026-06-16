@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { DayExecutionSequence } from "@/components/DayExecutionSequence";
 import { ExternalLoadActions } from "@/components/ExternalLoadActions";
@@ -15,8 +15,7 @@ function localDate() {
 }
 
 export function TodayState() {
-  const [today, setToday] = useState<string | null>(null);
-  useEffect(() => setToday(localDate()), []);
+  const [today] = useState(localDate);
   if (!today) return <section className="card"><p className="font-semibold">Checking today&apos;s plan...</p></section>;
 
   const { startDate, endDate } = trainingPlan.overview;
