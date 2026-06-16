@@ -1,190 +1,428 @@
-# Maddox iOS Training App — Startup / Recovery Runbook
+# Maddox Training OS — Startup & Recovery Guide
 
 ## Purpose
 
-Use this document after a shutdown, power outage, reboot, or lost browser/terminal session to restart the Maddox Training OS project quickly.
+This document explains how to restart the Maddox Training OS project after a shutdown, reboot, power outage, lost terminal session, or Codex interruption.
+
+Use this for both:
+
+* quick daily startup
+* full recovery after something breaks
 
 ---
 
-# 1. Project Basics
+# QUICK START — GET RUNNING FAST
 
-**Project name:** Maddox Training OS
-**Local repo path:** `~/Projects/maddox-training-os`
-**Main branch:** `main`
-**Local app URL:** `http://localhost:3000`
-**Production app:** Vercel deployment
-**Primary package manager:** npm
-**Framework:** Next.js
-**Database/backend:** Supabase
-**Source control:** GitHub
-**Deployment:** Vercel
+## 1. Open These Browser Links
 
----
+### Local App
 
-# 2. Browser Tabs to Reopen
+Localhost:
 
-## Local App
+http://localhost:3000/
 
-Open:
+Local network / iPhone testing:
 
-`http://localhost:3000`
+http://192.168.1.5:3000/
 
-Use this for live development and testing on the iMac.
+Note: the local network IP may change after router reboot or network change. If the iPhone link stops working, check the Network URL printed by `npm run dev`.
 
-## Production App
+### Production App
 
-Open the Vercel production URL:
+https://maddox-training-os.vercel.app/
 
-`PASTE_VERCEL_PRODUCTION_URL_HERE`
+### GitHub Repo
 
-Use this to compare what is actually deployed versus local development.
+https://github.com/mcsloan/maddox-training-os
 
-## GitHub
+### Vercel Dashboard
 
-Open the GitHub repository:
+https://vercel.com/mcsloans-projects
 
-`PASTE_GITHUB_REPO_URL_HERE`
+### Supabase Project
 
-Use this for commits, branches, repo files, issues, and deployment history links.
+https://supabase.com/dashboard/project/mbjcedhysniabbaigsko
 
-## Vercel Dashboard
+### Dropbox Project Folder
 
-Open:
+https://www.dropbox.com/home/Apps/Maddox%20Training%20OS
 
-`https://vercel.com/dashboard`
+### ChatGPT / Codex
 
-Then open the Maddox Training OS project.
+ChatGPT:
 
-Use this for:
+https://chatgpt.com/
 
-* Production deployment status
-* Preview deployments
-* Environment variables
-* Build logs
-* Domain settings
+Codex usage / limits:
 
-## Supabase Dashboard
-
-Open:
-
-`https://supabase.com/dashboard/projects`
-
-Then open the Maddox Training OS Supabase project.
-
-Use this for:
-
-* Database tables
-* Auth
-* Storage
-* SQL editor
-* API keys
-* Environment variables
-
-## ChatGPT / Codex
-
-Open:
-
-`https://chatgpt.com/`
-
-Use this for project planning, Codex prompts, debugging, and documentation generation.
+https://chatgpt.com/codex/settings/usage
 
 ---
 
-# 3. Terminal Window Layout
+## 2. Open Three Terminal Windows
 
-Use three terminal windows.
+Use three separate terminal windows.
 
 ---
 
-## Terminal 1 — Main App Server
+## Terminal 1 — Local App Server
 
-Purpose: run the local development server.
+Purpose: runs the local Next.js app.
 
 ```bash
 cd ~/Projects/maddox-training-os
-git status
-npm install
 npm run dev
 ```
 
-Expected local app:
+Expected output includes:
 
 ```text
-http://localhost:3000
+Local:   http://localhost:3000
+Network: http://192.168.1.5:3000
 ```
 
-If port 3000 is busy:
+Keep this terminal open.
 
-```bash
-lsof -i :3000
-kill -9 <PID>
-npm run dev
-```
+Do not use this terminal for Git or Codex while the dev server is running.
 
 ---
 
 ## Terminal 2 — Git / Repo Control
 
-Purpose: check repo state, commit work, and sync with GitHub.
+Purpose: check repo state, pull/push, commit changes, inspect branches.
 
 ```bash
 cd ~/Projects/maddox-training-os
 git status
-git branch
+git pull
 git log --oneline -5
 ```
 
-Before starting new work:
+Desired normal state:
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+nothing to commit, working tree clean
+```
+
+---
+
+## Terminal 3 — Codex
+
+Purpose: run Codex inside the project repo.
+
+```bash
+cd ~/Projects/maddox-training-os
+codex
+```
+
+If `codex` does not launch:
+
+```bash
+npx @openai/codex
+```
+
+Once Codex opens, give it the current surgical task.
+
+Current recommended Codex task:
+
+```text
+Wire Today / Day pages to v8.4 dayExecutionPlan + sportLoads, while preserving existing logging architecture. Do not change Gantt. Do not invent workouts. Do not wire Session/KPI yet.
+```
+
+---
+
+# NORMAL DAILY STARTUP
+
+## Step 1 — Start Local App
+
+Terminal 1:
+
+```bash
+cd ~/Projects/maddox-training-os
+npm run dev
+```
+
+Open:
+
+http://localhost:3000/
+
+For iPhone testing on the same Wi-Fi:
+
+http://192.168.1.5:3000/
+
+---
+
+## Step 2 — Check Git
+
+Terminal 2:
+
+```bash
+cd ~/Projects/maddox-training-os
+git status
+git pull
+git log --oneline -5
+```
+
+---
+
+## Step 3 — Start Codex
+
+Terminal 3:
+
+```bash
+cd ~/Projects/maddox-training-os
+codex
+```
+
+Fallback:
+
+```bash
+npx @openai/codex
+```
+
+---
+
+# EXPECTED WORKING STATE
+
+| Area                     | Expected State                                              |
+| ------------------------ | ----------------------------------------------------------- |
+| Terminal 1               | `npm run dev` running                                       |
+| Terminal 2               | available for Git commands                                  |
+| Terminal 3               | Codex running                                               |
+| Local app                | http://localhost:3000/                                      |
+| iPhone/local network app | http://192.168.1.5:3000/                                    |
+| Production app           | https://maddox-training-os.vercel.app/                      |
+| GitHub                   | https://github.com/mcsloan/maddox-training-os               |
+| Vercel                   | https://vercel.com/mcsloans-projects                        |
+| Supabase                 | https://supabase.com/dashboard/project/mbjcedhysniabbaigsko |
+| Dropbox                  | https://www.dropbox.com/home/Apps/Maddox%20Training%20OS    |
+
+---
+
+# POWER OUTAGE / CRASH RECOVERY
+
+Use this when the iMac shuts down unexpectedly.
+
+---
+
+## 1. Check Repo State
+
+Terminal 2:
+
+```bash
+cd ~/Projects/maddox-training-os
+git status
+git log --oneline -5
+```
+
+Look for:
+
+* modified files
+* untracked files
+* branch name
+* whether local is behind origin
+
+---
+
+## 2. Pull Latest Repo State
+
+Terminal 2:
 
 ```bash
 git pull
 ```
 
-Before committing:
+If it says:
+
+```text
+Already up to date.
+```
+
+That is good.
+
+---
+
+## 3. Start Local App
+
+Terminal 1:
+
+```bash
+cd ~/Projects/maddox-training-os
+npm run dev
+```
+
+Open:
+
+http://localhost:3000/
+
+---
+
+## 4. Start Codex
+
+Terminal 3:
+
+```bash
+cd ~/Projects/maddox-training-os
+codex
+```
+
+Fallback:
+
+```bash
+npx @openai/codex
+```
+
+---
+
+## 5. Verify Production
+
+Open production:
+
+https://maddox-training-os.vercel.app/
+
+Open Vercel dashboard:
+
+https://vercel.com/mcsloans-projects
+
+Check:
+
+* latest deployment
+* build status
+* production URL
+* latest commit
+
+---
+
+# COMMON GIT SITUATIONS
+
+## Working Tree Clean
+
+Good state:
+
+```text
+nothing to commit, working tree clean
+```
+
+No action needed.
+
+---
+
+## Untracked File Appears
+
+Example:
+
+```text
+Untracked files:
+  lib/imports/v8_4/daily.ts
+```
+
+If the file is real project work, commit it:
+
+```bash
+git add lib/imports/v8_4/daily.ts
+git commit -m "Add v8.4 daily import mapping"
+git push
+```
+
+---
+
+## next-env.d.ts Changed During Dev Server
+
+Example diff:
+
+```text
+import "./.next/types/routes.d.ts";
+changed to:
+import "./.next/dev/types/routes.d.ts";
+```
+
+This can happen when Next.js dev server updates generated type paths.
+
+Usually do not commit this file change.
+
+Restore it:
+
+```bash
+git restore next-env.d.ts
+git status
+```
+
+Then commit only the real project files.
+
+---
+
+## Commit Normal Project Changes
+
+Terminal 2:
 
 ```bash
 git status
 git diff
-```
-
-Commit pattern:
-
-```bash
 git add .
 git commit -m "Describe the change clearly"
 git push
 ```
 
-Useful check:
+After pushing:
 
 ```bash
-git log --oneline -3
+git status
+```
+
+Goal:
+
+```text
+nothing to commit, working tree clean
 ```
 
 ---
 
-## Terminal 3 — Diagnostics / Build / Tests
+# LOCAL APP TROUBLESHOOTING
 
-Purpose: run checks without disturbing the dev server.
+## Port 3000 Is Busy
+
+Check the port:
+
+```bash
+lsof -i :3000
+```
+
+Kill the stuck process:
+
+```bash
+kill -9 PID
+```
+
+Replace `PID` with the actual process ID.
+
+Then restart:
+
+```bash
+npm run dev
+```
+
+---
+
+## Next.js Cache Seems Broken
+
+Terminal 1 or Terminal 2:
 
 ```bash
 cd ~/Projects/maddox-training-os
-npm run lint
-npm run build
-```
-
-If the build fails, copy the first meaningful error into ChatGPT/Codex.
-
-Optional cleanup if things seem corrupted:
-
-```bash
 rm -rf .next
 npm run dev
 ```
 
-If dependencies seem broken:
+---
+
+## Dependencies Seem Broken
+
+Use only if the app will not run and normal restart fails.
 
 ```bash
+cd ~/Projects/maddox-training-os
 rm -rf node_modules package-lock.json
 npm install
 npm run dev
@@ -192,275 +430,269 @@ npm run dev
 
 ---
 
-# 4. After Power Outage Recovery Checklist
+## Slow Filesystem Warning
 
-## Step 1 — Confirm repo state
-
-```bash
-cd ~/Projects/maddox-training-os
-git status
-```
-
-Look for:
-
-* uncommitted changes
-* modified files
-* deleted files
-* branch name
-* whether local is behind origin
-
-## Step 2 — Confirm latest commits
-
-```bash
-git log --oneline -5
-```
-
-Make sure the latest commit matches the last known good work.
-
-## Step 3 — Start local app
-
-```bash
-npm run dev
-```
-
-Open:
-
-`http://localhost:3000`
-
-## Step 4 — Check production
-
-Open Vercel production URL:
-
-`PASTE_VERCEL_PRODUCTION_URL_HERE`
-
-Compare:
-
-* local app
-* production app
-* latest pushed commit
-* latest Vercel deployment
-
-## Step 5 — Check Vercel deployment status
-
-Open:
-
-`https://vercel.com/dashboard`
-
-Confirm:
-
-* latest deployment succeeded
-* production points to the expected commit
-* no failed build logs
-
-## Step 6 — Check Supabase only if data looks wrong
-
-Open:
-
-`https://supabase.com/dashboard/projects`
-
-Check:
-
-* tables
-* auth
-* storage
-* environment variables
-
-Do not change database settings unless the issue is clearly database-related.
-
----
-
-# 5. Critical Project Rules
-
-## Keep important decisions in the repo
-
-Important decisions should not live only in ChatGPT or Codex chat history.
-
-Save them in files such as:
+You may see:
 
 ```text
-/docs/DECISIONS.md
-/docs/STARTUP.md
-/docs/ROADMAP.md
-/docs/RELEASE_NOTES.md
-/docs/BACKLOG.md
+Slow filesystem detected.
 ```
 
-## Do not rely on memory alone
+This is not urgent if the app still runs.
 
-After every major decision, update the repo.
-
-Examples:
-
-* changed plan page terminology
-* changed chip categories
-* changed KPI rules
-* changed data model
-* changed calendar behavior
-* changed Maddox training structure
-* changed deployment process
-
-## Commit after stable milestones
-
-Good commit moments:
-
-* app runs locally
-* build passes
-* UI change is complete
-* terminology cleanup is complete
-* data model change is complete
-* deployment docs are updated
+Ignore it unless the app becomes unusably slow.
 
 ---
 
-# 6. Useful Commands
+# BUILD / VALIDATION COMMANDS
 
-## Check current folder
-
-```bash
-pwd
-```
-
-## Go to project
+Use Terminal 2 when Terminal 1 is already running the app.
 
 ```bash
 cd ~/Projects/maddox-training-os
-```
-
-## Check ports
-
-```bash
-lsof -i :3000
-lsof -i :3001
-```
-
-## Stop stuck process
-
-```bash
-kill -9 <PID>
-```
-
-## Check repo status
-
-```bash
-git status
-```
-
-## Pull latest
-
-```bash
-git pull
-```
-
-## Start app
-
-```bash
-npm run dev
-```
-
-## Build app
-
-```bash
+npm run lint
 npm run build
 ```
 
-## View recent commits
+If the build fails:
+
+1. Copy the first meaningful error.
+2. Paste it into ChatGPT or Codex.
+3. Do not paste the entire massive log unless needed.
+
+---
+
+# CODEX STARTUP NOTES
+
+## Start Codex
+
+Terminal 3:
 
 ```bash
-git log --oneline -5
+cd ~/Projects/maddox-training-os
+codex
+```
+
+Fallback:
+
+```bash
+npx @openai/codex
+```
+
+## Good Codex Prompt Pattern
+
+Use narrow, surgical tasks.
+
+Good:
+
+```text
+Wire Today / Day pages to v8.4 dayExecutionPlan + sportLoads, while preserving existing logging architecture. Do not change Gantt. Do not invent workouts. Do not wire Session/KPI yet.
+```
+
+Bad:
+
+```text
+Make the app better.
+```
+
+Bad:
+
+```text
+Fix everything.
+```
+
+Bad:
+
+```text
+Redesign the whole plan.
 ```
 
 ---
 
-# 7. Provider Links
+# CURRENT PROJECT GUARDRAILS
+
+## Do Not Let Codex Invent Training Logic
+
+Codex implements the approved plan.
+
+Codex must not:
+
+* invent workouts
+* alter the training methodology
+* redesign the Gantt logic
+* create new plan categories
+* rename approved labels without instruction
+* change source-of-truth data without approval
+
+---
+
+## Current App Priority
+
+Current focus:
+
+```text
+Wire Today / Day pages to v8.4 dayExecutionPlan + sportLoads.
+```
+
+Preserve:
+
+```text
+existing logging architecture
+```
+
+Do not work on:
+
+```text
+Gantt polishing
+Session/KPI wiring
+new workout invention
+new training plan design
+```
+
+---
+
+# IMPORTANT PROJECT LINKS
 
 ## GitHub
 
-Repository:
+https://github.com/mcsloan/maddox-training-os
 
-`PASTE_GITHUB_REPO_URL_HERE`
+## Vercel Dashboard
 
-## Vercel
+https://vercel.com/mcsloans-projects
 
-Dashboard:
+## Production App
 
-`https://vercel.com/dashboard`
+https://maddox-training-os.vercel.app/
 
-Project:
+## Local App
 
-`PASTE_VERCEL_PROJECT_URL_HERE`
+http://localhost:3000/
 
-Production app:
+## Local Network App
 
-`PASTE_VERCEL_PRODUCTION_URL_HERE`
+http://192.168.1.5:3000/
 
 ## Supabase
 
-Dashboard:
+https://supabase.com/dashboard/project/mbjcedhysniabbaigsko
 
-`https://supabase.com/dashboard/projects`
+## Dropbox
 
-Project:
-
-`PASTE_SUPABASE_PROJECT_URL_HERE`
-
-## OpenAI / ChatGPT / Codex
-
-ChatGPT:
-
-`https://chatgpt.com/`
-
-Codex usage/settings:
-
-`https://chatgpt.com/codex/settings/usage`
+https://www.dropbox.com/home/Apps/Maddox%20Training%20OS
 
 ---
 
-# 8. Current Known Priority
+# WHERE THIS DOCUMENT SHOULD LIVE
 
-Do not over-polish the Gantt chart right now.
+Keep two copies.
 
-The Gantt is usable.
+## Repo Copy
 
-Higher priority:
+```text
+~/Projects/maddox-training-os/docs/STARTUP.md
+```
 
-* clarify Plan page terminology
-* consolidate chip legend
-* remove confusing legacy categories
-* ensure local/prod startup is reliable
-* store decisions in repo docs
-* keep the app usable for Maddox training tracking
+Purpose:
+
+* version controlled
+* archived with the project
+* available to Codex
+* safe long-term source
+
+## Desktop Copy
+
+```text
+~/Desktop/Maddox-Training-OS-Startup.md
+```
+
+Purpose:
+
+* easy access after reboot
+* available even before opening the repo
+* fast recovery during chaos
 
 ---
 
-# 9. Immediate Restart Sequence
+# SAVE THIS DOCUMENT TO THE REPO
 
-Run this after reboot:
+Terminal 2:
+
+```bash
+cd ~/Projects/maddox-training-os
+nano docs/STARTUP.md
+```
+
+Paste this document.
+
+Save in nano:
+
+```text
+Ctrl + O
+Enter
+Ctrl + X
+```
+
+Then commit:
+
+```bash
+git status
+git add docs/STARTUP.md
+git commit -m "Update startup recovery guide"
+git push
+```
+
+---
+
+# SAVE THIS DOCUMENT TO THE DESKTOP
+
+```bash
+nano ~/Desktop/Maddox-Training-OS-Startup.md
+```
+
+Paste this document.
+
+Save in nano:
+
+```text
+Ctrl + O
+Enter
+Ctrl + X
+```
+
+---
+
+# MINIMUM RECOVERY COMMANDS
+
+When in doubt, this is the fastest restart:
+
+## Terminal 1
+
+```bash
+cd ~/Projects/maddox-training-os
+npm run dev
+```
+
+## Terminal 2
 
 ```bash
 cd ~/Projects/maddox-training-os
 git status
+git pull
 git log --oneline -5
-npm install
-npm run dev
 ```
 
-Then open:
+## Terminal 3
 
-```text
-http://localhost:3000
+```bash
+cd ~/Projects/maddox-training-os
+codex
 ```
 
-Then open:
+Open:
 
-```text
-PASTE_VERCEL_PRODUCTION_URL_HERE
-```
+http://localhost:3000/
 
-Then check:
+Check production:
 
-```text
-GitHub → latest commit
-Vercel → latest deployment
-Supabase → only if data/backend issue
-```
-
+https://maddox-training-os.vercel.app/
