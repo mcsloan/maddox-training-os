@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ExternalLoadChip, LoadChip, LoadChipLegend, PhaseChip, PlanTagChip } from "@/components/LoadChips";
 import { WeeklyLoadChart } from "@/components/WeeklyLoadChart";
-import { formatPlanDate, getWeekExternalLoads, getWeekPlanSummary, trainingPlan, userFacingPlanText } from "@/lib/trainingData";
+import { ganttModel, phaseLabels, phaseMap } from "@/lib/imports/v8_4";
+import { formatPlanDate, getWeekExternalLoads, getWeekPlanSummary, trainingPlan } from "@/lib/trainingData";
 import { ExternalLoadType } from "@/lib/types";
 
 export default function PlanPage() {
@@ -17,12 +18,25 @@ export default function PlanPage() {
 
       <section className="card bg-navy text-white">
         <p className="label text-lime">Primary goal</p>
-        <h2 className="max-w-4xl text-2xl font-black">{overview.primaryGoal}</h2>
+        <h2 className="max-w-4xl text-2xl font-black">{planPageText(overview.primaryGoal)}</h2>
         <div className="mt-6 grid gap-5 md:grid-cols-2">
-          <div><p className="label text-lime">Training bias</p><ul className="list-inside list-disc space-y-1 text-slate-200">{overview.trainingBias.map((item) => <li key={item}>{item}</li>)}</ul></div>
-          <div><p className="label text-lime">Sport loads</p><ul className="list-inside list-disc space-y-1 text-slate-200">{overview.externalLoads.map((item) => <li key={item}>{userFacingPlanText(item)}</li>)}</ul></div>
+          <div>
+            <p className="label text-lime">Training bias</p>
+            <ul className="list-inside list-disc space-y-1 text-slate-200">
+              {overview.trainingBias.map((item) => <li key={item}>{planPageText(item)}</li>)}
+            </ul>
+          </div>
+          <div>
+            <p className="label text-lime">Sport loads</p>
+            <ul className="list-inside list-disc space-y-1 text-slate-200">
+              {overview.externalLoads.map((item) => <li key={item}>{planPageText(item)}</li>)}
+            </ul>
+          </div>
         </div>
-        <div className="mt-6 flex flex-wrap gap-3"><Link className="btn-primary bg-blue" href="/calendar">Open Calendar</Link><Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link></div>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link className="btn-primary bg-blue" href="/calendar">Open Calendar</Link>
+          <Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link>
+        </div>
       </section>
 
       <section className="card mt-6">
@@ -42,25 +56,58 @@ export default function PlanPage() {
           const loads = getWeekExternalLoads(week);
           const summary = getWeekPlanSummary(week);
           const kpiDays = trainingPlan.days.filter((day) => day.weekNumber === week.weekNumber && day.kpiTestIds?.length);
-          return <article className="card" key={week.weekNumber}>
-            <div className="flex items-start justify-between gap-3">
-              <div><p className="label">Week {week.weekNumber} · {formatPlanDate(week.startDate, { month: "short", day: "numeric" })}-{formatPlanDate(week.endDate, { month: "short", day: "numeric" })}</p><h2 className="text-xl font-black">{summary.loadEmphasis}</h2><div className="mt-2 flex flex-wrap gap-2"><PhaseChip phase={summary.loadEmphasis} />{week.weekNumber === 7 ? <LoadChip kind="deload" /> : null}{week.weekNumber === 12 ? <LoadChip kind="taper" /> : null}</div></div>
-              <Link className="text-sm font-bold text-blue" href={`/calendar#week-${week.weekNumber}`}>Days</Link>
-            </div>
-            <p className="mt-3 font-semibold">{userFacingPlanText(week.objective)}</p>
-            <div className="mt-4 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
-              <Metric label="Training days" value={summary.trainingDays} />
-              <Metric label="Sport load days" value={summary.externalLoadDays} />
-              <Metric label="Perf testing days" value={summary.kpiDays} />
-              <Metric label="Recovery days" value={summary.recoveryProtectedDays} />
-              <Metric label="High-load days" value={summary.highLoadDays} />
-              <Metric label="Overall load" value={`${summary.loadLevel}/5`} />
-            </div>
-            <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3"><div className="rounded-xl bg-ice p-3"><p className="label">Hard days</p><p className="font-semibold">{userFacingPlanText(week.hardDays)}</p></div><div className="rounded-xl bg-ice p-3"><p className="label">Skill days</p><p className="font-semibold">{userFacingPlanText(week.skillDays)}</p></div><div className="rounded-xl bg-ice p-3"><p className="label">Recovery days</p><p className="font-semibold">{userFacingPlanText(week.recoveryDays)}</p></div></div>
-            {loads.length > 0 && <div className="mt-4"><p className="label">Sport load summary</p><div className="flex flex-wrap gap-2">{uniqueSportLoadTypes(loads.map((load) => load.type)).map((type) => <ExternalLoadChip key={type} type={type} />)}</div></div>}
-            {kpiDays.length > 0 && <div className="mt-4"><p className="label">Testing</p><div className="flex flex-wrap gap-2">{kpiDays.map((day) => <Link href={`/day/${day.date}`} key={day.date}><PlanTagChip tag="kpi" /></Link>)}</div></div>}
-            <p className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900"><strong>Parent watch-out:</strong> {userFacingPlanText(week.parentWatchOut)}</p>
-          </article>;
+          return (
+            <article className="card" key={week.weekNumber}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="label">Week {week.weekNumber} · {formatPlanDate(week.startDate, { month: "short", day: "numeric" })}-{formatPlanDate(week.endDate, { month: "short", day: "numeric" })}</p>
+                  <h2 className="text-xl font-black">{planPageText(summary.loadEmphasis)}</h2>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <PhaseChip phase={summary.loadEmphasis} />
+                    {week.weekNumber === 7 ? <LoadChip kind="deload" /> : null}
+                    {week.weekNumber === 12 ? <LoadChip kind="taper" /> : null}
+                  </div>
+                </div>
+                <Link className="text-sm font-bold text-blue" href={`/calendar#week-${week.weekNumber}`}>Days</Link>
+              </div>
+              <p className="mt-3 font-semibold">{planPageText(week.objective)}</p>
+              <div className="mt-4 grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
+                <Metric label="Training days" value={summary.trainingDays} />
+                <Metric label="Sport load days" value={summary.externalLoadDays} />
+                <Metric label="Perf testing days" value={summary.kpiDays} />
+                <Metric label="Recovery days" value={summary.recoveryProtectedDays} />
+                <Metric label="High-load days" value={summary.highLoadDays} />
+                <Metric label="Overall load" value={`${summary.loadLevel}/5`} />
+              </div>
+              <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
+                <div className="rounded-xl bg-ice p-3">
+                  <p className="label">Hard days</p>
+                  <p className="font-semibold">{planPageText(week.hardDays)}</p>
+                </div>
+                <div className="rounded-xl bg-ice p-3">
+                  <p className="label">Skill days</p>
+                  <p className="font-semibold">{planPageText(week.skillDays)}</p>
+                </div>
+                <div className="rounded-xl bg-ice p-3">
+                  <p className="label">Recovery days</p>
+                  <p className="font-semibold">{planPageText(week.recoveryDays)}</p>
+                </div>
+              </div>
+              {loads.length > 0 && (
+                <div className="mt-4">
+                  <p className="label">Sport load summary</p>
+                  <div className="flex flex-wrap gap-2">{uniqueSportLoadTypes(loads.map((load) => load.type)).map((type) => <ExternalLoadChip key={type} type={type} />)}</div>
+                </div>
+              )}
+              {kpiDays.length > 0 && (
+                <div className="mt-4">
+                  <p className="label">Testing</p>
+                  <div className="flex flex-wrap gap-2">{kpiDays.map((day) => <Link href={`/day/${day.date}`} key={day.date}><PlanTagChip tag="kpi" /></Link>)}</div>
+                </div>
+              )}
+              <p className="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900"><strong>Parent watch-out:</strong> {planPageText(week.parentWatchOut)}</p>
+            </article>
+          );
         })}
       </section>
       <p className="mt-6 text-xs text-slate-500">Plan seed {version}. {sourceTag}.</p>
@@ -74,158 +121,27 @@ function uniqueSportLoadTypes(types: ExternalLoadType[]) {
 }
 
 function MethodologyPanel() {
-  return <section className="card mt-6"><p className="label">Plan logic</p><h2 className="text-2xl font-black">12-Week Methodology</h2><p className="mt-3 max-w-4xl text-slate-700">This plan blends HockeyTraining-style Speed Stack scheduling, Nike&apos;s 12-week offseason structure, and Maddox&apos;s actual summer sport calendar. The goal is not to do more every week. The goal is to build, express, recover, and peak.</p><ul className="mt-5 list-inside list-disc space-y-2 text-sm font-semibold"><li>Build movement quality and acceleration first.</li><li>Layer speed, power, puck skill, and shot habits.</li><li>Treat camps and on-ice sessions as planned hockey stress, not extra work.</li><li>Reduce dryland volume around high sport-load weeks.</li><li>Taper into tryouts with fresh legs, confidence, and speed.</li></ul></section>;
+  return (
+    <section className="card mt-6">
+      <p className="label">Plan logic</p>
+      <h2 className="text-2xl font-black">12-Week Methodology</h2>
+      <p className="mt-3 max-w-4xl text-slate-700">This plan blends HockeyTraining-style Speed Stack scheduling, Nike&apos;s 12-week offseason structure, and Maddox&apos;s actual summer sport calendar. The goal is not to do more every week. The goal is to build, express, recover, and peak.</p>
+      <ul className="mt-5 list-inside list-disc space-y-2 text-sm font-semibold">
+        <li>Build movement quality and acceleration first.</li>
+        <li>Layer speed, power, puck skill, and shot habits.</li>
+        <li>Treat camps and on-ice sessions as planned hockey stress, not extra work.</li>
+        <li>Reduce dryland volume around high sport-load weeks.</li>
+        <li>Taper into tryouts with fresh legs, confidence, and speed.</li>
+      </ul>
+    </section>
+  );
 }
 
-const PERF_TEST_WEEKS = [1, 3, 5, 7, 10, 12] as const;
-
-const GANTT_GROUPS = [
-  {
-    phase: {
-      label: "Foundation + Acceleration",
-      shortLabel: "Foundation",
-      startWeek: 1,
-      endWeek: 4,
-      kind: "phase",
-    },
-    overlays: [
-      {
-        label: "Lacrosse",
-        shortLabel: "Lacrosse",
-        startWeek: 1,
-        endWeek: 2,
-        kind: "sport",
-      },
-      {
-        label: "4v4",
-        shortLabel: "4v4",
-        startWeek: 1,
-        endWeek: 2,
-        kind: "sport",
-      },
-      {
-        label: "Chase Hull Camp",
-        shortLabel: "Chase",
-        startWeek: 4,
-        endWeek: 4,
-        kind: "camp",
-      },
-    ],
-  },
-  {
-    phase: {
-      label: "Speed + Power",
-      shortLabel: "Speed + Power",
-      startWeek: 5,
-      endWeek: 6,
-      kind: "phase",
-    },
-    overlays: [
-      {
-        label: "Marc O’Connor Ice",
-        shortLabel: "Marc",
-        startWeek: 5,
-        endWeek: 5,
-        kind: "onIce",
-      },
-      {
-        label: "Marc O’Connor Ice",
-        shortLabel: "Marc",
-        startWeek: 6,
-        endWeek: 6,
-        kind: "onIce",
-      },
-    ],
-  },
-  {
-    phase: {
-      label: "Deload",
-      shortLabel: "Deload",
-      startWeek: 7,
-      endWeek: 7,
-      kind: "deload",
-    },
-    overlays: [],
-  },
-  {
-    phase: {
-      label: "Game-Speed + Reactive Agility",
-      shortLabel: "Game-Speed",
-      startWeek: 8,
-      endWeek: 10,
-      kind: "phase",
-    },
-    overlays: [
-      {
-        label: "Carleton Camp",
-        shortLabel: "Carleton",
-        startWeek: 8,
-        endWeek: 8,
-        kind: "camp",
-      },
-      {
-        label: "Marc O’Connor Ice",
-        shortLabel: "Marc",
-        startWeek: 9,
-        endWeek: 9,
-        kind: "onIce",
-      },
-    ],
-  },
-  {
-    phase: {
-      label: "Training Camp / Tryout Simulation",
-      shortLabel: "Training Camp",
-      startWeek: 11,
-      endWeek: 11,
-      kind: "phase",
-    },
-    overlays: [
-      {
-        label: "Sensplex Camp",
-        shortLabel: "Sensplex",
-        startWeek: 11,
-        endWeek: 11,
-        kind: "camp",
-      },
-    ],
-  },
-  {
-    phase: {
-      label: "Taper + Peak",
-      shortLabel: "Taper + Peak",
-      startWeek: 12,
-      endWeek: 12,
-      kind: "taper",
-    },
-    overlays: [],
-  },
-] as const;
-
 function PhaseGantt() {
-  const perfRow: GanttPerfRow = {
-    label: "Perf Testing",
-    shortLabel: "Perf",
-    kind: "testing",
-    markers: PERF_TEST_WEEKS.map((week) => ({
-      label: "Perf Testing",
-      shortLabel: "Test",
-      startWeek: week,
-      endWeek: week,
-      kind: "testing",
-    })),
-  };
-
-  const rows: Array<GanttPerfRow | GanttGroupRow> = [
-    perfRow,
-    ...GANTT_GROUPS.flatMap((group) => [
-      {
-        ...group.phase,
-        isPrimary: true,
-      },
-      ...group.overlays,
-    ]),
-  ];
+  ensureLockedGanttLaneCount();
+  const weekLabels = new Map(phaseLabels.map((entry) => [entry.week, entry.appLabel]));
+  const phaseNames = new Map(phaseMap.map((entry) => [entry.week, entry.trainingPhase]));
+  const rows = buildLockedGanttRows();
 
   return (
     <section className="card mt-6 bg-white">
@@ -233,24 +149,23 @@ function PhaseGantt() {
       <h2 className="text-2xl font-black">Phase Gantt</h2>
       <p className="mt-2 text-sm text-slate-600">Method phases lead the plan. Sport loads and performance tests are scheduled within them.</p>
       <div className="mt-5 overflow-x-auto">
-        <div className="min-w-[960px]">
-          <div className="grid grid-cols-[12rem_repeat(12,minmax(3.75rem,1fr))] gap-1 border-b border-slate-300 pb-2 text-xs font-black uppercase tracking-wide text-slate-500">
+        <div className="min-w-[1120px]">
+          <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] gap-0.5 border-b border-slate-300 pb-2 text-[11px] font-black uppercase tracking-wide text-slate-500">
             <div />
-            {trainingPlan.weeks.map((week) => (
-              <Link className="text-center text-blue" href={`/calendar#week-${week.weekNumber}`} key={week.weekNumber}>
-                W{week.weekNumber}
-              </Link>
-            ))}
+            {ganttModel.weeks.map((week) => {
+              const weekNumber = Number(week.slice(1));
+              const weekLabel = weekLabels.get(weekNumber) || week;
+              const phaseName = phaseNames.get(weekNumber);
+              return (
+                <Link key={week} className="text-center text-blue" href={`/calendar#week-${weekNumber}`} title={phaseName ? `${phaseName} · ${weekLabel}` : weekLabel}>
+                  {week}
+                </Link>
+              );
+            })}
           </div>
 
-          <div className="mt-4 space-y-2">
-            {rows.map((row) => (
-              "markers" in row ? (
-                <GanttPerfRow key={row.label} row={row} />
-              ) : (
-                <GanttRow key={`${row.label}-${row.startWeek}`} row={row} />
-              )
-            ))}
+          <div className="mt-3 space-y-1">
+            {rows.map((row) => ("markers" in row ? <GanttMarkerRow key={row.label} row={row} /> : <GanttSpanRow key={`${row.label}-${row.startWeek}-${row.endWeek}`} row={row} />))}
           </div>
         </div>
       </div>
@@ -258,36 +173,85 @@ function PhaseGantt() {
   );
 }
 
-type GanttGroupRow = {
-  label: string;
-  shortLabel: string;
-  startWeek: number;
-  endWeek: number;
-  kind: "phase" | "sport" | "camp" | "onIce" | "deload" | "taper";
-  isPrimary?: boolean;
-};
+type GanttRow =
+  | {
+      label: string;
+      kind: "testing";
+      markers: { week: number; label: string; shortLabel: string }[];
+    }
+  | {
+      label: string;
+      shortLabel: string;
+      startWeek: number;
+      endWeek: number;
+      kind: "phase" | "sport" | "camp" | "onIce" | "deload" | "taper";
+    };
 
-type GanttPerfRow = {
-  label: string;
-  shortLabel: string;
-  kind: "testing";
-  markers: {
-    label: string;
-    shortLabel: string;
-    startWeek: number;
-    endWeek: number;
-    kind: "testing";
-  }[];
-};
+function buildLockedGanttRows(): GanttRow[] {
+  const sourceLaneNames = new Set(ganttModel.lanes.map((lane) => lane.lane));
+  const requiredLaneNames = [
+    "Perf Testing",
+    "GPP/Foundation + Hypertrophy/Tissue Prep",
+    "Sport Loads / Playoffs",
+    "Strength Foundation + Acceleration Mechanics",
+    "Chase Hull Camp",
+    "Speed-Strength / Power Transition",
+    "Marc O’Connor Ice",
+    "Strategic Lighter Week + Toronto Trip",
+    "Toronto Trip / Travel",
+    "Power/Agility + Carleton Camp Overlay",
+    "Carleton U. Camp",
+    "Game-Speed + Reactive Agility / Repeat Sprint",
+    "Training Camp / Tryout Simulation",
+    "Sensplex Camp",
+    "Taper + Peak",
+    "Legend",
+  ];
 
-function GanttRow({ row }: { row: GanttGroupRow }) {
-  const style = ganttStyleFor(row.kind, row.isPrimary);
-  const fillStyle = ganttFillStyleFor(row.kind, row.isPrimary);
+  if (process.env.NODE_ENV !== "production") {
+    const missing = requiredLaneNames.filter((name) => !sourceLaneNames.has(name));
+    if (missing.length) {
+      throw new Error(`Locked v8.4 Gantt is missing lanes: ${missing.join(", ")}`);
+    }
+  }
+
+  return [
+    { label: "Perf Testing", kind: "testing", markers: [1, 3, 5, 7, 10, 12].map((week) => ({ week, label: "Perf Testing", shortLabel: "Test" })) },
+    { label: "GPP / Foundation", shortLabel: "GPP / Foundation", startWeek: 1, endWeek: 2, kind: "phase" },
+    { label: "Lacrosse", shortLabel: "Lacrosse", startWeek: 1, endWeek: 2, kind: "sport" },
+    { label: "4v4", shortLabel: "4v4", startWeek: 1, endWeek: 2, kind: "sport" },
+    { label: "Strength + Acceleration", shortLabel: "Strength + Accel", startWeek: 3, endWeek: 4, kind: "phase" },
+    { label: "Chase Hull Camp", shortLabel: "Chase Camp", startWeek: 4, endWeek: 4, kind: "camp" },
+    { label: "Power Transition", shortLabel: "Power Transition", startWeek: 5, endWeek: 6, kind: "phase" },
+    { label: "Marc O’Connor Ice", shortLabel: "Marc Ice", startWeek: 5, endWeek: 5, kind: "onIce" },
+    { label: "Marc O’Connor Ice", shortLabel: "Marc Ice", startWeek: 6, endWeek: 6, kind: "onIce" },
+    { label: "Deload", shortLabel: "Deload", startWeek: 7, endWeek: 7, kind: "deload" },
+    { label: "Toronto Trip / Travel", shortLabel: "Travel", startWeek: 7, endWeek: 7, kind: "deload" },
+    { label: "Power/Agility + Carleton", shortLabel: "Power/Agility", startWeek: 8, endWeek: 10, kind: "phase" },
+    { label: "Carleton Camp", shortLabel: "Carleton", startWeek: 8, endWeek: 8, kind: "camp" },
+    { label: "Marc O’Connor Ice", shortLabel: "Marc Ice", startWeek: 9, endWeek: 9, kind: "onIce" },
+    { label: "Game-Speed / Sprint", shortLabel: "Game-Speed / Sprint", startWeek: 9, endWeek: 10, kind: "phase" },
+    { label: "Tryout Sim", shortLabel: "Tryout Sim", startWeek: 11, endWeek: 11, kind: "phase" },
+    { label: "Sensplex Camp", shortLabel: "Sensplex", startWeek: 11, endWeek: 11, kind: "camp" },
+    { label: "Taper + Peak", shortLabel: "Taper", startWeek: 12, endWeek: 12, kind: "taper" },
+  ];
+}
+
+function GanttSpanRow({ row }: { row: Extract<GanttRow, { kind: Exclude<GanttRow["kind"], "testing"> }> }) {
   return (
-    <div className="grid grid-cols-[12rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-1">
-      <div className={`pr-3 text-sm font-black text-slate-800 ${row.isPrimary ? "uppercase tracking-wide text-slate-950" : ""}`}>{row.label}</div>
-      <div className="min-w-0" style={{ gridColumn: `${row.startWeek + 1} / ${row.endWeek + 2}` }}>
-        <div className={`${style} w-full min-w-0 overflow-hidden border px-2 py-2 text-xs font-black leading-tight shadow-sm`} style={fillStyle} title={row.label}>
+    <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-0.5">
+      <div className="pr-2 text-[12px] font-black leading-tight text-slate-800">{row.label}</div>
+      <div className="grid h-5 grid-cols-12 gap-0.5" style={{ gridColumn: "2 / span 12" }}>
+        {Array.from({ length: 12 }, (_, index) => {
+          const week = index + 1;
+          const isCovered = week >= row.startWeek && week <= row.endWeek;
+          return <div key={week} className={`h-5 border ${isCovered ? "border-transparent bg-transparent" : "border-slate-200 bg-white"}`} />;
+        })}
+        <div
+          className="pointer-events-none z-10 h-5 border px-2 py-0.5 text-[11px] font-black leading-tight shadow-sm"
+          style={{ ...ganttFillStyleFor(row.kind), gridColumn: `${row.startWeek} / ${row.endWeek + 1}`, gridRow: 1 }}
+          title={row.label}
+        >
           <span className="block truncate">{row.shortLabel}</span>
         </div>
       </div>
@@ -295,84 +259,58 @@ function GanttRow({ row }: { row: GanttGroupRow }) {
   );
 }
 
-function GanttPerfRow({ row }: { row: GanttPerfRow }) {
+function GanttMarkerRow({ row }: { row: Extract<GanttRow, { kind: "testing" }> }) {
   return (
-    <div className="grid grid-cols-[12rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-1">
-      <div className="pr-3 text-sm font-black text-slate-800">{row.label}</div>
-      <div className="grid min-w-0 grid-cols-12 gap-1" style={{ gridColumn: "2 / span 12" }}>
-        {row.markers.map((marker) => (
-          <div
-            key={`${marker.label}-${marker.startWeek}`}
-            className="min-h-[2.25rem] border border-cyan-900/15 bg-cyan-500 px-2 py-1 text-[11px] font-black text-cyan-950 shadow-sm"
-            style={{ gridColumn: `${marker.startWeek} / span 1` }}
-            title={marker.label}
-          >
-            <span className="block truncate">{marker.shortLabel}</span>
-          </div>
-        ))}
+    <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-0.5">
+      <div className="pr-2 text-[12px] font-black leading-tight text-slate-800">{row.label}</div>
+      <div className="grid h-5 grid-cols-12 gap-0.5" style={{ gridColumn: "2 / span 12" }}>
+        {Array.from({ length: 12 }, (_, index) => {
+          const week = index + 1;
+          const marker = row.markers.find((item) => item.week === week);
+          return (
+            <div key={week} className="h-5 border border-slate-200 bg-white">
+              {marker ? <div className="h-full w-full border border-cyan-900/15 bg-cyan-500 px-2 py-0.5 text-[10px] font-black leading-tight text-cyan-950 shadow-sm"><span className="block truncate">{marker.shortLabel}</span></div> : null}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-function ganttStyleFor(kind: GanttGroupRow["kind"], primary = false) {
-  if (primary) {
-    switch (kind) {
-      case "phase":
-        return "";
-      case "deload":
-        return "";
-      case "taper":
-        return "";
-      default:
-        return "";
-    }
-  }
-
+function ganttFillStyleFor(kind: Exclude<GanttRow["kind"], "testing">) {
   switch (kind) {
+    case "phase":
+      return { backgroundColor: "#0f6f9f", borderColor: "#075985", color: "#ffffff", fontWeight: 800, borderRadius: 0 as const };
     case "sport":
-      return "bg-purple-200 text-purple-950";
+      return { backgroundColor: "#ddd6fe", borderColor: "#7c3aed", color: "#3b0764", fontWeight: 800, borderRadius: 0 as const };
     case "camp":
-      return "bg-orange-300 text-orange-950";
+      return { backgroundColor: "#fdba74", borderColor: "#ea580c", color: "#7c2d12", fontWeight: 800, borderRadius: 0 as const };
     case "onIce":
-      return "bg-indigo-300 text-indigo-950";
+      return { backgroundColor: "#c7d2fe", borderColor: "#4338ca", color: "#312e81", fontWeight: 800, borderRadius: 0 as const };
     case "deload":
-      return "bg-teal-200 text-teal-950";
+      return { backgroundColor: "#99f6e4", borderColor: "#0f766e", color: "#134e4a", fontWeight: 800, borderRadius: 0 as const };
     case "taper":
-      return "bg-amber-200 text-amber-950";
-    default:
-      return "bg-slate-200 text-slate-950";
+      return { backgroundColor: "#fde68a", borderColor: "#d97706", color: "#78350f", fontWeight: 800, borderRadius: 0 as const };
   }
 }
 
-function ganttFillStyleFor(kind: GanttGroupRow["kind"], primary = false): React.CSSProperties {
-  if (primary) {
-    switch (kind) {
-      case "phase":
-        return { backgroundColor: "#0f6f9f", borderColor: "#075985", color: "#ffffff", fontWeight: 800, borderRadius: 0 };
-      case "deload":
-        return { backgroundColor: "#0f766e", borderColor: "#115e59", color: "#ffffff", fontWeight: 800, borderRadius: 0 };
-      case "taper":
-        return { backgroundColor: "#f59e0b", borderColor: "#b45309", color: "#111827", fontWeight: 800, borderRadius: 0 };
-      default:
-        return { backgroundColor: "#0f6f9f", borderColor: "#075985", color: "#ffffff", fontWeight: 800, borderRadius: 0 };
-    }
+function ensureLockedGanttLaneCount() {
+  if (process.env.NODE_ENV !== "production" && ganttModel.lanes.length !== 17) {
+    throw new Error(`Locked v8.4 Gantt should have 17 lanes, found ${ganttModel.lanes.length}.`);
   }
+}
 
-  switch (kind) {
-    case "sport":
-      return { backgroundColor: "#ddd6fe", borderColor: "#7c3aed", color: "#3b0764", fontWeight: 700, borderRadius: 0 };
-    case "camp":
-      return { backgroundColor: "#fdba74", borderColor: "#ea580c", color: "#7c2d12", fontWeight: 700, borderRadius: 0 };
-    case "onIce":
-      return { backgroundColor: "#c7d2fe", borderColor: "#4338ca", color: "#312e81", fontWeight: 700, borderRadius: 0 };
-    case "deload":
-      return { backgroundColor: "#99f6e4", borderColor: "#0f766e", color: "#134e4a", fontWeight: 700, borderRadius: 0 };
-    case "taper":
-      return { backgroundColor: "#fde68a", borderColor: "#d97706", color: "#78350f", fontWeight: 700, borderRadius: 0 };
-    default:
-      return { backgroundColor: "#e2e8f0", borderColor: "#94a3b8", color: "#0f172a", fontWeight: 700, borderRadius: 0 };
-  }
+function planPageText(text: string) {
+  return text
+    .replace(/external[- ]load[- ]protected/gi, "Recovery")
+    .replace(/external[- ]load/gi, "sport-load")
+    .replace(/external load/gi, "sport-load")
+    .replace(/external hockey/gi, "sport load")
+    .replace(/recovery protected/gi, "Recovery")
+    .replace(/camp protection/gi, "Camp")
+    .replace(/protection/gi, "recovery")
+    .replace(/consolidation/gi, "Deload");
 }
 
 function Metric({ label, value }: { label: string; value: string | number }) {
