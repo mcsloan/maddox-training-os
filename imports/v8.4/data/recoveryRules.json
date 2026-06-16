@@ -1,0 +1,44 @@
+[
+  {
+    "situation": "4v4 day",
+    "rule": "4v4 is the hockey load; dryland is support.",
+    "allowedWork": "MOB-15, SKL-HU10, optional SHOT-100 if fresh.",
+    "avoid": "Full Speed Stack or fatigue conditioning.",
+    "logging": "Energy, leg feel, soreness, confidence."
+  },
+  {
+    "situation": "Lacrosse game/playoff",
+    "rule": "Lacrosse is hard sport load; use mobility/touches only.",
+    "allowedWork": "MOB-20, optional head-up touches.",
+    "avoid": "Hard dryland or fatigue shooting if contact load is high.",
+    "logging": "Contact load, soreness, energy."
+  },
+  {
+    "situation": "Camp day",
+    "rule": "Camp is primary training stimulus.",
+    "allowedWork": "Mobility, hydration, nutrition, short reflection.",
+    "avoid": "Extra conditioning, heavy legs, long dryland.",
+    "logging": "Hours on ice, energy, soreness, confidence."
+  },
+  {
+    "situation": "Marc O’Connor ice",
+    "rule": "On-ice session is performance day.",
+    "allowedWork": "WU-10 before, MOB-15 after, light skill.",
+    "avoid": "Hard leg training same day.",
+    "logging": "Session takeaways, confidence, soreness."
+  },
+  {
+    "situation": "Lighter week",
+    "rule": "Reduce frequency/sets; keep movement quality.",
+    "allowedWork": "Two-set SpeedStack exposures, KPI, mobility, shooting mechanics.",
+    "avoid": "Grinding and chasing fatigue.",
+    "logging": "Energy rebound, KPI notes."
+  },
+  {
+    "situation": "Taper week",
+    "rule": "Fresh legs and confidence are the goal.",
+    "allowedWork": "Short primers, quality shots, mobility, visualization.",
+    "avoid": "Long conditioning, new exercises, soreness-causing work.",
+    "logging": "Readiness and confidence."
+  }
+]

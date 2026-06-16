@@ -1,0 +1,110 @@
+[
+  {
+    "week": 1,
+    "shotMinimumOnShootingDays": 100,
+    "typicalShootingDays": "2-3",
+    "primarySession": "SHOT-100-MECH",
+    "shotDevelopmentFocus": "Mechanics, quick release, target intent.",
+    "injuryQualityRule": "Reduce only for pain/soreness/technique breakdown.",
+    "notes": "Sport loads may shift exact day."
+  },
+  {
+    "week": 2,
+    "shotMinimumOnShootingDays": 110,
+    "typicalShootingDays": "2-3",
+    "primarySession": "SHOT-100-MECH",
+    "shotDevelopmentFocus": "Mechanics + catch-release + backhand.",
+    "injuryQualityRule": "Reduce only for pain/soreness/technique breakdown.",
+    "notes": "Playoffs/sport loads drive recovery."
+  },
+  {
+    "week": 3,
+    "shotMinimumOnShootingDays": 125,
+    "typicalShootingDays": "3",
+    "primarySession": "SHOT-125-MOVE",
+    "shotDevelopmentFocus": "Lateral release, curl-drag, deke-to-shot.",
+    "injuryQualityRule": "No fatigue shooting before quality is stable.",
+    "notes": "Pre-camp build."
+  },
+  {
+    "week": 4,
+    "shotMinimumOnShootingDays": 100,
+    "typicalShootingDays": "1-2 optional",
+    "primarySession": "PREICE-15 / SHOT-100-MECH",
+    "shotDevelopmentFocus": "Camp-adjusted technical confidence shots.",
+    "injuryQualityRule": "Camp is primary load.",
+    "notes": "No extra grind after Chase Hull."
+  },
+  {
+    "week": 5,
+    "shotMinimumOnShootingDays": 125,
+    "typicalShootingDays": "2-3",
+    "primarySession": "SHOT-125-MOVE",
+    "shotDevelopmentFocus": "Power transition, shooting in stride concepts.",
+    "injuryQualityRule": "Monitor wrist/elbow/shoulder.",
+    "notes": "Marc ice is performance day."
+  },
+  {
+    "week": 6,
+    "shotMinimumOnShootingDays": 125,
+    "typicalShootingDays": "2-3",
+    "primarySession": "SHOT-125-MOVE",
+    "shotDevelopmentFocus": "Quick release + movement before shot.",
+    "injuryQualityRule": "Monitor wrist/elbow/shoulder.",
+    "notes": "Keep quality high."
+  },
+  {
+    "week": 7,
+    "shotMinimumOnShootingDays": 100,
+    "typicalShootingDays": "2 light",
+    "primarySession": "SHOT-100-MECH",
+    "shotDevelopmentFocus": "Lighter week, rhythm and technique.",
+    "injuryQualityRule": "No PR chasing during Toronto/deload.",
+    "notes": "Travel week: optional hotel-compatible touches."
+  },
+  {
+    "week": 8,
+    "shotMinimumOnShootingDays": 100,
+    "typicalShootingDays": "1-2 optional",
+    "primarySession": "PREICE-15 / SHOT-100-MECH",
+    "shotDevelopmentFocus": "Camp-adjusted touch maintenance.",
+    "injuryQualityRule": "Carleton is primary sport load.",
+    "notes": "No fatigue volume."
+  },
+  {
+    "week": 9,
+    "shotMinimumOnShootingDays": 140,
+    "typicalShootingDays": "2-3",
+    "primarySession": "GSPUCK-25 / SHOT-150-GAME",
+    "shotDevelopmentFocus": "Game-speed release, deke-to-shot, scan-to-shot.",
+    "injuryQualityRule": "Stop if mechanics degrade.",
+    "notes": "Marc advanced/tryout ice around this block."
+  },
+  {
+    "week": 10,
+    "shotMinimumOnShootingDays": 150,
+    "typicalShootingDays": "3",
+    "primarySession": "SHOT-150-GAME",
+    "shotDevelopmentFocus": "Game context, mild fatigue, confident scoring actions.",
+    "injuryQualityRule": "Recover enough to shoot well.",
+    "notes": "Best game-speed shooting week."
+  },
+  {
+    "week": 11,
+    "shotMinimumOnShootingDays": 100,
+    "typicalShootingDays": "1-2 optional",
+    "primarySession": "PREICE-15 / SHOT-100-MECH",
+    "shotDevelopmentFocus": "Sensplex camp-adjusted confidence shots.",
+    "injuryQualityRule": "Camp is primary load.",
+    "notes": "Optional only when fresh."
+  },
+  {
+    "week": 12,
+    "shotMinimumOnShootingDays": 100,
+    "typicalShootingDays": "2-3",
+    "primarySession": "SHOT-100-MECH",
+    "shotDevelopmentFocus": "Sharp quick-release and confidence targets.",
+    "injuryQualityRule": "No volume grind; leave fresh.",
+    "notes": "Tryout taper."
+  }
+]

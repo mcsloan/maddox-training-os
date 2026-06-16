@@ -1,0 +1,163 @@
+{
+  "packageName": "Maddox Training OS v8.4 App Import Package",
+  "packageVersion": "v8.4",
+  "sourceWorkbook": "Maddox_Training_OS_v8_3_Source_Of_Truth_Lock.xlsx",
+  "sourceWorkbookSha256": "96cabdd23c4a45c5bd7d7dad9bb1b1d4252cef12ab72528e20df1ef092c15e5b",
+  "generatedAt": "2026-06-16T04:53:35+00:00",
+  "files": [
+    {
+      "file": "data/dayExecutionPlan.json",
+      "recordCount": 621,
+      "sha256": "c079b45a40c3de5fb088cd2042cb1415452b98a68a41094a930bbd9d2fa2fff2"
+    },
+    {
+      "file": "data/drillCards.json",
+      "recordCount": 154,
+      "sha256": "5826cd980b56139a94982c377f548847ad1145dd618b03a6eb080d03bd8a1a99"
+    },
+    {
+      "file": "data/drills.json",
+      "recordCount": 154,
+      "sha256": "8afe5f358464b44d3552a642f1304fe562ff6bb36327bf789a4de64097eb88fd"
+    },
+    {
+      "file": "data/exerciseVideoMap.json",
+      "recordCount": 154,
+      "sha256": "8f9f4825692dca777d0b933ffea72fa10b8c84900736db35ed80e74c93c7f9e7"
+    },
+    {
+      "file": "data/ganttModel.json",
+      "recordCount": 17,
+      "sha256": "dff8cc869be3e0b82d1b9d3a06335bd65bfeb7fc70c9230d00e44cf615b0c2fc"
+    },
+    {
+      "file": "data/hockeyIq.json",
+      "recordCount": 6,
+      "sha256": "c3da8f95da945795feb40a0bb3609cd581de04b71a7824e12de028f691770e7f"
+    },
+    {
+      "file": "data/importQaReport.json",
+      "recordCount": 7,
+      "sha256": "34ad7ee3da090479fbd895517009cd3ce0132afe6cda7dd2cd2538a05839861b"
+    },
+    {
+      "file": "data/integratedSkillSessions.json",
+      "recordCount": 9,
+      "sha256": "616cf195e779eaf7c9f49fd4188185e322f64a0e06fcf36bc66365ce62e2f448"
+    },
+    {
+      "file": "data/kpiProtocols.json",
+      "recordCount": 6,
+      "sha256": "e1dbbac6056882259dd90979b54bda3cd9d425e95d12cd6c05a68933d9c7bc70"
+    },
+    {
+      "file": "data/kpis.json",
+      "recordCount": 7,
+      "sha256": "a5d7af39bbb158f2fa159dba1f723f2c17154e394aa746a479572a1aa687f657"
+    },
+    {
+      "file": "data/logSchemas.json",
+      "recordCount": 8,
+      "sha256": "78b9931444eb6ab27582877d3d93332d327f0399712c315620bc24049103e5b6"
+    },
+    {
+      "file": "data/needsReview.json",
+      "recordCount": 0,
+      "sha256": "2087da898e3fe27ebcc6b9bc17f11c3812367439f7e774658132154cd094f025"
+    },
+    {
+      "file": "data/phaseLabels.json",
+      "recordCount": 12,
+      "sha256": "2907e11d2dcd1114896a7933ee28700ad8a65317c34642c0067ac8c6f36d61fb"
+    },
+    {
+      "file": "data/phaseMap.json",
+      "recordCount": 12,
+      "sha256": "a903e6330d8697085d985043d3453be37e7a06b50a437dbb95f1f01dfd6657ab"
+    },
+    {
+      "file": "data/recoveryRules.json",
+      "recordCount": 6,
+      "sha256": "b513213f6e928b4b917ff6401e926cfe513150714926c257bef334e2da17f15b"
+    },
+    {
+      "file": "data/sessions.json",
+      "recordCount": 84,
+      "sha256": "c7c78d0b2582b3cb4884aedbb740d0b93a6881bf346a3fa9e3d6149c11a6b5b1"
+    },
+    {
+      "file": "data/shootingProgression.json",
+      "recordCount": 12,
+      "sha256": "28ca578c9f4bd23b4aed799cdb857a7ebc939241918231c7526bd7a992275dea"
+    },
+    {
+      "file": "data/skillShotIqLibrary.json",
+      "recordCount": 22,
+      "sha256": "e28b9623e7be5574c5be611a7919ecdf727c60728d1f4d72d35d49ab1f31ddf3"
+    },
+    {
+      "file": "data/skillShotIqSeed.json",
+      "recordCount": 30,
+      "sha256": "8a2b56e494172894bc4e14d84efa72fcefc8e74a7edef30d6376d6641a70b4d0"
+    },
+    {
+      "file": "data/sourceOfTruthLock.json",
+      "recordCount": 39,
+      "sha256": "01b600fe07b7ff9d29f57554b1a2f8003085fed6f19217372b135cd19a3eef71"
+    },
+    {
+      "file": "data/sourceTrace.json",
+      "recordCount": 11,
+      "sha256": "01549094b3f1ec80cf5955ef2bd7e735b63840304a22f5cce7c351d1e4489cc5"
+    },
+    {
+      "file": "data/speedStackPrescriptions.json",
+      "recordCount": 616,
+      "sha256": "41b1dd3bfdb1d7b564c167013f3f3b50fa3a332c3feb99b4cec2b02d11660602"
+    },
+    {
+      "file": "data/sportLoads.json",
+      "recordCount": 28,
+      "sha256": "9e6dae65f14d47dd53fda386ebdd73c980301b2c52e3d7ceffd885bcd7948f86"
+    },
+    {
+      "file": "data/videoCoverageReport.json",
+      "recordCount": 10,
+      "sha256": "85e3e012e9d36ffe96d3b8f5f46d5f80161a1e2287871dd433eba1706f3168ce"
+    },
+    {
+      "file": "data/workoutBlockDetails.json",
+      "recordCount": 154,
+      "sha256": "f7b372ea694753516f56f99515ace505900b3473803261d121e73279ea4ea5b4"
+    }
+  ],
+  "importOrder": [
+    "phaseMap.json",
+    "phaseLabels.json",
+    "ganttModel.json",
+    "sportLoads.json",
+    "sessions.json",
+    "dayExecutionPlan.json",
+    "speedStackPrescriptions.json",
+    "exerciseVideoMap.json",
+    "workoutBlockDetails.json",
+    "drills.json",
+    "drillCards.json",
+    "kpis.json",
+    "kpiProtocols.json",
+    "hockeyIq.json",
+    "skillShotIqLibrary.json",
+    "integratedSkillSessions.json",
+    "skillShotIqSeed.json",
+    "shootingProgression.json",
+    "recoveryRules.json",
+    "logSchemas.json"
+  ],
+  "lockedRules": [
+    "GANTT_VIEW is canonical and locked.",
+    "Use SOURCE_OF_TRUTH_LOCK and VERSION_CONTROL as governance references.",
+    "Do not redesign or relabel phases.",
+    "Do not search for or substitute videos.",
+    "Do not call sport loads external loads."
+  ]
+}

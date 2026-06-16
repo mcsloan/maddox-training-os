@@ -1,0 +1,68 @@
+[
+  {
+    "conceptID": "IQ-SCAN-001",
+    "concept": "Scan Before Touch",
+    "purpose": "Create automatic awareness before puck action.",
+    "frequency": "Daily cue + 3 structured blocks/week",
+    "execution": "Before each puck touch/rep, look left/right/behind and name what you saw.",
+    "appPrompt": "What did you scan before touching the puck?",
+    "parentCue": "Praise early scan even if puck skill is imperfect.",
+    "logInputs": "completed,example,quality1to5,notes",
+    "notes": "Low physical load."
+  },
+  {
+    "conceptID": "IQ-TALK-001",
+    "concept": "Talk Early",
+    "purpose": "Make Maddox a centre who helps teammates.",
+    "frequency": "Daily sport cue; structured 1–2x/week",
+    "execution": "Use short commands: time, wheel, middle, reverse, I’m here, one more.",
+    "appPrompt": "What did you say early today?",
+    "parentCue": "Listen for useful early communication, not yelling.",
+    "logInputs": "completed,examples,confidence1to5,notes",
+    "notes": "Sport-load reflection."
+  },
+  {
+    "conceptID": "IQ-SUPPORT-001",
+    "concept": "Support Above/Below Puck",
+    "purpose": "Build role-specific centre support habits.",
+    "frequency": "3x/week structured",
+    "execution": "Review one scenario; identify support below puck, middle, weak side, escape option.",
+    "appPrompt": "Where should you support when the puck is under pressure?",
+    "parentCue": "Ask questions, do not lecture.",
+    "logInputs": "completed,answerQuality1to5,notes",
+    "notes": "Can be done during travel/deload."
+  },
+  {
+    "conceptID": "IQ-FIRSTTOUCH-001",
+    "concept": "First-Touch Plan",
+    "purpose": "Reduce panic touches and turnovers.",
+    "frequency": "3x/week during skill work",
+    "execution": "Before receiving/carrying, name plan: carry, pass, shoot, protect, escape.",
+    "appPrompt": "What was your plan before the puck arrived?",
+    "parentCue": "Reward having a plan, not just perfect execution.",
+    "logInputs": "completed,example,quality1to5,notes",
+    "notes": "Pair with catch-release and handling."
+  },
+  {
+    "conceptID": "IQ-ATTACK-001",
+    "concept": "Attack Middle / Drive Play",
+    "purpose": "Reinforce attacking identity.",
+    "frequency": "Weekly theme + sport reflection",
+    "execution": "After session/game, identify one time he attacked space or demanded puck.",
+    "appPrompt": "How did you drive play today?",
+    "parentCue": "Use specific praise: you attacked inside there.",
+    "logInputs": "confidence1to5,example,notes",
+    "notes": "Mindset without hype."
+  },
+  {
+    "conceptID": "IQ-PROTECT-001",
+    "concept": "Protect Puck / Escape Pressure",
+    "purpose": "Improve confidence under pressure.",
+    "frequency": "W3-W10 skill days",
+    "execution": "Use escape turn/backhand toe-drag; scan after escape; pass/shot next.",
+    "appPrompt": "Where is your escape option?",
+    "parentCue": "Encourage calm exit before speed.",
+    "logInputs": "completed,reps,quality1to5,notes",
+    "notes": "Pairs with SKL-DEKE-003."
+  }
+]

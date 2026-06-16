@@ -1,0 +1,159 @@
+{
+  "sourceSheet": "GANTT_VIEW",
+  "lockedVersion": "v7.6+",
+  "rule": "Render exactly from source model. Do not invent bars, lanes, colors, chips, or phase spans.",
+  "weeks": [
+    "W1",
+    "W2",
+    "W3",
+    "W4",
+    "W5",
+    "W6",
+    "W7",
+    "W8",
+    "W9",
+    "W10",
+    "W11",
+    "W12"
+  ],
+  "lanes": [
+    {
+      "lane": "Perf Testing",
+      "weekCells": []
+    },
+    {
+      "lane": "GPP/Foundation + Hypertrophy/Tissue Prep",
+      "weekCells": [
+        {
+          "week": "W1",
+          "label": "GPP / Foundation"
+        }
+      ]
+    },
+    {
+      "lane": "Sport Loads / Playoffs",
+      "weekCells": [
+        {
+          "week": "W1",
+          "label": "4v4 / Lax  Playoffs"
+        }
+      ]
+    },
+    {
+      "lane": "Strength Foundation + Acceleration Mechanics",
+      "weekCells": [
+        {
+          "week": "W3",
+          "label": "Strength + Acceleration"
+        }
+      ]
+    },
+    {
+      "lane": "Chase Hull Camp",
+      "weekCells": [
+        {
+          "week": "W4",
+          "label": "Chase H. Camp"
+        }
+      ]
+    },
+    {
+      "lane": "Speed-Strength / Power Transition",
+      "weekCells": [
+        {
+          "week": "W5",
+          "label": "Power Transition"
+        }
+      ]
+    },
+    {
+      "lane": "Marc O’Connor Ice",
+      "weekCells": []
+    },
+    {
+      "lane": "Strategic Lighter Week + Toronto Trip",
+      "weekCells": [
+        {
+          "week": "W7",
+          "label": "Deload"
+        }
+      ]
+    },
+    {
+      "lane": "Toronto Trip / Travel",
+      "weekCells": [
+        {
+          "week": "W7",
+          "label": "Travel"
+        }
+      ]
+    },
+    {
+      "lane": "Power/Agility + Carleton Camp Overlay",
+      "weekCells": [
+        {
+          "week": "W8",
+          "label": "Power/Agility"
+        }
+      ]
+    },
+    {
+      "lane": "Carleton U. Camp",
+      "weekCells": [
+        {
+          "week": "W8",
+          "label": "C.U. Camp"
+        }
+      ]
+    },
+    {
+      "lane": "Game-Speed + Reactive Agility / Repeat Sprint",
+      "weekCells": [
+        {
+          "week": "W9",
+          "label": "Game-Speed / Sprint"
+        }
+      ]
+    },
+    {
+      "lane": "Marc O’Connor Ice",
+      "weekCells": []
+    },
+    {
+      "lane": "Training Camp / Tryout Simulation",
+      "weekCells": [
+        {
+          "week": "W11",
+          "label": "Tryout Sim"
+        }
+      ]
+    },
+    {
+      "lane": "Sensplex Camp",
+      "weekCells": [
+        {
+          "week": "W11",
+          "label": "Sensplex"
+        }
+      ]
+    },
+    {
+      "lane": "Taper + Peak",
+      "weekCells": [
+        {
+          "week": "W12",
+          "label": "Taper"
+        }
+      ]
+    },
+    {
+      "lane": "Legend",
+      "weekCells": [
+        {
+          "week": "W1",
+          "label": "Teal = methodology phase; purple = sport/on-ice overlay; orange = camp; blue = deload/travel; yellow = taper; blue = KPI/perf testing."
+        }
+      ]
+    }
+  ]
+}

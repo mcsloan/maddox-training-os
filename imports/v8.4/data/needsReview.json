@@ -1,0 +1,21 @@
+[
+  {
+    "canonicalExerciseId": "NO_REMAINING_REVIEW_ROWS",
+    "exerciseName": "All human-reviewed NEEDS_REVIEW rows were applied in v8.2. See HUMAN_VIDEO_REVIEW_LOG for preserved review decisions.",
+    "exerciseCategory": null,
+    "sourceFamily": null,
+    "sourceDocument": null,
+    "sourcePageOrSection": null,
+    "sourcePlaylistUrl": null,
+    "sourceVideoTitle": null,
+    "primaryVideoUrl": null,
+    "urlType": null,
+    "matchStatus": null,
+    "matchConfidence": null,
+    "reviewRequired": "No",
+    "matchNotes": null,
+    "correctYN": null,
+    "newURL": null,
+    "commentSometimesASecondaryURLIfOptionalExercise": null
+  }
+]

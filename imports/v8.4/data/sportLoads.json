@@ -1,0 +1,254 @@
+[
+  {
+    "date": "2026-06-15",
+    "week": 1,
+    "day": "Monday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Two 22-minute games",
+    "intensity15": 3,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-06-17",
+    "week": 1,
+    "day": "Wednesday",
+    "sportLoad": "Lacrosse Game",
+    "details": "Knights lacrosse game",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-06-22",
+    "week": 2,
+    "day": "Monday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Two 22-minute games",
+    "intensity15": 3,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-06-24",
+    "week": 2,
+    "day": "Wednesday",
+    "sportLoad": "Lacrosse Game",
+    "details": "Knights lacrosse game",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-06-27",
+    "week": 2,
+    "day": "Saturday",
+    "sportLoad": "Lacrosse Playoff",
+    "details": "One playoff game",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-06-28",
+    "week": 2,
+    "day": "Sunday",
+    "sportLoad": "Lacrosse Playoff",
+    "details": "One playoff game",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-06",
+    "week": 4,
+    "day": "Monday",
+    "sportLoad": "Chase Hull Camp",
+    "details": "Approx. 2 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-07",
+    "week": 4,
+    "day": "Tuesday",
+    "sportLoad": "Chase Hull Camp",
+    "details": "Approx. 2 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-08",
+    "week": 4,
+    "day": "Wednesday",
+    "sportLoad": "Chase Hull Camp",
+    "details": "Approx. 2 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-09",
+    "week": 4,
+    "day": "Thursday",
+    "sportLoad": "Chase Hull Camp",
+    "details": "Approx. 2 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-10",
+    "week": 4,
+    "day": "Friday",
+    "sportLoad": "Chase Hull Camp",
+    "details": "Approx. 2 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-18",
+    "week": 5,
+    "day": "Saturday",
+    "sportLoad": "Marc O’Connor Ice",
+    "details": "Powerskating & Pucks 12:45-1:45",
+    "intensity15": 4,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-25",
+    "week": 6,
+    "day": "Saturday",
+    "sportLoad": "Marc O’Connor Ice",
+    "details": "Powerskating & Pucks 12:45-1:45",
+    "intensity15": 4,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-31",
+    "week": 7,
+    "day": "Friday",
+    "sportLoad": "Toronto Trip",
+    "details": "Blue Jays trip / travel; no formal hard training",
+    "intensity15": 1,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-01",
+    "week": 7,
+    "day": "Saturday",
+    "sportLoad": "Toronto Trip",
+    "details": "Blue Jays trip / travel; no formal hard training",
+    "intensity15": 1,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-02",
+    "week": 7,
+    "day": "Sunday",
+    "sportLoad": "Toronto Trip",
+    "details": "Blue Jays trip / travel; no formal hard training",
+    "intensity15": 1,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-03",
+    "week": 8,
+    "day": "Monday",
+    "sportLoad": "Toronto Trip",
+    "details": "Blue Jays trip / travel; no formal hard training",
+    "intensity15": 1,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-04",
+    "week": 8,
+    "day": "Tuesday",
+    "sportLoad": "Carleton Ravens Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-05",
+    "week": 8,
+    "day": "Wednesday",
+    "sportLoad": "Carleton Ravens Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-06",
+    "week": 8,
+    "day": "Thursday",
+    "sportLoad": "Carleton Ravens Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-07",
+    "week": 8,
+    "day": "Friday",
+    "sportLoad": "Carleton Ravens Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-15",
+    "week": 9,
+    "day": "Saturday",
+    "sportLoad": "Marc O’Connor Ice",
+    "details": "Advanced Skills 10:15-11:15",
+    "intensity15": 4,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-16",
+    "week": 9,
+    "day": "Sunday",
+    "sportLoad": "Marc O’Connor Ice",
+    "details": "Tryout session 3-4",
+    "intensity15": 4,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-24",
+    "week": 11,
+    "day": "Monday",
+    "sportLoad": "Sensplex Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-25",
+    "week": 11,
+    "day": "Tuesday",
+    "sportLoad": "Sensplex Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-26",
+    "week": 11,
+    "day": "Wednesday",
+    "sportLoad": "Sensplex Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-27",
+    "week": 11,
+    "day": "Thursday",
+    "sportLoad": "Sensplex Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-28",
+    "week": 11,
+    "day": "Friday",
+    "sportLoad": "Sensplex Camp",
+    "details": "All day camp; 2–3 hours ice/day",
+    "intensity15": 5,
+    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  }
+]

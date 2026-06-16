@@ -1,0 +1,52 @@
+[
+  {
+    "metric": "Total exercise/video-map rows",
+    "count": 154,
+    "notes": "Rows in EXERCISE_VIDEO_MAP."
+  },
+  {
+    "metric": "Exact source video rows",
+    "count": 149,
+    "notes": "Direct source videos mapped; includes human-confirmed v8.2 updates."
+  },
+  {
+    "metric": "Not video required rows",
+    "count": 5,
+    "notes": "Rows intentionally marked as not requiring a video."
+  },
+  {
+    "metric": "Source video variant-review rows",
+    "count": 0,
+    "notes": "Rows still requiring variant review."
+  },
+  {
+    "metric": "Source playlist fallback rows",
+    "count": 0,
+    "notes": "Rows still only mapped to playlist fallback."
+  },
+  {
+    "metric": "Needs review rows",
+    "count": 0,
+    "notes": "Rows where reviewRequired is Yes."
+  },
+  {
+    "metric": "Human review rows processed in v8.2",
+    "count": 86,
+    "notes": "Rows from user-updated NEEDS_REVIEW columns O:Q."
+  },
+  {
+    "metric": "Human supplied/replaced primary URLs",
+    "count": 73,
+    "notes": "Rows where user marked prior URL incorrect and supplied a new URL."
+  },
+  {
+    "metric": "Human confirmed existing URLs",
+    "count": 8,
+    "notes": "Rows where user confirmed existing URL was correct."
+  },
+  {
+    "metric": "Human marked not video required",
+    "count": 5,
+    "notes": "Rows where video is not required."
+  }
+]

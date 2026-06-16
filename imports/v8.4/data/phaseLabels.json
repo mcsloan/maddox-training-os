@@ -1,0 +1,122 @@
+[
+  {
+    "week": 1,
+    "start": "2026-06-15",
+    "end": "2026-06-21",
+    "canonicalPhaseLabel": "GPP/Foundation + Hypertrophy/Tissue Prep",
+    "shortGanttLabel": "GPP / Tissue",
+    "dashboardMonthlyLabel": "GPP/Foundation + Hypertrophy/Tissue Prep",
+    "appLabel": "GPP/Foundation + Hypertrophy/Tissue Prep",
+    "notes": "Foundation block starts from later Phase 1 because restoration already occurred."
+  },
+  {
+    "week": 2,
+    "start": "2026-06-22",
+    "end": "2026-06-28",
+    "canonicalPhaseLabel": "GPP/Foundation + Playoff Finish",
+    "shortGanttLabel": "Playoff Finish",
+    "dashboardMonthlyLabel": "GPP/Foundation + Playoff Finish",
+    "appLabel": "GPP/Foundation + Playoff Finish",
+    "notes": "Foundation continues but lacrosse/playoffs drive sport load."
+  },
+  {
+    "week": 3,
+    "start": "2026-06-29",
+    "end": "2026-07-05",
+    "canonicalPhaseLabel": "Strength Foundation + Acceleration Mechanics",
+    "shortGanttLabel": "Strength + Accel",
+    "dashboardMonthlyLabel": "Strength Foundation + Acceleration Mechanics",
+    "appLabel": "Strength Foundation + Acceleration Mechanics",
+    "notes": "Strength foundation and acceleration mechanics."
+  },
+  {
+    "week": 4,
+    "start": "2026-07-06",
+    "end": "2026-07-12",
+    "canonicalPhaseLabel": "Strength Foundation + Chase Hull Camp Overlay",
+    "shortGanttLabel": "Chase Support",
+    "dashboardMonthlyLabel": "Strength Foundation + Chase Hull Camp Overlay",
+    "appLabel": "Strength Foundation + Chase Hull Camp Overlay",
+    "notes": "Chase Hull camp is an overlay, not a standalone methodology replacement."
+  },
+  {
+    "week": 5,
+    "start": "2026-07-13",
+    "end": "2026-07-19",
+    "canonicalPhaseLabel": "Speed-Strength / Power Transition",
+    "shortGanttLabel": "Power Transition",
+    "dashboardMonthlyLabel": "Speed-Strength / Power Transition",
+    "appLabel": "Speed-Strength / Power Transition",
+    "notes": "Power transition after camp."
+  },
+  {
+    "week": 6,
+    "start": "2026-07-20",
+    "end": "2026-07-26",
+    "canonicalPhaseLabel": "Speed-Strength / Power Transition",
+    "shortGanttLabel": "Power Transition",
+    "dashboardMonthlyLabel": "Speed-Strength / Power Transition",
+    "appLabel": "Speed-Strength / Power Transition",
+    "notes": "Second week of speed-strength/power."
+  },
+  {
+    "week": 7,
+    "start": "2026-07-27",
+    "end": "2026-08-02",
+    "canonicalPhaseLabel": "Strategic Lighter Week + Toronto Trip",
+    "shortGanttLabel": "Deload + Travel",
+    "dashboardMonthlyLabel": "Strategic Lighter Week + Toronto Trip",
+    "appLabel": "Strategic Lighter Week + Toronto Trip",
+    "notes": "Toronto trip shown in W7 only on the Gantt; Monday return does not extend the bar to W8."
+  },
+  {
+    "week": 8,
+    "start": "2026-08-03",
+    "end": "2026-08-09",
+    "canonicalPhaseLabel": "Power/Agility + Carleton Camp Overlay",
+    "shortGanttLabel": "Power/Agility",
+    "dashboardMonthlyLabel": "Power/Agility + Carleton Camp Overlay",
+    "appLabel": "Power/Agility + Carleton Camp Overlay",
+    "notes": "W8 is not a gap: Carleton sits inside a power/agility methodology week."
+  },
+  {
+    "week": 9,
+    "start": "2026-08-10",
+    "end": "2026-08-16",
+    "canonicalPhaseLabel": "Game-Speed + Reactive Agility / Repeat Sprint",
+    "shortGanttLabel": "Game-Speed / RSA",
+    "dashboardMonthlyLabel": "Game-Speed + Reactive Agility / Repeat Sprint",
+    "appLabel": "Game-Speed + Reactive Agility / Repeat Sprint",
+    "notes": "Reactive agility and repeat sprint ability."
+  },
+  {
+    "week": 10,
+    "start": "2026-08-17",
+    "end": "2026-08-23",
+    "canonicalPhaseLabel": "Game-Speed + Reactive Agility / Repeat Sprint",
+    "shortGanttLabel": "Game-Speed / RSA",
+    "dashboardMonthlyLabel": "Game-Speed + Reactive Agility / Repeat Sprint",
+    "appLabel": "Game-Speed + Reactive Agility / Repeat Sprint",
+    "notes": "Second game-speed week."
+  },
+  {
+    "week": 11,
+    "start": "2026-08-24",
+    "end": "2026-08-30",
+    "canonicalPhaseLabel": "Training Camp / Tryout Simulation",
+    "shortGanttLabel": "Tryout Sim",
+    "dashboardMonthlyLabel": "Training Camp / Tryout Simulation",
+    "appLabel": "Training Camp / Tryout Simulation",
+    "notes": "W11 is not a gap: Sensplex sits inside tryout simulation."
+  },
+  {
+    "week": 12,
+    "start": "2026-08-31",
+    "end": "2026-09-06",
+    "canonicalPhaseLabel": "Taper + Peak",
+    "shortGanttLabel": "Taper",
+    "dashboardMonthlyLabel": "Taper + Peak",
+    "appLabel": "Taper + Peak",
+    "notes": "Fresh legs and confidence into tryouts."
+  }
+]

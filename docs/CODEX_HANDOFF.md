@@ -23,6 +23,20 @@ The Plan page should explain the offseason methodology clearly:
 * overlays align under the phase they belong to
 * the UI should avoid data-model jargon
 
+## Import Guardrails
+
+The approved source-of-truth import package is `imports/v8.4/`.
+
+Import-only rules:
+
+* GANTT is locked.
+* Phase labels are locked.
+* Sport loads are part of the plan, not external load.
+* Video map is human-reviewed.
+* Codex must not invent workouts or videos.
+* Codex must use `imports/v8.4/data/` as the source for app import work.
+* Do not relabel phases or rewrite the locked plan model.
+
 ## Product Decisions
 
 1. Consolidate the chip legend.

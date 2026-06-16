@@ -1,0 +1,95 @@
+{
+  "version": "v8.4",
+  "sessionCompletion": {
+    "fields": [
+      "sessionId",
+      "date",
+      "athleteId",
+      "startedAt",
+      "finishedAt",
+      "completionStatus",
+      "totalDurationMin",
+      "notes"
+    ],
+    "completionStatusValues": [
+      "completed",
+      "partial",
+      "skipped",
+      "modified"
+    ]
+  },
+  "trainingWorkLog": {
+    "fields": [
+      "sessionId",
+      "entrySequence",
+      "drillId",
+      "completed",
+      "actualSets",
+      "actualRepsOrTime",
+      "actualDurationMin",
+      "difficulty1to5",
+      "quality1to5",
+      "painOrSoreness",
+      "notes"
+    ]
+  },
+  "sportLoadLog": {
+    "fields": [
+      "date",
+      "sportLoad",
+      "durationMin",
+      "intensity1to5",
+      "energyAfter1to5",
+      "soreness",
+      "confidence1to5",
+      "notes"
+    ]
+  },
+  "readinessLog": {
+    "fields": [
+      "date",
+      "energy1to5",
+      "sleepQuality1to5",
+      "soreness",
+      "mood1to5",
+      "confidence1to5",
+      "adjustmentNeeded",
+      "notes"
+    ]
+  },
+  "shotCounterLog": {
+    "fields": [
+      "sessionId",
+      "drillId",
+      "shotsPlanned",
+      "shotsTaken",
+      "targetHits",
+      "accuracyPct",
+      "quality1to5",
+      "painOrSoreness",
+      "notes"
+    ]
+  },
+  "kpiLog": {
+    "fields": [
+      "kpiId",
+      "date",
+      "attempts",
+      "bestResult",
+      "unit",
+      "valid",
+      "notes"
+    ]
+  },
+  "reflectionLog": {
+    "fields": [
+      "date",
+      "sessionId",
+      "energy1to5",
+      "confidence1to5",
+      "difficulty1to5",
+      "oneThingImproved",
+      "notes"
+    ]
+  }
+}

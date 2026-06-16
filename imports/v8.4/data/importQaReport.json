@@ -1,0 +1,43 @@
+{
+  "packageVersion": "v8.4",
+  "sourceWorkbook": "Maddox_Training_OS_v8_3_Source_Of_Truth_Lock.xlsx",
+  "generatedAt": "2026-06-16T04:53:11+00:00",
+  "recordCounts": {
+    "dayExecutionPlan.json": 621,
+    "sessions.json": 84,
+    "drills.json": 154,
+    "workoutBlockDetails.json": 154,
+    "exerciseVideoMap.json": 154,
+    "speedStackPrescriptions.json": 616,
+    "kpis.json": 7,
+    "kpiProtocols.json": 6,
+    "sportLoads.json": 28,
+    "phaseMap.json": 12,
+    "phaseLabels.json": 12,
+    "hockeyIq.json": 6,
+    "skillShotIqLibrary.json": 22,
+    "integratedSkillSessions.json": 9,
+    "skillShotIqSeed.json": 30,
+    "shootingProgression.json": 12,
+    "recoveryRules.json": 6,
+    "ganttModel.json": 17,
+    "drillCards.json": 154,
+    "logSchemas.json": 8,
+    "videoCoverageReport.json": 10,
+    "sourceTrace.json": 11,
+    "sourceOfTruthLock.json": 39,
+    "needsReview.json": 0
+  },
+  "videoStatusCounts": {
+    "Exact Source Video": 149,
+    "Not Video Required": 5
+  },
+  "needsReviewRows": 0,
+  "guardrails": [
+    "GANTT_VIEW locked and exported as ganttModel.json only.",
+    "Codex must not invent workouts, exercises, videos, phase labels, or Gantt bars.",
+    "DAY_EXECUTION_PLAN is the source for Today/Start Session sequencing.",
+    "APP_SEED_DRILLS and EXERCISE_VIDEO_MAP are the source for Drill Cards and videos.",
+    "Sport loads are part of the plan, not external load."
+  ]
+}

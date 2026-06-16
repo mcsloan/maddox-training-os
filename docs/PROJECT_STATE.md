@@ -17,6 +17,7 @@ The app must be practical, clear, and usable during real training. It is not jus
 * docs/CODEX_HANDOFF.md — implementation and product rules for Codex.
 * docs/PROJECT_STATE.md — current project handover state for future ChatGPT and Codex sessions.
 * Latest workbook: Maddox_Training_OS_12Week_Methodology_v6_Source_Video_Map.xlsx.
+* Approved app-import package: imports/v8.4/.
 
 The workbook is the source of truth for:
 
@@ -27,6 +28,8 @@ The workbook is the source of truth for:
 * video-map direction
 
 The app should render approved data. Codex should not invent coaching logic.
+
+The approved source-of-truth import package is v8.4 in imports/v8.4/. Future import work should use the data files in that package, not ad hoc reconstruction.
 
 ## Current Stable App Status
 
@@ -52,9 +55,10 @@ The mixed-day logging model has been improved:
 1. Keep Plan page Gantt stable.
 2. Keep mixed-day logging stable.
 3. Ensure sport-load logging and planned-training logging remain independent.
-4. Build the source-video map from HockeyTraining playlists and USA Hockey Training@Home links.
-5. Import the final approved video map into the app.
-6. Improve workout/session execution flow.
+4. Integrate the approved v8.4 import package in a controlled, source-first way.
+5. Build the source-video map from HockeyTraining playlists and USA Hockey Training@Home links.
+6. Import the final approved video map into the app.
+7. Improve workout/session execution flow.
 
 ## Gantt Status
 
@@ -210,7 +214,7 @@ After doc-only edits, run:
 
 Next priorities:
 
-1. Add or update this project state document.
+1. Integrate imports/v8.4/ as the approved source-of-truth import package.
 2. Build v6.1 Source Video Map with enumerated HockeyTraining playlist items.
 3. Review Needs_Review video rows.
 4. Export approved app seed data.
