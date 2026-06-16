@@ -146,7 +146,7 @@ export async function saveExternalLoadLog(log: ExternalLoadLog, load: PlannedExt
 
 export async function loadExternalLoadLogs(): Promise<ExternalLoadHistoryResult> {
   const local = readLocal();
-  if (!isSupabaseConfigured()) return { logs: latestOnly(local), mode: "local", warning: "External load logs are backed up on this browser." };
+  if (!isSupabaseConfigured()) return { logs: latestOnly(local), mode: "local", warning: "Sport Load logs are backed up on this browser." };
   try {
     const supabase = getSupabaseClient();
     if (!supabase) return { logs: latestOnly(local), mode: "local", warning: "Supabase is not configured." };
@@ -165,11 +165,11 @@ export async function loadExternalLoadLogs(): Promise<ExternalLoadHistoryResult>
     const unsyncedLocal = local.filter((log) => !cloudIds.has(log.id));
     const logs = latestOnly([...cloud, ...local].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
     if (unsyncedLocal.length) {
-      return { logs, mode: "local", warning: `${unsyncedLocal.length} external load log backup${unsyncedLocal.length === 1 ? " is" : "s are"} not present in cloud history.` };
+      return { logs, mode: "local", warning: `${unsyncedLocal.length} sport load log backup${unsyncedLocal.length === 1 ? " is" : "s are"} not present in cloud history.` };
     }
     return { logs, mode: "cloud", warning: "" };
   } catch (reason) {
-    return { logs: latestOnly(local), mode: "local", warning: `Cloud external-load history unavailable. ${readableError(reason)}` };
+    return { logs: latestOnly(local), mode: "local", warning: `Cloud Sport Load history unavailable. ${readableError(reason)}` };
   }
 }
 

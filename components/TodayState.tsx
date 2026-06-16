@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { DayExecutionSequence } from "@/components/DayExecutionSequence";
 import { ExternalLoadActions } from "@/components/ExternalLoadActions";
 import { ExternalLoadChip, PlanTagChip } from "@/components/LoadChips";
 import { TodayCard } from "@/components/TodayCard";
-import { formatPlanDate, getExternalLoadsForDate, getNextKpiDay, getNextScheduledDate, getParentCue, getPhase, getPlanDay, getTodayWorkout, getWorkoutDrills, trainingPlan, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
+import { getV84DayExecutionEntries, getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
+import { formatPlanDate, getNextKpiDay, getNextScheduledDate, getParentCue, getPhase, getPlanDay, getTodayWorkout, getWorkoutDrills, trainingPlan, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
 
 function localDate() {
   const now = new Date();
@@ -22,17 +24,19 @@ export function TodayState() {
   if (today > endDate) return <PlanCompleteState />;
 
   const day = getPlanDay(today);
-  const loads = getExternalLoadsForDate(today);
+  const executionEntries = getV84DayExecutionEntries(today);
+  const loads = getV84SportLoadsForDate(today);
   const workout = getTodayWorkout(today);
   const nextDate = getNextScheduledDate(today);
 
   if (!day && loads.length > 0) return <ExternalOnlyState date={today} />;
-  if (!day && !loads.length) return <NoSessionState nextDate={nextDate} />;
+  if (!day && !loads.length && !executionEntries.length) return <NoSessionState nextDate={nextDate} />;
 
   return (
     <div>
       {workout && <><TodayCard workout={workout} phase={getPhase(workout.phaseId)} parentCue={getParentCue(workout.parentCueId)} /><SessionMap workoutId={workout.id} /></>}
       {!workout && day && <section className="card"><p className="label">{userFacingPlanText(day.dayRole)}</p><h2 className="text-3xl font-black">{day.primarySession}</h2><p className="mt-3">{userFacingPlanText(day.recovery)}</p><p className="mt-3 font-semibold text-amber-800">{userFacingLoadRule(day.doNotDo, loads.length > 0)}</p><Link className="btn-secondary mt-5" href={`/day/${today}`}>Open Today&apos;s Plan</Link></section>}
+      <DayExecutionSequence entries={executionEntries} compact />
       {loads.length > 0 && <section className="card mt-6"><p className="label">Sport load today</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} />)}</div><p className="mt-4 font-semibold text-amber-800">{userFacingLoadRule(loads[0].doNotDoRule, true)}</p><ExternalLoadActions loads={loads} /><NextKpiNotice afterDate={today} /></section>}
     </div>
   );
@@ -45,8 +49,9 @@ function PrePlanState({ today }: { today: string }) {
 }
 
 function ExternalOnlyState({ date }: { date: string }) {
-  const loads = getExternalLoadsForDate(date);
-  return <section className="card"><p className="label">Sport Load Day</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} />)}</div><h2 className="mt-4 text-3xl font-black">{loads[0].title}</h2><p className="mt-3 text-green-800"><strong>Recovery:</strong> {userFacingLoadRule(loads[0].recoveryRule, true)}</p><ExternalLoadActions loads={loads} /><NextKpiNotice afterDate={date} /><Link className="btn-secondary mt-4" href={`/day/${date}`}>Open Full Day</Link></section>;
+  const loads = getV84SportLoadsForDate(date);
+  const executionEntries = getV84DayExecutionEntries(date);
+  return <><section className="card"><p className="label">Sport Load Day</p><div className="flex flex-wrap gap-2">{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} />)}</div><h2 className="mt-4 text-3xl font-black">{loads[0].title}</h2><p className="mt-3 text-green-800"><strong>Recovery:</strong> {userFacingLoadRule(loads[0].recoveryRule, true)}</p><ExternalLoadActions loads={loads} /><NextKpiNotice afterDate={date} /><Link className="btn-secondary mt-4" href={`/day/${date}`}>Open Full Day</Link></section><DayExecutionSequence entries={executionEntries} compact /></>;
 }
 
 function NextKpiNotice({ afterDate }: { afterDate: string }) {

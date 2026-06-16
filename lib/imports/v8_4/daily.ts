@@ -21,9 +21,17 @@ export function getV84SportLoadsForDate(date: string) {
 }
 
 export function getV84SportLoadById(id: string) {
+  const decodedId = decodeSportLoadId(id);
+  const dateCounts = new Map<string, number>();
   for (const load of sportLoads) {
-    const planned = toPlannedSportLoad(load);
-    if (planned.id === id) return planned;
+    const index = dateCounts.get(load.date) || 0;
+    dateCounts.set(load.date, index + 1);
+    const planned = toPlannedSportLoad(load, index);
+    if (planned.id === decodedId) return planned;
+  }
+  for (const load of sportLoads) {
+    const planned = toPlannedSportLoad(load, 0);
+    if (planned.id === decodedId) return planned;
   }
   return null;
 }
@@ -53,7 +61,7 @@ function toPlannedSportLoad(load: V84SportLoad, index = 0): PlannedExternalLoad 
     plannedIntensity: clampRating(load.intensity15),
     notes: `${load.details}. Sport load is part of the plan.`,
     recoveryRule: "Keep recovery first: fluids, snack, mobility, and sleep.",
-    doNotDoRule: "No hard dryland after this sport load.",
+    doNotDoRule: "Keep dryland reduced after this sport load.",
     trackingQuestions: buildTrackingQuestions(title),
   };
 }
@@ -125,4 +133,12 @@ function clampRating(value: number): Rating {
 
 function slugify(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "sport-load";
+}
+
+function decodeSportLoadId(id: string) {
+  try {
+    return decodeURIComponent(id);
+  } catch {
+    return id;
+  }
 }
