@@ -9,12 +9,13 @@ import { ReflectionForm } from "@/components/ReflectionForm";
 import { SessionKPIForm } from "@/components/SessionKPIForm";
 import { SessionProgress } from "@/components/SessionProgress";
 import { SessionSummary } from "@/components/SessionSummary";
+import { getV84SessionById, getV84SessionDrills, getV84SessionWorkout, getV84VideoForDrillId } from "@/lib/imports/v8_4/session";
 import { getWorkout, getWorkoutDrills, kpis as allKpis } from "@/lib/trainingData";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
 import { saveCompletedSession } from "@/lib/storage/completedSessionRepository";
 import { SessionStorageDiagnostics } from "@/lib/storage/sessionRepository";
-import { SessionLog } from "@/lib/types";
+import { ExerciseCompletion, SessionLog } from "@/lib/types";
 
 type PageMode = "loading" | "live" | "choice" | "view" | "error";
 type InitDiagnostics = {
@@ -50,9 +51,11 @@ function debug(step: string, details?: unknown) {
 export default function SessionPage() {
   const params = useParams<{ id: string }>();
   const routeId = typeof params?.id === "string" ? params.id : "";
-  const workout = getWorkout(routeId);
-  const drills = useMemo(() => workout ? getWorkoutDrills(workout) : [], [workout]);
-  const workoutKpis = useMemo(() => workout ? workout.kpiTestIds.map((id) => allKpis.find((kpi) => kpi.id === id)).filter((kpi): kpi is (typeof allKpis)[number] => Boolean(kpi)) : [], [workout]);
+  const v84Session = getV84SessionById(routeId);
+  const legacyWorkout = getWorkout(routeId);
+  const workout = useMemo(() => v84Session ? getV84SessionWorkout(routeId) : legacyWorkout, [routeId, v84Session, legacyWorkout]);
+  const drills = useMemo(() => v84Session ? getV84SessionDrills(routeId) : workout ? getWorkoutDrills(workout) : [], [routeId, v84Session, workout]);
+  const workoutKpis = useMemo(() => v84Session ? [] : workout ? workout.kpiTestIds.map((id) => allKpis.find((kpi) => kpi.id === id)).filter((kpi): kpi is (typeof allKpis)[number] => Boolean(kpi)) : [], [v84Session, workout]);
   const [session, setSession] = useState<SessionLog | null>(null);
   const [completedSessions, setCompletedSessions] = useState<SessionLog[]>([]);
   const [mode, setMode] = useState<PageMode>("loading");
@@ -95,6 +98,18 @@ export default function SessionPage() {
     setMode("error");
   }, [captureDiagnostics]);
 
+  const hydrateExercises = useCallback((next: SessionLog) => {
+    const exercises: Record<string, ExerciseCompletion> = { ...next.exercises };
+    let changed = false;
+    for (const drill of drills) {
+      if (!exercises[drill.id]) {
+        exercises[drill.id] = { drillId: drill.id, done: false, actualSets: null, actualReps: null, actualDuration: null, actualDistance: null, notes: "", difficulty: null };
+        changed = true;
+      }
+    }
+    return changed ? { ...next, exercises } : next;
+  }, [drills]);
+
   const initialize = useCallback(() => {
     try {
       captureDiagnostics({ currentStage: "Route and workout lookup" });
@@ -130,15 +145,19 @@ export default function SessionPage() {
         if (requestedMode === "reopen") {
           const reopened = localSessionRepository.reopenSession(found.id);
           if (!reopened) throw new Error("Unable to reopen this session");
-          setSession(reopened);
+          const hydrated = hydrateExercises(reopened);
+          localSessionRepository.updateSession(hydrated);
+          setSession(hydrated);
           setMode("live");
-          debug("final render state", { mode: "live", sessionId: reopened.id });
+          debug("final render state", { mode: "live", sessionId: hydrated.id });
           return;
         }
-        setSession(found);
+        const hydrated = hydrateExercises(found);
+        localSessionRepository.updateSession(hydrated);
+        setSession(hydrated);
         const finalMode = requestedMode === "view" || found.status === "completed" ? "view" : "live";
         setMode(finalMode);
-        debug("final render state", { mode: finalMode, sessionId: found.id });
+        debug("final render state", { mode: finalMode, sessionId: hydrated.id });
         return;
       }
 
@@ -150,26 +169,31 @@ export default function SessionPage() {
       const resumable = sessions.find((item) => item.status === "in-progress" || item.status === "reopened");
       if (resumable) {
         captureDiagnostics({ sessionFound: true });
-        setSession(resumable);
+        const hydrated = hydrateExercises(resumable);
+        localSessionRepository.updateSession(hydrated);
+        setSession(hydrated);
         setMode("live");
-        debug("final render state", { mode: "live", sessionId: resumable.id });
+        debug("final render state", { mode: "live", sessionId: hydrated.id });
         return;
       }
 
       const completed = sessions.filter((item) => item.status === "completed");
       if (completed.length > 0) {
         captureDiagnostics({ sessionFound: true });
-        setCompletedSessions(completed);
-        setSession(completed[0]);
+        const hydrated = completed.map(hydrateExercises);
+        hydrated.forEach((item) => localSessionRepository.updateSession(item));
+        setCompletedSessions(hydrated);
+        setSession(hydrated[0]);
         setMode("choice");
-        debug("final render state", { mode: "choice", sessionId: completed[0].id });
+        debug("final render state", { mode: "choice", sessionId: hydrated[0].id });
         return;
       }
 
       captureDiagnostics({ newSessionAttempted: true });
       captureDiagnostics({ currentStage: "Creating and saving new session" });
       debug("session creation start", { workoutId: workout.id });
-      const created = localSessionRepository.createSessionFromWorkout(workout);
+      const created = hydrateExercises(localSessionRepository.createSessionFromWorkout(workout));
+      localSessionRepository.updateSession(created);
       debug("session creation end", { sessionId: created.id, repository: localSessionRepository.getDiagnostics() });
       setSession(created);
       setMode("live");
@@ -178,7 +202,7 @@ export default function SessionPage() {
     } catch (reason) {
       fail(reason);
     }
-  }, [captureDiagnostics, fail, routeId, workout]);
+  }, [captureDiagnostics, fail, hydrateExercises, routeId, workout]);
 
   useEffect(() => {
     const watchdog = window.setTimeout(() => {
@@ -215,7 +239,8 @@ export default function SessionPage() {
     try {
       captureDiagnostics({ newSessionAttempted: true });
       debug("session creation start", { workoutId: workout.id, bypassLookup: true });
-      const fresh = localSessionRepository.createSessionFromWorkout(workout);
+      const fresh = hydrateExercises(localSessionRepository.createSessionFromWorkout(workout));
+      localSessionRepository.updateSession(fresh);
       debug("session creation end", { sessionId: fresh.id, repository: localSessionRepository.getDiagnostics() });
       setSession(fresh);
       setSessionUrl(fresh, "resume");
@@ -261,15 +286,19 @@ export default function SessionPage() {
       setMode("error");
       return;
     }
-    setSession(reopened);
-    setSessionUrl(reopened, "resume");
+    const hydrated = hydrateExercises(reopened);
+    localSessionRepository.updateSession(hydrated);
+    setSession(hydrated);
+    setSessionUrl(hydrated, "resume");
     setMode("live");
   }
 
   function view(target = session) {
     if (!target) return;
-    setSession(target);
-    setSessionUrl(target, "view");
+    const hydrated = hydrateExercises(target);
+    localSessionRepository.updateSession(hydrated);
+    setSession(hydrated);
+    setSessionUrl(hydrated, "view");
     setMode("view");
   }
 
@@ -352,7 +381,7 @@ export default function SessionPage() {
         <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm font-bold text-slate-200"><span>{drill ? `Drill ${step} of ${drills.length}` : kpi ? `KPI test ${kpiIndex + 1} of ${workoutKpis.length}` : isReflection ? "Final reflection" : "Readiness check"}</span><span>About {Math.max(0, Math.ceil(workout.totalEstimatedMinutes * (totalSteps - step - 1) / totalSteps))} min remaining</span><span>{saveFeedback}</span></div>
       </div>
       {step === 0 && <ReadinessCheck value={session.readiness} onChange={(readiness) => update({ ...session!, readiness })} />}
-      {drill && <DrillCard drill={drill} completion={session.exercises[drill.id]} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
+      {drill && <DrillCard drill={drill} completion={session.exercises[drill.id]} videoState={v84Session ? getV84VideoForDrillId(drill.id) : null} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
       {kpi && <SessionKPIForm kpi={kpi} result={session.kpiResults[kpi.id]} onChange={(result) => update({ ...session!, kpiResults: { ...session!.kpiResults, [kpi.id]: result } })} />}
       {isReflection && <ReflectionForm value={session.reflection} onChange={(reflection) => update({ ...session!, reflection })} />}
       <div className="sticky bottom-16 mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice/95 py-3 backdrop-blur sm:bottom-0">

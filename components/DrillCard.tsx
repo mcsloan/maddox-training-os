@@ -4,7 +4,14 @@ import { Drill, ExerciseCompletion, Rating } from "@/lib/types";
 import { isUsableExternalUrl } from "@/lib/trainingData";
 import { SessionTimer } from "./SessionTimer";
 
-export function DrillCard({ drill, completion, onChange }: { drill: Drill; completion: ExerciseCompletion; onChange: (next: ExerciseCompletion) => void }) {
+interface DrillVideoState {
+  primaryVideoUrl: string | null;
+  sourcePlaylistUrl: string | null;
+  sourceVideoTitle: string | null;
+  matchStatus: string;
+}
+
+export function DrillCard({ drill, completion, onChange, videoState }: { drill: Drill; completion: ExerciseCompletion; onChange: (next: ExerciseCompletion) => void; videoState?: DrillVideoState | null }) {
   const update = (patch: Partial<ExerciseCompletion>) => onChange({ ...completion, ...patch });
 
   return (
@@ -52,7 +59,7 @@ export function DrillCard({ drill, completion, onChange }: { drill: Drill; compl
             <p className="label mt-3">Safety</p>
             <p>{drill.safetyNotes}</p>
           </details>
-          {(isUsableExternalUrl(drill.videoUrl) || isUsableExternalUrl(drill.qrUrl)) && <div className="mt-4 grid gap-2 sm:grid-cols-2">{isUsableExternalUrl(drill.videoUrl) && <a className="btn-secondary" href={drill.videoUrl!} target="_blank" rel="noreferrer">Open Video Demo</a>}{isUsableExternalUrl(drill.qrUrl) && <a className="btn-secondary" href={drill.qrUrl!} target="_blank" rel="noreferrer">Open QR-Ready Link</a>}</div>}
+          <DrillVideoLinks drill={drill} videoState={videoState} />
         </div>
         <div className="space-y-4">
           {drill.plannedDuration && <SessionTimer initialSeconds={completion.actualDuration || 0} onChange={(actualDuration) => update({ actualDuration })} />}
@@ -71,4 +78,18 @@ export function DrillCard({ drill, completion, onChange }: { drill: Drill; compl
       </div>
     </article>
   );
+}
+
+function DrillVideoLinks({ drill, videoState }: { drill: Drill; videoState?: DrillVideoState | null }) {
+  if (videoState) {
+    return (
+      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        {isUsableExternalUrl(videoState.primaryVideoUrl) ? <a className="btn-secondary" href={videoState.primaryVideoUrl!} target="_blank" rel="noreferrer">Open Video Demo</a> : videoState.matchStatus === "Not Video Required" ? <p className="rounded-2xl bg-ice p-3 text-sm font-bold text-slate-600">No video required</p> : <p className="rounded-2xl bg-ice p-3 text-sm font-bold text-slate-500">Approved link pending</p>}
+        {isUsableExternalUrl(videoState.sourcePlaylistUrl) && <a className="btn-secondary" href={videoState.sourcePlaylistUrl!} target="_blank" rel="noreferrer">Open Source Playlist</a>}
+      </div>
+    );
+  }
+
+  if (!isUsableExternalUrl(drill.videoUrl) && !isUsableExternalUrl(drill.qrUrl)) return null;
+  return <div className="mt-4 grid gap-2 sm:grid-cols-2">{isUsableExternalUrl(drill.videoUrl) && <a className="btn-secondary" href={drill.videoUrl!} target="_blank" rel="noreferrer">Open Video Demo</a>}{isUsableExternalUrl(drill.qrUrl) && <a className="btn-secondary" href={drill.qrUrl!} target="_blank" rel="noreferrer">Open QR-Ready Link</a>}</div>;
 }
