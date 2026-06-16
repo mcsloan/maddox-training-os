@@ -30,8 +30,28 @@ create table if not exists public.session_logs (
 create index if not exists session_logs_athlete_completed_idx
   on public.session_logs (athlete_id, completed_at desc);
 
+create table if not exists public.session_progress (
+  id text primary key,
+  athlete_id uuid not null references public.athletes(id),
+  workout_id text not null,
+  session_date date,
+  status text not null,
+  current_step integer,
+  started_at timestamptz,
+  completed_at timestamptz,
+  session_data jsonb not null,
+  device_id text,
+  schema_version integer default 1,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index if not exists session_progress_athlete_workout_idx
+  on public.session_progress (athlete_id, workout_id, updated_at desc);
+
 alter table public.athletes enable row level security;
 alter table public.session_logs enable row level security;
+alter table public.session_progress enable row level security;
 
 -- Phase 1 is a private single-family app without authentication.
 -- These policies permit the anon client to access only the stable Maddox athlete.
@@ -54,4 +74,17 @@ create policy "anon can read Maddox session logs"
 
 create policy "anon can insert Maddox session logs"
   on public.session_logs for insert to anon
+  with check (athlete_id = '00000000-0000-4000-8000-000000000012');
+
+create policy "anon can read Maddox session progress"
+  on public.session_progress for select to anon
+  using (athlete_id = '00000000-0000-4000-8000-000000000012');
+
+create policy "anon can insert Maddox session progress"
+  on public.session_progress for insert to anon
+  with check (athlete_id = '00000000-0000-4000-8000-000000000012');
+
+create policy "anon can update Maddox session progress"
+  on public.session_progress for update to anon
+  using (athlete_id = '00000000-0000-4000-8000-000000000012')
   with check (athlete_id = '00000000-0000-4000-8000-000000000012');

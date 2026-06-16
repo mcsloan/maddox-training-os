@@ -11,6 +11,7 @@ import { SessionProgress } from "@/components/SessionProgress";
 import { SessionSummary } from "@/components/SessionSummary";
 import { getV84SessionById, getV84SessionDrills, getV84SessionWorkout, getV84VideoForDrillId } from "@/lib/imports/v8_4/session";
 import { getWorkout, getWorkoutDrills, kpis as allKpis } from "@/lib/trainingData";
+import { loadCloudSessionById, loadCloudSessionsByWorkoutId, saveCloudSessionProgress } from "@/lib/storage/cloudSessionProgressRepository";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
 import { saveCompletedSession } from "@/lib/storage/completedSessionRepository";
@@ -61,6 +62,7 @@ export default function SessionPage() {
   const [mode, setMode] = useState<PageMode>("loading");
   const [error, setError] = useState("");
   const [saveFeedback, setSaveFeedback] = useState("Ready");
+  const [cloudWarning, setCloudWarning] = useState("");
   const [isCompleting, setIsCompleting] = useState(false);
   const [diagnostics, setDiagnostics] = useState<InitDiagnostics>({
     currentStage: "Component render",
@@ -110,7 +112,16 @@ export default function SessionPage() {
     return changed ? { ...next, exercises } : next;
   }, [drills]);
 
-  const initialize = useCallback(() => {
+  const saveCloudProgress = useCallback(async (next: SessionLog) => {
+    const result = await saveCloudSessionProgress(next);
+    setCloudWarning(result.warning);
+    if (result.warning) {
+      debug("cloud progress save warning", result.warning);
+    }
+    return result;
+  }, []);
+
+  const initialize = useCallback(async () => {
     try {
       captureDiagnostics({ currentStage: "Route and workout lookup" });
       debug("route id received", routeId);
@@ -135,18 +146,25 @@ export default function SessionPage() {
       const requestedSession = query.get("sessionId");
       const requestedMode = query.get("mode");
       if (requestedSession) {
-        captureDiagnostics({ currentStage: "Repository getSessionById" });
+        captureDiagnostics({ currentStage: "Cloud session_progress getSessionById" });
+        debug("cloud progress read start", { requestedSession });
+        const cloudResult = await loadCloudSessionById(requestedSession);
+        setCloudWarning(cloudResult.warning);
+        if (cloudResult.data) localSessionRepository.updateSession(cloudResult.data);
+        captureDiagnostics({ repositoryResult: `cloud getSessionById completed; found=${Boolean(cloudResult.data)}` });
+
+        captureDiagnostics({ currentStage: "Repository getSessionById fallback" });
         debug("repository read start", { requestedSession });
-        const found = localSessionRepository.getSessionById(requestedSession);
+        const found = cloudResult.data || localSessionRepository.getSessionById(requestedSession);
         debug("repository read end", localSessionRepository.getDiagnostics());
-        captureDiagnostics({ repositoryResult: `getSessionById completed; found=${Boolean(found)}` });
+        captureDiagnostics({ repositoryResult: `getSessionById completed; found=${Boolean(found)}; source=${cloudResult.data ? "cloud" : "local"}` });
         if (!found || found.workoutId !== workout.id) throw new Error("Session not found");
         captureDiagnostics({ sessionFound: true });
         if (requestedMode === "reopen") {
-          const reopened = localSessionRepository.reopenSession(found.id);
-          if (!reopened) throw new Error("Unable to reopen this session");
+          const reopened = { ...found, status: "reopened" as const, completedAt: null };
           const hydrated = hydrateExercises(reopened);
           localSessionRepository.updateSession(hydrated);
+          void saveCloudProgress(hydrated);
           setSession(hydrated);
           setMode("live");
           debug("final render state", { mode: "live", sessionId: hydrated.id });
@@ -161,11 +179,18 @@ export default function SessionPage() {
         return;
       }
 
+      debug("cloud progress read start", { workoutId: workout.id });
+      captureDiagnostics({ currentStage: "Cloud session_progress getSessionsByWorkoutId" });
+      const cloudSessionsResult = await loadCloudSessionsByWorkoutId(workout.id);
+      setCloudWarning(cloudSessionsResult.warning);
+      cloudSessionsResult.data.forEach((item) => localSessionRepository.updateSession(item));
+      captureDiagnostics({ repositoryResult: `cloud getSessionsByWorkoutId completed; count=${cloudSessionsResult.data.length}` });
+
       debug("repository read start", { workoutId: workout.id });
-      captureDiagnostics({ currentStage: "Repository getSessionsByWorkoutId" });
-      const sessions = localSessionRepository.getSessionsByWorkoutId(workout.id);
+      captureDiagnostics({ currentStage: "Repository getSessionsByWorkoutId fallback" });
+      const sessions = cloudSessionsResult.data.length ? cloudSessionsResult.data : localSessionRepository.getSessionsByWorkoutId(workout.id);
       debug("repository read end", localSessionRepository.getDiagnostics());
-      captureDiagnostics({ repositoryResult: `getSessionsByWorkoutId completed; count=${sessions.length}` });
+      captureDiagnostics({ repositoryResult: `getSessionsByWorkoutId completed; count=${sessions.length}; source=${cloudSessionsResult.data.length ? "cloud" : "local"}` });
       const resumable = sessions.find((item) => item.status === "in-progress" || item.status === "reopened");
       if (resumable) {
         captureDiagnostics({ sessionFound: true });
@@ -194,6 +219,7 @@ export default function SessionPage() {
       debug("session creation start", { workoutId: workout.id });
       const created = hydrateExercises(localSessionRepository.createSessionFromWorkout(workout));
       localSessionRepository.updateSession(created);
+      void saveCloudProgress(created);
       debug("session creation end", { sessionId: created.id, repository: localSessionRepository.getDiagnostics() });
       setSession(created);
       setMode("live");
@@ -202,7 +228,7 @@ export default function SessionPage() {
     } catch (reason) {
       fail(reason);
     }
-  }, [captureDiagnostics, fail, hydrateExercises, routeId, workout]);
+  }, [captureDiagnostics, fail, hydrateExercises, routeId, saveCloudProgress, workout]);
 
   useEffect(() => {
     const watchdog = window.setTimeout(() => {
@@ -223,6 +249,9 @@ export default function SessionPage() {
     setSession(next);
     localSessionRepository.updateSession(next);
     setSaveFeedback("Saved just now");
+    void saveCloudProgress(next).then((result) => {
+      if (result.warning) setSaveFeedback("Local saved; cloud sync pending");
+    });
     window.setTimeout(() => setSaveFeedback("Autosave on"), 1200);
   }
 
@@ -241,6 +270,7 @@ export default function SessionPage() {
       debug("session creation start", { workoutId: workout.id, bypassLookup: true });
       const fresh = hydrateExercises(localSessionRepository.createSessionFromWorkout(workout));
       localSessionRepository.updateSession(fresh);
+      void saveCloudProgress(fresh);
       debug("session creation end", { sessionId: fresh.id, repository: localSessionRepository.getDiagnostics() });
       setSession(fresh);
       setSessionUrl(fresh, "resume");
@@ -288,6 +318,7 @@ export default function SessionPage() {
     }
     const hydrated = hydrateExercises(reopened);
     localSessionRepository.updateSession(hydrated);
+    void saveCloudProgress(hydrated);
     setSession(hydrated);
     setSessionUrl(hydrated, "resume");
     setMode("live");
@@ -360,8 +391,9 @@ export default function SessionPage() {
     update(completed);
     setSaveFeedback("Saving completed session...");
     try {
+      const progressResult = await saveCloudProgress(completed);
       const result = await saveCompletedSession(completed, workout!);
-      setSaveFeedback(result.mode === "cloud" ? "Cloud Synced" : "Local Backup Mode");
+      setSaveFeedback(result.mode === "cloud" && !progressResult.warning ? "Cloud Synced" : "Local Backup Mode");
     } catch (reason) {
       console.error("Completed session cloud save failed; local backup retained.", reason);
       setSaveFeedback("Local backup saved; cloud sync failed");
@@ -374,6 +406,7 @@ export default function SessionPage() {
   return (
     <div className="mx-auto max-w-4xl">
       {diagnostics.repository.lastError && <div className="mb-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm font-semibold text-amber-900">Browser storage warning: {diagnostics.repository.lastError}. This session can continue in memory, but autosave may be unavailable.</div>}
+      {cloudWarning && <div className="mb-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm font-semibold text-amber-900">{cloudWarning} Local autosave is still active.</div>}
       <div className="card mb-5 bg-navy text-white">
         <p className="label text-lime">{workout.sessionType}</p>
         <h1 className="text-3xl font-black">{workout.dayFocus}</h1>
