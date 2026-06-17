@@ -73,6 +73,7 @@ function latestOnly(logs: ExternalLoadLog[]) {
 
 export function createExternalLoadLog(load: PlannedExternalLoad, previous?: ExternalLoadLog): ExternalLoadLog {
   const now = new Date().toISOString();
+  const previousSkillRecoveryWork = previous?.skillRecoveryWork;
   return {
     id: uniqueId(),
     athleteId: MADDOX_ATHLETE_ID,
@@ -95,6 +96,18 @@ export function createExternalLoadLog(load: PlannedExternalLoad, previous?: Exte
     whatToAdjust: previous?.whatToAdjust ?? "",
     parentNotes: previous?.parentNotes ?? "",
     recoveryCompleted: previous?.recoveryCompleted ?? false,
+    skillRecoveryWork: {
+      headUpPuckTouchesCompleted: previousSkillRecoveryWork?.headUpPuckTouchesCompleted ?? false,
+      headUpPuckTouchesMinutes: previousSkillRecoveryWork?.headUpPuckTouchesMinutes ?? null,
+      accuracyShootingCompleted: previousSkillRecoveryWork?.accuracyShootingCompleted ?? false,
+      shotsTaken: previousSkillRecoveryWork?.shotsTaken ?? null,
+      targetHits: previousSkillRecoveryWork?.targetHits ?? null,
+      cooldownBikeCompleted: previousSkillRecoveryWork?.cooldownBikeCompleted ?? false,
+      cooldownBikeMinutes: previousSkillRecoveryWork?.cooldownBikeMinutes ?? null,
+      bikeIntensity: previousSkillRecoveryWork?.bikeIntensity ?? "easy",
+      recoveryMobilityCompleted: previousSkillRecoveryWork?.recoveryMobilityCompleted ?? false,
+      recoveryMobilityMinutes: previousSkillRecoveryWork?.recoveryMobilityMinutes ?? null,
+    },
     campReflection: load.type === "hockey_camp" ? previous?.campReflection || {
       competeLevel: null,
       skatingPace: null,

@@ -186,6 +186,18 @@ export interface ExternalLoadLog {
   whatToAdjust: string;
   parentNotes: string;
   recoveryCompleted: boolean;
+  skillRecoveryWork?: {
+    headUpPuckTouchesCompleted: boolean;
+    headUpPuckTouchesMinutes: number | null;
+    accuracyShootingCompleted: boolean;
+    shotsTaken: number | null;
+    targetHits: number | null;
+    cooldownBikeCompleted: boolean;
+    cooldownBikeMinutes: number | null;
+    bikeIntensity: "easy" | "moderate";
+    recoveryMobilityCompleted: boolean;
+    recoveryMobilityMinutes: number | null;
+  };
   campReflection?: {
     competeLevel: Rating | null;
     skatingPace: Rating | null;

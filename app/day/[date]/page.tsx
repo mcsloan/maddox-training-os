@@ -68,7 +68,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
             </div>
             <div className="max-w-sm">
               <Link className="btn-primary text-lg" href={logTodayHref}>Log Today</Link>
-              <p className="mt-2 text-sm font-semibold text-slate-600">For now, Log Today records the lacrosse/sport-load part of the day. Skill, shooting, bike, and mobility logging will be unified next.</p>
+              <p className="mt-2 text-sm font-semibold text-slate-600">Log lacrosse plus today’s skill, shooting, bike, mobility, and reflection notes.</p>
             </div>
           </div>
           <div className="mt-5 grid gap-3">
