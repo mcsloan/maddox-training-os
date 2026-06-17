@@ -1,13 +1,18 @@
-import { TodayState } from "@/components/TodayState";
+import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export default function TodayPage() {
-  return (
-    <div>
-      <div className="mb-6">
-        <p className="label">Training day</p>
-        <h1 className="text-4xl font-black">Today</h1>
-      </div>
-      <TodayState />
-    </div>
-  );
+  redirect(`/day/${currentPlanDate()}`);
+}
+
+function currentPlanDate() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "America/Toronto",
+    year: "numeric",
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
 }
