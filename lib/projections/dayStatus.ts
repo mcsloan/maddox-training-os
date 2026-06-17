@@ -106,19 +106,21 @@ export function deriveDayStatus(input: DayStatusInput): DayStatus {
   const hasTrainingWorkEvidence = trainingRecords.length > 0;
   const hasInProgressTraining = sessionAttempts.some((record) => isInProgressStatus(record.status));
   const completionPercent = deriveCompletionPercent(currentRecords);
+  const required = requiredKinds(plannedActivities);
   const hasCompletedTrainingWork = isPlannedKindComplete("training_work", plannedActivities, trainingRecords);
   const hasCompletedSportLoad = isPlannedKindComplete("sport_load", plannedActivities, sportLoadLogs);
   const hasCompletedRecovery = isPlannedKindComplete("recovery", plannedActivities, recoveryLogs);
   const hasCompletedKpi = isPlannedKindComplete("kpi", plannedActivities, kpiResults);
   const hasCompletedRequiredWork =
     hasPlannedWork &&
-    requiredKinds(plannedActivities).every((kind) => {
+    required.every((kind) => {
       if (kind === "training_work") return hasCompletedTrainingWork;
       if (kind === "sport_load") return hasCompletedSportLoad;
       if (kind === "recovery") return hasCompletedRecovery;
       if (kind === "kpi") return hasCompletedKpi;
       return isPlannedKindComplete(kind, plannedActivities, currentRecords);
     });
+  const hasCompletedStatusEligibleWork = required.some((kind) => kind === "training_work" || kind === "kpi");
   const hasSomeCompletedWork = currentRecords.some(isCompletedRecord) || completionPercent > 0;
   const allCurrentRecordsDeferred = currentRecords.length > 0 && currentRecords.every(isExplicitDeferral);
   const allRequiredPlannedWorkDeferred =
@@ -131,8 +133,10 @@ export function deriveDayStatus(input: DayStatusInput): DayStatus {
   if (hasLegacyReview || hasManualReview) statuses.push("legacy_needs_review");
   if (hasInProgressTraining) statuses.push("in_progress");
   if (hasAnyRecord && hasSomeCompletedWork && !hasCompletedRequiredWork && !hasInProgressTraining) statuses.push("partial");
-  if (hasCompletedRequiredWork && hasExplicitDeferral && !hasUnsupportedCompletionGap) statuses.push("completed_with_deferred");
-  if (hasCompletedRequiredWork && !hasUnsupportedCompletionGap) statuses.push("completed");
+  if (hasCompletedRequiredWork && hasCompletedStatusEligibleWork && hasExplicitDeferral && !hasUnsupportedCompletionGap) {
+    statuses.push("completed_with_deferred");
+  }
+  if (hasCompletedRequiredWork && hasCompletedStatusEligibleWork && !hasUnsupportedCompletionGap) statuses.push("completed");
   if (hasSportLoadEvidence) statuses.push("sport_load_logged");
   if (hasRecoveryEvidence) statuses.push("recovery_logged");
   if (
