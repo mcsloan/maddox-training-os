@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ExternalLoadChip, PhaseChip, PlanTagChip } from "@/components/LoadChips";
-import { formatPlanDate, getCalendarDates, getDayTags, getExternalLoadsForDate, getPlanDay, getPlanDayDisplayModel, getWeekLoadLabel, trainingPlan, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
+import { getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
+import { formatPlanDate, getCalendarDates, getDayTags, getPlanDay, getPlanDayDisplayModel, getWeekLoadLabel, trainingPlan, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 import { ExternalLoadLog } from "@/lib/types";
 import { buildDayProjection } from "@/lib/projections/dayProjection";
@@ -29,7 +30,7 @@ export default function CalendarPage() {
               <div className="grid gap-4 lg:grid-cols-2">
                 {dates.map((date) => {
                   const day = getPlanDay(date);
-                  const loads = getExternalLoadsForDate(date);
+                  const loads = getV84SportLoadsForDate(date);
                   const tags = getDayTags(date);
                   const display = getPlanDayDisplayModel(date);
                   const intensity = Math.max(day?.intensity || 0, ...loads.map((load) => load.plannedIntensity));
@@ -56,7 +57,7 @@ export default function CalendarPage() {
                       <p><strong>Recovery:</strong> {userFacingPlanText(day?.recovery || loads[0]?.recoveryRule || "Recovery as needed")}</p><p><strong>Parent cue:</strong> {userFacingPlanText(day?.parentCue || "Prioritize recovery and ask about energy.")}</p>
                     </div>
                     <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900"><strong>Load rule:</strong> {userFacingLoadRule(loads[0]?.doNotDoRule || day?.doNotDo, loads.length > 0)}</p></Link>
-                    {loads.length > 0 && <div className="mt-3 space-y-2">{loads.map((load) => { const log = logs.find((item) => item.externalLoadId === load.id); return <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-ice p-3" key={load.id}><p className="text-sm font-semibold">{log ? `Logged: effort ${log.effort ?? "—"}/5 · energy ${log.energyAfter ?? "—"}/5 · confidence ${log.confidence ?? "—"}/5 · soreness ${log.soreness}/5${log.painFlag ? " · pain flagged" : ""}` : "Not logged"}</p><Link className={log ? "btn-secondary" : "btn-primary"} href={`/external-load/${load.id}`}>{log ? `Update ${load.title}` : `Log ${load.title}`}</Link></div>; })}</div>}
+                    {loads.length > 0 && <div className="mt-3 space-y-2">{loads.map((load) => { const log = logs.find((item) => item.externalLoadId === load.id); return <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-ice p-3" key={load.id}><p className="text-sm font-semibold">{log ? `Logged: effort ${log.effort ?? "—"}/5 · energy ${log.energyAfter ?? "—"}/5 · confidence ${log.confidence ?? "—"}/5 · soreness ${log.soreness}/5${log.painFlag ? " · pain flagged" : ""}` : "Not logged"}</p><Link className={log ? "btn-secondary" : "btn-primary"} href={`/external-load/${encodeURIComponent(load.id)}`}>{log ? `Update ${load.title}` : `Log ${load.title}`}</Link></div>; })}</div>}
                   </article>;
                 })}
               </div>
