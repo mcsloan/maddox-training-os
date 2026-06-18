@@ -2,18 +2,18 @@
 
 ## Current Handoff State
 
-This is the handoff after KPI cloud-sync core staging validation, local main fast-forward merge, and production Supabase grant hardening.
+This is the handoff after Agentic Workflow v1 setup and the successful production KPI backfill.
 
 Current constraints:
 
 - Local branch is `main`.
-- Local `main` includes `bec6008` (`Add KPI cloud sync with immutable delete`) after fast-forward merge.
-- Local `main` is ahead of `origin/main` and has not been pushed.
 - Do not commit unless explicitly asked.
 - Do not push unless explicitly asked.
 - Do not apply any additional stash or patch.
 - Do not add `.wip/` to git.
 - Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.
+- Run `node scripts/preflight.mjs` before production-risk work.
+- Run `node scripts/confirm-write-target.mjs` before cloud writes, deploys, or backfills.
 
 ## Recent Production Checkpoint
 
@@ -29,21 +29,20 @@ Current constraints:
 - June 17 iPad Sport Load / Log Today save appeared in parent browser.
 - Calendar June 15 Sport Load bug was fixed and production verified.
 - KPI iPad local data was recovered via debug/local-data.
+- Production KPI backfill is complete.
+- Seven June 16 standalone KPI rows are visible in production `/kpis`.
+- Temporary production backfill script was deleted.
+- Repo was clean after backfill cleanup.
 
-## Current WIP
+## Agentic Workflow v1
 
-- KPI cloud sync implementation is committed locally in `bec6008` on `main`.
-- Stash name: `WIP KPI cloud sync before master reconciliation`
-- Patch file: `.wip/2026-06-17-kpi-cloud-sync-wip.patch`
-- Local commit exists; not pushed to `origin/main`.
-- Core staging save/read/delete path has passed manual testing.
-
-## Vercel Deployment State
-
-- `staging/kpi-cloud-sync-test` produced a Vercel Preview deployment at `bec6008`.
-- `origin/main` currently maps to Vercel Production at `9b44228`.
-- Pushing local `main` will likely trigger Vercel Production from `bec6008` or later.
-- Production app has not yet been deployed or tested with `bec6008`.
+- `docs/NEXT_AGENT_TASK.md` carries the next-task brief.
+- `docs/AGENT_REPORT.md` carries the standard report template.
+- `docs/ENVIRONMENT_SAFETY.md` carries environment/write-target rules.
+- `scripts/env-whoami.mjs` identifies git/env target without secrets.
+- `scripts/confirm-write-target.mjs` blocks unconfirmed production writes.
+- `scripts/preflight.mjs` reports git/env/package-script state without running builds.
+- `.github/workflows/verify.yml` runs verification on pull requests and manual dispatch with no deploy steps.
 
 ## Supabase Staging Baseline
 
@@ -59,8 +58,6 @@ Current constraints:
 - Staging SQL result: "Success. No rows returned."
 - Confirmed staging tables: `athletes`, `session_logs`, `session_progress`.
 - Existing code paths upsert Maddox athlete automatically in `externalLoadRepository`, `cloudSessionProgressRepository`, and `completedSessionRepository`.
-
-Production Supabase remains untouched. Vercel production remains untouched.
 
 ## Production Supabase Safety Checks
 
@@ -96,8 +93,6 @@ Passed:
 Remaining:
 
 - Validate remaining KPI scenarios if required: Puck-Control Weave deferred state, Plank Quality time plus form score, broader duplicate/update behavior, offline/local fallback, and more cross-device checks.
-- Do not mark production app testing passed yet.
-- Do not backfill June 16 real KPI values yet.
 - Do not remove the local-only `9.99` staging browser backup entry.
 
 ## Recommended Next Session
@@ -105,15 +100,14 @@ Remaining:
 Start by reading:
 
 1. `AGENTS.md`
-2. `docs/CURRENT_PROJECT_STATE.md`
-3. `docs/NEXT_BUILD_PRIORITIES.md`
-4. The specific doc for the task area, such as `docs/DATA_SYNC_STRATEGY.md` for sync work.
+2. `docs/SESSION_HANDOFF.md`
+3. `docs/NEXT_AGENT_TASK.md`
+4. `docs/ENVIRONMENT_SAFETY.md`
+5. The specific doc for the task area, such as `docs/DATA_SYNC_STRATEGY.md` for sync work.
 
 If resuming KPI cloud sync:
 
-1. Confirm whether the next action is docs commit/check, push `main`, or more staging validation.
-2. Do not apply additional stash/patch.
-3. If pushing `main`, treat it as likely triggering Production.
-4. After Production deploy, run production smoke tests without fake/test records.
-5. Update defect log and testing status if scope/status changes.
-6. Do not backfill June 16 production KPI values until explicitly planned.
+1. Run `node scripts/preflight.mjs`.
+2. Confirm the target with `node scripts/confirm-write-target.mjs`.
+3. Do not apply additional stash/patch.
+4. Update defect log and testing status if scope/status changes.

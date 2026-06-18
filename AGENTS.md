@@ -48,6 +48,31 @@ This is not just a checklist app. It is intended to become a professional-grade 
 - Vercel Production must point to production.
 - No fake/test records in production.
 
+## Agentic Workflow v1
+
+Use repo files as the handoff contract between ChatGPT, Codex, Terminal, GitHub, Vercel, and Supabase.
+
+- `docs/NEXT_AGENT_TASK.md` is the next-task brief.
+- `docs/AGENT_REPORT.md` is the standard completion report template.
+- `docs/SESSION_HANDOFF.md` is the durable current-state handoff.
+- `docs/ENVIRONMENT_SAFETY.md` is the environment and write-target safety reference.
+- `scripts/env-whoami.mjs` is read-only and identifies the local git/env target without printing secrets.
+- `scripts/confirm-write-target.mjs` is read-only and must be used before any cloud write test or production-risk action.
+- `scripts/preflight.mjs` is read-only and summarizes git/env/package-script state without running builds.
+
+Before any cloud write, deploy, production-impacting operation, or data backfill:
+
+```bash
+node scripts/preflight.mjs
+node scripts/confirm-write-target.mjs --target <staging|production> --action "<plain English action>"
+```
+
+Production writes require explicit confirmation:
+
+```bash
+node scripts/confirm-write-target.mjs --target production --action "<action>" --confirm-production
+```
+
 ## Guardrails
 
 - Do not polish or rework GANTT unless explicitly asked.
