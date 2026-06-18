@@ -5,22 +5,24 @@ import Link from "next/link";
 import { DataStatus } from "@/components/DataStatus";
 import { ParentDashboardCard } from "@/components/ParentDashboardCard";
 import { getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
-import { localKpiRepository } from "@/lib/storage/localKpiRepository";
+import { buildDayEvidenceProjection } from "@/lib/projections/dayEvidence";
+import { buildWeekDashboardProjection } from "@/lib/projections/screenProjections";
+import { loadStandaloneKpiResults, SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 import { getCurrentPlanWeek, getWeekLoadLabel, getWeekPlanSummary, kpis, trainingPlan, userFacingLoadRule, userFacingPlanText, workouts } from "@/lib/trainingData";
 import { estimateWeeklyActualLoad, kpiTrend, sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
-import { ExternalLoadLog, KPIResult, SessionLog } from "@/lib/types";
+import { ExternalLoadLog, SessionLog } from "@/lib/types";
 
 export default function DashboardPage() {
   const [sessions, setSessions] = useState<SessionLog[]>([]);
-  const [results, setResults] = useState<KPIResult[]>([]);
+  const [results, setResults] = useState<SyncedKPIResult[]>([]);
   const [externalLogs, setExternalLogs] = useState<ExternalLoadLog[]>([]);
   const [dataMode, setDataMode] = useState<DataMode>("local");
   const [warning, setWarning] = useState("Checking completed training history...");
   useEffect(() => {
     let active = true;
-    setResults(localKpiRepository.getAll());
+    loadStandaloneKpiResults().then((result) => { if (active) setResults(result.results); });
     loadExternalLoadLogs().then((result) => { if (active) setExternalLogs(result.logs); });
     loadTrainingHistory().then((result) => {
       if (!active) return;
@@ -33,9 +35,23 @@ export default function DashboardPage() {
   const completed = sessions.filter((session) => session.status === "completed");
   const active = sessions.filter((session) => session.status !== "completed");
   const latest = sessions[0];
+  const dayEvidenceByDate = new Map(trainingPlan.days.map((day) => {
+    const projection = buildDayEvidenceProjection({
+      date: day.date,
+      weekNumber: day.weekNumber,
+      sportLoadLogs: externalLogs,
+      kpiResults: results,
+      sessionAttempts: sessions,
+      projection: "preview",
+    });
+    return [day.date, projection] as const;
+  }));
   const missed = workouts.filter((workout) => !sessions.some((session) => session.workoutId === workout.id));
+  const missedWithoutEvidence = missed.filter((workout) => !dayEvidenceByDate.get(workout.date)?.status.hasAnyRecord);
+  const missedWithDayEvidence = missed.filter((workout) => dayEvidenceByDate.get(workout.date)?.status.hasAnyRecord);
   const needsAttention = [
-    ...missed.map((workout) => `Not started: ${workout.dayFocus}`),
+    ...missedWithoutEvidence.map((workout) => `Not started: ${workout.dayFocus}`),
+    ...missedWithDayEvidence.map((workout) => `Day evidence needs review: ${workout.dayFocus} (${dayEvidenceByDate.get(workout.date)?.summaryLabel})`),
     ...active.map((session) => `Incomplete session: ${workoutName(workouts.find((workout) => workout.id === session.workoutId))} (${sessionCompletionPercent(session)}%)`),
     ...sessions.filter((session) => session.readiness.energy !== null && session.readiness.energy <= 2).map(() => "Low pre-session energy recorded"),
     ...sessions.filter((session) => session.reflection.confidence !== null && session.reflection.confidence <= 2).map(() => "Low confidence reflection recorded"),
@@ -54,6 +70,15 @@ export default function DashboardPage() {
   const sorenessPainFlags = currentWeekExternalLogs.filter((log) => log.painFlag || log.soreness >= 3).length;
   const recoveryReminders = currentWeekExternalLogs.filter((log) => !log.recoveryCompleted).length;
   const currentWeekKpiDays = currentWeekDays.filter((day) => day.kpiTestIds?.length);
+  const currentWeekDayEvidence = buildWeekDashboardProjection(currentWeekDays.map((day) => buildDayEvidenceProjection({
+    date: day.date,
+    weekNumber: day.weekNumber,
+    sportLoadLogs: externalLogs,
+    kpiResults: results,
+    sessionAttempts: sessions,
+    projection: "preview",
+  })));
+  const currentWeekKpiEvidence = results.filter((result) => currentWeekDays.some((day) => day.date === result.date)).length;
   const actualWeekLoad = estimateWeeklyActualLoad(currentPlanWeek, sessions, externalLogs, workouts);
   const latestRestingHeartRateSession = sessions.find((session) => session.readiness.restingHeartRate);
   const latestRestingHeartRate = latestRestingHeartRateSession?.readiness.restingHeartRate ?? null;
@@ -77,6 +102,8 @@ export default function DashboardPage() {
           <ParentDashboardCard label="Recovery days" value={`${weekSummary.recoveryProtectedDays}`} detail="Planned lower-volume days" />
           <ParentDashboardCard label="High-load days" value={`${weekSummary.highLoadDays}`} detail="Intensity 4-5 load dates" />
           <ParentDashboardCard label="Perf testing days" value={`${currentWeekKpiDays.length}`} detail={currentWeekKpiDays[0]?.primarySession || "None planned this week"} />
+          <ParentDashboardCard label="Days with evidence" value={`${currentWeekDayEvidence.days.filter((day) => day.evidenceCounts.sportLoadLogs + day.evidenceCounts.sessionAttempts + day.evidenceCounts.kpiResults + day.evidenceCounts.reflections + day.evidenceCounts.recoveryLogs > 0).length}`} detail="Sport Load, Training Work, or KPI records" />
+          <ParentDashboardCard label="KPI evidence" value={`${currentWeekKpiEvidence}`} detail="Standalone KPI results this week" />
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <ParentDashboardCard label="Logged sport loads" value={`${currentWeekExternalLogs.length} / ${currentWeekLoads.length}`} detail="Latest log per planned event" />

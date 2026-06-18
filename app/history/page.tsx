@@ -5,9 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DataStatus } from "@/components/DataStatus";
 import { DataMode, loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
+import { loadStandaloneKpiResults, SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
 import { localSessionRepository } from "@/lib/storage/localSessionRepository";
-import { workouts } from "@/lib/trainingData";
+import { formatPlanDate, getCalendarDates, workouts } from "@/lib/trainingData";
+import { buildDayEvidenceProjection } from "@/lib/projections/dayEvidence";
+import { buildHistoryDayProjection } from "@/lib/projections/screenProjections";
 import { sessionCompletionPercent, workoutName } from "@/lib/trainingMetrics";
 import { ExternalLoadLog, SessionLog } from "@/lib/types";
 
@@ -21,6 +24,7 @@ export default function HistoryPage() {
   const router = useRouter();
   const [sessions, setSessions] = useState<SessionLog[]>([]);
   const [externalLogs, setExternalLogs] = useState<ExternalLoadLog[]>([]);
+  const [kpiResults, setKpiResults] = useState<SyncedKPIResult[]>([]);
   const [dataMode, setDataMode] = useState<DataMode>("local");
   const [warning, setWarning] = useState("Checking completed training history...");
   useEffect(() => {
@@ -34,8 +38,26 @@ export default function HistoryPage() {
     loadExternalLoadLogs().then((result) => {
       if (active) setExternalLogs(result.logs);
     });
+    loadStandaloneKpiResults().then((result) => {
+      if (active) setKpiResults(result.results);
+    });
     return () => { active = false; };
   }, []);
+  const evidenceDates = Array.from(new Set([
+    ...getCalendarDates(),
+    ...externalLogs.map((log) => log.date),
+    ...kpiResults.map((result) => result.date),
+    ...sessions.map((session) => session.date),
+  ])).sort((a, b) => b.localeCompare(a));
+  const dayEvidence = evidenceDates
+    .map((date) => buildHistoryDayProjection(buildDayEvidenceProjection({
+      date,
+      sportLoadLogs: externalLogs,
+      kpiResults,
+      sessionAttempts: sessions,
+      projection: "preview",
+    })))
+    .filter((day) => day.groups.sportLoad.hasRecords || day.groups.trainingWork.hasRecords || day.groups.kpi.hasRecords || day.groups.reflection.hasRecords || day.groups.recovery.hasRecords || day.groups.legacy.hasRecords);
 
   function fresh(workoutId: string) {
     const session = localSessionRepository.startFreshAttempt(workoutId);
@@ -52,6 +74,10 @@ export default function HistoryPage() {
     <div>
       <div className="mb-6"><p className="label">Completed history and active drafts</p><h1 className="text-4xl font-black">Session History</h1></div>
       <DataStatus mode={dataMode} warning={warning} />
+      <section className="card mb-6">
+        <div className="flex items-center justify-between gap-3"><div><p className="label">Program day truth</p><h2 className="text-2xl font-black">Day Evidence</h2></div><Link className="text-sm font-bold text-blue" href="/calendar">Calendar</Link></div>
+        <div className="mt-4 space-y-3">{dayEvidence.slice(0, 12).map((day) => <Link className="block rounded-2xl border border-rink p-4 hover:border-blue" href={`/day/${day.date}`} key={day.date}><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{formatPlanDate(day.date)} · {day.summaryLabel}</p><p className="font-black">{day.displayTitle}</p></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black text-blue">{day.groups.kpi.count ? `${day.groups.kpi.count} KPI` : day.hasSportLoad ? "Sport Load" : "Training Work"}</span></div><p className="mt-2 text-sm">Sport Load {day.groups.sportLoad.count} · Training Work {day.groups.trainingWork.count} · KPI {day.groups.kpi.count} · Reflection {day.groups.reflection.count}</p></Link>)}{!dayEvidence.length && <p className="text-slate-500">No day evidence saved yet.</p>}</div>
+      </section>
       <section className="card mb-6">
         <div className="flex items-center justify-between gap-3"><div><p className="label">Hockey, lacrosse, camps, and tryouts</p><h2 className="text-2xl font-black">Sport Load Logs</h2></div><Link className="text-sm font-bold text-blue" href="/calendar">Calendar</Link></div>
         <div className="mt-4 space-y-3">{externalLogs.slice(0, 8).map((log) => <Link className="block rounded-2xl border border-rink p-4 hover:border-blue" href={`/external-load/${log.externalLoadId}`} key={log.id}><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{new Date(`${log.date}T12:00:00`).toLocaleDateString()} · Sport Load Log</p><p className="font-black">{log.title}</p></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black text-blue">{log.attended ? "Attended" : "Did not attend"}</span></div><p className="mt-2 text-sm">Effort {log.effort ?? "—"}/5 · Energy {log.energyAfter ?? "—"}/5 · Confidence {log.confidence ?? "—"}/5 · Soreness {log.soreness}/5{log.painFlag ? " · Pain flagged" : ""}</p></Link>)}{!externalLogs.length && <p className="text-slate-500">No sport load logs saved yet.</p>}</div>
