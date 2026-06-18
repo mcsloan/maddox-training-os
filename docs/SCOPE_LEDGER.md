@@ -138,6 +138,7 @@ Age-appropriate rules:
 - Staging Supabase has been created before fake/dev cloud-write tests.
 - Staging project: `maddox-training-os-staging`, ref `npuankmkxbjtlokbpczz`, West US (Oregon) `us-west-2`, compute `t4g.nano`.
 - Production Supabase is real Maddox data only.
+- Production Supabase RLS/policies/grants are hardened for immutable `session_logs`: SELECT/INSERT only, no UPDATE/DELETE.
 - Local development now points to staging.
 - Vercel Preview must point to staging once staging exists.
 - Vercel Production must point to production.
@@ -149,6 +150,7 @@ Age-appropriate rules:
 - Staging schema baseline applied successfully and tables confirmed: `athletes`, `session_logs`, `session_progress`.
 - Standalone KPI core save/read/delete path passed manual staging validation.
 - Standalone KPI delete uses immutable `standalone_kpi_result_deleted` tombstones in `session_logs`; no delete grants or delete policies.
+- Local `main` includes `bec6008`; pushing `main` likely triggers Vercel Production while origin/main remains at `9b44228`.
 
 ## Data / Sync / Environment Scope
 

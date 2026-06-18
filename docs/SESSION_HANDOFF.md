@@ -2,11 +2,13 @@
 
 ## Current Handoff State
 
-This is the handoff after KPI cloud-sync core staging validation.
+This is the handoff after KPI cloud-sync core staging validation, local main fast-forward merge, and production Supabase grant hardening.
 
 Current constraints:
 
-- KPI cloud-sync WIP is applied on branch `staging/kpi-cloud-sync-test`.
+- Local branch is `main`.
+- Local `main` includes `bec6008` (`Add KPI cloud sync with immutable delete`) after fast-forward merge.
+- Local `main` is ahead of `origin/main` and has not been pushed.
 - Do not commit unless explicitly asked.
 - Do not push unless explicitly asked.
 - Do not apply any additional stash or patch.
@@ -30,12 +32,18 @@ Current constraints:
 
 ## Current WIP
 
-- KPI cloud sync implementation is applied in the working tree on `staging/kpi-cloud-sync-test`.
+- KPI cloud sync implementation is committed locally in `bec6008` on `main`.
 - Stash name: `WIP KPI cloud sync before master reconciliation`
 - Patch file: `.wip/2026-06-17-kpi-cloud-sync-wip.patch`
-- Not committed.
-- Not pushed.
+- Local commit exists; not pushed to `origin/main`.
 - Core staging save/read/delete path has passed manual testing.
+
+## Vercel Deployment State
+
+- `staging/kpi-cloud-sync-test` produced a Vercel Preview deployment at `bec6008`.
+- `origin/main` currently maps to Vercel Production at `9b44228`.
+- Pushing local `main` will likely trigger Vercel Production from `bec6008` or later.
+- Production app has not yet been deployed or tested with `bec6008`.
 
 ## Supabase Staging Baseline
 
@@ -54,6 +62,22 @@ Current constraints:
 
 Production Supabase remains untouched. Vercel production remains untouched.
 
+## Production Supabase Safety Checks
+
+Passed after `bec6008`:
+
+- RLS enabled on `athletes`, `session_logs`, and `session_progress`.
+- Policies scoped to Maddox athlete ID.
+- No DELETE policies on `athletes`, `session_logs`, or `session_progress`.
+- `session_logs` has SELECT and INSERT policies only.
+- `session_progress` has SELECT, INSERT, and UPDATE policies.
+- Production anon grants aligned:
+  - `athletes`: SELECT, INSERT, UPDATE
+  - `session_logs`: SELECT, INSERT
+  - `session_progress`: SELECT, INSERT, UPDATE
+- Production anon has no DELETE, TRUNCATE, REFERENCES, or TRIGGER grants.
+- Production anon has no UPDATE grant on `session_logs`.
+
 ## KPI Cloud Sync Staging Results
 
 Passed:
@@ -71,9 +95,8 @@ Passed:
 
 Remaining:
 
-- Run final lint/build/import checks after docs/schema updates.
 - Validate remaining KPI scenarios if required: Puck-Control Weave deferred state, Plank Quality time plus form score, broader duplicate/update behavior, offline/local fallback, and more cross-device checks.
-- Do not mark production ready yet.
+- Do not mark production app testing passed yet.
 - Do not backfill June 16 real KPI values yet.
 - Do not remove the local-only `9.99` staging browser backup entry.
 
@@ -88,9 +111,9 @@ Start by reading:
 
 If resuming KPI cloud sync:
 
-1. Confirm local env still points to staging without displaying secrets.
-2. Review current working tree and do not apply additional stash/patch.
-3. Run required checks.
-4. Decide whether remaining staging scenarios are required before commit.
+1. Confirm whether the next action is docs commit/check, push `main`, or more staging validation.
+2. Do not apply additional stash/patch.
+3. If pushing `main`, treat it as likely triggering Production.
+4. After Production deploy, run production smoke tests without fake/test records.
 5. Update defect log and testing status if scope/status changes.
 6. Do not backfill June 16 production KPI values until explicitly planned.

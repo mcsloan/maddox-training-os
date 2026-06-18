@@ -1,12 +1,12 @@
 # Next Build Priorities
 
-1. Run and record final checks for KPI cloud-sync WIP.
-2. Decide whether remaining KPI staging scenarios are required before commit.
-3. Wire Vercel Preview to staging.
-4. Keep Vercel Production on production.
-5. Commit KPI cloud-sync only after accepted staging validation scope is complete.
+1. Commit/check this production-hardening documentation update if accepted.
+2. Decide explicitly whether to push local `main`; pushing will likely trigger Production from `bec6008` or later.
+3. Keep Vercel Production on production.
+4. After push/deploy, run production smoke tests without fake/test records.
+5. Confirm KPI cloud sync production behavior using only real/intended records.
 6. Plan recovered June 16 real production KPI backfill.
-7. Prepare production deploy checklist; do not deploy until explicitly approved.
+7. Keep remaining KPI edge scenarios tracked: Puck-Control Weave deferred state, Plank Quality time plus form score, duplicate/update, offline fallback.
 8. Fix Homepage stale Next Session card DEF-017.
 9. Fix History Week -> Day -> Evidence.
 10. Add readiness fields including resting HR.
@@ -17,4 +17,4 @@
 
 ## Immediate Guardrail
 
-Do not apply additional KPI cloud-sync stash/patch content. Do not add `.wip/` to git. Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys. Production is not deploy-ready until explicitly approved.
+Do not apply additional KPI cloud-sync stash/patch content. Do not add `.wip/` to git. Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys. Production app testing has not passed until the `bec6008` production deployment is pushed and smoke-tested.

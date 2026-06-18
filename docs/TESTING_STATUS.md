@@ -30,6 +30,7 @@
 - History Week -> Day -> Evidence regression tests
 - Homepage stale card regression
 - Formal release gate
+- Production app test for `bec6008`
 
 ## Staging Baseline
 
@@ -62,6 +63,28 @@
 
 - June 17 iPad Sport Load / Log Today save appeared in parent browser.
 - This confirms cross-device cloud sync for Sport Load core path.
+
+## Production DB Safety Checks
+
+Passed after local commit `bec6008` and before production deploy:
+
+- Production RLS enabled on `athletes`, `session_logs`, and `session_progress`.
+- Production policies are scoped to Maddox athlete ID.
+- No DELETE policies exist on `athletes`, `session_logs`, or `session_progress`.
+- `session_logs` has SELECT and INSERT policies only.
+- `session_progress` has SELECT, INSERT, and UPDATE policies.
+- Production anon grants were reset and confirmed:
+  - `athletes`: SELECT, INSERT, UPDATE
+  - `session_logs`: SELECT, INSERT
+  - `session_progress`: SELECT, INSERT, UPDATE
+- Production anon has no DELETE, TRUNCATE, REFERENCES, or TRIGGER grants.
+- Production anon has no UPDATE grant on `session_logs`.
+
+Deployment/testing caveat:
+
+- Production app has not yet been deployed with `bec6008`.
+- Production app testing for KPI cloud sync has not passed yet.
+- June 16 real KPI backfill is not complete.
 
 ## Current Test Command Rules
 

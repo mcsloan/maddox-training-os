@@ -15,6 +15,30 @@ Rules:
 - KPI backfill into production must be intentional and documented.
 - Production smoke tests must not create fake data.
 
+Current production hardening:
+
+- Production RLS is enabled on `athletes`, `session_logs`, and `session_progress`.
+- Production policies are scoped to Maddox athlete ID.
+- No DELETE policies exist on `athletes`, `session_logs`, or `session_progress`.
+- `session_logs` has SELECT and INSERT policies only.
+- `session_progress` has SELECT, INSERT, and UPDATE policies.
+- Production anon grants were reset and confirmed:
+  - `athletes`: SELECT, INSERT, UPDATE
+  - `session_logs`: SELECT, INSERT
+  - `session_progress`: SELECT, INSERT, UPDATE
+- Production anon has no DELETE, TRUNCATE, REFERENCES, or TRIGGER grants.
+- Production anon has no UPDATE grant on `session_logs`.
+
+Current production app deployment state:
+
+- Local `main` contains `bec6008` (`Add KPI cloud sync with immutable delete`) after fast-forward merge.
+- Local `main` is ahead of `origin/main` and has not been pushed.
+- Vercel Preview exists for `staging/kpi-cloud-sync-test` at `bec6008`.
+- Vercel Production currently maps to `origin/main` at `9b44228`.
+- Pushing `main` will likely trigger Production.
+- Production app has not yet been deployed or tested with `bec6008`.
+- Production DB safety checks passed, but production app testing is still pending.
+
 ## Staging
 
 Staging Supabase is a separate non-prod Supabase project.
@@ -54,4 +78,5 @@ Current staging baseline:
 - Wire Vercel Preview to staging.
 - Keep Vercel Production on production.
 - Add explicit pre-test environment confirmation step to release workflow.
-- Validate staging cloud writes before applying KPI cloud-sync WIP.
+- Push `main` only when ready to trigger Production deployment from `bec6008` or later.
+- Run production smoke tests after deployment without fake/test records.

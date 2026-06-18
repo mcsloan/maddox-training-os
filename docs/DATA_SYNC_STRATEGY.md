@@ -31,6 +31,13 @@ Known sources:
 - `source = external_load` for legacy/internal Sport Load logs.
 - KPI cloud-sync WIP uses `source = kpi_page` for standalone KPI snapshots in staging.
 
+Production Supabase now matches the immutable `session_logs` grant model:
+
+- `session_logs`: SELECT and INSERT for anon, no UPDATE, no DELETE.
+- No DELETE policies exist for `session_logs`.
+- Physical deletion is not part of the client data model.
+- Standalone KPI delete must use tombstone records.
+
 ## Staging Baseline
 
 Non-prod Supabase staging has been created:
