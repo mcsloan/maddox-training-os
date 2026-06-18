@@ -7,3 +7,6 @@ out
 tsconfig.tsbuildinfo
 .env*
 !.env.example
+
+# Local WIP patches
+.wip/
