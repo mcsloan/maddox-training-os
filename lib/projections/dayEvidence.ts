@@ -2,7 +2,7 @@ import { getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
 import { getPlanDay } from "@/lib/trainingData";
 import { type ExternalLoadLog, type KPIResult, type SessionLog } from "@/lib/types";
 import { buildDayProjection, type DayProjection } from "./dayProjection";
-import { buildDayProjectionInputFromRecords } from "./dayProjectionAdapters";
+import { buildDayProjectionInputFromRecords, type LegacyOrphanProjectionSource } from "./dayProjectionAdapters";
 import { type PlannedDayActivity } from "./dayStatus";
 
 type KpiEvidenceResult = KPIResult & { syncState?: "cloud" | "local" };
@@ -13,6 +13,7 @@ export interface BuildDayEvidenceProjectionArgs {
   sportLoadLogs?: ExternalLoadLog[];
   kpiResults?: KpiEvidenceResult[];
   sessionAttempts?: SessionLog[];
+  legacyOrphanRecords?: LegacyOrphanProjectionSource[];
   projection?: "execution" | "preview";
 }
 
@@ -22,6 +23,7 @@ export function buildDayEvidenceProjection({
   sportLoadLogs = [],
   kpiResults = [],
   sessionAttempts = [],
+  legacyOrphanRecords = [],
   projection = "preview",
 }: BuildDayEvidenceProjectionArgs): DayProjection {
   const day = getPlanDay(date);
@@ -44,8 +46,9 @@ export function buildDayEvidenceProjection({
       .map((result) => ({
         ...result,
         syncState: result.syncState === "local" ? "local-only" : result.syncState === "cloud" ? "cloud-synced" : undefined,
-      })),
+    })),
     sessionAttempts: sessionAttempts.filter((session) => session.date === date),
+    legacyOrphanRecords: legacyOrphanRecords.filter((record) => record.id?.includes(date)),
     projection,
   }));
 }
