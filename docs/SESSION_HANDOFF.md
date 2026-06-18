@@ -2,7 +2,7 @@
 
 ## Current Handoff State
 
-This is the handoff after master documentation / scope reconciliation.
+This is the handoff after the Supabase staging milestone documentation update.
 
 Current constraints:
 
@@ -12,6 +12,7 @@ Current constraints:
 - KPI cloud-sync WIP is stashed.
 - Do not apply the stash until staging work resumes.
 - Do not add `.wip/` to git.
+- Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.
 
 ## Recent Production Checkpoint
 
@@ -37,6 +38,23 @@ Current constraints:
 - Not pushed.
 - Not staging-tested.
 
+## Supabase Staging Baseline
+
+- Non-prod Supabase staging project created.
+- Project name: `maddox-training-os-staging`
+- Project ref: `npuankmkxbjtlokbpczz`
+- Region: West US (Oregon) `us-west-2`
+- Compute: `t4g.nano`
+- Local production env backup exists at `.env.local.production-backup`.
+- Backup contains secrets; do not display or commit its contents.
+- Local `.env.local` now points to staging Supabase.
+- `supabase/schema.sql` applied manually in Supabase staging SQL Editor.
+- Staging SQL result: "Success. No rows returned."
+- Confirmed staging tables: `athletes`, `session_logs`, `session_progress`.
+- Existing code paths upsert Maddox athlete automatically in `externalLoadRepository`, `cloudSessionProgressRepository`, and `completedSessionRepository`.
+
+Production Supabase remains untouched. Vercel production remains untouched.
+
 ## Recommended Next Session
 
 Start by reading:
@@ -48,9 +66,9 @@ Start by reading:
 
 If resuming KPI cloud sync:
 
-1. Create/confirm staging Supabase first.
-2. Confirm local env points to staging.
-3. Apply stash only after environment is safe.
+1. Confirm local env still points to staging without displaying secrets.
+2. Write the staging KPI cloud-sync test plan before applying WIP.
+3. Apply stash only after environment and test plan are safe.
 4. Run staging cloud-write tests.
 5. Update defect log and testing status.
 6. Do not backfill June 16 production KPI values until explicitly planned.

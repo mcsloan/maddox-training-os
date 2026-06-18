@@ -135,25 +135,29 @@ Age-appropriate rules:
 
 - Sport Load / Log Today cloud sync is production-confirmed.
 - Standalone KPI cloud sync remains DEF-001 and is not complete until staged and validated.
-- Staging Supabase must be created before fake/dev cloud-write tests.
+- Staging Supabase has been created before fake/dev cloud-write tests.
+- Staging project: `maddox-training-os-staging`, ref `npuankmkxbjtlokbpczz`, West US (Oregon) `us-west-2`, compute `t4g.nano`.
 - Production Supabase is real Maddox data only.
-- Local development must point to staging once staging exists.
+- Local development now points to staging.
 - Vercel Preview must point to staging once staging exists.
 - Vercel Production must point to production.
 - No fake/test records in production.
 - Recovered June 16 KPI backfill must be intentional, documented, and treated as real historical data.
 - KPI cloud-sync WIP is stashed and not committed.
 - `.wip/2026-06-17-kpi-cloud-sync-wip.patch` exists and must not be committed.
+- `.env.local.production-backup` exists locally and contains secrets; do not commit or display it.
+- Staging schema baseline applied successfully and tables confirmed: `athletes`, `session_logs`, `session_progress`.
 
 ## Data / Sync / Environment Scope
 
 - Staging Supabase
 - Production Supabase is real Maddox data only
-- local development must point to staging once staging exists
+- local development now points to staging
 - no fake/test records in production
 - KPI backfill must be intentional
 - KPI cloud-sync WIP is stashed and not committed
 - `.wip/2026-06-17-kpi-cloud-sync-wip.patch` exists and must not be committed
+- `.env.local.production-backup` exists locally and must not be committed or displayed
 - app-wide sync visibility
 - Log Today support-field cross-device reload verification
 - standalone KPI cloud sync staged validation

@@ -2,13 +2,18 @@
 
 ## Current Checkpoint
 
-This documentation checkpoint reconciles project memory as of June 17, 2026.
+This documentation checkpoint reconciles project memory as of June 18, 2026.
 
 Recent production commits:
 
 - `a94ad9f` Simplify sport-load day plan
 - `550f8af` Capture full sport-load day support work
 - `a0bc4e4` Redirect Today to canonical day page
+
+Recent documentation checkpoints:
+
+- `c433e7a` Document master project scope and handoff
+- `c8a9463` Ignore local WIP patches
 
 Current handoff constraints:
 
@@ -28,6 +33,9 @@ Current handoff constraints:
 - Calendar June 15 Sport Load bug was fixed and production verified.
 - KPI iPad local data was recovered through `debug/local-data`.
 - KPI cloud sync was implemented locally but is not committed, not pushed, not staging-tested, and is currently stashed.
+- Non-prod Supabase staging project has been created and local development now points to staging.
+- `supabase/schema.sql` was applied manually in the staging SQL Editor and completed with "Success. No rows returned."
+- Staging tables confirmed: `athletes`, `session_logs`, `session_progress`.
 
 ## Current Product Shape
 
@@ -61,11 +69,16 @@ Done:
 - June 17 real Sport Load log appeared cross-device.
 - Today route is canonical.
 - Log Today captures lacrosse load plus support fields.
+- Supabase staging project created: `maddox-training-os-staging`.
+- Staging project ref: `npuankmkxbjtlokbpczz`.
+- Staging region: West US (Oregon) `us-west-2`.
+- Staging compute: `t4g.nano`.
+- Local `.env.local` now points to staging Supabase.
+- Production env backup exists locally at `.env.local.production-backup`; it contains secrets and must not be committed or displayed.
+- Staging schema baseline applied and core tables confirmed.
 
 Open:
 
-- Create non-prod Supabase staging project.
-- Wire local development to staging.
 - Wire Vercel Preview to staging.
 - Keep Vercel Production on production.
 - Validate KPI cloud sync in staging before fake/dev writes.

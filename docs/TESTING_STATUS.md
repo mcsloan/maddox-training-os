@@ -25,11 +25,24 @@
 
 - Playwright E2E tests
 - Automated cross-device sync tests
-- Staging environment tests
+- Staging environment tests beyond schema/table baseline
 - KPI cloud sync regression tests
 - History Week -> Day -> Evidence regression tests
 - Homepage stale card regression
 - Formal release gate
+
+## Staging Baseline
+
+- Non-prod Supabase staging project created: `maddox-training-os-staging`.
+- Project ref: `npuankmkxbjtlokbpczz`.
+- Region: West US (Oregon) `us-west-2`.
+- Compute: `t4g.nano`.
+- Local development now points to staging.
+- `supabase/schema.sql` was applied manually in staging SQL Editor.
+- Staging SQL result: "Success. No rows returned."
+- Confirmed staging tables: `athletes`, `session_logs`, `session_progress`.
+- No KPI cloud-sync staging validation has been run yet.
+- No production deploy readiness is implied by this baseline.
 
 ## Current Manual Production Evidence
 

@@ -1,10 +1,10 @@
 # Next Build Priorities
 
-1. Master reconciliation docs and `AGENTS.md` update.
-2. Commit documentation checkpoint when explicitly asked.
-3. Create staging Supabase project.
-4. Wire local env to staging.
-5. Reapply KPI cloud-sync stash after docs checkpoint.
+1. Document Supabase staging baseline and environment handoff.
+2. Wire Vercel Preview to staging.
+3. Keep Vercel Production on production.
+4. Create explicit staging KPI cloud-sync test plan.
+5. Reapply KPI cloud-sync stash only after staging test plan is explicit.
 6. Test KPI cloud sync against staging.
 7. Commit KPI cloud-sync only after staging validation.
 8. Plan recovered June 16 real production KPI backfill.
@@ -18,4 +18,4 @@
 
 ## Immediate Guardrail
 
-Do not apply the KPI cloud-sync stash during documentation work. Do not add `.wip/` to git.
+Do not apply the KPI cloud-sync stash during staging-baseline documentation work. Do not add `.wip/` to git. Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.

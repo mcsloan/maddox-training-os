@@ -17,21 +17,41 @@ Rules:
 
 ## Staging
 
-Staging Supabase should be a separate free Supabase project, not a preview branch, unless explicitly chosen later.
+Staging Supabase is a separate non-prod Supabase project.
+
+Project:
+
+- name: `maddox-training-os-staging`
+- ref: `npuankmkxbjtlokbpczz`
+- region: West US (Oregon) `us-west-2`
+- compute: `t4g.nano`
+- URL: `https://npuankmkxbjtlokbpczz.supabase.co`
 
 Rules:
 
 - Staging is for dev/test data.
-- Local development must point to staging once staging exists.
+- Local development now points to staging via `.env.local`.
 - Vercel Preview must point to staging once staging exists.
 - Cloud-write tests must run against staging unless the record is real Maddox historical data.
 - KPI cloud sync must be validated in staging before committing/deploying production changes.
+- Do not display or commit staging keys.
+
+Current staging baseline:
+
+- Local production env backup exists at `.env.local.production-backup`.
+- The backup contains secrets; do not commit or display its contents.
+- `.env.local` has been updated locally to use the staging Supabase URL and staging publishable key.
+- `supabase/schema.sql` was applied manually in the staging SQL Editor.
+- Staging SQL result: "Success. No rows returned."
+- Confirmed tables exist in staging: `athletes`, `session_logs`, `session_progress`.
+- Existing code paths upsert Maddox athlete automatically in:
+  - `lib/storage/externalLoadRepository.ts`
+  - `lib/storage/cloudSessionProgressRepository.ts`
+  - `lib/storage/completedSessionRepository.ts`
 
 ## Current Open Environment Work
 
-- Create non-prod Supabase staging project.
-- Wire local development to staging.
 - Wire Vercel Preview to staging.
 - Keep Vercel Production on production.
-- Document environment variables after staging is created.
 - Add explicit pre-test environment confirmation step to release workflow.
+- Validate staging cloud writes before applying KPI cloud-sync WIP.

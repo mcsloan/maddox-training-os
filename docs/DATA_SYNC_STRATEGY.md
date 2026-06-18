@@ -10,6 +10,7 @@ Cloud-backed:
 
 - Sport Load / Log Today core path.
 - June 17 iPad Sport Load / Log Today save appeared in parent browser.
+- Staging Supabase baseline exists and is ready for controlled cloud-write validation.
 
 Local-only or not fully validated:
 
@@ -27,6 +28,32 @@ Known sources:
 - `source = web` for completed sessions.
 - `source = external_load` for legacy/internal Sport Load logs.
 - Stashed KPI WIP proposes `source = kpi_page` for standalone KPI snapshots.
+
+## Staging Baseline
+
+Non-prod Supabase staging has been created:
+
+- project name: `maddox-training-os-staging`
+- project ref: `npuankmkxbjtlokbpczz`
+- region: West US (Oregon) `us-west-2`
+- compute: `t4g.nano`
+- URL: `https://npuankmkxbjtlokbpczz.supabase.co`
+
+Local development now points to staging through `.env.local`. The staging publishable key is set locally but must not be displayed or committed.
+
+Schema baseline:
+
+- `supabase/schema.sql` applied manually in staging SQL Editor.
+- Result: "Success. No rows returned."
+- Confirmed tables: `athletes`, `session_logs`, `session_progress`.
+
+Existing cloud save paths upsert the Maddox athlete automatically:
+
+- `lib/storage/externalLoadRepository.ts`
+- `lib/storage/cloudSessionProgressRepository.ts`
+- `lib/storage/completedSessionRepository.ts`
+
+KPI cloud sync remains not complete. The stash/patch must stay unapplied until the staging baseline and explicit test plan are accepted.
 
 ## Local Storage
 
