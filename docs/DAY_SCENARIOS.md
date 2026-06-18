@@ -243,7 +243,8 @@ Sync expectations:
 
 - Live session progress syncs while the session is in progress.
 - Completed session snapshot syncs on finish.
-- Standalone KPI cloud sync is not expected in the current MVP.
+- Standalone KPI results should use the cloud-backed `source = kpi_page` evidence path when entered outside a live session.
+- If KPI save is local-only or sync failed, Parent/Dashboard/KPI screens must show local-only or sync-failed caveat.
 
 Failure modes:
 
@@ -663,11 +664,11 @@ Export expectations:
 Sync expectations:
 
 - Session-runner KPI data syncs inside live session progress.
-- Standalone KPI cloud sync remains out of scope.
+- Standalone KPI results should sync through `session_logs` with `source = kpi_page`.
 
 Failure modes:
 
-- Retest result saved locally only through standalone KPI page.
+- Retest result saved locally only through standalone KPI page because cloud sync failed or was unavailable.
 - Deferred retest counted as completed.
 
 Defects this scenario can expose:

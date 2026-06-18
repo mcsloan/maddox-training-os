@@ -191,11 +191,11 @@ Expected projections:
 - KPI results embedded in completed sessions.
 - Standalone KPI results if the app supports them.
 - Unsupported deferral caveat if a KPI is expected to be deferred but there is no storage path.
-- Local-only caveat for standalone KPI entries until KPI cloud sync exists.
+- Local-only or sync-failed caveat for standalone KPI entries that have not reached cloud.
 
 Current known constraint:
 
-- Standalone KPI cloud sync is not part of the live-session-progress MVP.
+- Standalone KPI cloud sync uses the `session_logs` evidence path and should still surface local-only/sync-failed caveats when cloud confirmation fails.
 
 ## Plan
 

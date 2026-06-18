@@ -158,7 +158,7 @@ Athlete:
 Parent/operator:
 
 - Should see whether data is cloud-synced, pending, failed, or local-only.
-- Should be able to identify local-only KPI or Training Work records until those systems are explicitly synced.
+- Should be able to identify local-only or sync-failed KPI and Training Work records when those records have not reached cloud.
 - Should see local-only records as valid current-device evidence with limited cross-device/export confidence.
 
 ## Export Expectations By Role

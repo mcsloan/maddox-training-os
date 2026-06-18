@@ -2,15 +2,23 @@
 
 Use this template at the end of every meaningful work session.
 
-## What Changed
-
-- 
-
-## What It Means
-
-- 
-
 ## Files Created/Updated
+
+- 
+
+## Summary of Each File
+
+- 
+
+## Ambiguities Discovered
+
+- 
+
+## Missing Scenarios
+
+- 
+
+## Recommended Next Step
 
 - 
 
@@ -18,26 +26,22 @@ Use this template at the end of every meaningful work session.
 
 - 
 
-## Browser / iPhone / iPad / Supabase / Vercel Checks
-
-- 
-
-## Git Status
+## git status --short
 
 ```text
 
 ```
 
-## Commit / Push
-
-- Commit happened: no
-- Push happened: no
-
-## Remaining Risks
+## Browser / iPhone / iPad / Supabase / Vercel Checks
 
 - 
 
-## Recommended Next Step
+## Commit / Push
+
+- Commit happened:
+- Push happened:
+
+## Remaining Risks
 
 - 
 
