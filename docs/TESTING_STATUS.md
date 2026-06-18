@@ -1,0 +1,57 @@
+# Testing Status
+
+## Implemented
+
+- `npm run lint`
+- `npm run build`
+- `node scripts/verify-v8.4-import.mjs`
+- Pure projection tests exist for:
+  - `dayStatus`
+  - `dayProjection`
+  - `dayProjectionAdapters`
+  - `screenProjections`
+- QA docs exist for:
+  - `DAY_SCENARIOS`
+  - `DATA_PROPAGATION_MATRIX`
+  - `ROLE_EXPECTATIONS`
+  - `DAY_STATUS_MODEL`
+  - `SCREEN_EXPECTATIONS`
+  - `TEST_CASES`
+  - `GOLDEN_FIXTURES_PLAN`
+  - `QA_TRACEABILITY_MATRIX`
+  - `QA_AUTOMATION_READINESS`
+
+## Not Implemented
+
+- Playwright E2E tests
+- Automated cross-device sync tests
+- Staging environment tests
+- KPI cloud sync regression tests
+- History Week -> Day -> Evidence regression tests
+- Homepage stale card regression
+- Formal release gate
+
+## Current Manual Production Evidence
+
+- June 17 iPad Sport Load / Log Today save appeared in parent browser.
+- This confirms cross-device cloud sync for Sport Load core path.
+
+## Current Test Command Rules
+
+For app-code changes:
+
+- `npm run lint`
+- `npm run build`
+- `node scripts/verify-v8.4-import.mjs`
+
+For documentation-only changes:
+
+- `git status --short`
+- run markdown lint/test only if a script exists
+- do not run build unless code changed
+
+For iPhone/LAN production-style validation when needed:
+
+- `npm run ios:test`
+
+Use production mode for iPhone/iPad validation; do not rely on Next dev/Turbopack mode for iOS behavior.
