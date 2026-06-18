@@ -1,52 +1,41 @@
-# Safe Lane Fix 2 Report
+# Safe Lane Fix 3 Report
 
 ## Branch Name
 
-- `fix/history-day-evidence`
+- `fix/day-logged-state-cta`
 
 ## Files Changed
 
-- `app/history/page.tsx`
-- `lib/projections/dayEvidence.ts`
+- `app/day/[date]/page.tsx`
+- `components/DayEvidenceStatus.tsx`
 - `docs/AGENT_REPORT.md`
 
 ## What Changed
 
-- Made `/history` primarily a day-based Training Journal organized by Program > Week > Day > Evidence.
-- Grouped evidence cards under plan week sections, with a separate needs-review group for records outside approved plan dates.
-- Kept raw Sport Load logs and raw session attempts lower on the page as secondary audit detail.
-- Added History-specific labels and summaries so evidence-only days do not look like nothing happened.
-- Extended the shared day evidence helper to accept legacy/orphan records for review-state projection.
+- Added a small client-side Day evidence status component that reads existing Sport Load, KPI, Training Work, and Reflection evidence.
+- Wired the Day page to show saved evidence status instead of acting like nothing has been logged.
+- Changed the Sport Load day CTA area to show `Sport Load logged`, `Update Sport Load`, and `Add Recovery Notes` when a Sport Load log already exists.
+- Added KPI evidence status to KPI checkpoint days, including partial KPI counts.
+- Updated static Sport Load copy so it says to record or update the day log, not only first-time logging.
 
-## How History Now Groups Week -> Day -> Evidence
+## How June 15 Day Page CTA / Status Changed
 
-- The primary History section is now `Training Journal`.
-- Evidence dates are built from approved calendar dates plus existing Sport Load logs, standalone KPI results, and session attempts.
-- Each day card shows date, day title, derived status label, evidence chips/counts for Sport Load, Training Work, KPI, Reflection, and Legacy review when present.
-- Week groups use approved plan weeks. Records outside approved plan weeks go into `Needs review`.
+- If the June 15 4v4 Sport Load log exists, the Sport Load day card shows `Sport Load logged`.
+- The primary action changes from first-time `Log Today` to `Update Sport Load`.
+- A secondary `Add Recovery Notes` action is available and points to the existing Sport Load log page.
+- Training Work is not marked complete by Sport Load evidence.
 
-## How June 15 Is Shown
+## How June 16 Day Page KPI Evidence Changed
 
-- June 15 appears as a Week 1 day when a Sport Load log exists.
-- It shows `Sport Load logged` and a Sport Load evidence count.
-- It does not mark Training Work complete just because the 4v4 Sport Load was logged.
+- The KPI Checkpoint section now shows KPI evidence status.
+- If 7 of 8 planned KPI results exist, it shows `7 of 8 KPI results recorded`.
+- It also states the day is partial because Puck-Control Weave or another planned KPI remains unresolved.
+- No Puck-Control Weave result or deferment is invented.
 
-## How June 16 Is Shown
+## How June 17 Day Page Status Changed
 
-- June 16 appears as a Week 1 KPI evidence day when standalone KPI results exist.
-- If 7 of 8 planned KPI results are present, the card displays `Partial` and summarizes `7 of 8 planned KPI results recorded`.
-- Missing Puck-Control Weave is not inferred as deferred without an explicit supported record.
-
-## How June 17 Is Shown
-
-- June 17 appears as a Week 1 day when the lacrosse Sport Load log exists.
-- It shows Sport Load evidence and keeps that separate from Training Work evidence.
-
-## How June 14 Legacy/Test/Orphan Data Is Handled
-
-- Sessions outside approved plan dates, or sessions whose workout id cannot be matched to known workouts, are treated as legacy/orphan records.
-- Those records are shown under `Needs review` with `Legacy / unattached records`.
-- They are preserved and shown, but not silently attached to approved plan truth.
+- If the June 17 lacrosse Sport Load log exists, the Day page shows `Sport Load logged`.
+- The action changes to update/recovery-note language instead of implying no log exists.
 
 ## What Did Not Change
 
@@ -54,9 +43,10 @@
 - No Supabase data was mutated.
 - No production data was written.
 - No Gantt logic changed.
-- Calendar and Dashboard were not redesigned.
+- Calendar, Dashboard, and History were not redesigned.
 - Sport Load logging and Training Work logging remain separate.
 - No fake data was created and no existing real data was removed.
+- Existing Sport Load save/update route remains the same.
 
 ## Checks Run / Results
 
@@ -68,17 +58,17 @@
 
 ## Risks / Remaining Gaps
 
-- This is still a narrow History projection fix, not the full History evidence-detail redesign.
-- Legacy/orphan handling is conservative: records are labeled for review when the app cannot confidently attach them.
-- The day status model still does not store an explicit Puck-Control Weave deferment, so June 16 partial KPI evidence is labeled in History rather than by creating a deferment.
+- Evidence status loads client-side after the server-rendered Day page, so there is a brief `Checking saved day evidence...` state.
+- If evidence loading fails, the component falls back to the existing log action.
 - No browser/iPad visual verification was run in this pass.
+- Explicit KPI deferment storage remains deferred; missing Puck-Control Weave is only described as unresolved.
 
 ## git status --short
 
 ```text
- M app/history/page.tsx
+ M app/day/[date]/page.tsx
  M docs/AGENT_REPORT.md
- M lib/projections/dayEvidence.ts
+?? components/DayEvidenceStatus.tsx
 ```
 
 ## Browser / iPhone / iPad / Supabase / Vercel Checks
@@ -92,10 +82,10 @@
 
 ## Scope Capture Check
 
-- Defects added/updated: DEF-013 History record fragmentation addressed with a narrow Week -> Day -> Evidence journal; DEF-004/DEF-015 legacy-style records now get needs-review treatment in History when they cannot attach to plan truth.
-- Epics/features added/updated: Daily Plan / One Day Truth and QA / Testing / Regression advanced for History projection.
-- Product decisions added/updated: History is now day-first; raw records are secondary audit detail.
+- Defects added/updated: Day page stale/not-logged behavior addressed for existing Sport Load and KPI evidence.
+- Epics/features added/updated: Daily Plan / One Day Truth advanced on canonical Day page.
+- Product decisions added/updated: Day page now reacts to evidence without merging Sport Load, KPI, and Training Work completion.
 - Data/sync/environment decisions added/updated: Existing read paths only; no writes or environment changes.
 - Testing requirements added/updated: Standard app checks completed; browser/iPad verification still deferred.
 - Docs updated: `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: full drill-level evidence expansion, explicit KPI deferment storage, export integration, browser/iPad manual verification.
+- Items intentionally deferred: explicit KPI deferment storage, browser/iPad manual verification, deeper Day evidence drill-down, export integration.

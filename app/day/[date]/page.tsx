@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DayExecutionSequence } from "@/components/DayExecutionSequence";
+import { DayEvidenceStatus } from "@/components/DayEvidenceStatus";
 import { ExternalLoadActions } from "@/components/ExternalLoadActions";
 import { ExternalLoadChip, PhaseChip, PlanTagChip } from "@/components/LoadChips";
 import { TrainingWorkActions } from "@/components/TrainingWorkActions";
@@ -67,15 +68,15 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
               <p className="mt-2 text-lg font-semibold text-slate-700">{sportLoadLabel} is the main workload today. Keep extra work skill-focused, not conditioning-focused.</p>
             </div>
             <div className="max-w-sm">
-              <Link className="btn-primary text-lg" href={logTodayHref}>Log Today</Link>
-              <p className="mt-2 text-sm font-semibold text-slate-600">Log lacrosse plus today’s skill, shooting, bike, mobility, and reflection notes.</p>
+              <DayEvidenceStatus date={date} logTodayHref={logTodayHref} mode="sport-load" plannedKpiCount={plannedKpis.length} sportLoads={externalLoads} />
+              <p className="mt-2 text-sm font-semibold text-slate-600">This saves or updates lacrosse plus today’s skill, shooting, bike, mobility, and reflection notes.</p>
             </div>
           </div>
           <div className="mt-5 grid gap-3">
             <SimplePlanItem
               label="A"
               title={externalLoads[0]?.title || "Sport load"}
-              body="Play the game. Afterward, tap Log Today and record duration, effort, energy, confidence, soreness, and pain."
+              body="Play the game. Afterward, open the day log to record or update duration, effort, energy, confidence, soreness, and pain."
             />
             <SimplePlanItem
               label="B"
@@ -103,6 +104,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
       )}
 
       {!isSportLoadDay && <DayExecutionSequence entries={executionEntries} />}
+      {!isSportLoadDay && <DayEvidenceStatus date={date} logTodayHref={logTodayHref} mode="summary" plannedKpiCount={plannedKpis.length} sportLoads={externalLoads} />}
 
       {!isSportLoadDay && <section className="mt-6 grid gap-4 md:grid-cols-2">
         <article className="card">
@@ -125,7 +127,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
       </section>}
 
       {externalLoads.length > 0 && !isSportLoadDay && <section className="card mt-6"><h2 className="text-2xl font-black">Sport Loads</h2><p className="mt-2 text-sm font-semibold text-slate-600">On camp, lacrosse, or heavy on-ice days, dryland is reduced to mobility, light puck touches, and recovery.</p><div className="mt-4 grid gap-4 md:grid-cols-2">{externalLoads.map((load) => <article className="rounded-2xl border border-rink p-4" key={load.id}><ExternalLoadChip type={load.type} /><p className="mt-3 font-black">{load.title}</p><p className="mt-1 text-sm">{load.provider} · {load.startTime}{load.endTime ? `-${load.endTime}` : ""} · {load.plannedDurationMinutes ? `${load.plannedDurationMinutes} min` : "Duration to confirm"} · Intensity {load.plannedIntensity}/5</p><p className="mt-3 text-sm">{userFacingPlanText(load.notes)}</p><p className="mt-3 text-sm text-green-800"><strong>Recovery:</strong> {userFacingLoadRule(load.recoveryRule, true)}</p><p className="label mt-4">Track after</p><ul className="list-inside list-disc text-sm">{load.trackingQuestions.map((question) => <li key={question}>{question}</li>)}</ul></article>)}</div><ExternalLoadActions loads={externalLoads} /></section>}
-      {plannedKpis.length > 0 && <section className="card mt-6 border-2 border-cyan-200"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">First-class plan event</p><h2 className="text-2xl font-black">KPI Checkpoint</h2></div><Link className="btn-secondary" href="/kpis">Open KPI Dashboard</Link></div><p className="mt-3 font-semibold text-amber-900">{day?.recoveryRule}</p><div className="mt-4 grid gap-3 sm:grid-cols-2">{plannedKpis.map((kpi) => <div className="rounded-2xl bg-ice p-4" key={kpi!.id}><p className="label">{kpi!.category}</p><p className="font-black">{kpi!.name}</p></div>)}</div></section>}
+      {plannedKpis.length > 0 && <section className="card mt-6 border-2 border-cyan-200"><div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">First-class plan event</p><h2 className="text-2xl font-black">KPI Checkpoint</h2></div><Link className="btn-secondary" href="/kpis">Open KPI Dashboard</Link></div><p className="mt-3 font-semibold text-amber-900">{day?.recoveryRule}</p><DayEvidenceStatus date={date} logTodayHref={logTodayHref} mode="kpi" plannedKpiCount={plannedKpis.length} sportLoads={externalLoads} /><div className="mt-4 grid gap-3 sm:grid-cols-2">{plannedKpis.map((kpi) => <div className="rounded-2xl bg-ice p-4" key={kpi!.id}><p className="label">{kpi!.category}</p><p className="font-black">{kpi!.name}</p></div>)}</div></section>}
       {!isSportLoadDay && blocks.length > 0 && <section className="card mt-6"><h2 className="text-2xl font-black">Workout Blocks</h2><div className="mt-4 grid gap-3 md:grid-cols-2">{blocks.map((block) => <div className="rounded-2xl bg-ice p-4" key={block!.id}><p className="label">{block!.id} · {block!.category}</p><h3 className="font-black">{block!.name}</h3><p className="mt-2 text-sm">{userFacingPlanText(block!.description)}</p></div>)}</div></section>}
       {!isSportLoadDay && drills.length > 0 && <section className="card mt-6"><h2 className="text-2xl font-black">Drill Sequence</h2><div className="mt-4 space-y-3">{drills.map((drill, index) => <article className="rounded-2xl border border-rink p-4" key={drill.id}><div className="flex items-start justify-between gap-3"><div><p className="label">Step {index + 1} · {drill.category}</p><h3 className="text-lg font-black">{drill.name}</h3></div>{isUsableExternalUrl(drill.videoUrl) && <a className="text-sm font-bold text-blue" href={drill.videoUrl!} target="_blank" rel="noreferrer">Video ↗</a>}</div><p className="mt-2 text-sm">{drill.purpose}</p></article>)}</div></section>}
       {!isSportLoadDay && <section className="mt-6 grid gap-4 md:grid-cols-2"><article className="card"><h2 className="text-xl font-black">Equipment</h2>{equipment.length ? <ul className="mt-3 list-inside list-disc space-y-1">{equipment.map((item) => <li key={item}>{item}</li>)}</ul> : <p className="mt-3 text-slate-500">Use equipment required by the sport provider.</p>}</article><article className="card"><h2 className="text-xl font-black">Recovery</h2><p className="mt-3">{userFacingPlanText(day?.recovery || externalLoads[0]?.recoveryRule || "Recovery as needed")}</p>{workout && <p className="mt-3 text-sm text-slate-500">{workout.recoveryNotes}</p>}</article></section>}
