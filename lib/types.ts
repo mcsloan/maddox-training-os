@@ -327,6 +327,31 @@ export interface KPIResult {
   notes: string;
 }
 
+export interface StandaloneKPIResultSnapshot {
+  kind: "standalone_kpi_result";
+  kpiId: string;
+  date: string;
+  enteredAt?: string;
+  bestResult: number | null;
+  attempts: KPIAttempt[];
+  notes: string;
+  source: "kpi_page";
+  kpiResult: KPIResult;
+}
+
+export interface StandaloneKPIResultDeletedSnapshot {
+  kind: "standalone_kpi_result_deleted";
+  deletedResultId: string;
+  deletedAt: string;
+  reason: "user_deleted";
+  source: "kpi_page";
+  athleteId: string;
+  schemaVersion: number;
+  appVersion: string;
+  planVersion: string;
+  deviceId: string;
+}
+
 export interface CompletedSessionSnapshot {
   schemaVersion: number;
   appVersion: string;

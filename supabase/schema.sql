@@ -88,3 +88,10 @@ create policy "anon can update Maddox session progress"
   on public.session_progress for update to anon
   using (athlete_id = '00000000-0000-4000-8000-000000000012')
   with check (athlete_id = '00000000-0000-4000-8000-000000000012');
+
+-- Non-destructive API grants for projects with automatic table exposure off.
+-- session_logs is immutable history: select/insert only, no update/delete grants.
+grant usage on schema public to anon;
+grant select, insert, update on table public.athletes to anon;
+grant select, insert on table public.session_logs to anon;
+grant select, insert, update on table public.session_progress to anon;

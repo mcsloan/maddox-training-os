@@ -147,6 +147,8 @@ Age-appropriate rules:
 - `.wip/2026-06-17-kpi-cloud-sync-wip.patch` exists and must not be committed.
 - `.env.local.production-backup` exists locally and contains secrets; do not commit or display it.
 - Staging schema baseline applied successfully and tables confirmed: `athletes`, `session_logs`, `session_progress`.
+- Standalone KPI core save/read/delete path passed manual staging validation.
+- Standalone KPI delete uses immutable `standalone_kpi_result_deleted` tombstones in `session_logs`; no delete grants or delete policies.
 
 ## Data / Sync / Environment Scope
 
@@ -161,6 +163,7 @@ Age-appropriate rules:
 - app-wide sync visibility
 - Log Today support-field cross-device reload verification
 - standalone KPI cloud sync staged validation
+- immutable KPI tombstone delete behavior
 - production data cleanup for unclear seed/test/legacy/orphan records
 
 ## Recovery / Readiness Scope

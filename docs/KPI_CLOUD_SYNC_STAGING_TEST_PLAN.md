@@ -6,6 +6,35 @@ Validate standalone KPI cloud sync safely in Supabase staging before any product
 
 This plan does not mark KPI cloud sync complete. It defines the validation path to run after the current KPI cloud-sync WIP is applied locally.
 
+## Live Staging Result
+
+Core standalone KPI cloud sync path passed in staging after adding non-destructive anon API grants.
+
+Verified:
+
+- `/kpis` loaded against staging with no visible entries initially.
+- First KPI save before API grants saved a local backup but cloud failed with `permission denied for table session_logs (42501)`.
+- Staging SQL grants were applied manually:
+  - `grant usage on schema public to anon;`
+  - `grant select, insert, update on table public.athletes to anon;`
+  - `grant select, insert on table public.session_logs to anon;`
+  - `grant select, insert, update on table public.session_progress to anon;`
+- After grants, a 10-yard sprint staging test KPI saved with `bestResult = 8.88` and note `STAGING CLOUD TEST AFTER GRANTS - DELETE LATER`.
+- Supabase staging readback confirmed `source = kpi_page`, `kind = standalone_kpi_result`, `kpiId = kpi-10-yard`, and `bestResult = 8.88`.
+- Incognito confirmed `8.88` was visible from cloud and a separate `9.99` local-only browser backup was not visible.
+- Initial delete failed because `session_logs` is immutable and has no delete policy.
+- Tombstone delete fix was implemented.
+- Browser retest deleted `8.88` from UI.
+- Supabase staging readback confirmed the original `standalone_kpi_result` row remains and a new `standalone_kpi_result_deleted` tombstone row exists.
+- Tombstone fields confirmed: `deletedResultId = kpi-10-yard-1781758488979`, `reason = user_deleted`.
+- Incognito confirmed `8.88` is not visible, tombstone is not visible, and no error appears.
+
+Not yet complete:
+
+- Production deploy readiness.
+- June 16 real KPI backfill.
+- Full scenario coverage for Puck-Control Weave deferred state, Plank Quality time plus form score, and broader app-wide sync visibility.
+
 ## Preconditions
 
 - Repo is clean at `c352af8` or later before applying WIP.
@@ -16,6 +45,7 @@ This plan does not mark KPI cloud sync complete. It defines the validation path 
   - region: West US (Oregon) `us-west-2`
 - Staging schema has been applied.
 - Staging tables are confirmed: `athletes`, `session_logs`, `session_progress`.
+- Non-destructive anon API grants are present for staging/fresh environments with automatic table exposure off.
 - Production Supabase remains untouched.
 - Vercel Production remains untouched.
 - No secrets are displayed in terminal, docs, screenshots, or reports.
@@ -26,6 +56,7 @@ This plan does not mark KPI cloud sync complete. It defines the validation path 
 - No production Supabase changes.
 - No Vercel production deploy.
 - No destructive SQL.
+- No delete grants or delete policies for `session_logs`.
 - No clearing iPad/browser storage until data is backed up.
 - No service-role key in client env.
 - Do not edit `imports/v8.4/data/*.json`.
@@ -171,11 +202,13 @@ Pass only if:
 - No production Supabase rows change.
 - No secrets are exposed.
 - No source training data changes.
+- Delete uses immutable tombstone records, not physical deletes.
 
 Fail if:
 
 - Any production Supabase write occurs.
 - Any secret is displayed or committed.
+- Any `session_logs` delete grant, delete policy, or physical delete is introduced.
 - KPI result is local-only after a normal staging save.
 - Existing local KPI results disappear.
 - Duplicate cloud/local rows show as duplicate KPI attempts.

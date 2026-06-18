@@ -2,19 +2,23 @@
 
 import { useState } from "react";
 import { KPI, KPIAttempt, KPIResult } from "@/lib/types";
-import { localKpiRepository } from "@/lib/storage/localKpiRepository";
+import { readableError } from "@/lib/errorMessage";
+import { saveStandaloneKpiResult } from "@/lib/storage/cloudKpiRepository";
 
 export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: () => void; existing?: KPIResult }) {
   const empty = Array.from({ length: kpi.attempts }, () => ({ result: "" }));
   const [attempts, setAttempts] = useState<KPIAttempt[]>(existing?.attempts || empty);
   const [notes, setNotes] = useState(existing?.notes || "");
-  const [saved, setSaved] = useState(false);
+  const [status, setStatus] = useState("Ready");
+  const [saving, setSaving] = useState(false);
 
   const values = attempts.map((attempt) => Number(attempt.result)).filter((value) => Number.isFinite(value) && value > 0);
   const best = values.length ? (kpi.scoringMethod === "lowest" ? Math.min(...values) : Math.max(...values)) : null;
 
-  function save() {
-    localKpiRepository.save({
+  async function save() {
+    setSaving(true);
+    setStatus("Saving local backup...");
+    const result = {
       id: existing?.id || `${kpi.id}-${Date.now()}`,
       kpiId: kpi.id,
       date: existing?.date || new Date().toISOString().slice(0, 10),
@@ -22,9 +26,18 @@ export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: ()
       attempts,
       bestResult: best,
       notes,
-    } satisfies KPIResult);
-    setSaved(true);
-    onSaved();
+    } satisfies KPIResult;
+
+    try {
+      const saved = await saveStandaloneKpiResult(result);
+      setStatus(saved.mode === "cloud" ? "Cloud synced" : "Local only / pending sync");
+      onSaved();
+    } catch (reason) {
+      setStatus(`Sync failed. Local only / pending sync: ${readableError(reason)}`);
+      onSaved();
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -38,8 +51,9 @@ export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: ()
       <label className="mt-3 block"><span className="label">Notes</span><input className="field" value={notes} onChange={(event) => setNotes(event.target.value)} /></label>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <p className="font-black">Best: {best ?? "—"} {best !== null ? kpi.units : ""}</p>
-        <button className="btn-primary" disabled={best === null} onClick={save}>{saved ? "Saved" : existing ? "Update Result" : "Save Result"}</button>
+        <button className="btn-primary" disabled={best === null || saving} onClick={save}>{saving ? "Saving..." : existing ? "Update Result" : "Save Result"}</button>
       </div>
+      <p className="mt-2 text-sm font-semibold text-slate-600">{status}</p>
     </div>
   );
 }

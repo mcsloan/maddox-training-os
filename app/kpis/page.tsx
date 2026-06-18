@@ -3,26 +3,38 @@
 import { useEffect, useState } from "react";
 import { KPIEntryForm } from "@/components/KPIEntryForm";
 import Link from "next/link";
+import { readableError } from "@/lib/errorMessage";
 import { formatPlanDate, kpis, trainingPlan, userFacingPlanText } from "@/lib/trainingData";
 import { kpiBaseline, kpiBest, kpiTargetProgress, kpiTrend } from "@/lib/trainingMetrics";
-import { localKpiRepository } from "@/lib/storage/localKpiRepository";
-import { KPIResult } from "@/lib/types";
+import { deleteStandaloneKpiResult, loadStandaloneKpiResults, SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
 
 export default function KpisPage() {
-  const [results, setResults] = useState<KPIResult[]>([]);
+  const [results, setResults] = useState<SyncedKPIResult[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const refresh = () => { setResults(localKpiRepository.getAll()); setEditingId(null); };
+  const [syncStatus, setSyncStatus] = useState("Loading KPI history...");
+  const refresh = () => {
+    loadStandaloneKpiResults().then((result) => {
+      setResults(result.results);
+      setSyncStatus(result.warning || (result.mode === "cloud" ? "Cloud synced" : "Local only / pending sync"));
+      setEditingId(null);
+    });
+  };
   useEffect(refresh, []);
 
-  function remove(id: string) {
+  async function remove(id: string) {
     if (!window.confirm("Delete this KPI result? This cannot be undone.")) return;
-    localKpiRepository.delete(id);
-    refresh();
+    try {
+      const result = await deleteStandaloneKpiResult(id);
+      setSyncStatus(result.mode === "cloud" ? "Cloud synced" : "Local only / pending sync");
+      refresh();
+    } catch (reason) {
+      setSyncStatus(`Delete sync failed. Result was not removed from cloud: ${readableError(reason)}`);
+    }
   }
 
   return (
     <div>
-      <div className="mb-6"><p className="label">Measure progress</p><h1 className="text-4xl font-black">KPI Dashboard</h1><p className="mt-2 text-slate-500">History and trends are stored on this browser. Use the same setup each time.</p></div>
+      <div className="mb-6"><p className="label">Measure progress</p><h1 className="text-4xl font-black">KPI Dashboard</h1><p className="mt-2 text-slate-500">History and trends sync to cloud when available. Use the same setup each time.</p><p className="mt-2 text-sm font-bold text-blue">{syncStatus}</p></div>
       <section className="card mb-6 border-2 border-cyan-200"><h2 className="text-xl font-black">Planned KPI Checkpoints</h2><div className="mt-4 rounded-2xl bg-cyan-50 p-4 text-sm"><p className="font-black">Beat your best cleanly.</p><p>Clean technique beats ugly numbers.</p><p className="font-semibold text-red-700">Do not test hard if sore, sick, tired, or low energy.</p></div><div className="mt-4 space-y-3">{trainingPlan.days.filter((day) => day.kpiTestIds?.length).map((day) => <Link className="block rounded-2xl bg-ice p-4 hover:ring-2 hover:ring-blue" href={`/day/${day.date}`} key={day.date}><p className="label">{formatPlanDate(day.date)} · Week {day.weekNumber}</p><p className="font-black">{day.primarySession}</p><p className="mt-2 text-sm text-amber-900">{userFacingPlanText(day.recoveryRule)}</p></Link>)}</div></section>
       <section className="card mb-6">
         <p className="label">Plan vs actual</p><h2 className="text-2xl font-black">Offseason KPI Scoreboard</h2>
@@ -59,7 +71,7 @@ export default function KpisPage() {
               <details><summary className="mt-4 cursor-pointer font-bold text-blue">Add a new KPI result</summary><KPIEntryForm kpi={kpi} onSaved={refresh} /></details>
               <div className="mt-5 overflow-x-auto">
                 <table className="w-full min-w-[620px] text-left text-sm"><thead><tr className="border-b border-rink"><th className="p-2">Date/time</th><th className="p-2">Best</th><th className="p-2">Attempts</th><th className="p-2">Notes</th><th className="p-2">Actions</th></tr></thead><tbody>
-                  {entries.map((entry) => <tr className="border-b border-rink/70 align-top" key={entry.id}><td className="p-2">{entry.enteredAt ? new Date(entry.enteredAt).toLocaleString() : entry.date}</td><td className="p-2 font-black">{entry.bestResult ?? "—"} {kpi.units}</td><td className="p-2">{entry.attempts.map((attempt, index) => <span className="mr-2 inline-block" key={index}>#{index + 1}: {attempt.result || "—"}</span>)}</td><td className="p-2">{entry.notes || "—"}</td><td className="p-2"><div className="flex gap-2"><button className="font-bold text-blue" onClick={() => setEditingId(editingId === entry.id ? null : entry.id)}>Edit</button><button className="font-bold text-red-700" onClick={() => remove(entry.id)}>Delete</button></div></td></tr>)}
+                  {entries.map((entry) => <tr className="border-b border-rink/70 align-top" key={entry.id}><td className="p-2">{entry.enteredAt ? new Date(entry.enteredAt).toLocaleString() : entry.date}<p className="mt-1 text-xs font-bold text-slate-500">{entry.syncState === "cloud" ? "Cloud synced" : "Local only / pending sync"}</p></td><td className="p-2 font-black">{entry.bestResult ?? "—"} {kpi.units}</td><td className="p-2">{entry.attempts.map((attempt, index) => <span className="mr-2 inline-block" key={index}>#{index + 1}: {attempt.result || "—"}</span>)}</td><td className="p-2">{entry.notes || "—"}</td><td className="p-2"><div className="flex gap-2"><button className="font-bold text-blue" onClick={() => setEditingId(editingId === entry.id ? null : entry.id)}>Edit</button><button className="font-bold text-red-700" onClick={() => remove(entry.id)}>Delete</button></div></td></tr>)}
                   {!entries.length && <tr><td className="p-3 text-slate-500" colSpan={5}>No results entered yet.</td></tr>}
                 </tbody></table>
               </div>

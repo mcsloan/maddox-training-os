@@ -11,13 +11,15 @@ Cloud-backed:
 - Sport Load / Log Today core path.
 - June 17 iPad Sport Load / Log Today save appeared in parent browser.
 - Staging Supabase baseline exists and is ready for controlled cloud-write validation.
+- Standalone KPI core save/read/delete path passed manual staging validation.
 
 Local-only or not fully validated:
 
 - Standalone KPI results in production.
-- KPI cloud-sync WIP is stashed and not staging-tested.
+- KPI cloud-sync WIP is not production-deployed.
 - App-wide sync visibility.
 - Log Today support field cross-device reload has not been explicitly verified.
+- Advanced KPI edge cases remain unvalidated: Puck-Control Weave deferred state and Plank Quality time plus form score.
 
 ## Existing Cloud Pattern
 
@@ -27,7 +29,7 @@ Known sources:
 
 - `source = web` for completed sessions.
 - `source = external_load` for legacy/internal Sport Load logs.
-- Stashed KPI WIP proposes `source = kpi_page` for standalone KPI snapshots.
+- KPI cloud-sync WIP uses `source = kpi_page` for standalone KPI snapshots in staging.
 
 ## Staging Baseline
 
@@ -53,7 +55,26 @@ Existing cloud save paths upsert the Maddox athlete automatically:
 - `lib/storage/cloudSessionProgressRepository.ts`
 - `lib/storage/completedSessionRepository.ts`
 
-KPI cloud sync remains not complete. The stash/patch must stay unapplied until the staging baseline and explicit test plan are accepted.
+KPI cloud sync is staging-validated for the core save/read/delete path, but is not production-ready. Production deployment, June 16 backfill, and remaining KPI edge-case validation are still pending.
+
+## Standalone KPI Immutable Delete
+
+Standalone KPI deletion must not physically delete `session_logs` rows.
+
+Decision:
+
+- `session_logs` is immutable history.
+- Standalone KPI delete writes a new `source = kpi_page` row with `session_snapshot.kind = standalone_kpi_result_deleted`.
+- The tombstone snapshot includes `deletedResultId`, `deletedAt`, `reason = user_deleted`, and audit metadata.
+- Load logic reads both `standalone_kpi_result` and `standalone_kpi_result_deleted`, builds a deleted ID set, and excludes deleted results from display.
+- Tombstone records are not displayed as KPI entries.
+- No delete grants or delete policies are required or desired for `session_logs`.
+
+Staging evidence:
+
+- Original `standalone_kpi_result` row for the `8.88` test remains.
+- `standalone_kpi_result_deleted` tombstone row exists.
+- Incognito confirmed the deleted result and tombstone are not displayed.
 
 ## Local Storage
 
