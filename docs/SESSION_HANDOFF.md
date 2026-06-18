@@ -67,7 +67,7 @@ Start by reading:
 If resuming KPI cloud sync:
 
 1. Confirm local env still points to staging without displaying secrets.
-2. Write the staging KPI cloud-sync test plan before applying WIP.
+2. Review `docs/KPI_CLOUD_SYNC_STAGING_TEST_PLAN.md` before applying WIP.
 3. Apply stash only after environment and test plan are safe.
 4. Run staging cloud-write tests.
 5. Update defect log and testing status.

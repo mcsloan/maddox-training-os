@@ -43,6 +43,7 @@
 - Confirmed staging tables: `athletes`, `session_logs`, `session_progress`.
 - No KPI cloud-sync staging validation has been run yet.
 - No production deploy readiness is implied by this baseline.
+- KPI cloud-sync staging validation plan exists at `docs/KPI_CLOUD_SYNC_STAGING_TEST_PLAN.md`.
 
 ## Current Manual Production Evidence
 
