@@ -6,7 +6,7 @@ import { ExternalLoadActions } from "@/components/ExternalLoadActions";
 import { ExternalLoadChip, PhaseChip, PlanTagChip } from "@/components/LoadChips";
 import { TrainingWorkActions } from "@/components/TrainingWorkActions";
 import { getV84DayExecutionEntries, getV84SportLoadsForDate, getV84TrainingWorkEntries } from "@/lib/imports/v8_4/daily";
-import { getV84SessionByDate } from "@/lib/imports/v8_4/session";
+import { getV84SessionByDate, getV84SessionDrills } from "@/lib/imports/v8_4/session";
 import { formatPlanDate, getDayTags, getPlanDay, getPlanDayDisplayModel, getRelatedVideos, getWorkout, getWorkoutBlock, getWorkoutDrills, isUsableExternalUrl, kpis, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
 
 export default async function DayPreviewPage({ params }: { params: Promise<{ date: string }> }) {
@@ -20,13 +20,15 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   const workout = day?.workoutId ? getWorkout(day.workoutId) : undefined;
   const trainingWorkHref = workout ? v84Session ? `/session/${v84Session.sessionId}` : `/session/${workout.id}` : "";
   const blocks = day ? day.workoutBlockIds.map(getWorkoutBlock).filter((block) => Boolean(block)) : [];
-  const drills = workout ? getWorkoutDrills(workout) : [];
-  const equipment = Array.from(new Set(drills.flatMap((drill) => drill.equipment)));
+  const equipmentDrills = workout ? getWorkoutDrills(workout) : [];
+  const drills = v84Session ? getV84SessionDrills(v84Session.sessionId) : equipmentDrills;
+  const equipment = smartEquipmentSummary(Array.from(new Set(equipmentDrills.flatMap((drill) => drill.equipment))));
   const videos = getRelatedVideos(drills.map((drill) => drill.id));
   const tags = getDayTags(date);
   const display = getPlanDayDisplayModel(date);
   const intensity = Math.max(day?.intensity || 0, ...externalLoads.map((load) => load.plannedIntensity));
   const plannedKpis = (day?.kpiTestIds || workout?.kpiTestIds || []).map((id) => kpis.find((kpi) => kpi.id === id)).filter((kpi) => Boolean(kpi));
+  const plannedKpiNames = plannedKpis.map((kpi) => kpi!.name);
   const hasPlannedTrainingWork = Boolean(workout || blocks.length > 0 || trainingWorkEntries.length > 0 || (day?.durationMinutes || 0) > 0);
   const plannedTrainingWorkSummary = hasPlannedTrainingWork
     ? externalLoads.length > 0
@@ -104,7 +106,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
       )}
 
       {!isSportLoadDay && <DayEvidenceStatus date={date} logTodayHref={logTodayHref} mode="summary" plannedKpiCount={plannedKpis.length} sportLoads={externalLoads} trainingWorkLogHref={`/training-work/${date}`} />}
-      {!isSportLoadDay && <DayExecutionSequence entries={executionEntries} />}
+      {!isSportLoadDay && <DayExecutionSequence entries={executionEntries} plannedKpiNames={plannedKpiNames} />}
 
       {!isSportLoadDay && <section className="mt-6 grid gap-4 md:grid-cols-2">
         <article className="card">
@@ -127,10 +129,10 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
       </section>}
 
       {externalLoads.length > 0 && !isSportLoadDay && <section className="card mt-6"><h2 className="text-2xl font-black">Sport Loads</h2><p className="mt-2 text-sm font-semibold text-slate-600">On camp, lacrosse, or heavy on-ice days, dryland is reduced to mobility, light puck touches, and recovery.</p><div className="mt-4 grid gap-4 md:grid-cols-2">{externalLoads.map((load) => <article className="rounded-2xl border border-rink p-4" key={load.id}><ExternalLoadChip type={load.type} /><p className="mt-3 font-black">{load.title}</p><p className="mt-1 text-sm">{load.provider} · {load.startTime}{load.endTime ? `-${load.endTime}` : ""} · {load.plannedDurationMinutes ? `${load.plannedDurationMinutes} min` : "Duration to confirm"} · Intensity {load.plannedIntensity}/5</p><p className="mt-3 text-sm">{userFacingPlanText(load.notes)}</p><p className="mt-3 text-sm text-green-800"><strong>Recovery:</strong> {userFacingLoadRule(load.recoveryRule, true)}</p><p className="label mt-4">Track after</p><ul className="list-inside list-disc text-sm">{load.trackingQuestions.map((question) => <li key={question}>{question}</li>)}</ul></article>)}</div><ExternalLoadActions loads={externalLoads} /></section>}
-      {plannedKpis.length > 0 && <section className="card mt-6"><div><p className="label">Reference details</p><h2 className="text-2xl font-black">KPI Checkpoint Plan</h2></div><p className="mt-3 font-semibold text-amber-900">{day?.recoveryRule}</p><div className="mt-4 grid gap-3 sm:grid-cols-2">{plannedKpis.map((kpi) => <div className="rounded-2xl bg-ice p-4" key={kpi!.id}><p className="label">{kpi!.category}</p><p className="font-black">{kpi!.name}</p></div>)}</div></section>}
-      {!isSportLoadDay && blocks.length > 0 && <section className="card mt-6"><p className="label">Reference details</p><h2 className="text-2xl font-black">Workout Blocks</h2><div className="mt-4 grid gap-3 md:grid-cols-2">{blocks.map((block) => <div className="rounded-2xl bg-ice p-4" key={block!.id}><p className="label">{block!.id} · {block!.category}</p><h3 className="font-black">{block!.name}</h3><p className="mt-2 text-sm">{userFacingPlanText(block!.description)}</p></div>)}</div></section>}
-      {!isSportLoadDay && drills.length > 0 && <section className="card mt-6"><p className="label">Reference details</p><h2 className="text-2xl font-black">Drill Sequence</h2><div className="mt-4 space-y-3">{drills.map((drill, index) => <article className="rounded-2xl border border-rink p-4" key={drill.id}><div className="flex items-start justify-between gap-3"><div><p className="label">Step {index + 1} · {drill.category}</p><h3 className="text-lg font-black">{drill.name}</h3></div>{isUsableExternalUrl(drill.videoUrl) && <a className="text-sm font-bold text-blue" href={drill.videoUrl!} target="_blank" rel="noreferrer">Video ↗</a>}</div><p className="mt-2 text-sm">{drill.purpose}</p></article>)}</div></section>}
-      {!isSportLoadDay && <section className="mt-6 grid gap-4 md:grid-cols-2"><article className="card"><h2 className="text-xl font-black">Equipment</h2>{equipment.length ? <ul className="mt-3 list-inside list-disc space-y-1">{equipment.map((item) => <li key={item}>{item}</li>)}</ul> : <p className="mt-3 text-slate-500">Use equipment required by the sport provider.</p>}</article><article className="card"><h2 className="text-xl font-black">Recovery</h2><p className="mt-3">{userFacingPlanText(day?.recovery || externalLoads[0]?.recoveryRule || "Recovery as needed")}</p>{workout && <p className="mt-3 text-sm text-slate-500">{workout.recoveryNotes}</p>}</article></section>}
+      {plannedKpis.length > 0 && <details className="card mt-6"><summary className="cursor-pointer text-xl font-black">Reference: KPI checkpoint plan</summary><p className="mt-3 font-semibold text-amber-900">{day?.recoveryRule}</p><div className="mt-4 grid gap-3 sm:grid-cols-2">{plannedKpis.map((kpi) => <div className="rounded-2xl bg-ice p-4" key={kpi!.id}><p className="label">{kpi!.category}</p><p className="font-black">{kpi!.name}</p></div>)}</div></details>}
+      {!isSportLoadDay && blocks.length > 0 && <details className="card mt-6"><summary className="cursor-pointer text-xl font-black">Reference: Workout blocks</summary><p className="mt-3 text-sm font-semibold text-slate-600">Block definitions from the source plan. These explain the codes used in the execution sequence.</p><div className="mt-4 grid gap-3 md:grid-cols-2">{blocks.map((block) => <div className="rounded-2xl bg-ice p-4" key={block!.id}><p className="label">{block!.id} · {block!.category}</p><h3 className="font-black">{plainBlockName(block!.id, block!.name)}</h3><p className="mt-2 text-sm">{plainBlockDescription(block!.id, userFacingPlanText(block!.description))}</p></div>)}</div></details>}
+      {!isSportLoadDay && drills.length > 0 && <details className="card mt-6"><summary className="cursor-pointer text-xl font-black">Reference: Drill-level instructions</summary><p className="mt-3 text-sm font-semibold text-slate-600">Detailed drill cards for setup, cues, and approved videos when available.</p><div className="mt-4 space-y-3">{drills.map((drill, index) => <article className="rounded-2xl border border-rink p-4" key={drill.id}><div className="flex items-start justify-between gap-3"><div><p className="label">Drill {index + 1} · {drill.category}</p><h3 className="text-lg font-black">{drill.name}</h3></div>{isUsableExternalUrl(drill.videoUrl) && <a aria-label={`Video for ${drill.name}`} className="text-sm font-bold text-blue" href={drill.videoUrl!} target="_blank" rel="noreferrer">▶ Video</a>}</div><p className="mt-2 text-sm">{drill.purpose}</p></article>)}</div></details>}
+      {!isSportLoadDay && <section className="mt-6 grid gap-4 md:grid-cols-2"><article className="card"><h2 className="text-xl font-black">Equipment summary</h2>{equipment.length ? <ul className="mt-3 list-inside list-disc space-y-1">{equipment.map((item) => <li key={item}>{item}</li>)}</ul> : <p className="mt-3 text-slate-500">Use equipment required by the sport provider.</p>}</article><article className="card"><h2 className="text-xl font-black">Recovery rule</h2><p className="mt-3">{recoveryRuleText(day?.recovery || externalLoads[0]?.recoveryRule || "Recovery as needed")}</p>{blocks.some((block) => block!.id === "MOB-15") && <p className="mt-3 text-sm font-semibold text-slate-600">MOB-15 means 15 minutes of easy mobility support. It should help him feel better, not add fatigue.</p>}</article></section>}
       {!isSportLoadDay && videos.length > 0 && <section className="card mt-6"><h2 className="text-xl font-black">Related Videos</h2><div className="mt-3 flex flex-wrap gap-3">{videos.map((video) => <a className="btn-secondary" href={video.url} target="_blank" rel="noreferrer" key={video.id}>{video.title} ↗</a>)}</div></section>}
       {isSportLoadDay && (
         <details className="card mt-6">
@@ -175,4 +177,52 @@ function uniqueExternalLoadChips<T extends { type: string }>(loads: T[]) {
     seen.add(load.type);
     return true;
   });
+}
+
+function smartEquipmentSummary(items: string[]) {
+  let maxCones = 0;
+  const output: string[] = [];
+  for (const item of items) {
+    const coneMatch = item.match(/^(\d+)\s+cones?$/i);
+    if (coneMatch) {
+      maxCones = Math.max(maxCones, Number(coneMatch[1]));
+      continue;
+    }
+    if (/^puck or ball$/i.test(item)) {
+      addUnique(output, "Puck or ball: for stickhandling");
+      continue;
+    }
+    if (/^50 pucks$/i.test(item)) {
+      addUnique(output, "50 pucks or shooting supply: for shot block, if available");
+      continue;
+    }
+    addUnique(output, item);
+  }
+  if (maxCones > 0) output.unshift(`Cones: up to ${maxCones}`);
+  return output;
+}
+
+function addUnique(items: string[], item: string) {
+  if (!items.includes(item)) items.push(item);
+}
+
+function plainBlockName(id: string, name: string) {
+  const labels: Record<string, string> = {
+    "MOB-15": "Mobility support - 15 minutes",
+    "WUP-10": "Warmup - 10 minutes",
+    "SS-A": "Strength and speed support",
+    "SHOT-50": "Controlled accuracy shooting",
+    "CD-8": "Cooldown - 8 minutes",
+    TEST: "KPI test block",
+  };
+  return labels[id] || name;
+}
+
+function plainBlockDescription(id: string, description: string) {
+  if (id === "MOB-15") return "Easy mobility support around a high-load day. Keep it comfortable and recovery-focused.";
+  return description;
+}
+
+function recoveryRuleText(value: string) {
+  return userFacingPlanText(value || "Recovery as needed");
 }

@@ -1,44 +1,63 @@
-# Safe Lane Fix 4 Report
+# Safe Lane Fix 5 Report
 
 ## Branch Name
 
-- `fix/day-page-consolidation`
+- `fix/day-page-reference-cleanup`
 
 ## Files Changed
 
 - `app/day/[date]/page.tsx`
-- `components/DayEvidenceStatus.tsx`
+- `components/DayExecutionSequence.tsx`
 - `docs/AGENT_REPORT.md`
 
 ## What Changed
 
-- Made `DayEvidenceStatus` the primary non-Sport Load day truth summary.
-- Expanded the summary to separate KPI evidence, Sport Load evidence, Training Work evidence, Reflection evidence, and unresolved work.
-- Moved the day evidence summary above the execution sequence on non-Sport Load days.
-- Reframed lower sections as `Plan details` or `Reference details` instead of repeating evidence/status messages.
-- Removed the repeated KPI evidence status block from the lower KPI plan section.
+- Kept the top Day Status / evidence summary as the primary truth.
+- Enhanced Planned Execution Sequence so KPI steps show the intended KPI test names and a `Review KPI Results` action.
+- Collapsed repeated lower sections into native `details` reference sections.
+- Reworked equipment into a parent-friendly consolidated summary.
+- Reframed bottom recovery copy as `Recovery rule` with plain-language MOB-15 context.
+- Switched drill reference cards to v8.4 session drill cards when available, so video links come from the approved v8.4 video map path.
 
-## How June 16 Now Explains KPI Evidence vs Training Work Not Logged
+## How Duplication Was Reduced
 
-- The top evidence area can show `Day status: Partial`.
-- It states `KPI evidence recorded: 7 of 8 planned KPI results`.
-- It states `Remaining/unresolved: Puck-Control Weave or another planned KPI remains unresolved`.
-- It states `Training Work evidence: Not logged`.
-- It gives separate actions: `Review KPI Results` and `Log Training Work`.
-- It includes the caveat: only log Training Work if the supporting training work was actually completed.
+- Planned Execution Sequence remains the main `what to do` section.
+- KPI evidence remains only in the top Day Status summary.
+- KPI plan details, workout blocks, and drill-level instructions are now collapsible references.
+- Workout Blocks are source-plan block definitions; Drill-level instructions are detailed setup/cue/video references.
 
-## How June 15 / June 17 Sport Load Pages Are Preserved
+## How KPI Checkpoint Details Are Handled
 
-- Sport Load pages still use the Sport Load evidence mode.
-- Existing `Sport Load logged`, `Update Sport Load`, and `Add Recovery Notes` behavior is unchanged.
-- Sport Load evidence still does not imply Training Work completion.
+- The KPI execution step lists:
+  - 10-Yard Sprint
+  - 5-10-5 Pro Agility
+  - Broad Jump
+  - Head-Up Callout %
+  - Puck-Control Weave
+  - 50-Shot Target Hits
+  - 30-Second Quick Hands Touch Count
+  - Plank Quality
+- A `Review KPI Results` link appears on the KPI execution step.
+- The lower KPI section is now `Reference: KPI checkpoint plan`, not another evidence/status block.
 
-## What Duplication Was Reduced
+## How Equipment Was Consolidated
 
-- KPI evidence status now appears in the primary Day evidence summary instead of being repeated inside the KPI plan section.
-- The KPI section is now `KPI Checkpoint Plan` under `Reference details`.
-- Workout blocks and drill sequence are now labeled `Reference details`.
-- Planned training work is now labeled `Plan details`.
+- Repeated cone entries are combined as `Cones: up to 6`.
+- `Puck or ball` is labeled for stickhandling.
+- `50 pucks` is reframed as `50 pucks or shooting supply: for shot block, if available`.
+- Other unique practical items remain deduped.
+
+## How Recovery / MOB-15 Is Explained
+
+- The bottom box is now `Recovery rule`.
+- MOB-15 is explained as 15 minutes of easy mobility support.
+- Copy states that MOB-15 should help him feel better, not add fatigue.
+
+## How Video Icons / Links Are Handled
+
+- Drill reference cards show a small `Video` link only when `drill.videoUrl` is a usable approved URL.
+- For v8.4-backed days, drill cards use `getV84SessionDrills`, which sources video URLs from the existing v8.4 video map.
+- No video URLs were searched for or invented.
 
 ## What Did Not Change
 
@@ -61,16 +80,16 @@
 
 ## Risks / Remaining Gaps
 
-- Evidence status still loads client-side after the server-rendered Day page.
-- Training Work evidence includes local Training Work logs and completed session evidence, but Training Work cloud sync remains a separate future concern.
-- Explicit KPI deferment storage remains deferred; missing Puck-Control Weave is described as unresolved, not silently deferred.
+- Reference sections are cleaner but still dense because the source plan contains substantial detail.
+- Equipment summary is heuristic for current equipment strings; future data shapes may need parser updates.
+- Some KPI protocol videos remain pending in source data, so no video link is shown for those.
 - No browser/iPad visual verification was run in this pass.
 
 ## git status --short
 
 ```text
  M app/day/[date]/page.tsx
- M components/DayEvidenceStatus.tsx
+ M components/DayExecutionSequence.tsx
  M docs/AGENT_REPORT.md
 ```
 
@@ -85,10 +104,10 @@
 
 ## Scope Capture Check
 
-- Defects added/updated: Day page partial/logged confusion reduced for KPI evidence plus unlogged Training Work.
-- Epics/features added/updated: Daily Plan / One Day Truth improved on canonical Day page.
-- Product decisions added/updated: Day page summary is the primary day truth; lower sections are plan/reference details.
-- Data/sync/environment decisions added/updated: Existing read paths only; no writes or environment changes.
+- Defects added/updated: Day page reference duplication reduced after logged/partial day fixes.
+- Epics/features added/updated: Daily Plan / One Day Truth and Source Video / Instruction Coverage improved on Day page.
+- Product decisions added/updated: Planned Execution Sequence is the primary instruction path; lower details are reference-only.
+- Data/sync/environment decisions added/updated: Existing read paths and approved video-map data only; no writes or environment changes.
 - Testing requirements added/updated: Standard app checks completed; browser/iPad verification still deferred.
 - Docs updated: `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: explicit KPI deferment storage, browser/iPad visual verification, deeper evidence drill-down, export integration.
+- Items intentionally deferred: explicit KPI deferment storage, browser/iPad visual verification, deeper equipment taxonomy, export integration.

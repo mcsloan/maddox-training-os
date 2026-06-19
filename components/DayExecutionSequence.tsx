@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { V84DayExecutionPlanEntry } from "@/lib/imports/v8_4/types";
 
 function durationLabel(minutes: number | null) {
@@ -13,7 +14,7 @@ function entryTone(entry: V84DayExecutionPlanEntry) {
   return "border-green-200 bg-green-50";
 }
 
-export function DayExecutionSequence({ entries, compact = false }: { entries: V84DayExecutionPlanEntry[]; compact?: boolean }) {
+export function DayExecutionSequence({ entries, compact = false, plannedKpiNames = [] }: { entries: V84DayExecutionPlanEntry[]; compact?: boolean; plannedKpiNames?: string[] }) {
   if (!entries.length) return null;
 
   return (
@@ -39,6 +40,15 @@ export function DayExecutionSequence({ entries, compact = false }: { entries: V8
             </div>
             <p className="mt-2 text-sm text-slate-700">{entry.loadImpact}</p>
             {!compact && <p className="mt-2 text-sm text-slate-600">{entry.notes}</p>}
+            {!compact && entry.logType === "kpiLog" && plannedKpiNames.length > 0 && (
+              <div className="mt-3 rounded-xl bg-white/80 p-3">
+                <p className="text-sm font-black text-slate-800">Intended KPI tests</p>
+                <ul className="mt-2 grid gap-1 text-sm text-slate-700 sm:grid-cols-2">
+                  {plannedKpiNames.map((name) => <li key={name}>• {name}</li>)}
+                </ul>
+                <Link className="btn-secondary mt-3" href="/kpis">Review KPI Results</Link>
+              </div>
+            )}
           </article>
         ))}
       </div>
