@@ -1,19 +1,20 @@
-import dayExecutionPlanJson from "@/imports/v8.4/data/dayExecutionPlan.json";
-import drillCardsJson from "@/imports/v8.4/data/drillCards.json";
-import exerciseVideoMapJson from "@/imports/v8.4/data/exerciseVideoMap.json";
-import ganttModelJson from "@/imports/v8.4/data/ganttModel.json";
-import hockeyIqJson from "@/imports/v8.4/data/hockeyIq.json";
-import importQaReportJson from "@/imports/v8.4/data/importQaReport.json";
-import kpiProtocolsJson from "@/imports/v8.4/data/kpiProtocols.json";
-import kpisJson from "@/imports/v8.4/data/kpis.json";
-import logSchemasJson from "@/imports/v8.4/data/logSchemas.json";
-import needsReviewJson from "@/imports/v8.4/data/needsReview.json";
-import phaseLabelsJson from "@/imports/v8.4/data/phaseLabels.json";
-import phaseMapJson from "@/imports/v8.4/data/phaseMap.json";
-import sessionsJson from "@/imports/v8.4/data/sessions.json";
-import sportLoadsJson from "@/imports/v8.4/data/sportLoads.json";
-import sourceOfTruthLockJson from "@/imports/v8.4/data/sourceOfTruthLock.json";
-import manifestJson from "@/imports/v8.4/manifest.json";
+import dayExecutionPlanJson from "../../../imports/v8.4/data/dayExecutionPlan.json";
+import drillCardsJson from "../../../imports/v8.4/data/drillCards.json";
+import exerciseVideoMapJson from "../../../imports/v8.4/data/exerciseVideoMap.json";
+import ganttModelJson from "../../../imports/v8.4/data/ganttModel.json";
+import hockeyIqJson from "../../../imports/v8.4/data/hockeyIq.json";
+import importQaReportJson from "../../../imports/v8.4/data/importQaReport.json";
+import kpiProtocolsJson from "../../../imports/v8.4/data/kpiProtocols.json";
+import kpisJson from "../../../imports/v8.4/data/kpis.json";
+import logSchemasJson from "../../../imports/v8.4/data/logSchemas.json";
+import needsReviewJson from "../../../imports/v8.4/data/needsReview.json";
+import phaseLabelsJson from "../../../imports/v8.4/data/phaseLabels.json";
+import phaseMapJson from "../../../imports/v8.4/data/phaseMap.json";
+import sessionsJson from "../../../imports/v8.4/data/sessions.json";
+import sportLoadsJson from "../../../imports/v8.4/data/sportLoads.json";
+import sourceOfTruthLockJson from "../../../imports/v8.4/data/sourceOfTruthLock.json";
+import speedStackPrescriptionsJson from "../../../imports/v8.4/data/speedStackPrescriptions.json";
+import manifestJson from "../../../imports/v8.4/manifest.json";
 import {
   V84DayExecutionPlanEntry,
   V84DrillCard,
@@ -29,6 +30,7 @@ import {
   V84PhaseMapEntry,
   V84SessionEntry,
   V84SourceOfTruthLock,
+  V84SpeedStackPrescription,
   V84SportLoad,
   V84ValidationIssue,
 } from "./types";
@@ -40,6 +42,7 @@ export const sourceOfTruthLock = sourceOfTruthLockJson as V84SourceOfTruthLock;
 export const dayExecutionPlan = normalizeDayExecutionPlan(dayExecutionPlanJson as Array<Record<string, unknown>>);
 export const sessions = normalizeSessions(sessionsJson as Array<Record<string, unknown>>);
 export const drillCards = normalizeDrillCards(drillCardsJson as Array<Record<string, unknown>>);
+export const speedStackPrescriptions = normalizeSpeedStackPrescriptions(speedStackPrescriptionsJson as Array<Record<string, unknown>>);
 export const exerciseVideoMap = normalizeExerciseVideoMap(exerciseVideoMapJson as Array<Record<string, unknown>>);
 export const kpis = normalizeKpis(kpisJson as Array<Record<string, unknown>>);
 export const kpiProtocols = normalizeKpiProtocols(kpiProtocolsJson as Array<Record<string, unknown>>);
@@ -146,6 +149,28 @@ function normalizeDrillCards(records: Array<Record<string, unknown>>): V84DrillC
       lastReviewedVersion: toNullableString(record.lastReviewedVersion),
       urlType: String(record.urlType),
       matchConfidence: String(record.matchConfidence),
+    };
+  });
+}
+
+function normalizeSpeedStackPrescriptions(records: Array<Record<string, unknown>>): V84SpeedStackPrescription[] {
+  return records.map((record, index) => {
+    ensureRecord(`speedStackPrescriptions[${index}]`, record, ["phase", "session", "code", "exercise", "sourceWeek", "tempo", "setsXReps", "rest", "group", "coachingNotes", "sourceDocument", "sourcePage", "sourceSection", "extractionStatus"]);
+    return {
+      phase: String(record.phase),
+      session: String(record.session),
+      code: String(record.code),
+      exercise: String(record.exercise),
+      sourceWeek: Number(record.sourceWeek),
+      tempo: String(record.tempo),
+      setsXReps: String(record.setsXReps),
+      rest: String(record.rest),
+      group: String(record.group),
+      coachingNotes: String(record.coachingNotes),
+      sourceDocument: String(record.sourceDocument),
+      sourcePage: String(record.sourcePage),
+      sourceSection: String(record.sourceSection),
+      extractionStatus: String(record.extractionStatus),
     };
   });
 }
@@ -262,6 +287,10 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
 
   if (drillCards.length !== 154) {
     issues.push({ file: "data/drillCards.json", message: "Drill cards should contain 154 records." });
+  }
+
+  if (speedStackPrescriptions.length !== 616) {
+    issues.push({ file: "data/speedStackPrescriptions.json", message: "Speed Stack prescriptions should contain 616 records." });
   }
 
   if (kpis.length !== 7) {

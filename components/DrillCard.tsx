@@ -26,9 +26,9 @@ export function DrillCard({ drill, completion, onChange, videoState }: { drill: 
       </div>
 
       <div className="mb-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice p-4 sm:grid-cols-3">
-        <div><p className="label">Plan</p><p className="font-bold">{drill.plannedSets ? `${drill.plannedSets} sets` : "Quality reps"}{drill.plannedReps ? ` × ${drill.plannedReps}` : ""}</p></div>
-        <div><p className="label">Time</p><p className="font-bold">{drill.plannedDuration ? `${drill.plannedDuration} sec` : "Untimed"}</p></div>
-        <div><p className="label">Equipment</p><p className="font-bold">{drill.equipment.join(", ")}</p></div>
+        <div><p className="label">Plan</p><p className="font-bold">{drill.plannedPrescription || planLabel(drill)}</p></div>
+        <div><p className="label">Rest / tempo</p><p className="font-bold">{restTempoLabel(drill)}</p></div>
+        <div><p className="label">Equipment</p><p className="font-bold">{drill.equipment.length ? drill.equipment.join(", ") : "No equipment listed"}</p></div>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -39,6 +39,13 @@ export function DrillCard({ drill, completion, onChange, videoState }: { drill: 
           <ul className="space-y-2">
             {drill.setupChecklist.map((item) => <li key={item} className="flex gap-2"><span className="font-black text-blue">□</span><span>{item}</span></li>)}
           </ul>
+          {(drill.plannedGroup || drill.sourceCode || drill.sourcePage) && (
+            <div className="mt-3 flex flex-wrap gap-2 text-sm font-bold text-slate-700">
+              {drill.plannedGroup && <span className="rounded-full bg-white px-3 py-1">{drill.plannedGroup}</span>}
+              {drill.sourceCode && <span className="rounded-full bg-white px-3 py-1">Code {drill.sourceCode}</span>}
+              {drill.sourcePage && <span className="rounded-full bg-white px-3 py-1">{drill.sourcePage}</span>}
+            </div>
+          )}
           <p className="mt-3 text-sm text-slate-500">{drill.setup}</p>
           <p className="label mt-5">Do it</p>
           <ol className="list-inside list-decimal space-y-2">
@@ -78,6 +85,21 @@ export function DrillCard({ drill, completion, onChange, videoState }: { drill: 
       </div>
     </article>
   );
+}
+
+function planLabel(drill: Drill) {
+  const parts = [];
+  if (drill.plannedSets) parts.push(`${drill.plannedSets} sets`);
+  if (drill.plannedReps) parts.push(`${drill.plannedReps} reps`);
+  if (drill.plannedDuration) parts.push(`${drill.plannedDuration} sec`);
+  return parts.join(" × ") || "Plan detail not listed";
+}
+
+function restTempoLabel(drill: Drill) {
+  const parts = [];
+  if (drill.plannedRest) parts.push(`Rest ${drill.plannedRest}`);
+  if (drill.plannedTempo) parts.push(`Tempo ${drill.plannedTempo}`);
+  return parts.join(" · ") || "Not listed";
 }
 
 function DrillVideoLinks({ drill, videoState }: { drill: Drill; videoState?: DrillVideoState | null }) {

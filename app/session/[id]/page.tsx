@@ -414,7 +414,7 @@ export default function SessionPage() {
         <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm font-bold text-slate-200"><span>{drill ? `Drill ${step} of ${drills.length}` : kpi ? `KPI test ${kpiIndex + 1} of ${workoutKpis.length}` : isReflection ? "Final reflection" : "Readiness check"}</span><span>About {Math.max(0, Math.ceil(workout.totalEstimatedMinutes * (totalSteps - step - 1) / totalSteps))} min remaining</span><span>{saveFeedback}</span></div>
       </div>
       {step === 0 && <ReadinessCheck value={session.readiness} onChange={(readiness) => update({ ...session!, readiness })} />}
-      {drill && <DrillCard drill={drill} completion={session.exercises[drill.id]} videoState={v84Session ? getV84VideoForDrillId(drill.id) : null} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
+      {drill && <DrillCard drill={drill} completion={session.exercises[drill.id] || emptyExerciseCompletion(drill.id)} videoState={v84Session ? getV84VideoForDrillId(drill.id) : null} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
       {kpi && <SessionKPIForm kpi={kpi} result={session.kpiResults[kpi.id]} onChange={(result) => update({ ...session!, kpiResults: { ...session!.kpiResults, [kpi.id]: result } })} />}
       {isReflection && <ReflectionForm value={session.reflection} onChange={(reflection) => update({ ...session!, reflection })} />}
       <div className="sticky bottom-16 mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice/95 py-3 backdrop-blur sm:bottom-0">
@@ -423,4 +423,8 @@ export default function SessionPage() {
       </div>
     </div>
   );
+}
+
+function emptyExerciseCompletion(drillId: string) {
+  return { drillId, done: false, actualSets: null, actualReps: null, actualDuration: null, actualDistance: null, notes: "", difficulty: null };
 }

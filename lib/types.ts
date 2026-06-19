@@ -11,6 +11,12 @@ export interface Drill {
   plannedSets: number | null;
   plannedReps: number | null;
   plannedDuration: number | null;
+  plannedPrescription?: string;
+  plannedRest?: string;
+  plannedTempo?: string;
+  plannedGroup?: string;
+  sourceCode?: string;
+  sourcePage?: string;
   equipment: string[];
   coachingCues: string[];
   commonMistakes: string[];

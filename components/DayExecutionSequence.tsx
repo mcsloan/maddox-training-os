@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { V84DayExecutionPlanEntry } from "@/lib/imports/v8_4/types";
-import type { VideoReference, WorkoutBlock } from "@/lib/types";
+import type { DayExecutionStepPresentation } from "@/lib/projections/dayPresentation";
 
 function durationLabel(minutes: number | null) {
   return minutes ? `${minutes} min` : "Duration to confirm";
@@ -16,25 +16,18 @@ function entryTone(entry: V84DayExecutionPlanEntry) {
 }
 
 export function DayExecutionSequence({
-  dayMicroSkill,
   entries,
   compact = false,
   plannedKpiNames = [],
-  recoveryRule,
-  shootingDetail,
-  videos = [],
-  workoutBlocks = [],
+  stepPresentation = {},
 }: {
-  dayMicroSkill?: string;
   entries: V84DayExecutionPlanEntry[];
   compact?: boolean;
   plannedKpiNames?: string[];
-  recoveryRule?: string;
-  shootingDetail?: string;
-  videos?: VideoReference[];
-  workoutBlocks?: WorkoutBlock[];
+  stepPresentation?: Record<number, DayExecutionStepPresentation>;
 }) {
-  if (!entries.length) return null;
+  const visibleEntries = entries.filter((entry) => !stepPresentation[entry.sequence]?.hidden);
+  if (!visibleEntries.length) return null;
 
   return (
     <section className={compact ? "card mt-6" : "card mt-6"}>
@@ -43,34 +36,33 @@ export function DayExecutionSequence({
           <p className="label">Daily execution</p>
           <h2 className={compact ? "text-xl font-black" : "text-2xl font-black"}>Planned Execution Sequence</h2>
         </div>
-        <p className="rounded-full bg-ice px-3 py-1 text-sm font-black text-blue">{entries.length} steps</p>
+        <p className="rounded-full bg-ice px-3 py-1 text-sm font-black text-blue">{visibleEntries.length} steps</p>
       </div>
       <div className="mt-4 space-y-3">
-        {entries.map((entry) => {
-          const stepBlocks = matchingBlocks(entry, workoutBlocks);
-          const stepVideos = matchingVideos(entry, videos);
-          const details = stepDetails(entry, { dayMicroSkill, recoveryRule, shootingDetail });
+        {visibleEntries.map((entry, index) => {
+          const presentation = stepPresentation[entry.sequence];
+          const displaySequence = presentation?.displaySequence ?? index + 1;
           return (
             <article className={`rounded-2xl border p-4 ${entryTone(entry)}`} key={`${entry.date}-${entry.sequence}-${entry.entryTitle}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="label">
-                    Step {entry.sequence} · {entry.entryType} · {entry.requiredOptional}
+                    Step {displaySequence} · {presentation?.subtitle || entry.entryType}
                   </p>
-                  <h3 className="font-black">{plainEntryTitle(entry.entryTitle)}</h3>
+                  <h3 className="font-black">{presentation?.title || entry.entryTitle}</h3>
                 </div>
                 <span className="text-sm font-bold text-slate-600">{durationLabel(entry.plannedDurationMin)}</span>
               </div>
-              <p className="mt-2 text-sm text-slate-700">{entry.loadImpact}</p>
-              {!compact && <p className="mt-2 text-sm text-slate-600">{entry.notes}</p>}
-              {!compact && stepBlocks.length > 0 && (
+              <p className="mt-2 text-sm text-slate-700">{presentation?.loadImpact || entry.loadImpact}</p>
+              {!compact && <p className="mt-2 text-sm text-slate-600">{presentation?.note ?? entry.notes}</p>}
+              {!compact && presentation && presentation.blockLabels.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {stepBlocks.map((block) => <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-black text-slate-700" key={block.id}>{block.id}: {plainBlockName(block)}</span>)}
+                  {presentation.blockLabels.map((label) => <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-black text-slate-700" key={label}>{label}</span>)}
                 </div>
               )}
-              {!compact && details.length > 0 && (
+              {!compact && presentation && presentation.guidance.length > 0 && (
                 <ul className="mt-3 grid gap-1 text-sm font-semibold text-slate-700">
-                  {details.map((detail) => <li key={detail}>• {detail}</li>)}
+                  {presentation.guidance.map((detail) => <li key={detail}>• {detail}</li>)}
                 </ul>
               )}
               {!compact && entry.logType === "kpiLog" && plannedKpiNames.length > 0 && (
@@ -82,9 +74,9 @@ export function DayExecutionSequence({
                   <Link className="btn-secondary mt-3" href="/kpis">Review KPI Results</Link>
                 </div>
               )}
-              {!compact && stepVideos.length > 0 && (
+              {!compact && presentation && presentation.videos.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {stepVideos.map((video) => <a className="text-sm font-bold text-blue" href={video.url} target="_blank" rel="noreferrer" key={video.id}>▶ {video.title}</a>)}
+                  {presentation.videos.map((video) => <a className="text-sm font-bold text-blue" href={video.url} target="_blank" rel="noreferrer" key={video.id}>▶ {video.title}</a>)}
                 </div>
               )}
             </article>
@@ -93,76 +85,4 @@ export function DayExecutionSequence({
       </div>
     </section>
   );
-}
-
-function plainEntryTitle(title: string) {
-  const labels: Record<string, string> = {
-    "WU-10": "WU-10 - Warmup / mobility preparation",
-    "WUP-10": "WUP-10 - Warmup / mobility preparation",
-    "MOB-15": "MOB-15 - Mobility / cooldown support",
-    "CD-8": "CD-8 - Cooldown and reflection",
-    "SHOT-50": "SHOT-50 - 50-shot controlled accuracy block",
-    "SHOT-100": "SHOT-100 - Controlled accuracy / mechanics shooting",
-    "SS-A": "SS-A - Strength and speed support",
-  };
-  const matchingCode = Object.keys(labels).find((code) => title === code || title.startsWith(`${code} `) || title.startsWith(`${code}-`) || title.includes(`${code} `));
-  return matchingCode ? title.replace(matchingCode, labels[matchingCode]) : title;
-}
-
-function matchingBlocks(entry: V84DayExecutionPlanEntry, blocks: WorkoutBlock[]) {
-  return blocks.filter((block) => {
-    if (entry.sourceBlock === block.id || entry.entryTitle.includes(block.id)) return true;
-    if (entry.logType === "kpiLog") return block.id === "TEST";
-    if (entry.entryType.toLowerCase().includes("warmup")) return block.id === "WUP-10" || block.id === "WU-10";
-    if (entry.entryType.toLowerCase().includes("conditioning")) return block.id === "SS-A";
-    if (entry.entryType.toLowerCase().includes("shooting")) return block.id === "SHOT-50" || block.id === "SHOT-100";
-    if (entry.entryType.toLowerCase().includes("recovery")) return block.id === "CD-8" || block.id === "MOB-15";
-    return false;
-  });
-}
-
-function matchingVideos(entry: V84DayExecutionPlanEntry, videos: VideoReference[]) {
-  if (!videos.length) return [];
-  const normalized = `${entry.entryTitle} ${entry.entryType} ${entry.sourceBlock}`.toLowerCase();
-  return videos.filter((video) => {
-    const videoText = `${video.title} ${video.category} ${video.bestUse || ""}`.toLowerCase();
-    if (normalized.includes("shot") || normalized.includes("shooting")) return videoText.includes("shoot");
-    if (normalized.includes("kpi") || normalized.includes("baseline")) return videoText.includes("kpi") || videoText.includes("sprint") || videoText.includes("agility") || videoText.includes("puck");
-    if (normalized.includes("warmup") || normalized.includes("wu-")) return videoText.includes("warm") || videoText.includes("mobility");
-    return false;
-  });
-}
-
-function plainBlockName(block: WorkoutBlock) {
-  const labels: Record<string, string> = {
-    "WUP-10": "10-minute warmup",
-    "WU-10": "10-minute warmup",
-    TEST: "KPI testing block",
-    "SS-A": "strength and speed support",
-    "SHOT-50": "controlled accuracy shooting",
-    "SHOT-100": "controlled accuracy shooting",
-    "MOB-15": "15-minute mobility support",
-    "CD-8": "8-minute cooldown",
-  };
-  return labels[block.id] || block.name;
-}
-
-function stepDetails(entry: V84DayExecutionPlanEntry, context: { dayMicroSkill?: string; recoveryRule?: string; shootingDetail?: string }) {
-  const details: string[] = [];
-  const entryType = entry.entryType.toLowerCase();
-  const title = entry.entryTitle.toLowerCase();
-  if (entry.logType === "kpiLog") {
-    if (context.recoveryRule) details.push(context.recoveryRule);
-    details.push("Full recovery between attempts; finish fresh. Do not chase ugly personal records.");
-  }
-  if (entryType.includes("shooting") || title.includes("shot")) {
-    if (context.shootingDetail) details.push(context.shootingDetail);
-    details.push("Shot work is accuracy and mechanics first: pick targets, reset between shots, and stop if technique breaks.");
-  }
-  if (entryType.includes("recovery") || title.includes("mob")) {
-    details.push("MOB-15 means mobility, cooldown, hydration, breathing, and recovery support.");
-    details.push("This should help him feel better, not add fatigue.");
-  }
-  if (entryType.includes("skill") && context.dayMicroSkill) details.push(`Daily skill focus: ${context.dayMicroSkill}.`);
-  return Array.from(new Set(details));
 }

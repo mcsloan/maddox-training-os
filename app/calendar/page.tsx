@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ExternalLoadChip, PhaseChip, PlanTagChip } from "@/components/LoadChips";
+import { LoadChip } from "@/components/LoadChips";
 import { getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
 import { formatPlanDate, getCalendarDates, getDayTags, getPlanDay, getPlanDayDisplayModel, getWeekLoadLabel, trainingPlan, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
@@ -10,6 +10,7 @@ import { ExternalLoadLog } from "@/lib/types";
 import { buildDayEvidenceProjection } from "@/lib/projections/dayEvidence";
 import { buildCalendarDayProjection } from "@/lib/projections/screenProjections";
 import { loadStandaloneKpiResults, SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
+import { buildDayPresentation } from "@/lib/projections/dayPresentation";
 
 export default function CalendarPage() {
   const [logs, setLogs] = useState<ExternalLoadLog[]>([]);
@@ -38,16 +39,25 @@ export default function CalendarPage() {
                   const tags = getDayTags(date);
                   const display = getPlanDayDisplayModel(date);
                   const intensity = Math.max(day?.intensity || 0, ...loads.map((load) => load.plannedIntensity));
-                  const calendarProjection = buildCalendarDayProjection(buildDayEvidenceProjection({
+                  const evidenceProjection = buildDayEvidenceProjection({
                     date,
                     weekNumber: week.weekNumber,
                     sportLoadLogs: logs,
                     kpiResults,
                     projection: "preview",
-                  }));
+                  });
+                  const calendarProjection = buildCalendarDayProjection(evidenceProjection);
+                  const presentation = buildDayPresentation({
+                    date,
+                    day,
+                    display,
+                    tags,
+                    sportLoads: loads,
+                    evidence: evidenceProjection,
+                  });
                   return <article className="card border-2 border-transparent transition hover:border-blue" key={date}>
                     <Link href={`/day/${date}`} className="block"><div className="flex items-start justify-between gap-3"><div><p className="label">{formatPlanDate(date, { weekday: "long", month: "short", day: "numeric" })} · Week {week.weekNumber}</p><h3 className="text-xl font-black">{day?.primarySession || loads[0]?.title || "Recovery / planning day"}</h3></div><div className="flex flex-wrap justify-end gap-2">{day && <span className="rounded-full bg-ice px-3 py-1 text-xs font-black text-blue">{userFacingPlanText(day.dayRole)}</span>}<span className="rounded-full bg-lime/20 px-3 py-1 text-xs font-black text-navy">{calendarProjection.summaryLabel}</span></div></div>
-                    <div className="mt-3 flex flex-wrap gap-2"><PhaseChip phase={display.methodologyPhase} />{loads.map((load) => <ExternalLoadChip key={load.id} type={load.type} />)}{tags.map((tag) => <PlanTagChip key={tag} tag={tag} />)}</div>
+                    <div className="mt-3 flex flex-wrap gap-2">{presentation.chips.map((chip) => <LoadChip key={chip.key} kind={chip.kind} label={chip.label} />)}</div>
                     <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
                       <p><strong>Method phase:</strong> {display.methodologyPhase}</p><p><strong>Load:</strong> {intensity}/5</p>
                       <p><strong>Off-ice:</strong> {day?.primarySession || "None planned"}</p><p><strong>Sport Load:</strong> {calendarProjection.hasLoggedSportLoad ? "Logged" : loads.length ? `${loads.length} planned` : "None planned"}</p>

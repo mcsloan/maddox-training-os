@@ -80,6 +80,23 @@ export interface V84DrillCard {
   matchConfidence: string;
 }
 
+export interface V84SpeedStackPrescription {
+  phase: string;
+  session: string;
+  code: string;
+  exercise: string;
+  sourceWeek: number;
+  tempo: string;
+  setsXReps: string;
+  rest: string;
+  group: string;
+  coachingNotes: string;
+  sourceDocument: string;
+  sourcePage: string;
+  sourceSection: string;
+  extractionStatus: string;
+}
+
 export interface V84ExerciseVideoMap {
   canonicalExerciseId: string;
   exerciseName: string;

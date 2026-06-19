@@ -16,10 +16,11 @@ interface DayEvidenceStatusProps {
   plannedKpiCount: number;
   logTodayHref: string;
   mode: "sport-load" | "kpi" | "summary";
+  showTrainingWorkCta?: boolean;
   trainingWorkLogHref?: string;
 }
 
-export function DayEvidenceStatus({ date, logTodayHref, mode, plannedKpiCount, sportLoads, trainingWorkLogHref }: DayEvidenceStatusProps) {
+export function DayEvidenceStatus({ date, logTodayHref, mode, plannedKpiCount, showTrainingWorkCta = true, sportLoads, trainingWorkLogHref }: DayEvidenceStatusProps) {
   const [projection, setProjection] = useState<DayProjection | null>(null);
   const [trainingWorkLog, setTrainingWorkLog] = useState<TrainingWorkLog | null>(null);
   const [loading, setLoading] = useState(true);
@@ -115,7 +116,7 @@ export function DayEvidenceStatus({ date, logTodayHref, mode, plannedKpiCount, s
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
         {plannedKpiCount > 0 && kpiCount > 0 && <Link className="btn-secondary" href="/kpis">Review KPI Results</Link>}
-        <Link className="btn-secondary" href={trainingWorkLogHref || logTodayHref}>Log Training Work</Link>
+        {showTrainingWorkCta && <Link className="btn-secondary" href={trainingWorkLogHref || logTodayHref}>Log Training Work</Link>}
       </div>
       <p className="mt-2 text-xs font-semibold text-slate-600">Only log Training Work if the supporting training work was actually completed. KPI evidence and Training Work evidence are tracked separately.</p>
     </section>
