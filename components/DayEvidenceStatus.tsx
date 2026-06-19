@@ -6,8 +6,9 @@ import { buildDayEvidenceProjection } from "@/lib/projections/dayEvidence";
 import { loadStandaloneKpiResults, type SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
 import { loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
 import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
+import { getTrainingWorkLogByDate } from "@/lib/storage/trainingWorkRepository";
 import { type DayProjection } from "@/lib/projections/dayProjection";
-import { type ExternalLoadLog, type PlannedExternalLoad, type SessionLog } from "@/lib/types";
+import { type ExternalLoadLog, type PlannedExternalLoad, type SessionLog, type TrainingWorkLog } from "@/lib/types";
 
 interface DayEvidenceStatusProps {
   date: string;
@@ -15,14 +16,17 @@ interface DayEvidenceStatusProps {
   plannedKpiCount: number;
   logTodayHref: string;
   mode: "sport-load" | "kpi" | "summary";
+  trainingWorkLogHref?: string;
 }
 
-export function DayEvidenceStatus({ date, logTodayHref, mode, plannedKpiCount, sportLoads }: DayEvidenceStatusProps) {
+export function DayEvidenceStatus({ date, logTodayHref, mode, plannedKpiCount, sportLoads, trainingWorkLogHref }: DayEvidenceStatusProps) {
   const [projection, setProjection] = useState<DayProjection | null>(null);
+  const [trainingWorkLog, setTrainingWorkLog] = useState<TrainingWorkLog | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    setTrainingWorkLog(getTrainingWorkLogByDate(date));
     Promise.all([loadExternalLoadLogs(), loadStandaloneKpiResults(), loadTrainingHistory()])
       .then(([sportLoadResult, kpiResult, historyResult]) => {
         if (!active) return;
@@ -53,7 +57,7 @@ export function DayEvidenceStatus({ date, logTodayHref, mode, plannedKpiCount, s
 
   const sportLoadCount = projection.records.sportLoadLogs.length;
   const kpiCount = projection.records.kpiResults.length;
-  const trainingWorkCount = projection.records.sessionAttempts.length + projection.records.drillLogs.length;
+  const trainingWorkCount = projection.records.sessionAttempts.length + projection.records.drillLogs.length + (trainingWorkLog ? 1 : 0);
   const reflectionCount = projection.records.reflections.length;
   const hasAnyEvidence = projection.status.hasAnyRecord;
   const hasSportLoadEvidence = sportLoadCount > 0;
@@ -90,18 +94,30 @@ export function DayEvidenceStatus({ date, logTodayHref, mode, plannedKpiCount, s
     );
   }
 
-  if (!hasAnyEvidence) return null;
+  if (!hasAnyEvidence && !trainingWorkLog && plannedKpiCount === 0) return null;
 
   return (
-    <section className="card mt-6 border-2 border-lime">
-      <p className="label">Saved day evidence</p>
-      <h2 className="text-2xl font-black">{projection.summaryLabel}</h2>
+    <section className="card mt-6 border-2 border-lime bg-lime/10">
+      <p className="label">Day status</p>
+      <h2 className="text-2xl font-black">{summaryStatusLabel(projection, kpiPartial, trainingWorkLog)}</h2>
+      <div className="mt-3 grid gap-2 text-sm font-semibold text-slate-700">
+        {plannedKpiCount > 0 && <p><strong>KPI evidence recorded:</strong> {kpiCount} of {plannedKpiCount} planned KPI results.</p>}
+        {kpiPartial && <p><strong>Remaining/unresolved:</strong> Puck-Control Weave or another planned KPI remains unresolved. No missing result is inferred.</p>}
+        <p><strong>Training Work evidence:</strong> {trainingWorkLog || trainingWorkCount > 0 ? "Logged" : "Not logged"}.</p>
+        {sportLoadCount > 0 && <p><strong>Sport Load evidence:</strong> Logged.</p>}
+        {reflectionCount > 0 && <p><strong>Reflection evidence:</strong> Saved.</p>}
+      </div>
       <div className="mt-3 flex flex-wrap gap-2">
         <EvidenceChip label="Sport Load" count={sportLoadCount} />
         <EvidenceChip label="Training Work" count={trainingWorkCount} />
         <EvidenceChip label="KPI" count={kpiCount} />
         <EvidenceChip label="Reflection" count={reflectionCount} />
       </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {plannedKpiCount > 0 && kpiCount > 0 && <Link className="btn-secondary" href="/kpis">Review KPI Results</Link>}
+        <Link className="btn-secondary" href={trainingWorkLogHref || logTodayHref}>Log Training Work</Link>
+      </div>
+      <p className="mt-2 text-xs font-semibold text-slate-600">Only log Training Work if the supporting training work was actually completed. KPI evidence and Training Work evidence are tracked separately.</p>
     </section>
   );
 }
@@ -118,4 +134,10 @@ function EvidenceChip({ count, label }: { count: number; label: string }) {
 function sportLoadSummary(_record: DayProjection["records"]["sportLoadLogs"][number], fallbackTitle?: string) {
   const title = fallbackTitle || "Sport Load";
   return `${title} is logged. Review or update details if effort, energy, soreness, pain, recovery, or notes changed.`;
+}
+
+function summaryStatusLabel(projection: DayProjection, kpiPartial: boolean, trainingWorkLog: TrainingWorkLog | null) {
+  if (kpiPartial) return "Partial";
+  if (trainingWorkLog?.completed) return "Training Work logged";
+  return projection.summaryLabel;
 }
