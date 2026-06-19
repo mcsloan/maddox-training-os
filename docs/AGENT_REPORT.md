@@ -1,34 +1,44 @@
-# Safe Lane Fix 5 Report
+# Corrective Fix Report - Day page real simplification
 
 ## Branch Name
 
-- `fix/day-page-reference-cleanup`
+- `fix/day-page-real-simplification`
 
 ## Files Changed
 
 - `app/day/[date]/page.tsx`
 - `components/DayExecutionSequence.tsx`
 - `docs/AGENT_REPORT.md`
+- `docs/NEXT_AGENT_TASK.md`
+- `docs/SESSION_HANDOFF.md`
 
-## What Changed
+## What Was Removed, Not Merely Hidden
 
-- Kept the top Day Status / evidence summary as the primary truth.
-- Enhanced Planned Execution Sequence so KPI steps show the intended KPI test names and a `Review KPI Results` action.
-- Collapsed repeated lower sections into native `details` reference sections.
-- Reworked equipment into a parent-friendly consolidated summary.
-- Reframed bottom recovery copy as `Recovery rule` with plain-language MOB-15 context.
-- Switched drill reference cards to v8.4 session drill cards when available, so video links come from the approved v8.4 video map path.
+- Removed the separate non-sport-load `Plan details` / `Planned training work` card.
+- Removed the separate `Reference: KPI checkpoint plan` expander.
+- Removed the separate `Reference: Workout blocks` expander.
+- Removed the separate `Reference: Drill-level instructions` expander from the Day page.
+- Removed the separate bottom `Recovery rule` card.
+- Removed the separate `Related Videos` section from the Day page; approved video links now belong on relevant execution cards when available.
 
-## How Duplication Was Reduced
+## What Information Was Merged Into Planned Execution Sequence
 
-- Planned Execution Sequence remains the main `what to do` section.
-- KPI evidence remains only in the top Day Status summary.
-- KPI plan details, workout blocks, and drill-level instructions are now collapsible references.
-- Workout Blocks are source-plan block definitions; Drill-level instructions are detailed setup/cue/video references.
+- Block-code context now appears inside matching execution cards.
+- KPI checkpoint details now appear inside the KPI step.
+- Shooting guidance now appears inside shooting steps.
+- Recovery/MOB-15 guidance now appears inside recovery steps.
+- Daily micro-skill guidance now appears inside skill/IQ steps.
+- Approved video links are rendered on matching execution cards when existing approved URLs are available.
 
-## How KPI Checkpoint Details Are Handled
+## Duplicate Perf Testing Chips
 
-- The KPI execution step lists:
+- Day header plan tags are now deduped by rendered chip kind, not just raw tag string.
+- `kpi` and `baseline` no longer render two separate `Perf Testing` chips.
+
+## KPI Details Presentation
+
+- The KPI step remains in `Planned Execution Sequence`.
+- It lists the planned KPI tests:
   - 10-Yard Sprint
   - 5-10-5 Pro Agility
   - Broad Jump
@@ -37,53 +47,43 @@
   - 50-Shot Target Hits
   - 30-Second Quick Hands Touch Count
   - Plank Quality
-- A `Review KPI Results` link appears on the KPI execution step.
-- The lower KPI section is now `Reference: KPI checkpoint plan`, not another evidence/status block.
+- It keeps the `Review KPI Results` link.
+- It includes recovery/testing guidance inside the KPI card.
 
-## How Equipment Was Consolidated
+## Recovery / MOB-15 Presentation
 
-- Repeated cone entries are combined as `Cones: up to 6`.
-- `Puck or ball` is labeled for stickhandling.
-- `50 pucks` is reframed as `50 pucks or shooting supply: for shot block, if available`.
-- Other unique practical items remain deduped.
+- `MOB-15` is explained inside recovery execution cards as mobility, cooldown, hydration, breathing, and recovery support.
+- The standalone bottom recovery box was removed.
 
-## How Recovery / MOB-15 Is Explained
+## Equipment Presentation
 
-- The bottom box is now `Recovery rule`.
-- MOB-15 is explained as 15 minutes of easy mobility support.
-- Copy states that MOB-15 should help him feel better, not add fatigue.
-
-## How Video Icons / Links Are Handled
-
-- Drill reference cards show a small `Video` link only when `drill.videoUrl` is a usable approved URL.
-- For v8.4-backed days, drill cards use `getV84SessionDrills`, which sources video URLs from the existing v8.4 video map.
-- No video URLs were searched for or invented.
+- Equipment remains as one concise summary below the main plan.
+- Cone counts remain consolidated as `Cones: up to 6` when relevant.
+- Puck/ball and shooting supply wording remains practical and parent-friendly.
 
 ## What Did Not Change
 
-- No `imports/v8.4/data/*.json` files changed.
-- No Supabase data was mutated.
-- No production data was written.
-- No Gantt logic changed.
-- Calendar, Dashboard, and History were not redesigned.
+- No v8.4 source data changed.
+- No Supabase data changed.
+- No Gantt changes.
+- No Calendar/Dashboard/History redesign.
 - Sport Load logging and Training Work logging remain separate.
-- No KPI results were invented.
-- No real evidence was hidden.
+- Day evidence logic remains read-only.
+- Playwright remains paused.
 
 ## Checks Run / Results
 
-- `node scripts/preflight.mjs` - passed, read-only, local env classified as staging.
 - `npm run lint` - passed.
 - `npm run build` - passed.
 - `node scripts/verify-v8.4-import.mjs` - passed.
 - `git diff --check` - passed.
+- `git status --short` - pending final status after doc update.
 
-## Risks / Remaining Gaps
+## Remaining Visual Risks
 
-- Reference sections are cleaner but still dense because the source plan contains substantial detail.
-- Equipment summary is heuristic for current equipment strings; future data shapes may need parser updates.
-- Some KPI protocol videos remain pending in source data, so no video link is shown for those.
-- No browser/iPad visual verification was run in this pass.
+- Browser visual QA is still needed on production or a local production build for `/day/2026-06-16`.
+- The card-level merge is intentionally surgical; additional copy tightening may still be useful if the page feels too dense.
+- Existing approved video data currently may not include usable URLs for the affected cards, so no video links may appear.
 
 ## git status --short
 
@@ -91,23 +91,16 @@
  M app/day/[date]/page.tsx
  M components/DayExecutionSequence.tsx
  M docs/AGENT_REPORT.md
+ M docs/NEXT_AGENT_TASK.md
+ M docs/SESSION_HANDOFF.md
 ```
-
-## Browser / iPhone / iPad / Supabase / Vercel Checks
-
-- Not run. This pass used local code/build checks only.
-
-## Commit / Push
-
-- Commit happened: no.
-- Push happened: no.
 
 ## Scope Capture Check
 
-- Defects added/updated: Day page reference duplication reduced after logged/partial day fixes.
-- Epics/features added/updated: Daily Plan / One Day Truth and Source Video / Instruction Coverage improved on Day page.
-- Product decisions added/updated: Planned Execution Sequence is the primary instruction path; lower details are reference-only.
-- Data/sync/environment decisions added/updated: Existing read paths and approved video-map data only; no writes or environment changes.
-- Testing requirements added/updated: Standard app checks completed; browser/iPad verification still deferred.
-- Docs updated: `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: explicit KPI deferment storage, browser/iPad visual verification, deeper equipment taxonomy, export integration.
+- Defects added/updated: Safe Lane Fix 5 was visually rejected as insufficient; corrective fix captures real Day page simplification.
+- Epics/features added/updated: Daily Plan / One Day Truth and Day page information architecture updated.
+- Product decisions added/updated: Do not hide duplicate plan sections in expanders; merge useful details into the main execution sequence or remove them.
+- Data/sync/environment decisions added/updated: None.
+- Testing requirements added/updated: Production/local visual QA for `/day/2026-06-16` remains required; Playwright remains paused.
+- Docs updated: `AGENT_REPORT.md`, `SESSION_HANDOFF.md`, `NEXT_AGENT_TASK.md`.
+- Items intentionally deferred: commit, push, Playwright Smoke Harness v1, production smoke confirmation.

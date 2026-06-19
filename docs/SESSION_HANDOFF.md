@@ -1,113 +1,104 @@
 # Session Handoff
 
-## Current Handoff State
+## New-Chat Transition State
 
-This is the handoff after Agentic Workflow v1 setup and the successful production KPI backfill.
+This handoff captures the current state for starting a new ChatGPT/Codex session without losing context.
 
 Current constraints:
 
-- Local branch is `main`.
+- Local branch is `fix/day-page-real-simplification`.
 - Do not commit unless explicitly asked.
 - Do not push unless explicitly asked.
-- Do not apply any additional stash or patch.
-- Do not add `.wip/` to git.
+- Do not edit `imports/v8.4/data/*.json` unless explicitly asked.
+- Do not mutate Supabase data without explicit target confirmation.
 - Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.
 - Run `node scripts/preflight.mjs` before production-risk work.
 - Run `node scripts/confirm-write-target.mjs` before cloud writes, deploys, or backfills.
 
-## Recent Production Checkpoint
+## Recent Completed Commits On Main
 
-- `a94ad9f` Simplify sport-load day plan
-- `550f8af` Capture full sport-load day support work
-- `a0bc4e4` Redirect Today to canonical day page
+- `b4891df` Add agentic workflow guardrails
+- `a4ef7fa` Document day scenario propagation model
+- `7b7d6fe` Recognize day evidence for sport loads and KPIs
+- `35cd352` Group history by day evidence
+- `376c7ba` Show day evidence status on day pages
+- `4bdd674` Clarify day evidence and training work status
+- `6a41683` Clean up day page reference details
 
-## Confirmed Production State
+## Current Corrective Work
 
-- `/today` redirects to canonical `/day/<today-date>`.
-- `/day/2026-06-17` is the canonical June 17 experience.
-- Log Today captures sport load plus support work.
-- June 17 iPad Sport Load / Log Today save appeared in parent browser.
-- Calendar June 15 Sport Load bug was fixed and production verified.
-- KPI iPad local data was recovered via debug/local-data.
-- Production KPI backfill is complete.
-- Seven June 16 standalone KPI rows are visible in production `/kpis`.
-- Temporary production backfill script was deleted.
-- Repo was clean after backfill cleanup.
+- Safe Lane Fix 5 (`6a41683`) technically passed checks but visual QA rejected it as insufficient.
+- Problem: duplicate Day page plan sections were hidden in expanders instead of being merged or removed.
+- Corrective branch: `fix/day-page-real-simplification`.
+- Corrective goal: real simplification, not hidden duplication.
+- Current intended Day page structure for `/day/2026-06-16`:
+  1. Hero/header
+  2. Day Status / Evidence Summary
+  3. Planned Execution Sequence as the main plan
+  4. Parent cue / plan note if needed
+  5. Concise equipment summary if useful
+- KPI, block-code, recovery, shooting, and approved-video context should live inside relevant execution cards.
+- Separate duplicate boxes for planned training work, KPI checkpoint plan, workout blocks, drill-level instructions, related videos, and recovery rule should not return unless they contain genuinely unique information.
 
-## Agentic Workflow v1
+## Current Production State
 
-- `docs/NEXT_AGENT_TASK.md` carries the next-task brief.
-- `docs/AGENT_REPORT.md` carries the standard report template.
-- `docs/ENVIRONMENT_SAFETY.md` carries environment/write-target rules.
-- `scripts/env-whoami.mjs` identifies git/env target without secrets.
-- `scripts/confirm-write-target.mjs` blocks unconfirmed production writes.
-- `scripts/preflight.mjs` reports git/env/package-script state without running builds.
-- `.github/workflows/verify.yml` runs verification on pull requests and manual dispatch with no deploy steps.
+- KPI production backfill completed earlier.
+- Seven June 16 KPI rows are visible in production `/kpis`.
+- Calendar recognizes June 15 Sport Load logged.
+- Dashboard recognizes `KPI Evidence = 7`.
+- History is now `Program > Week > Day > Evidence`.
+- June 14 legacy/test/unattached records are separated as `Needs review`.
+- Day page shows `Partial` / KPI evidence / Training Work not logged.
+- Day page reference cleanup was pushed in commit `6a41683`, but visual QA found it still too duplicative.
+- The corrective simplification branch must be reviewed before treating Day page cleanup as accepted.
 
-## Supabase Staging Baseline
+## Workflow Decisions
 
-- Non-prod Supabase staging project created.
-- Project name: `maddox-training-os-staging`
-- Project ref: `npuankmkxbjtlokbpczz`
-- Region: West US (Oregon) `us-west-2`
-- Compute: `t4g.nano`
-- Local production env backup exists at `.env.local.production-backup`.
-- Backup contains secrets; do not display or commit its contents.
-- Local `.env.local` now points to staging Supabase.
-- `supabase/schema.sql` applied manually in Supabase staging SQL Editor.
-- Staging SQL result: "Success. No rows returned."
-- Confirmed staging tables: `athletes`, `session_logs`, `session_progress`.
-- Existing code paths upsert Maddox athlete automatically in `externalLoadRepository`, `cloudSessionProgressRepository`, and `completedSessionRepository`.
+- Docs-only changes can go straight to `main`.
+- Read-only UI/projection changes can go straight to `main` after:
+  - `npm run lint`
+  - `npm run build`
+  - `node scripts/verify-v8.4-import.mjs`
+  - `git diff --check`
+- Preview is required for:
+  - Supabase writes
+  - KPI save/sync changes
+  - schema/data model changes
+  - logging flow changes
+  - auth/env changes
+  - large UI rewrites
+  - anything that can corrupt or hide production data
+- Playwright is paused until after the real Day page visual cleanup is accepted.
+- Next major agentic improvement should be Playwright Smoke Harness v1.
 
-## Production Supabase Safety Checks
+## Current Next Recommended Task
 
-Passed after `bec6008`:
+1. Review the corrective branch `fix/day-page-real-simplification`.
+2. Verify `/day/2026-06-16` visually.
+3. Confirm the page no longer feels like a pile of boxes:
+   - no duplicate `Perf Testing` chips
+   - no separate duplicate `Planned training work` card
+   - no duplicate KPI checkpoint expander
+   - no duplicate workout-block expander
+   - no tiny standalone recovery-rule box
+   - planned KPI tests and recovery guidance live inside execution cards
+4. If accepted, decide whether to commit/push this branch.
+5. After acceptance, either continue Day page cleanup if visual issues remain or build Playwright Smoke Harness v1.
 
-- RLS enabled on `athletes`, `session_logs`, and `session_progress`.
-- Policies scoped to Maddox athlete ID.
-- No DELETE policies on `athletes`, `session_logs`, or `session_progress`.
-- `session_logs` has SELECT and INSERT policies only.
-- `session_progress` has SELECT, INSERT, and UPDATE policies.
-- Production anon grants aligned:
-  - `athletes`: SELECT, INSERT, UPDATE
-  - `session_logs`: SELECT, INSERT
-  - `session_progress`: SELECT, INSERT, UPDATE
-- Production anon has no DELETE, TRUNCATE, REFERENCES, or TRIGGER grants.
-- Production anon has no UPDATE grant on `session_logs`.
-
-## KPI Cloud Sync Staging Results
-
-Passed:
-
-- `/kpis` loaded against staging with no visible entries initially.
-- Pre-grant save failed cloud write with `permission denied for table session_logs (42501)` but preserved local backup.
-- Non-destructive anon grants were applied manually in staging.
-- 10-yard sprint staging test KPI saved with `bestResult = 8.88`.
-- Staging readback confirmed `source = kpi_page`, `kind = standalone_kpi_result`, `kpiId = kpi-10-yard`, and `bestResult = 8.88`.
-- Incognito confirmed `8.88` was visible from cloud and `9.99` local-only browser backup was not visible.
-- Immutable tombstone delete fix was implemented after physical delete failed as expected under immutable `session_logs`.
-- Browser retest removed `8.88` from UI.
-- Staging readback confirmed original result remains and a `standalone_kpi_result_deleted` tombstone exists with `deletedResultId = kpi-10-yard-1781758488979` and `reason = user_deleted`.
-- Incognito confirmed `8.88` and the tombstone are not visible and no error appears.
-
-Remaining:
-
-- Validate remaining KPI scenarios if required: Puck-Control Weave deferred state, Plank Quality time plus form score, broader duplicate/update behavior, offline/local fallback, and more cross-device checks.
-- Do not remove the local-only `9.99` staging browser backup entry.
-
-## Recommended Next Session
-
-Start by reading:
+## Recommended Startup Reading
 
 1. `AGENTS.md`
 2. `docs/SESSION_HANDOFF.md`
 3. `docs/NEXT_AGENT_TASK.md`
 4. `docs/ENVIRONMENT_SAFETY.md`
-5. The specific doc for the task area, such as `docs/DATA_SYNC_STRATEGY.md` for sync work.
+5. Task-specific docs, especially `docs/DAY_SCENARIOS.md`, `docs/DATA_PROPAGATION_MATRIX.md`, and `docs/SCREEN_EXPECTATIONS.md` for day projection work.
 
-If resuming KPI cloud sync:
+## Scope Capture Check
 
-1. Run `node scripts/preflight.mjs`.
-2. Confirm the target with `node scripts/confirm-write-target.mjs`.
-3. Do not apply additional stash/patch.
-4. Update defect log and testing status if scope/status changes.
+- Defects added/updated: Safe Lane Fix 5 visually rejected as insufficient; corrective real simplification branch captured.
+- Epics/features added/updated: Daily Plan / One Day Truth, History Week -> Day -> Evidence, Source Video / Instruction Coverage, QA automation roadmap.
+- Product decisions added/updated: Day Status is primary truth; useful detail should be merged into Planned Execution Sequence instead of duplicated in expanders; History is day-first.
+- Data/sync/environment decisions added/updated: Production writes require explicit target confirmation; preview required for risky write/sync/schema/logging work.
+- Testing requirements added/updated: Standard checks remain required for read-only UI/projection work; visual QA for `/day/2026-06-16` is required before acceptance; Playwright Smoke Harness v1 remains paused.
+- Docs updated: `SESSION_HANDOFF.md`, `NEXT_AGENT_TASK.md`, `AGENT_REPORT.md`.
+- Items intentionally deferred: commit/push, Playwright Smoke Harness v1 implementation, explicit KPI deferment storage, deeper export integration.
