@@ -1,41 +1,17 @@
 # Current Project State
 
-## Current Checkpoint
+## Current Verified State - June 22, 2026
 
-This documentation checkpoint reconciles project memory as of June 18, 2026.
+This section is the current checkpoint. Historical June 17/18 state is preserved below and should not be treated as current unless restated here.
 
-Recent production commits:
-
-- `a94ad9f` Simplify sport-load day plan
-- `550f8af` Capture full sport-load day support work
-- `a0bc4e4` Redirect Today to canonical day page
-
-Recent documentation checkpoints:
-
-- `c433e7a` Document master project scope and handoff
-- `c8a9463` Ignore local WIP patches
-
-Current handoff constraints:
-
-- KPI cloud-sync implementation was created locally but is stashed.
-- Stash name: `WIP KPI cloud sync before master reconciliation`
-- Patch file exists at `.wip/2026-06-17-kpi-cloud-sync-wip.patch`.
-- Do not apply the stash during documentation reconciliation.
-- Do not modify KPI code unless the task explicitly resumes KPI cloud-sync work.
-- Do not add `.wip/` to git.
-
-## Confirmed Wins
-
-- `/today` redirects to canonical `/day/<today-date>`.
-- `/day/2026-06-17` is the canonical June 17 experience.
-- Log Today captures sport load plus support work.
-- June 17 iPad Sport Load / Log Today save appeared in parent browser, proving cross-device cloud sync for Sport Load.
-- Calendar June 15 Sport Load bug was fixed and production verified.
-- KPI iPad local data was recovered through `debug/local-data`.
-- KPI cloud sync was implemented locally but is not committed, not pushed, not staging-tested, and is currently stashed.
-- Non-prod Supabase staging project has been created and local development now points to staging.
-- `supabase/schema.sql` was applied manually in the staging SQL Editor and completed with "Success. No rows returned."
-- Staging tables confirmed: `athletes`, `session_logs`, `session_progress`.
+- Branch: `main`.
+- Current commit: `7b48a3e` (`Render calendar from v8.4 day coverage`).
+- Calendar coverage from v8.4 is fixed and accepted.
+- v8.4 app import package is authoritative for training plan data.
+- Active v8.4 plan range: `2026-06-15` through `2026-09-06`.
+- v8.4 has 84/84 `dayExecutionPlan` dates and 84/84 session dates.
+- Current active product issue after docs reconciliation: Activity Prescription Display Layer.
+- KPI cloud-sync stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
 
 ## Current Product Shape
 
@@ -53,51 +29,62 @@ The system is intended to become a professional-grade training operating system 
 - QA/regression system
 - Later AI Coach layer
 
-## Three-Tier Lens
+## Current Confirmed Wins
 
-Tier 1: Data integrity, cloud sync, environments.
+- `/today` routes to canonical Day flow.
+- Friday June 19 is usable enough for training.
+- Direct `/day/2026-06-20` works and shows `Game-speed skill and shooting volume.`
+- Calendar renders all 84 v8.4 dates, including June 20 and June 21.
+- Sport Load logging and Training Work logging remain separate.
+- v8.4 source JSON remains unchanged for recent projection/navigation fixes.
+- `docs/SCOPE.md` is the only active scope source and identifies the Active Execution Queue and Current Sprint / Next Codex Task.
 
-Tier 2: Stabilization, defects, UX consistency.
+## Current Open Scope Themes
 
-Tier 3: Product intelligence, coaching value, roadmap.
-
-## Tier 1 State
-
-Done:
-
-- Sport Load / Log Today cloud sync confirmed iPad to browser.
-- June 17 real Sport Load log appeared cross-device.
-- Today route is canonical.
-- Log Today captures lacrosse load plus support fields.
-- Supabase staging project created: `maddox-training-os-staging`.
-- Staging project ref: `npuankmkxbjtlokbpczz`.
-- Staging region: West US (Oregon) `us-west-2`.
-- Staging compute: `t4g.nano`.
-- Local `.env.local` now points to staging Supabase.
-- Production env backup exists locally at `.env.local.production-backup`; it contains secrets and must not be committed or displayed.
-- Staging schema baseline applied and core tables confirmed.
-
-Open:
-
-- Wire Vercel Preview to staging.
-- Keep Vercel Production on production.
-- Validate KPI cloud sync in staging before fake/dev writes.
-- Decide and execute real recovered June 16 KPI backfill.
-- Add app-wide sync visibility.
-- Confirm Log Today support fields reload cross-device, not only core sport-load values.
-- Add resting HR readiness field.
-- Add Puck-Control Weave deferred state.
-- Update Plank to time plus form-score model.
+| Theme | Priority | Lane | Status | Canonical owner |
+| --- | --- | --- | --- | --- |
+| Scope/docs reconciliation | P0 | Docs-only | In progress | `docs/SCOPE.md` |
+| Documentation inventory/consolidation | P0 | Docs-only | In progress | `docs/DOCUMENTATION_INVENTORY.md` |
+| Environment/data safety reconciliation | P0 | Docs-only | Not started | `docs/SCOPE.md` |
+| Activity Prescription Display Layer | P1 | Fast lane | Not started | `docs/SCOPE.md` |
+| Future-day readiness audit from June 23 onward | P1 | Fast lane | Not started | `docs/SCOPE.md` |
+| KPI roadmap and advanced KPI scope | P1 | Safe lane | In progress | `docs/SCOPE.md` |
+| OvertimeAthlete source ingestion | P2 | Source-review | Scope review required | `docs/SCOPE.md` |
+| Agentic workflow evaluation | P3 | Future roadmap | Scope review required | `docs/SCOPE.md` |
 
 ## Canonical Rules
 
 - v8.4 import package remains authoritative for training plan data.
-- Do not invent workouts.
+- Do not invent workouts, drills, phases, sport loads, sessions, videos, KPIs, or coaching logic.
 - Do not edit `imports/v8.4/data/*.json` unless explicitly instructed.
 - Do not call sport loads "external" in user-facing language.
 - Camps, lacrosse, 4v4, and on-ice sessions are part of the plan, not external to it.
 - Today must equal the canonical Day page.
 - One day, one truth.
-- History should become Week -> Day -> Evidence.
 - Missing data is not deferred data; deferral must be explicit.
 - No silent blank days. Every date must resolve to a meaningful day state.
+- Recovery days are intentional low-intensity development days where appropriate, not blanks.
+- Gemini/OvertimeAthlete recommendations are scope-review/source-review inputs only until reconciled into approved source docs.
+
+## Historical Checkpoint - June 18, 2026
+
+Historical only. This section explains prior docs and should not override the current verified state above.
+
+Earlier docs reconciled project memory as of June 18, 2026, when:
+
+- KPI cloud-sync implementation had been created locally but was stashed.
+- Stash name was `WIP KPI cloud sync before master reconciliation`.
+- A patch file was referenced at `.wip/2026-06-17-kpi-cloud-sync-wip.patch`.
+- June 17 Sport Load / Log Today cross-device save had been observed.
+- Staging Supabase had been created and baseline tables were confirmed.
+- Several docs still referenced stale branch, deployment, and KPI backfill states.
+
+Those claims are historical unless restated in the current verified section.
+
+## Current Handoff Constraints
+
+- Do not apply the KPI cloud-sync stash during docs or unrelated app work.
+- Do not modify KPI code unless the task explicitly resumes KPI cloud sync.
+- Do not add `.wip/` to git.
+- Do not display or commit secrets.
+- Run target-confirmation scripts before cloud writes, deploys, or production-risk actions.

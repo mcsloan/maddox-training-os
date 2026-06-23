@@ -52,13 +52,32 @@ This is not just a checklist app. It is intended to become a professional-grade 
 
 Use repo files as the handoff contract between ChatGPT, Codex, Terminal, GitHub, Vercel, and Supabase.
 
-- `docs/NEXT_AGENT_TASK.md` is the next-task brief.
+- `docs/SCOPE.md` is the single canonical owner for active scope, priority, roadmap, defects summary, epics, source-review items, execution sequencing, and next-task ownership.
 - `docs/AGENT_REPORT.md` is the standard completion report template.
-- `docs/SESSION_HANDOFF.md` is the durable current-state handoff.
-- `docs/ENVIRONMENT_SAFETY.md` is the environment and write-target safety reference.
+- `docs/SESSION_HANDOFF.md` is the durable current-state handoff only; it must point to `docs/SCOPE.md` for scope and priorities.
 - `scripts/env-whoami.mjs` is read-only and identifies the local git/env target without printing secrets.
 - `scripts/confirm-write-target.mjs` is read-only and must be used before any cloud write test or production-risk action.
 - `scripts/preflight.mjs` is read-only and summarizes git/env/package-script state without running builds.
+
+Do not create new planning markdown files without explicit user approval. If new scope is discovered, update `docs/SCOPE.md` using its Minimum Record Template. Before answering "what is next", inspect `docs/SCOPE.md`.
+
+Scope failure rules:
+
+- Before answering "what is next", inspect `docs/SCOPE.md`.
+- Before changing code, identify the active scope ID from `docs/SCOPE.md`.
+- Do not create new planning markdown files without explicit user approval.
+- If new scope is discovered, update `docs/SCOPE.md` using the Minimum Record Template.
+- If a prompt asks for work not linked to an active `docs/SCOPE.md` ID, stop and report: `[CRITICAL SCOPE VIOLATION]`.
+- If Codex would need to create a new markdown planning file, stop and report: `[CRITICAL SCOPE VIOLATION]`.
+- If Codex would need to modify app code without an active scope ID, stop and report: `[CRITICAL SCOPE VIOLATION]`.
+- Do not attempt to salvage a violating prompt by inventing a new scope path.
+
+Code Comment Authority:
+
+- Inline comments, TODOs, docstrings, and historical code comments are not scope authority.
+- Before following a TODO/comment that implies scope, verify the work maps to an active scope ID in `docs/SCOPE.md`.
+- If a code comment conflicts with `docs/SCOPE.md`, ignore the comment and report the conflict.
+- Do not implement a TODO/comment unless it is explicitly in the active scope item.
 
 Before any cloud write, deploy, production-impacting operation, or data backfill:
 
@@ -152,20 +171,11 @@ Scope Capture Check:
 
 Durable scope files to update or explicitly review when relevant:
 
+- `docs/SCOPE.md`
 - `docs/CURRENT_PROJECT_STATE.md`
-- `docs/MASTER_RECONCILIATION.md`
-- `docs/SCOPE_LEDGER.md`
-- `docs/DEFECT_LOG.md`
-- `docs/PRODUCT_ROADMAP.md`
-- `docs/TRAINING_SYSTEM_EPICS.md`
-- `docs/KPI_TESTING_ROADMAP.md`
-- `docs/QA_TESTING_STRATEGY.md`
-- `docs/TESTING_STATUS.md`
-- `docs/DATA_SYNC_STRATEGY.md`
-- `docs/ENVIRONMENTS.md`
-- `docs/AI_COACH_STRATEGY.md`
-- `docs/NEXT_BUILD_PRIORITIES.md`
 - `docs/SESSION_HANDOFF.md`
+- `docs/AGENT_REPORT.md`
+- `docs/DOCUMENTATION_INVENTORY.md`
 
 ## Low-Usage Codex Rule
 

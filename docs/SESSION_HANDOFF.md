@@ -1,104 +1,79 @@
 # Session Handoff
 
-## New-Chat Transition State
+## Current Verified Checkpoint
 
-This handoff captures the current state for starting a new ChatGPT/Codex session without losing context.
+- Branch: `main`.
+- Current commit: `7b48a3e` (`Render calendar from v8.4 day coverage`).
+- `origin/main` matched local `main` before docs reconciliation.
+- Working tree was clean before docs reconciliation.
+- Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
+- v8.4 app import package remains authoritative.
+- Calendar coverage from v8.4 was fixed and accepted.
+- Current active product issue after docs reconciliation: Activity Prescription Display Layer.
 
-Current constraints:
+## Current Constraints
 
-- Local branch is `fix/day-page-real-simplification`.
 - Do not commit unless explicitly asked.
 - Do not push unless explicitly asked.
 - Do not edit `imports/v8.4/data/*.json` unless explicitly asked.
 - Do not mutate Supabase data without explicit target confirmation.
 - Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.
+- Do not apply the KPI cloud-sync stash during unrelated tasks.
 - Run `node scripts/preflight.mjs` before production-risk work.
 - Run `node scripts/confirm-write-target.mjs` before cloud writes, deploys, or backfills.
 
-## Recent Completed Commits On Main
+## Verified Product State
 
-- `b4891df` Add agentic workflow guardrails
-- `a4ef7fa` Document day scenario propagation model
-- `7b7d6fe` Recognize day evidence for sport loads and KPIs
-- `35cd352` Group history by day evidence
-- `376c7ba` Show day evidence status on day pages
-- `4bdd674` Clarify day evidence and training work status
-- `6a41683` Clean up day page reference details
+- `/today` routes to canonical Day flow.
+- v8.4 covers all 84 dates from `2026-06-15` through `2026-09-06`.
+- Calendar renders from v8.4 date coverage.
+- Calendar Week 1 includes June 15 through June 21.
+- June 20 direct Day URL works and shows `Game-speed skill and shooting volume.`
+- Friday June 19 is usable enough for training.
+- Sport Load logging and Training Work logging remain separate.
+- v8.4 source JSON has not been edited for accepted Calendar coverage.
 
-## Current Corrective Work
+## Documentation Reconciliation State
 
-- Safe Lane Fix 5 (`6a41683`) technically passed checks but visual QA rejected it as insufficient.
-- Problem: duplicate Day page plan sections were hidden in expanders instead of being merged or removed.
-- Corrective branch: `fix/day-page-real-simplification`.
-- Corrective goal: real simplification, not hidden duplication.
-- Current intended Day page structure for `/day/2026-06-16`:
-  1. Hero/header
-  2. Day Status / Evidence Summary
-  3. Planned Execution Sequence as the main plan
-  4. Parent cue / plan note if needed
-  5. Concise equipment summary if useful
-- KPI, block-code, recovery, shooting, and approved-video context should live inside relevant execution cards.
-- Separate duplicate boxes for planned training work, KPI checkpoint plan, workout blocks, drill-level instructions, related videos, and recovery rule should not return unless they contain genuinely unique information.
+- `docs/SCOPE.md` is now the canonical owner for active scope, priority, sequencing, roadmap, defect summary, KPI roadmap, training/source epics, source-review items, and next-task planning.
+- `docs/SCOPE.md` is the only active scope source.
+- `docs/SESSION_HANDOFF.md` owns current checkpoint/handoff only.
+- `docs/DOCUMENTATION_INVENTORY.md` owns documentation inventory only.
+- `docs/AGENT_REPORT.md` owns latest agent report.
+- Former scope-like docs are dead-end stubs; do not read them for current scope.
 
-## Current Production State
+## Current Next Work Sequence
 
-- KPI production backfill completed earlier.
-- Seven June 16 KPI rows are visible in production `/kpis`.
-- Calendar recognizes June 15 Sport Load logged.
-- Dashboard recognizes `KPI Evidence = 7`.
-- History is now `Program > Week > Day > Evidence`.
-- June 14 legacy/test/unattached records are separated as `Needs review`.
-- Day page shows `Partial` / KPI evidence / Training Work not logged.
-- Day page reference cleanup was pushed in commit `6a41683`, but visual QA found it still too duplicative.
-- The corrective simplification branch must be reviewed before treating Day page cleanup as accepted.
+See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Codex Task.
 
-## Workflow Decisions
+Current sequence starts with:
 
-- Docs-only changes can go straight to `main`.
-- Read-only UI/projection changes can go straight to `main` after:
-  - `npm run lint`
-  - `npm run build`
-  - `node scripts/verify-v8.4-import.mjs`
-  - `git diff --check`
-- Preview is required for:
-  - Supabase writes
-  - KPI save/sync changes
-  - schema/data model changes
-  - logging flow changes
-  - auth/env changes
-  - large UI rewrites
-  - anything that can corrupt or hide production data
-- Playwright is paused until after the real Day page visual cleanup is accepted.
-- Next major agentic improvement should be Playwright Smoke Harness v1.
+1. Scope system consolidation.
+2. Environment/data safety reconciliation.
+3. Activity Prescription Display Layer.
+4. Future-day readiness audit from June 23 onward.
 
-## Current Next Recommended Task
+## Known Caution Areas
 
-1. Review the corrective branch `fix/day-page-real-simplification`.
-2. Verify `/day/2026-06-16` visually.
-3. Confirm the page no longer feels like a pile of boxes:
-   - no duplicate `Perf Testing` chips
-   - no separate duplicate `Planned training work` card
-   - no duplicate KPI checkpoint expander
-   - no duplicate workout-block expander
-   - no tiny standalone recovery-rule box
-   - planned KPI tests and recovery guidance live inside execution cards
-4. If accepted, decide whether to commit/push this branch.
-5. After acceptance, either continue Day page cleanup if visual issues remain or build Playwright Smoke Harness v1.
+- KPI cloud-sync/backfill docs contain historical and conflicting claims. Treat cloud sync/backfill as scope-review until explicitly verified in the current checkpoint.
+- OvertimeAthlete and Gemini recommendations are scope-review inputs only.
+- Unconfirmed schedule/camp claims must be verified before any plan change.
+- Playwright, Husky, VS Code agent tools, and package installs are future scope only.
 
 ## Recommended Startup Reading
 
 1. `AGENTS.md`
 2. `docs/SESSION_HANDOFF.md`
-3. `docs/NEXT_AGENT_TASK.md`
-4. `docs/ENVIRONMENT_SAFETY.md`
-5. Task-specific docs, especially `docs/DAY_SCENARIOS.md`, `docs/DATA_PROPAGATION_MATRIX.md`, and `docs/SCREEN_EXPECTATIONS.md` for day projection work.
+3. `docs/SCOPE.md`
+4. `docs/DOCUMENTATION_INVENTORY.md`
+5. Task-specific docs/files.
 
 ## Scope Capture Check
 
-- Defects added/updated: Safe Lane Fix 5 visually rejected as insufficient; corrective real simplification branch captured.
-- Epics/features added/updated: Daily Plan / One Day Truth, History Week -> Day -> Evidence, Source Video / Instruction Coverage, QA automation roadmap.
-- Product decisions added/updated: Day Status is primary truth; useful detail should be merged into Planned Execution Sequence instead of duplicated in expanders; History is day-first.
-- Data/sync/environment decisions added/updated: Production writes require explicit target confirmation; preview required for risky write/sync/schema/logging work.
-- Testing requirements added/updated: Standard checks remain required for read-only UI/projection work; visual QA for `/day/2026-06-16` is required before acceptance; Playwright Smoke Harness v1 remains paused.
-- Docs updated: `SESSION_HANDOFF.md`, `NEXT_AGENT_TASK.md`, `AGENT_REPORT.md`.
-- Items intentionally deferred: commit/push, Playwright Smoke Harness v1 implementation, explicit KPI deferment storage, deeper export integration.
+- Defects added/updated: documentation drift and Calendar date coverage status reconciled.
+- Epics/features added/updated: Activity Prescription Display Layer confirmed as next implementation work; source-ingestion and safety review captured as future scope.
+- Product decisions added/updated: recovery days are intentional, not blank; v8.4 remains authoritative; Gemini/OTA are source-review inputs only.
+- Data/sync/environment decisions added/updated: KPI cloud-sync stash noted and not applied; production/staging safety remains mandatory.
+- Testing requirements added/updated: docs-only changes require status plus docs lint only if configured; app-code changes still require standard checks.
+- Docs updated: `SESSION_HANDOFF.md`, `SCOPE.md`, `DOCUMENTATION_INVENTORY.md`, `AGENT_REPORT.md`, `AGENTS.md`, and dead-end stubs.
+- Items intentionally deferred: Activity Prescription implementation, environment safety implementation, KPI cloud-sync stash, OvertimeAthlete source ingestion, agentic workflow tooling.
