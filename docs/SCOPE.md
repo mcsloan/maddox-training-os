@@ -102,7 +102,7 @@ Every active scope item should use this structure, either as a detailed record b
 | Order | ID | Title | Priority | Status | Lane | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | SCOPE-CONSOLIDATION-001 | Scope system consolidation | P0 | In progress | Docs-only | Mike review of `docs/SCOPE.md`; do not commit until accepted. |
-| 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Not started | Docs-only | Reconcile stale environment, data sync, KPI sync, and deployment claims. |
+| 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
 | 3 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 4 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Not started | Fast lane | Render approved v8.4 prescription detail where available. |
 | 5 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
@@ -165,9 +165,9 @@ Active source files to inspect next:
 | Status | IDs |
 | --- | --- |
 | In progress | SCOPE-CONSOLIDATION-001, DOC-DRIFT-001, DOC-INV-001 |
-| Not started | ENV-SAFETY-RECON-001 |
+| Not started | None |
 | Scope review required | SCOPE-GATE-001, ENV-SAFETY-LOCAL-PROD-GUARD, SPORT-SCHEDULE-VERIFY-001, DEF-001, DEF-015 |
-| Completed | DPM-QA-006 |
+| Completed | ENV-SAFETY-RECON-001, DPM-QA-006 |
 
 ### P1
 
@@ -222,7 +222,7 @@ Active source files to inspect next:
 - Type: Initiative
 - Parent: Data integrity / production safety
 - Priority: P0
-- Status: Not started
+- Status: Completed
 - Lane: Docs-only
 - Owner: Mike / Codex
 - Source: prior environment, data sync, environment safety, and testing docs were merged here; use git history only.
@@ -230,10 +230,10 @@ Active source files to inspect next:
 - Desired outcome: current environment and write-target truth is clear before any cloud write or deploy.
 - In scope: reconcile staging/production/local state, KPI stash status, required confirmation commands, production-risk guardrails.
 - Out of scope: cloud writes, deploys, schema changes, stash application.
-- Acceptance criteria: stale `bec6008`/deployment claims are marked historical or corrected; next cloud-write path is explicit.
+- Acceptance criteria: package scripts are classified; Supabase/Vercel/env references are identified by file path and purpose; key names are listed without values; forbidden write/deploy/backfill actions are blocked pending explicit approval.
 - Dependencies: docs-only review; no production action.
 - Risks: stale docs could lead to accidental production writes if not reconciled.
-- Next action: inspect env/sync/test docs and update current truth without exposing secrets.
+- Next action: Mike reviews these findings, then explicitly approves any future write/deploy/backfill work before it starts.
 - Links / evidence: `scripts/confirm-write-target.mjs`, `scripts/env-whoami.mjs`, `scripts/preflight.mjs`, `stash`.
 
 Ground Truth Baseline:
@@ -298,6 +298,59 @@ Ground Truth Baseline:
   - any command that prints `.env.local` values or Supabase keys/tokens/URLs
 - Exact next action: perform an inspect-only environment reconciliation that records current env/sync/deploy truth, key names only, and safe/forbidden command boundaries.
 - Blocker rule: if key names cannot be safely determined without exposing values, mark this item `Blocked` and ask Mike to provide a redacted key-name list.
+
+Environment Safety Findings:
+
+- Inspection date: 2026-06-23.
+- Worktree at inspection start: clean.
+- `package.json` script classification:
+  - Safe local verification:
+    - `lint`: TypeScript compile check; no cloud write expected.
+    - `test`: Vitest run; no cloud write expected unless future tests add live-cloud behavior.
+    - `build`: local Next build through build-info wrapper; no deploy.
+    - `vercel:build`: runs the same build command; no Vercel deploy.
+  - Caution-required:
+    - `dev`: starts local app; UI paths can write to Supabase if env points at a configured target.
+    - `start`: starts built app; UI paths can write to Supabase if env points at a configured target.
+    - `start:lan`: exposes built app on LAN; UI paths can write to Supabase if env points at a configured target.
+    - `ios:test`: builds and starts LAN server; useful for validation but can expose write-capable app flows.
+  - Forbidden without explicit approval:
+    - No package script directly runs deploy, migration, seed, or backfill.
+    - Any future `vercel deploy`, Supabase CLI write, SQL migration, seed, backfill, production smoke write, or command requiring production credentials is forbidden until explicitly approved.
+- Supabase/Vercel/env references found:
+  - `lib/supabase/client.ts`: creates browser Supabase client from public env keys.
+  - `lib/storage/completedSessionRepository.ts`: upserts athlete and inserts completed session snapshots into `session_logs`; reads `session_logs`.
+  - `lib/storage/externalLoadRepository.ts`: upserts athlete and inserts Sport Load snapshots into `session_logs`; reads `session_logs`.
+  - `lib/storage/cloudKpiRepository.ts`: upserts athlete, inserts standalone KPI snapshots and tombstone delete snapshots into `session_logs`; reads `session_logs`.
+  - `lib/storage/cloudSessionProgressRepository.ts`: upserts athlete and upserts live session progress into `session_progress`; reads `session_progress`.
+  - `lib/storage/localSessionRepository.ts`, `lib/storage/localKpiRepository.ts`, `app/history/page.tsx`, `components/SessionDebugClient.tsx`: local delete paths only; no Supabase delete path observed.
+  - `supabase/schema.sql`: schema/RLS/grants SQL; migration-class file, forbidden to apply without explicit approval and target confirmation.
+  - `scripts/env-whoami.mjs`: reads env key names/values internally to classify target and prints host/classification; safe only when target disclosure is acceptable.
+  - `scripts/confirm-write-target.mjs`: read-only confirmation gate; performs no writes.
+  - `scripts/preflight.mjs`: read-only summary but invokes `env-whoami`; can reveal target classification/host.
+  - `scripts/run-with-build-info.mjs`: injects local git SHA into build/dev env; no cloud write.
+  - `components/BuildBadge.tsx`: displays public build/deploy metadata.
+  - `README.md`, `MIGRATION_NOTES.md`, `docs/SESSION_HANDOFF.md`, `docs/KPI_CLOUD_SYNC_STAGING_TEST_PLAN.md`, `docs/GOLDEN_FIXTURES_PLAN.md`, `docs/STARTUP.md`: supporting docs with environment, deploy, sync, staging, or production-safety references; not active scope authority.
+- Environment key names found, names only:
+  - `CONFIRM_PRODUCTION`
+  - `NEXT_PUBLIC_LOCAL_GIT_COMMIT_SHA`
+  - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+  - `NEXT_PUBLIC_SUPABASE_URL`
+  - `NEXT_PUBLIC_VERCEL_ENV`
+  - `NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA`
+  - `SUPABASE_ANON_KEY`
+  - `SUPABASE_PROJECT_URL`
+  - `SUPABASE_URL`
+  - `VERCEL_ENV`
+  - `WRITE_ACTION`
+  - `WRITE_TARGET`
+- Risk classification:
+  - Supabase mutation paths exist in repositories through `upsert`/`insert` to `athletes`, `session_logs`, and `session_progress`.
+  - No client physical Supabase delete path was observed; standalone KPI delete uses an inserted tombstone snapshot.
+  - Applying `supabase/schema.sql` is a migration/write operation and forbidden without explicit target confirmation.
+  - Starting the app is caution-required because user interaction can create cloud writes if env points at a configured Supabase target.
+  - Vercel deploy is not present as a package script, but any deploy command or push intended to deploy remains forbidden without explicit approval.
+  - `.env.local` and env backup files were not read; key names were discovered from code/docs only.
 
 ### CODE-COMMENT-AUDIT-001
 
