@@ -9,12 +9,21 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Current commit before docs consolidation: `7b48a3e` (`Render calendar from v8.4 day coverage`).
+- Local HEAD: `3ebc157` (`docs(scope): record environment safety reconciliation`).
+- Local `main` is ahead of `origin/main` by 2 commits.
+- Local docs commits not pushed yet:
+  - `3dadea0` (`build(scope): harden documentation architecture and scope controls`)
+  - `3ebc157` (`docs(scope): record environment safety reconciliation`)
+- Historical pre-hardening / current production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
+- Vercel production is expected to remain on `v0.1.0 · 7b48a3e · production` until the local docs commits are pushed and deployed.
+- Local browser/build badge may show stale running-server context and is not the repo source of truth.
+- Git state from Terminal 2 is authoritative for repo checkpoint.
 - Calendar coverage from v8.4 was fixed and accepted.
 - v8.4 covers all 84 dates from `2026-06-15` through `2026-09-06`.
 - v8.4 app import package remains authoritative for app training data.
 - Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
-- Current active product issue after scope consolidation: Activity Prescription Display Layer.
+- No app code work has started after the docs hardening checkpoint.
+- Next action: Mike review / push approval for the local docs checkpoint.
 
 ## Scope System Rules
 
@@ -66,6 +75,8 @@ Every active scope item should use this structure, either as a detailed record b
 - Deferred
 - Historical
 
+`Scope review required` means the item must be inspected/reconciled before implementation. It does not mean ready to code.
+
 ## Priority Model
 
 - P0: data integrity, production safety, scope-control blockers.
@@ -94,14 +105,14 @@ Every active scope item should use this structure, either as a detailed record b
 | DEC-LANGUAGE-001 | User-facing UI should say `Sport Load`, not `External Load`, except legacy/internal names. | In progress | `AGENTS.md` |
 | DEC-KPI-001 | Compare Maddox against himself over time, not adult/NHL standards. | Completed | KPI roadmap intake |
 | DEC-KPI-002 | Do not use flat 400m as the primary hockey-shift test; prefer a 45-second repeated shuttle / shift simulation. | Completed | KPI roadmap intake |
-| DEC-AI-001 | AI Coach recommends; parent approves. | Deferred | `docs/AI_COACH_STRATEGY.md` historical input |
+| DEC-AI-001 | AI Coach recommends; parent approves. | Not started | Prior AI Coach strategy content merged here; use git history only |
 | DEC-SOURCE-REVIEW-001 | Gemini/OvertimeAthlete recommendations are source-review inputs only, not source of truth. | Completed | Gemini intake |
 
 ## Active Execution Queue
 
 | Order | ID | Title | Priority | Status | Lane | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | SCOPE-CONSOLIDATION-001 | Scope system consolidation | P0 | In progress | Docs-only | Mike review of `docs/SCOPE.md`; do not commit until accepted. |
+| 1 | SCOPE-CONSOLIDATION-001 | Scope system consolidation | P0 | In progress | Docs-only | Mike review / push approval for the local docs checkpoint. |
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
 | 3 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 4 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Not started | Fast lane | Render approved v8.4 prescription detail where available. |
@@ -120,14 +131,14 @@ Every active scope item should use this structure, either as a detailed record b
 | 17 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
 | 18 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
 | 19 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
-| 20 | AI-COACH-001 | AI Coach strategy | P3 | Deferred | Future roadmap | Start only after data/sync/QA trust. |
+| 20 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
 | 21 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
 
 ## Current Sprint / Next Codex Task
 
-Current sprint: complete and review scope system consolidation, then perform environment/data safety reconciliation.
+Current sprint: Mike review / push approval for the local docs checkpoint. `ENV-SAFETY-RECON-001` is completed for the inspection pass.
 
-Next implementation task after docs consolidation and environment/data safety reconciliation: Activity Prescription Display Layer.
+Next implementation task after docs checkpoint review/push approval: Activity Prescription Display Layer.
 
 Minimum next task brief:
 
@@ -189,7 +200,8 @@ Active source files to inspect next:
 
 | Status | IDs |
 | --- | --- |
-| Deferred | AI-COACH-001 |
+| Deferred | None |
+| Not started | AI-COACH-001 |
 | Scope review required | AGENTIC-WORKFLOW-001, AGENTIC-WORKFLOW-002 |
 
 ## Detailed Scope Records
@@ -763,7 +775,7 @@ Advanced KPI scope:
 - Type: Epic
 - Parent: Future intelligence layer
 - Priority: P3
-- Status: Deferred
+- Status: Not started
 - Lane: Future roadmap
 - Owner: Mike
 - Source: AI Coach strategy doc

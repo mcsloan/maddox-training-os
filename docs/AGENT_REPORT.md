@@ -8,6 +8,8 @@ ENV-SAFETY-RECON-001 - Environment Safety Reconciliation.
 
 Environment, Supabase, Vercel, script, migration, sync, backfill, deploy, and secret-handling references were inspected without reading env files or printing secret values. `docs/SCOPE.md` now records the environment-safety findings under `ENV-SAFETY-RECON-001`.
 
+Checkpoint wording correction: `docs/SESSION_HANDOFF.md` and `docs/SCOPE.md` were updated after this report to distinguish local Git HEAD `3ebc157` from the historical/current production baseline `7b48a3e`, and to clarify that browser build badges are runtime context, not repo truth.
+
 ## Files Changed
 
 - `docs/SCOPE.md`
