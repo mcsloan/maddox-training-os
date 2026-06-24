@@ -2,17 +2,22 @@
 
 ## Latest Task
 
-ENV-SAFETY-RECON-001 - Environment Safety Reconciliation.
+POST-PUSH-STATE-001 - Realign Scope Tracking to Production Baseline `f02bff4`.
 
 ## Result
 
-Environment, Supabase, Vercel, script, migration, sync, backfill, deploy, and secret-handling references were inspected without reading env files or printing secret values. `docs/SCOPE.md` now records the environment-safety findings under `ENV-SAFETY-RECON-001`.
+Post-push state realignment only. `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, and this report now state that the last verified pushed/deployed production baseline before this realignment was `f02bff4` (`docs(scope): correct checkpoint wording before push`) with production badge `v0.1.0 · f02bff4 · production`.
 
-Checkpoint wording correction: `docs/SESSION_HANDOFF.md` and `docs/SCOPE.md` were updated after this report to distinguish local Git HEAD `3ebc157` from the historical/current production baseline `7b48a3e`, and to clarify that browser build badges are runtime context, not repo truth.
+Phase 1 docs/scope-control and environment safety reconciliation are complete. No app code work has started after the docs/safety checkpoint. The next active implementation task remains `ACTIVITY-PRESCRIPTION-001`.
+
+Previous environment safety report retained below.
+
+Environment, Supabase, Vercel, script, migration, sync, backfill, deploy, and secret-handling references were inspected without reading env files or printing secret values. `docs/SCOPE.md` now records the environment-safety findings under `ENV-SAFETY-RECON-001`.
 
 ## Files Changed
 
 - `docs/SCOPE.md`
+- `docs/SESSION_HANDOFF.md`
 - `docs/AGENT_REPORT.md`
 
 ## Files Inspected
@@ -86,14 +91,14 @@ Names only:
 
 ## Recommended Next Single Step
 
-Mike reviews `ENV-SAFETY-RECON-001` findings in `docs/SCOPE.md`; after review, proceed to the next approved scope item without cloud writes or deploys.
+Mike reviews the post-push state diff; after approval, proceed to `ACTIVITY-PRESCRIPTION-001` without cloud writes or deploys.
 
 ## Scope Capture Check
 
 - Defects added/updated: none.
-- Epics/features added/updated: `ENV-SAFETY-RECON-001` marked completed for this inspection pass.
+- Epics/features added/updated: `ENV-SAFETY-RECON-001` remains completed for this inspection pass; `ACTIVITY-PRESCRIPTION-001` remains the next active implementation task.
 - Product decisions added/updated: none.
 - Data/sync/environment decisions added/updated: package scripts and Supabase/Vercel/env references classified.
 - Testing requirements added/updated: no new tests; safe local verification commands classified.
-- Docs updated: `docs/SCOPE.md`, `docs/AGENT_REPORT.md`.
+- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
 - Items intentionally deferred: cloud writes, migrations, deploys, seeds, backfills, production smoke writes, app code, script changes, package changes.

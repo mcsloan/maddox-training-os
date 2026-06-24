@@ -9,21 +9,18 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Local HEAD: `3ebc157` (`docs(scope): record environment safety reconciliation`).
-- Local `main` is ahead of `origin/main` by 2 commits.
-- Local docs commits not pushed yet:
-  - `3dadea0` (`build(scope): harden documentation architecture and scope controls`)
-  - `3ebc157` (`docs(scope): record environment safety reconciliation`)
-- Historical pre-hardening / current production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
-- Vercel production is expected to remain on `v0.1.0 · 7b48a3e · production` until the local docs commits are pushed and deployed.
-- Local browser/build badge may show stale running-server context and is not the repo source of truth.
-- Git state from Terminal 2 is authoritative for repo checkpoint.
+- Settled post-push baseline: local `main` == `origin/main` == Vercel production.
+- Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
+- Production badge confirmed: `v0.1.0 · f02bff4 · production`.
+- Historical pre-hardening production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
+- Git state is the repo source of truth; browser/build badges are runtime context only.
+- Phase 1 docs/scope-control checkpoint is complete.
 - Calendar coverage from v8.4 was fixed and accepted.
 - v8.4 covers all 84 dates from `2026-06-15` through `2026-09-06`.
 - v8.4 app import package remains authoritative for app training data.
 - Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
-- No app code work has started after the docs hardening checkpoint.
-- Next action: Mike review / push approval for the local docs checkpoint.
+- No app code work has started after the docs/safety checkpoint.
+- Next active implementation task: `ACTIVITY-PRESCRIPTION-001`.
 
 ## Scope System Rules
 
@@ -112,7 +109,7 @@ Every active scope item should use this structure, either as a detailed record b
 
 | Order | ID | Title | Priority | Status | Lane | Next action |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | SCOPE-CONSOLIDATION-001 | Scope system consolidation | P0 | In progress | Docs-only | Mike review / push approval for the local docs checkpoint. |
+| 1 | SCOPE-CONSOLIDATION-001 | Scope system consolidation | P0 | Completed | Docs-only | Phase 1 docs/scope-control checkpoint is complete after the `f02bff4` pushed/deployed baseline. |
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
 | 3 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 4 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Not started | Fast lane | Render approved v8.4 prescription detail where available. |
@@ -136,9 +133,9 @@ Every active scope item should use this structure, either as a detailed record b
 
 ## Current Sprint / Next Codex Task
 
-Current sprint: Mike review / push approval for the local docs checkpoint. `ENV-SAFETY-RECON-001` is completed for the inspection pass.
+Current sprint: Phase 1 docs/scope-control and environment safety reconciliation are complete. The last verified pushed/deployed production baseline before this realignment was `f02bff4`. `ENV-SAFETY-RECON-001` is completed for the inspection pass.
 
-Next implementation task after docs checkpoint review/push approval: Activity Prescription Display Layer.
+Next active implementation task: `ACTIVITY-PRESCRIPTION-001` - Activity Prescription Display Layer.
 
 Minimum next task brief:
 
@@ -151,14 +148,8 @@ Minimum next task brief:
 - Do not change logging fields or Supabase/schema behavior unless a separate safe-lane task explicitly allows it.
 - Do not follow inline TODOs or comments unless they are backed by the active `docs/SCOPE.md` ID.
 
-Active source files to inspect next:
+Active source files to inspect next for `ACTIVITY-PRESCRIPTION-001`:
 
-- `package.json` script names only for environment safety reconciliation.
-- `scripts/env-whoami.mjs`
-- `scripts/preflight.mjs`
-- `scripts/confirm-write-target.mjs`
-- `lib/supabase/client.ts`
-- `lib/storage/`
 - `imports/v8.4/data/dayExecutionPlan.json`
 - `imports/v8.4/data/sessions.json`
 - `imports/v8.4/data/drills.json`
@@ -175,10 +166,10 @@ Active source files to inspect next:
 
 | Status | IDs |
 | --- | --- |
-| In progress | SCOPE-CONSOLIDATION-001, DOC-DRIFT-001, DOC-INV-001 |
+| In progress | None |
 | Not started | None |
 | Scope review required | SCOPE-GATE-001, ENV-SAFETY-LOCAL-PROD-GUARD, SPORT-SCHEDULE-VERIFY-001, DEF-001, DEF-015 |
-| Completed | ENV-SAFETY-RECON-001, DPM-QA-006 |
+| Completed | SCOPE-CONSOLIDATION-001, DOC-DRIFT-001, DOC-INV-001, ENV-SAFETY-RECON-001, DPM-QA-006 |
 
 ### P1
 
@@ -213,7 +204,7 @@ Active source files to inspect next:
 - Type: Task
 - Parent: Scope control
 - Priority: P0
-- Status: In progress
+- Status: Completed
 - Lane: Docs-only
 - Owner: Mike / Codex
 - Source: Current task
@@ -222,9 +213,9 @@ Active source files to inspect next:
 - In scope: create this file, merge active scope, update pointers, update AGENTS/session/report/inventory.
 - Out of scope: app code, v8.4 source JSON, Supabase, tooling, stash, commit, push.
 - Acceptance criteria: active queue and current sprint exist here; duplicate scope docs are non-canonical; AGENTS points here.
-- Dependencies: Mike review before commit.
+- Dependencies: Completed Phase 1 review/push checkpoint after the `f02bff4` pushed/deployed baseline.
 - Risks: historical detail may still need archive review.
-- Next action: Mike reviews this consolidation.
+- Next action: Use this file as the active scope source for the next approved implementation task.
 - Links / evidence: `docs/DOCUMENTATION_INVENTORY.md`, prior reconciled docs.
 
 ### ENV-SAFETY-RECON-001
@@ -985,12 +976,12 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-013 | History is record-fragmented instead of Week -> Day -> Evidence | Defect | History | P1 | Scope review required | Safe lane | Mike / Codex | Defect log | History grouping may fragment records. | Week -> Day -> Evidence. | verify/reconcile. | now. | grouping accepted. | evidence model | confusing history. | Review later. | former defect log stub; use git history only |
 | DEF-017 | Homepage Next Session card uses stale session logic | Defect | Homepage/today | P1 | Scope review required | Fast lane | Mike / Codex | Defect log | Homepage may not use canonical Day. | Today/next card aligns with Day. | verify/fix. | now. | no stale next session. | day projection | stale nav. | Review later. | former defect log stub; use git history only |
 | DEF-019 | Blank / unclear future day state | Defect | Day readiness | P1 | Scope review required | Fast lane | Mike / Codex | Defect log | Future days may be unclear. | intentional usable day states. | future audit. | source invention. | upcoming days usable. | FUTURE-DAY-READINESS-001 | athlete blocked. | Audit after display work. | former defect log stub; use git history only |
-| DOC-DRIFT-001 | Documentation current-state drift | Defect | Scope control | P0 | In progress | Docs-only | Mike / Codex | Docs reconciliation | Docs diverged from current reality. | docs are trustworthy. | docs consolidation. | app changes. | active scope centralized. | SCOPE-CONSOLIDATION-001 | wrong next work. | Mike review. | `docs/DOCUMENTATION_INVENTORY.md` |
-| DOC-INV-001 | Documentation inventory/consolidation needed | Defect | Scope control | P0 | In progress | Docs-only | Mike / Codex | Docs reconciliation | Docs lacked inventory. | inventory guides archive/merge. | inventory update. | deletion. | inventory reflects SCOPE canonical. | SCOPE-CONSOLIDATION-001 | stale ownership. | review inventory. | `docs/DOCUMENTATION_INVENTORY.md` |
+| DOC-DRIFT-001 | Documentation current-state drift | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs diverged from current reality. | docs are trustworthy. | docs consolidation. | app changes. | active scope centralized. | SCOPE-CONSOLIDATION-001 | wrong next work. | Use `docs/SCOPE.md` as canonical active scope source. | `docs/DOCUMENTATION_INVENTORY.md` |
+| DOC-INV-001 | Documentation inventory/consolidation needed | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs lacked inventory. | inventory guides archive/merge. | inventory update. | deletion. | inventory reflects SCOPE canonical. | SCOPE-CONSOLIDATION-001 | stale ownership. | Use `docs/DOCUMENTATION_INVENTORY.md` for inventory only. | `docs/DOCUMENTATION_INVENTORY.md` |
 
 ## Training / Source Scope
 
-- Activity Prescription Display Layer is the next P1 implementation feature after docs/environment safety work.
+- Activity Prescription Display Layer is the next P1 implementation feature; docs/scope-control and environment safety work are complete.
 - Recovery days are not blank days.
 - OvertimeAthlete source ingestion/review is future source-review only.
 - U12 safety guardrails are source-review scope, not immediate app changes.

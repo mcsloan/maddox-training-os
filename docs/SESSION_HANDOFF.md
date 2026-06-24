@@ -3,21 +3,17 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Local HEAD: `3ebc157` (`docs(scope): record environment safety reconciliation`).
-- Local `main` is ahead of `origin/main` by 2 commits.
-- Local docs commits not pushed yet:
-  - `3dadea0` (`build(scope): harden documentation architecture and scope controls`)
-  - `3ebc157` (`docs(scope): record environment safety reconciliation`)
-- Historical pre-hardening / current production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
-- Vercel production is expected to remain on `v0.1.0 · 7b48a3e · production` until the local docs commits are pushed and deployed.
-- Local browser/build badge may show stale running-server context and is not the repo source of truth.
-- Git state from Terminal 2 is authoritative for this checkpoint.
-- Working tree was clean before this checkpoint wording fix.
+- Settled post-push baseline: local `main` == `origin/main` == Vercel production.
+- Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
+- Production badge confirmed: `v0.1.0 · f02bff4 · production`.
+- Historical pre-hardening production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
+- Git state is the repo source of truth; browser/build badges are runtime context only.
+- Phase 1 docs/scope-control checkpoint is complete.
 - Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
 - v8.4 app import package remains authoritative.
 - Calendar coverage from v8.4 was fixed and accepted.
-- No app code work has started after the docs hardening checkpoint.
-- Next action: Mike review / push approval for the local docs checkpoint.
+- No app code work has started after the docs/safety checkpoint.
+- Next active implementation task: `ACTIVITY-PRESCRIPTION-001`.
 
 ## Current Constraints
 
@@ -56,10 +52,9 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Current sequence starts with:
 
-1. Mike review / push approval for the local docs checkpoint.
-2. Activity Prescription Display Layer.
-3. Test fixture discovery / comment audit if Mike chooses to run those before app code.
-4. Future-day readiness audit from June 23 onward.
+1. Activity Prescription Display Layer (`ACTIVITY-PRESCRIPTION-001`).
+2. Test fixture discovery / comment audit if Mike chooses to run those before app code.
+3. Future-day readiness audit from June 23 onward.
 
 ## Known Caution Areas
 
@@ -84,4 +79,4 @@ Current sequence starts with:
 - Data/sync/environment decisions added/updated: environment safety reconciliation completed for the inspection pass; KPI cloud-sync stash noted and not applied; production/staging safety remains mandatory.
 - Testing requirements added/updated: docs-only changes require status plus docs lint only if configured; app-code changes still require standard checks.
 - Docs updated: `SESSION_HANDOFF.md`, `SCOPE.md`, `DOCUMENTATION_INVENTORY.md`, `AGENT_REPORT.md`, `AGENTS.md`, and dead-end stubs.
-- Items intentionally deferred: Activity Prescription implementation, KPI cloud-sync stash, OvertimeAthlete source ingestion, agentic workflow tooling, push/deploy until Mike approval.
+- Items intentionally deferred: Activity Prescription implementation until explicitly started, KPI cloud-sync stash, OvertimeAthlete source ingestion, agentic workflow tooling, future deploy/cloud-write work until explicit approval.
