@@ -3,7 +3,8 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Settled post-push baseline: local `main` == `origin/main` == Vercel production.
+- Latest pushed repo checkpoint before this docs capture: `97a7cee` (`docs(scope): log site-wide activity presentation drift risk`).
+- Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
 - Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
 - Production badge confirmed: `v0.1.0 · f02bff4 · production`.
 - Historical pre-hardening production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
@@ -12,8 +13,10 @@
 - Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
 - v8.4 app import package remains authoritative.
 - Calendar coverage from v8.4 was fixed and accepted.
-- No app code work has started after the docs/safety checkpoint.
-- Next active implementation task: `ACTIVITY-PRESCRIPTION-001`.
+- No accepted app code work has started after the docs/safety checkpoint.
+- ACTIVITY-PRESCRIPTION-001A/B/C produced local uncommitted app-code WIP, but it is blocked and not commit-ready.
+- Completed audit: `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` - Site-wide activity presentation consumer audit.
+- Next implementation candidate after docs capture: `ACTIVITY-PRESENTATION-CONTRACT-001` - Planned activity presentation contract, Day + Session parity only.
 
 ## Current Constraints
 
@@ -52,9 +55,18 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Current sequence starts with:
 
-1. Activity Prescription Display Layer (`ACTIVITY-PRESCRIPTION-001`).
-2. Test fixture discovery / comment audit if Mike chooses to run those before app code.
-3. Future-day readiness audit from June 23 onward.
+1. Durable capture of completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` findings.
+2. Planned activity presentation contract, Day + Session parity only (`ACTIVITY-PRESENTATION-CONTRACT-001`).
+3. Activity Prescription Display Layer (`ACTIVITY-PRESCRIPTION-001`) remains blocked until Day + Session parity is implemented and product-reviewed.
+4. Test fixture discovery / comment audit if Mike chooses to run those before app code.
+5. Future-day readiness audit from June 23 onward.
+
+Next code-task boundaries:
+
+- Start from the completed site-wide consumer audit.
+- Implement canonical planned-activity projection first: `projectPlannedDayActivities(date)`.
+- Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source JSON in the next code task.
+- Do not build on current WIP blindly; revise or discard WIP only through the approved canonical contract plan.
 
 ## Known Caution Areas
 

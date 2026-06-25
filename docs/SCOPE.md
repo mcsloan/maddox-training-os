@@ -9,7 +9,8 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Settled post-push baseline: local `main` == `origin/main` == Vercel production.
+- Latest pushed repo checkpoint before this docs capture: `97a7cee` (`docs(scope): log site-wide activity presentation drift risk`).
+- Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
 - Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
 - Production badge confirmed: `v0.1.0 · f02bff4 · production`.
 - Historical pre-hardening production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
@@ -20,7 +21,8 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - v8.4 app import package remains authoritative for app training data.
 - Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
 - ACTIVITY-PRESCRIPTION-001A/B/C produced local uncommitted app-code WIP, but it is blocked and not commit-ready.
-- Next required work before implementation resumes: `SURFACE-PRESENTATION-CONSUMER-AUDIT-001`.
+- `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` is completed as an inspect-only audit; no files were changed during the audit.
+- Next implementation candidate after this documentation capture: `ACTIVITY-PRESENTATION-CONTRACT-001` - Planned activity presentation contract, Day + Session parity only.
 
 ## Scope System Rules
 
@@ -113,44 +115,48 @@ Every active scope item should use this structure, either as a detailed record b
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
 | 3 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 4 | FORENSIC-DAY-SESSION-MISMATCH-001 | Forensic Day/Session data-flow audit | P1 | Completed | Fast lane | Audit found Day and Session use divergent presentation paths; use findings to drive canonical contract. |
-| 5 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Not started | Fast lane | Identify every surface that renders plan/activity/session display data before further Activity Prescription implementation. |
-| 6 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
-| 7 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
-| 8 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Not started | Fast lane | Audit upcoming Day/Calendar/Session usability. |
-| 9 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
-| 10 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Not started | Fast lane | Ensure Day planned sequence and Session execution cards match. |
-| 11 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
-| 12 | RECOVERY-DAY-MODEL-001 | Recovery-day model completion | P1 | Not started | Source-review | Ensure intentional recovery prescriptions are represented from source. |
-| 13 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
-| 14 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
-| 15 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
-| 16 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Formalize release gate, fixtures, and later Playwright. |
-| 17 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
-| 18 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
-| 19 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
-| 20 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
-| 21 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
-| 22 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
-| 23 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
+| 5 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Completed | Fast lane | Audit completed; use findings to constrain the next Day + Session parity implementation. |
+| 6 | ACTIVITY-PRESENTATION-CONTRACT-001 | Planned activity presentation contract, Day + Session parity only | P1 | Not started | Fast lane | Implement `projectPlannedDayActivities(date)` for master/reference plan presentation only; wire Day + Session parity before broader surfaces. |
+| 7 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
+| 8 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
+| 9 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Not started | Fast lane | Audit upcoming Day/Calendar/Session usability. |
+| 10 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
+| 11 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Not started | Fast lane | Ensure Day planned sequence and Session execution cards match. |
+| 12 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
+| 13 | RECOVERY-DAY-MODEL-001 | Recovery-day model completion | P1 | Not started | Source-review | Ensure intentional recovery prescriptions are represented from source. |
+| 14 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
+| 15 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
+| 16 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
+| 17 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Formalize release gate, fixtures, and later Playwright. |
+| 18 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
+| 19 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
+| 20 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
+| 21 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
+| 22 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
+| 23 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
+| 24 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
 
 ## Current Sprint / Next Codex Task
 
 Current sprint: Phase 1 docs/scope-control and environment safety reconciliation are complete. The last verified pushed/deployed production baseline before this realignment was `f02bff4`. `ENV-SAFETY-RECON-001` is completed for the inspection pass.
 
-Next required task: `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` - Site-wide activity presentation consumer audit.
+Next implementation candidate: `ACTIVITY-PRESENTATION-CONTRACT-001` - Planned activity presentation contract, Day + Session parity only.
 
 Minimum next task brief:
 
 - Read `AGENTS.md`, `docs/SESSION_HANDOFF.md`, and this file first.
-- Inspect every route/component/helper that renders plan, day, session, drill, activity, sport-load, recovery, IQ, shooting, conditioning, Speed Stack, source-block, or logging labels.
-- Classify each consumer as canonical-contract-now, summary-from-contract, admin/source/reference-only exception, or deferred with rationale.
-- Produce the wiring plan for the canonical activity presentation contract before further implementation.
+- Start from completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` findings.
+- Implement Pass 1 only: `projectPlannedDayActivities(date)` for master/reference planned activity presentation and metadata.
+- Wire Day + Session planned-activity parity only.
+- Do not include Supabase, saved logs, transactional joins, Dashboard, History, KPI, Exports, Gantt, or source JSON edits.
 - Do not edit `imports/v8.4/data/*.json`.
 - Do not invent prescriptions.
 - Do not change logging fields or Supabase/schema behavior unless a separate safe-lane task explicitly allows it.
 - Do not follow inline TODOs or comments unless they are backed by the active `docs/SCOPE.md` ID.
 
-Execution gate: no further cosmetic display patches or implementation under `ACTIVITY-PRESCRIPTION-001` until the Day/Session forensic audit and site-wide consumer audit identify:
+Execution gate: no further cosmetic display patches or broad implementation under `ACTIVITY-PRESCRIPTION-001` until the planned-activity contract is implemented and verified for Day + Session parity.
+
+Completed audit findings identified:
 
 1. Day page source path.
 2. Session form source path.
@@ -161,18 +167,7 @@ Execution gate: no further cosmetic display patches or implementation under `ACT
 7. Every athlete-facing consumer of plan/activity/session display data.
 8. Which consumers must use the canonical contract now, can use summaries from it, are admin/source/reference-only exceptions, or are deferred with rationale.
 
-Active source files and surfaces to inspect next for `SURFACE-PRESENTATION-CONSUMER-AUDIT-001`:
-
-- `imports/v8.4/data/dayExecutionPlan.json`
-- `imports/v8.4/data/sessions.json`
-- `imports/v8.4/data/drills.json`
-- `imports/v8.4/data/drillCards.json`
-- `imports/v8.4/data/speedStackPrescriptions.json`
-- `imports/v8.4/data/workoutBlockDetails.json`
-- `imports/v8.4/data/skillShotIqLibrary.json`
-- `imports/v8.4/data/recoveryRules.json`
-- `imports/v8.4/data/logSchemas.json`
-- Day, Today, Calendar, Session, Dashboard, History, Library, Exports, and report surfaces.
+Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source JSON in the next code task.
 
 ## Scope Item Index By Priority And Status
 
@@ -191,9 +186,9 @@ Active source files and surfaces to inspect next for `SURFACE-PRESENTATION-CONSU
 | --- | --- |
 | In progress | KPI-ROADMAP-001 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | CODE-COMMENT-AUDIT-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, TEST-FIXTURE-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
+| Not started | CODE-COMMENT-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, TEST-FIXTURE-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
-| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, DEF-007 |
+| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, DEF-007 |
 
 ### P2
 
@@ -414,7 +409,7 @@ Known comment-risk findings:
 - Acceptance criteria: available prescription detail appears in Day/Session activity cards; missing data is identified honestly.
 - Dependencies: `FORENSIC-DAY-SESSION-MISMATCH-001`; `SURFACE-PRESENTATION-CONSUMER-AUDIT-001`; v8.4 metadata/loaders/components.
 - Risks: current uncommitted WIP may contain surface-specific fixes that do not solve the shared Day/Session architecture.
-- Next action: stop cosmetic display patching; perform `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` and confirm canonical contract scope before revising current WIP.
+- Next action: stop cosmetic display patching; implement the approved planned-activity presentation contract for Day + Session parity only before revising current WIP for broader surfaces.
 - Links / evidence: `imports/v8.4/data/`, prior training epics content merged here; use git history only.
 
 Current WIP gate:
@@ -443,7 +438,7 @@ Current WIP gate:
 - Acceptance criteria: audit documents Day path, Session path, why steps differ, why duration/title conflict occurs, which canonical projection layer both must use, and which WIP changes should be kept, revised, or reverted.
 - Dependencies: current uncommitted ACTIVITY-PRESCRIPTION WIP; v8.4 import package.
 - Risks: applying more display patches before this audit may hide architectural defects and increase divergence.
-- Next action: use the audit findings with `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` before any further app-code implementation.
+- Next action: use the completed forensic and site-wide consumer audit findings to guide `ACTIVITY-PRESENTATION-CONTRACT-001`.
 - Links / evidence: DEF-021 through DEF-026; Mike June 19 browser QA.
 
 ### SURFACE-PRESENTATION-CONSUMER-AUDIT-001
@@ -453,7 +448,7 @@ Current WIP gate:
 - Type: Task
 - Parent: ACTIVITY-PRESCRIPTION-001
 - Priority: P1
-- Status: Not started
+- Status: Completed
 - Lane: Fast lane
 - Owner: Mike / Codex
 - Source: Mike review after FORENSIC-DAY-SESSION-MISMATCH-001
@@ -464,8 +459,128 @@ Current WIP gate:
 - Acceptance criteria: every athlete-facing consumer is identified and classified as must consume canonical activity presentation contract now, can consume summary projection from the same contract, admin/source/reference-only exception, or deferred with explicit rationale.
 - Dependencies: FORENSIC-DAY-SESSION-MISMATCH-001; current uncommitted ACTIVITY-PRESCRIPTION WIP; v8.4 import package.
 - Risks: without this audit, fixes may continue as surface-specific cosmetic patches and create new drift across Calendar, Dashboard, History, Today, Library, exports, and reports.
-- Next action: inspect-only site-wide consumer audit before further ACTIVITY-PRESCRIPTION implementation.
-- Links / evidence: DEF-027; FORENSIC-DAY-SESSION-MISMATCH-001 report; Mike review.
+- Next action: use completed audit findings to implement `ACTIVITY-PRESENTATION-CONTRACT-001` as a Day + Session planned-activity parity slice only.
+- Links / evidence: DEF-027; FORENSIC-DAY-SESSION-MISMATCH-001 report; inspect-only SURFACE-PRESENTATION-CONSUMER-AUDIT-001 report; Mike review.
+
+Completed audit conclusions:
+
+- The Day page is closest to canonical because it uses `dayExecutionPlan` plus `buildDayPresentation`.
+- The Session page is the main divergent path because it builds a synthetic flattened workout/drill model from `sessions.json` and `drills.json`.
+- Site-wide presentation consumers exist across Day, Session, Today/Home, Calendar, Training Work, Sport Load, Dashboard, History, Library, Plan, KPIs, Exports, storage snapshots, and debug/reference surfaces.
+- Site-wide consumers must be classified before broad fixes: canonical-contract-now, summary-from-contract, admin/source/reference-only exception, or deferred with explicit rationale.
+- Current ACTIVITY-PRESCRIPTION-001A/B/C WIP remains intentionally uncommitted and not commit-ready.
+
+Consumer classification summary:
+
+- Must consume canonical activity presentation contract now: Day execution, Session form/cards/summary, Training Work logging surface, and the v8.4 session adapter path that currently synthesizes workout/drill display.
+- Can consume summary projection from the same contract: Today/Home, Calendar, Dashboard, History, DayEvidenceStatus, Plan summaries, KPI day summaries, Sport Load support-work summaries, and future exports/reports.
+- Admin/source/reference-only exceptions: Library source catalog and debug/diagnostic session surfaces, as long as they are not used as athlete execution UI.
+- Deferred with rationale: broad Dashboard/History/KPI/Exports rewiring until Day + Session parity is stable and product-reviewed.
+
+Approved architecture direction:
+
+- v8.4 `dayExecutionPlan` owns top-level day activity coverage and order.
+- `sessions.json` and `drills.json` enrich details but must not replace top-level planned day order.
+- Speed Stack child drills attach under parent Speed Stack activities.
+- Duration precedence is `dayExecutionPlan` first, session/drill detail second, code-derived fallback only when no authoritative duration exists and no conflict is present.
+- Presentation fixes must not mutate saved data.
+- Implementation is not product-accepted until Mike completes future browser/product QA.
+
+Split-pass implementation strategy:
+
+- Pass 1, immediate: `projectPlannedDayActivities(date)`. Scope is master/reference plan data plus metadata only. No Supabase, no saved logs, no transactional joins.
+- Pass 2, deferred: `projectDayEvidence(date)`. Scope is saved evidence/status/logs only.
+- Pass 3, deferred: `composeDayViewModel(date)`. Scope is composition of planned presentation plus evidence.
+
+Documentation-only target baseline:
+
+```ts
+export type ActivityPresentation = {
+  id: string;
+  date: string;
+  sequenceOrder: number;
+
+  sourceBlockId?: string;
+  sourceTrace?: {
+    dayExecutionPlanId?: string;
+    sessionId?: string;
+    drillIds?: string[];
+  };
+
+  athleteTitle: string;
+  parentTitle?: string;
+
+  category:
+    | "warmup"
+    | "speed_stack"
+    | "shooting"
+    | "conditioning"
+    | "mobility"
+    | "recovery"
+    | "iq"
+    | "kpi"
+    | "sport_load"
+    | "reflection"
+    | "other";
+
+  plannedDurationMinutes?: number;
+  instruction?: string;
+  coachingCue?: string;
+
+  logType:
+    | "none"
+    | "checkoff"
+    | "drill_log"
+    | "shooting_log"
+    | "kpi_log"
+    | "sport_load_log"
+    | "recovery_log"
+    | "reflection_log";
+
+  required: boolean;
+  optional: boolean;
+
+  children?: ActivityPresentationChild[];
+};
+
+export type ActivityPresentationChild = {
+  id: string;
+  title: string;
+  instruction?: string;
+  plannedSets?: number;
+  plannedReps?: string;
+  plannedDurationMinutes?: number;
+  coachingCue?: string;
+  videoUrl?: string;
+  sourceTrace?: {
+    drillId?: string;
+    sourceBlockId?: string;
+  };
+};
+```
+
+This contract is an approved target baseline for the next implementation task. It is not implemented in app code yet.
+
+### ACTIVITY-PRESENTATION-CONTRACT-001
+
+- ID: ACTIVITY-PRESENTATION-CONTRACT-001
+- Title: Planned activity presentation contract, Day + Session parity only
+- Type: Task
+- Parent: ACTIVITY-PRESCRIPTION-001
+- Priority: P1
+- Status: Not started
+- Lane: Fast lane
+- Owner: Mike / Codex
+- Source: Completed SURFACE-PRESENTATION-CONSUMER-AUDIT-001
+- Problem: Day and Session do not consume one canonical planned-activity presentation model, causing missing planned steps, stale source language, and duration/title conflicts.
+- Desired outcome: Day and Session render planned activities from one `projectPlannedDayActivities(date)` contract while preserving raw IDs and avoiding saved-data mutation.
+- In scope: implement Pass 1 only; derive top-level planned activity presentation from v8.4 `dayExecutionPlan`; enrich with session/drill metadata where available; attach Speed Stack child drills under parent Speed Stack activities; wire Day + Session parity; add focused tests for planned-step parity, duration precedence, and source-language filtering.
+- Out of scope: Supabase, saved logs, transactional joins, Dashboard, History, KPI, Exports, Gantt, source JSON edits, logging schema changes, broad redesign, product acceptance claims.
+- Acceptance criteria: Day and Session use the same planned-activity contract for June 19-style execution; Warmup and Optional Easy Bike are represented or explicitly classified; athlete-facing labels do not leak known source/workbook language; duration labels follow authoritative precedence; current WIP is revised through the contract rather than committed as surface-specific patches.
+- Dependencies: completed `FORENSIC-DAY-SESSION-MISMATCH-001`; completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001`; v8.4 import package.
+- Risks: expanding the first pass into evidence/log composition could change logging behavior or saved data; overfitting June 19 could leave site-wide drift unresolved.
+- Next action: implement `projectPlannedDayActivities(date)` as the first planned-activity projection pass and wire Day + Session parity only.
+- Links / evidence: DEF-021 through DEF-027; completed consumer audit; current uncommitted ACTIVITY-PRESCRIPTION-001A/B/C WIP.
 
 Ground Truth Baseline:
 
@@ -1048,7 +1163,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-024 | Display fixes were surface-specific, not canonical | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Day page labels/copy changed while Session form retained stale/internal/source copy. | One shared projection/helper is consumed by all athlete-facing execution surfaces. | audit projection ownership and test parity. | additional one-off Day or Session display patches. | tests prove Day and Session projections agree for the same activity IDs. | FORENSIC-DAY-SESSION-MISMATCH-001 | fixes may mask symptoms without correcting architecture. | Decide which current WIP changes to keep, revise, or revert. | Mike browser QA |
 | DEF-025 | Session form leaks stale/internal/source language | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Session form showed labels/copy such as `IQ 5 daily cue`, `Skill IQ Mindset`, `Recovery Rules`, and older scan/support/talk style copy. | Session form does not expose raw/source/workbook labels as athlete-facing primary labels or instructions. | audit Session projection output and add parity tests. | source JSON edits or invented instructions. | known forbidden/internal phrases are covered by tests in Session projection output. | FORENSIC-DAY-SESSION-MISMATCH-001 | session execution remains confusing during live training. | Audit Session form source path and display transformations. | Mike browser QA |
 | DEF-026 | Current ACTIVITY-PRESCRIPTION WIP is not commit-ready | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Browser QA failed across Day/Session consistency and missing loggable steps. | Current WIP is not committed until architecture mismatch is resolved. | forensic audit, fix plan approval, Day/Session parity implementation, browser verification. | committing or pushing current WIP. | forensic data-flow audit completed, fix plan approved, Day and Session parity implemented and browser-verified. | DEF-021, DEF-022, DEF-023, DEF-024, DEF-025 | committing WIP would preserve known critical defects. | Keep WIP uncommitted; start forensic audit. | Mike browser QA |
-| DEF-027 | Site-wide activity presentation drift risk | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | FORENSIC-DAY-SESSION-MISMATCH-001 and Mike review | Day and Session already diverged for June 19; similar display/data drift may exist wherever the app renders plan/activity/session labels, including Today, Calendar, Dashboard, History, Library, exports, and reports. | Every athlete-facing consumer of plan/activity/session display data uses or is intentionally classified against the canonical activity presentation contract. | site-wide consumer audit, canonical presentation rules for label, duration, description, source-language filtering, loggable classification, and trace fields. | app fixes before the consumer audit; broad redesign; source JSON edits. | every athlete-facing consumer is identified and classified as must consume canonical activity presentation contract now, can consume summary projection from the same contract, admin/source/reference-only exception, or deferred with explicit rationale; tests or fixtures prevent drift for critical surfaces. | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | surface-specific cosmetic patches may keep creating inconsistent athlete instructions and logging representations. | Run `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` before further Activity Prescription implementation. | Mike review; Day/Session forensic audit |
+| DEF-027 | Site-wide activity presentation drift risk | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | FORENSIC-DAY-SESSION-MISMATCH-001 and Mike review | Day and Session already diverged for June 19; similar display/data drift may exist wherever the app renders plan/activity/session labels, including Today, Calendar, Dashboard, History, Library, exports, and reports. | Every athlete-facing consumer of plan/activity/session display data uses or is intentionally classified against the canonical activity presentation contract. | site-wide consumer audit, canonical presentation rules for label, duration, description, source-language filtering, loggable classification, and trace fields. | broad app fixes before Day + Session planned-activity parity; broad redesign; source JSON edits. | every athlete-facing consumer is identified and classified as must consume canonical activity presentation contract now, can consume summary projection from the same contract, admin/source/reference-only exception, or deferred with explicit rationale; tests or fixtures prevent drift for critical surfaces. | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | surface-specific cosmetic patches may keep creating inconsistent athlete instructions and logging representations. | Use completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` findings to constrain `ACTIVITY-PRESENTATION-CONTRACT-001`; defer broad surfaces until Day + Session parity is stable. | Mike review; Day/Session forensic audit; completed consumer audit |
 | DOC-DRIFT-001 | Documentation current-state drift | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs diverged from current reality. | docs are trustworthy. | docs consolidation. | app changes. | active scope centralized. | SCOPE-CONSOLIDATION-001 | wrong next work. | Use `docs/SCOPE.md` as canonical active scope source. | `docs/DOCUMENTATION_INVENTORY.md` |
 | DOC-INV-001 | Documentation inventory/consolidation needed | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs lacked inventory. | inventory guides archive/merge. | inventory update. | deletion. | inventory reflects SCOPE canonical. | SCOPE-CONSOLIDATION-001 | stale ownership. | Use `docs/DOCUMENTATION_INVENTORY.md` for inventory only. | `docs/DOCUMENTATION_INVENTORY.md` |
 
