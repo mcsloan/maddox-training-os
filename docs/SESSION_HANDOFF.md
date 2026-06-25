@@ -3,8 +3,8 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Latest pushed commit: `402edc8` (`test(qa): add Playwright chrome proof of life`).
-- Repo state after push: local `main` == `origin/main`.
+- Last pushed baseline before the DEF-028 evidence-script commit: `6b174a9` (`docs(qa): record Playwright proof-of-life checkpoint`).
+- DEF-028 evidence script commit: `66ab959` (`test(qa): improve DEF-028 Playwright evidence logging`).
 - `docs/SCOPE.md` remains the only canonical active scope source.
 - v8.4 app import package remains authoritative.
 - Playwright is installed as a dev dependency.
@@ -12,6 +12,17 @@
 - Installed Google Chrome channel launched successfully on macOS Catalina `10.15.8`.
 - Read-only production Playwright proof-of-life passed:
   - `npx playwright test e2e/activity-presentation-proof.spec.ts --project=chrome`
+- Latest DEF-028 evidence run from Terminal 2 passed with improved logging:
+  - result: `1 passed`
+  - production badge: `v0.1.0 · 6b174a9 · production`
+  - Day expected title present: `true`
+  - Session expected title present: `false`
+  - Previous Attempt gate visible: `false`
+  - `Reopen / Edit Latest Completed Session` visible: `false`
+  - `View Latest Completed Session` visible: `false`
+  - completed-session branch not exercised
+  - DEF-028 not reproduced by this run
+  - no dangerous actions clicked; no Supabase/data mutation
 - No accepted app code work is pending from this checkpoint.
 - DEF-028 remains open/not fixed because the completed-session/read-only surface was not exercised in the passing proof-of-life run.
 
@@ -25,6 +36,7 @@
 - `Reopen / Edit Latest Completed Session` was not visible.
 - `View Latest Completed Session` was not visible.
 - Therefore the completed-session surface was not exercised and DEF-028 was not reproduced during this run.
+- Later improved evidence logging at evidence script commit `66ab959` confirmed the same state-dependent branch absence and recorded Session expected title present as `false`.
 - No Supabase/data mutation was performed.
 - The test did not click Finish Session, Save, Submit, Start Fresh Attempt, or any logging/submission action.
 
