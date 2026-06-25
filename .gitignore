@@ -13,3 +13,7 @@ tsconfig.tsbuildinfo
 
 # Local QA evidence artifacts
 qa-artifacts/
+
+# Playwright local test artifacts
+test-results/
+playwright-report/
