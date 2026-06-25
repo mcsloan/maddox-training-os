@@ -9,7 +9,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Latest pushed repo checkpoint before this docs capture: `97a7cee` (`docs(scope): log site-wide activity presentation drift risk`).
+- Latest pushed repo checkpoint before this docs capture: `9964e52` (`Add activity presentation contract and QA harness`).
 - Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
 - Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
 - Production badge confirmed: `v0.1.0 · f02bff4 · production`.
@@ -128,13 +128,14 @@ Every active scope item should use this structure, either as a detailed record b
 | 15 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
 | 16 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
 | 17 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Formalize release gate, fixtures, and later Playwright. |
-| 18 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
-| 19 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
-| 20 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
-| 21 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
-| 22 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
-| 23 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
-| 24 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
+| 18 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Scope review required | Safe lane | Later task should install/configure the smallest Playwright proof-of-life only after Mike approves package changes. |
+| 19 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
+| 20 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
+| 21 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
+| 22 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
+| 23 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
+| 24 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
+| 25 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
 
 ## Current Sprint / Next Codex Task
 
@@ -185,9 +186,9 @@ Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source J
 | Status | IDs |
 | --- | --- |
 | In progress | KPI-ROADMAP-001 |
-| Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
+| Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027, DEF-028 |
 | Not started | CODE-COMMENT-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, TEST-FIXTURE-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
-| Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
+| Scope review required | ACTIVITY-LOGGING-001, QA-AUTOMATION-002, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, DEF-007 |
 
 ### P2
@@ -813,6 +814,27 @@ Advanced KPI scope:
 - Next action: reconcile QA/testing docs after environment safety.
 - Links / evidence: prior QA docs merged here; use git history only.
 
+### QA-AUTOMATION-002
+
+- ID: QA-AUTOMATION-002
+- Title: Playwright proof-of-life strategy
+- Type: Task
+- Parent: QA-SYSTEM-001
+- Priority: P1
+- Status: Scope review required
+- Lane: Safe lane
+- Owner: Mike / Codex
+- Source: Completed-session presentation defect and local QA harness limits
+- Problem: Manual browser QA is finding presentation regressions that static HTTP checks cannot fully cover, including completed-session/read-only flows.
+- Desired outcome: Add the smallest approved Playwright proof-of-life that verifies the June 19 Day + Session title/context flow without saving, finishing, mutating production data, or relying on Mike as the only QA harness.
+- In scope: later approved package install, local proof-of-life spec, production/read-only navigation, artifact capture, and explicit no-save/no-finish guardrails.
+- Out of scope: installing packages in this planning pass, broad Playwright rollout, CI changes, bundled browser downloads before Catalina compatibility review, app code fixes, Supabase writes, data backfills, migrations, or saved-record mutation.
+- Acceptance criteria: a future task proves Playwright can launch safely, open the production Day and Session routes, detect the previous-attempt gate, reopen/edit without saving, view completed session, and record whether the completed-session surface still shows stale legacy title text.
+- Dependencies: Mike approval for package changes; macOS 10.15.8 Catalina compatibility; installed Google Chrome 128; current no-package QA harness; DEF-028.
+- Risks: latest bundled Playwright browsers may not support Catalina safely; production session routes can expose real saved data; accidental clicks on finish/save/log actions would mutate data.
+- Next action: propose an install/setup task that uses installed Chrome via Playwright `channel: "chrome"` first, keeps bundled browser install disabled unless explicitly approved, and targets one proof-of-life spec only.
+- Links / evidence: DEF-028; current package setup has Vitest only, no `@playwright/test`, no `playwright.config.*`, no top-level `tests/` or `e2e/` folder.
+
 ### TEST-FIXTURE-001
 
 - ID: TEST-FIXTURE-001
@@ -1164,6 +1186,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-025 | Session form leaks stale/internal/source language | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Session form showed labels/copy such as `IQ 5 daily cue`, `Skill IQ Mindset`, `Recovery Rules`, and older scan/support/talk style copy. | Session form does not expose raw/source/workbook labels as athlete-facing primary labels or instructions. | audit Session projection output and add parity tests. | source JSON edits or invented instructions. | known forbidden/internal phrases are covered by tests in Session projection output. | FORENSIC-DAY-SESSION-MISMATCH-001 | session execution remains confusing during live training. | Audit Session form source path and display transformations. | Mike browser QA |
 | DEF-026 | Current ACTIVITY-PRESCRIPTION WIP is not commit-ready | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Browser QA failed across Day/Session consistency and missing loggable steps. | Current WIP is not committed until architecture mismatch is resolved. | forensic audit, fix plan approval, Day/Session parity implementation, browser verification. | committing or pushing current WIP. | forensic data-flow audit completed, fix plan approved, Day and Session parity implemented and browser-verified. | DEF-021, DEF-022, DEF-023, DEF-024, DEF-025 | committing WIP would preserve known critical defects. | Keep WIP uncommitted; start forensic audit. | Mike browser QA |
 | DEF-027 | Site-wide activity presentation drift risk | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | FORENSIC-DAY-SESSION-MISMATCH-001 and Mike review | Day and Session already diverged for June 19; similar display/data drift may exist wherever the app renders plan/activity/session labels, including Today, Calendar, Dashboard, History, Library, exports, and reports. | Every athlete-facing consumer of plan/activity/session display data uses or is intentionally classified against the canonical activity presentation contract. | site-wide consumer audit, canonical presentation rules for label, duration, description, source-language filtering, loggable classification, and trace fields. | broad app fixes before Day + Session planned-activity parity; broad redesign; source JSON edits. | every athlete-facing consumer is identified and classified as must consume canonical activity presentation contract now, can consume summary projection from the same contract, admin/source/reference-only exception, or deferred with explicit rationale; tests or fixtures prevent drift for critical surfaces. | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | surface-specific cosmetic patches may keep creating inconsistent athlete instructions and logging representations. | Use completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` findings to constrain `ACTIVITY-PRESENTATION-CONTRACT-001`; defer broad surfaces until Day + Session parity is stable. | Mike review; Day/Session forensic audit; completed consumer audit |
+| DEF-028 | Completed-session surfaces bypass ActivityPresentation context | Defect | Activity Presentation | P1 | Blocked | Fast lane | Mike / Codex | Production browser QA after `9964e52` | Active/edit Day + Session surfaces use the shared ActivityPresentation context, but completed-session/read-only flow still shows stale legacy title `Speed Stack C, conditioning, and shooting.` while Day and reopened/edit Session show `Acceleration and accurate shooting.` | Completed-session and previous-attempt surfaces use the same presentation contract where appropriate without mutating saved historical records. | audit completed-session/read-only presentation path; route display through shared day/session presentation context where safe; add browser regression coverage. | saved session mutation, Supabase writes, backfill, delete, migration, or changing transactional session records to fix display. | `/day/2026-06-19`, reopened/edit Session, previous-attempt gate, and View Latest Completed Session do not contradict the shared day title/context; saved data remains intact. | ACTIVITY-PRESENTATION-CONTRACT-001, QA-AUTOMATION-002 | stale completed-session copy can make accepted presentation work look inconsistent and untrusted. | Audit completed-session/read-only surfaces, then fix display/projection only; prove with Playwright proof-of-life before broad QA rollout. | Mike production flow: View Latest Completed Session shows stale title; Reopen/Edit shows corrected title |
 | DOC-DRIFT-001 | Documentation current-state drift | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs diverged from current reality. | docs are trustworthy. | docs consolidation. | app changes. | active scope centralized. | SCOPE-CONSOLIDATION-001 | wrong next work. | Use `docs/SCOPE.md` as canonical active scope source. | `docs/DOCUMENTATION_INVENTORY.md` |
 | DOC-INV-001 | Documentation inventory/consolidation needed | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs lacked inventory. | inventory guides archive/merge. | inventory update. | deletion. | inventory reflects SCOPE canonical. | SCOPE-CONSOLIDATION-001 | stale ownership. | Use `docs/DOCUMENTATION_INVENTORY.md` for inventory only. | `docs/DOCUMENTATION_INVENTORY.md` |
 
