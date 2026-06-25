@@ -9,7 +9,8 @@ import { ReflectionForm } from "@/components/ReflectionForm";
 import { SessionKPIForm } from "@/components/SessionKPIForm";
 import { SessionProgress } from "@/components/SessionProgress";
 import { SessionSummary } from "@/components/SessionSummary";
-import { getV84SessionById, getV84SessionDrills, getV84SessionWorkout, getV84VideoForDrillId } from "@/lib/imports/v8_4/session";
+import { getV84SessionById, getV84SessionWorkout, getV84VideoForDrillId } from "@/lib/imports/v8_4/session";
+import { activityToDrill, projectDayPresentationContext, projectPlannedDayActivities, remainingPlannedMinutesFromStep } from "@/lib/projections/activityPresentation";
 import { getWorkout, getWorkoutDrills, kpis as allKpis } from "@/lib/trainingData";
 import { loadCloudSessionById, loadCloudSessionsByWorkoutId, saveCloudSessionProgress } from "@/lib/storage/cloudSessionProgressRepository";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
@@ -55,7 +56,9 @@ export default function SessionPage() {
   const v84Session = getV84SessionById(routeId);
   const legacyWorkout = getWorkout(routeId);
   const workout = useMemo(() => v84Session ? getV84SessionWorkout(routeId) : legacyWorkout, [routeId, v84Session, legacyWorkout]);
-  const drills = useMemo(() => v84Session ? getV84SessionDrills(routeId) : workout ? getWorkoutDrills(workout) : [], [routeId, v84Session, workout]);
+  const dayContext = useMemo(() => v84Session ? projectDayPresentationContext(v84Session.date) : null, [v84Session]);
+  const plannedActivities = useMemo(() => v84Session ? projectPlannedDayActivities(v84Session.date) : [], [v84Session]);
+  const drills = useMemo(() => v84Session ? plannedActivities.map(activityToDrill) : workout ? getWorkoutDrills(workout) : [], [v84Session, plannedActivities, workout]);
   const workoutKpis = useMemo(() => v84Session ? [] : workout ? workout.kpiTestIds.map((id) => allKpis.find((kpi) => kpi.id === id)).filter((kpi): kpi is (typeof allKpis)[number] => Boolean(kpi)) : [], [v84Session, workout]);
   const [session, setSession] = useState<SessionLog | null>(null);
   const [completedSessions, setCompletedSessions] = useState<SessionLog[]>([]);
@@ -366,12 +369,17 @@ export default function SessionPage() {
     return <div className="card mx-auto max-w-2xl"><h1 className="text-2xl font-black">Unable to load session</h1><p className="mt-2 text-slate-500">No usable session was created.</p><button className="btn-primary mt-5" onClick={startFresh}>Start Fresh Attempt</button></div>;
   }
 
-  const totalSteps = drills.length + workoutKpis.length + 2;
+  const totalSteps = v84Session ? Math.max(plannedActivities.length, 1) : drills.length + workoutKpis.length + 2;
   const step = Math.max(0, Math.min(session.currentStep, totalSteps - 1));
-  const drill = step > 0 && step <= drills.length ? drills[step - 1] : null;
-  const kpiIndex = step - drills.length - 1;
-  const kpi = kpiIndex >= 0 && kpiIndex < workoutKpis.length ? workoutKpis[kpiIndex] : null;
-  const isReflection = step === totalSteps - 1;
+  const activeActivity = v84Session ? plannedActivities[step] : null;
+  const drill = v84Session ? activeActivity && !isReadinessActivity(activeActivity) && activeActivity.category !== "reflection" ? drills[step] : null : step > 0 && step <= drills.length ? drills[step - 1] : null;
+  const kpiIndex = v84Session ? -1 : step - drills.length - 1;
+  const kpi = !v84Session && kpiIndex >= 0 && kpiIndex < workoutKpis.length ? workoutKpis[kpiIndex] : null;
+  const isReadiness = v84Session ? Boolean(activeActivity && isReadinessActivity(activeActivity)) : step === 0;
+  const isReflection = v84Session ? activeActivity?.category === "reflection" : step === totalSteps - 1;
+  const remainingLabel = v84Session
+    ? v84RemainingLabel(plannedActivities, step)
+    : `About ${Math.max(0, Math.ceil(workout.totalEstimatedMinutes * (totalSteps - step - 1) / totalSteps))} min remaining`;
 
   function move(nextStep: number) {
     update({ ...session!, currentStep: Math.max(0, Math.min(totalSteps - 1, nextStep)) });
@@ -408,13 +416,13 @@ export default function SessionPage() {
       {diagnostics.repository.lastError && <div className="mb-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm font-semibold text-amber-900">Browser storage warning: {diagnostics.repository.lastError}. This session can continue in memory, but autosave may be unavailable.</div>}
       {cloudWarning && <div className="mb-5 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm font-semibold text-amber-900">{cloudWarning} Local autosave is still active.</div>}
       <div className="card mb-5 bg-navy text-white">
-        <p className="label text-lime">{workout.sessionType}</p>
-        <h1 className="text-3xl font-black">{workout.dayFocus}</h1>
+        <p className="label text-lime">{dayContext?.eyebrow || workout.sessionType}</p>
+        <h1 className="text-3xl font-black">{dayContext?.heroTitle || workout.dayFocus}</h1>
         <div className="mt-4"><SessionProgress current={step + 1} total={totalSteps} /></div>
-        <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm font-bold text-slate-200"><span>{drill ? `Drill ${step} of ${drills.length}` : kpi ? `KPI test ${kpiIndex + 1} of ${workoutKpis.length}` : isReflection ? "Final reflection" : "Readiness check"}</span><span>About {Math.max(0, Math.ceil(workout.totalEstimatedMinutes * (totalSteps - step - 1) / totalSteps))} min remaining</span><span>{saveFeedback}</span></div>
+        <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm font-bold text-slate-200"><span>{v84Session ? activeActivity?.athleteTitle || `Step ${step + 1}` : drill ? `Drill ${step} of ${drills.length}` : kpi ? `KPI test ${kpiIndex + 1} of ${workoutKpis.length}` : isReflection ? "Final reflection" : "Readiness check"}</span><span>{remainingLabel}</span><span>{saveFeedback}</span></div>
       </div>
-      {step === 0 && <ReadinessCheck value={session.readiness} onChange={(readiness) => update({ ...session!, readiness })} />}
-      {drill && <DrillCard drill={drill} completion={session.exercises[drill.id] || emptyExerciseCompletion(drill.id)} videoState={v84Session ? getV84VideoForDrillId(drill.id) : null} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
+      {isReadiness && <ReadinessCheck value={session.readiness} onChange={(readiness) => update({ ...session!, readiness })} />}
+      {drill && <DrillCard drill={drill} completion={session.exercises[drill.id] || emptyExerciseCompletion(drill.id)} presentationChildren={plannedActivities.find((activity) => activity.id === drill.id)?.children} videoState={v84Session ? getV84VideoForDrillId(drill.id) : null} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
       {kpi && <SessionKPIForm kpi={kpi} result={session.kpiResults[kpi.id]} onChange={(result) => update({ ...session!, kpiResults: { ...session!.kpiResults, [kpi.id]: result } })} />}
       {isReflection && <ReflectionForm value={session.reflection} onChange={(reflection) => update({ ...session!, reflection })} />}
       <div className="sticky bottom-16 mt-5 grid grid-cols-2 gap-3 rounded-2xl bg-ice/95 py-3 backdrop-blur sm:bottom-0">
@@ -427,4 +435,13 @@ export default function SessionPage() {
 
 function emptyExerciseCompletion(drillId: string) {
   return { drillId, done: false, actualSets: null, actualReps: null, actualDuration: null, actualDistance: null, notes: "", difficulty: null };
+}
+
+function isReadinessActivity(activity: { athleteTitle: string; category: string }) {
+  return activity.athleteTitle.toLowerCase().includes("readiness");
+}
+
+function v84RemainingLabel(activities: ReturnType<typeof projectPlannedDayActivities>, step: number) {
+  const remainingMinutes = remainingPlannedMinutesFromStep(activities, step);
+  return typeof remainingMinutes === "number" ? `About ${remainingMinutes} min remaining` : "Planned time shown per step";
 }

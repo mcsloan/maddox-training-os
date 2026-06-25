@@ -1,4 +1,5 @@
 import type { V84DayExecutionPlanEntry } from "@/lib/imports/v8_4/types";
+import { projectDayPresentationContext, projectPlannedDayActivities, type ActivityPresentation, type DayPresentationContext } from "./activityPresentation";
 import type { DayProjection } from "./dayProjection";
 import type { Drill, KPI, PlannedExternalLoad, PlanDay, PlanDayDisplayModel, VideoReference, Workout, WorkoutBlock } from "../types";
 
@@ -74,11 +75,13 @@ export interface BuildDayPresentationArgs {
   drills?: Drill[];
   videos?: VideoReference[];
   plannedKpis?: KPI[];
+  plannedActivities?: ActivityPresentation[];
   evidence?: DayProjection;
   logTodayHref?: string;
   trainingWorkHref?: string;
   trainingWorkLogHref?: string;
   fallbackTitle?: string;
+  dayContext?: DayPresentationContext;
 }
 
 export function normalizeChips(args: { display?: PlanDayDisplayModel; tags?: string[]; sportLoads?: PlannedExternalLoad[] }) {
@@ -176,6 +179,8 @@ export function detectPlanConflicts(args: { day?: PlanDay; executionEntries?: V8
 export function buildDayPresentation(args: BuildDayPresentationArgs): DayPresentation {
   const sportLoads = args.sportLoads ?? [];
   const executionEntries = args.executionEntries ?? [];
+  const plannedActivities = args.plannedActivities ?? projectPlannedDayActivities(args.date);
+  const dayContext = args.dayContext ?? projectDayPresentationContext(args.date);
   const plannedKpis = args.plannedKpis ?? [];
   const evidence = args.evidence;
   const isSportLoadDay = sportLoads.length > 0;
@@ -187,7 +192,8 @@ export function buildDayPresentation(args: BuildDayPresentationArgs): DayPresent
   const trainingWorkCount = evidence ? evidence.records.sessionAttempts.length + evidence.records.drillLogs.length : 0;
   const reflectionCount = evidence?.records.reflections.length ?? 0;
   const kpiPartial = isKpiDay && plannedKpis.length > 0 && kpiCount > 0 && kpiCount < plannedKpis.length;
-  const dayTitle = displayDayTitle(args.day?.primarySession || args.fallbackTitle || sportLoads[0]?.title || "Recovery / planning day", isKpiDay);
+  const sharedHeroTitle = dayContext.heroTitle === "Recovery / planning day" ? "" : dayContext.heroTitle;
+  const dayTitle = displayDayTitle(sharedHeroTitle || args.day?.primarySession || args.fallbackTitle || sportLoads[0]?.title || "Recovery / planning day", isKpiDay);
   const guidance = dedupeGuidance([
     args.day?.parentCue,
     args.day?.doNotDo,
@@ -235,30 +241,53 @@ export function buildDayPresentation(args: BuildDayPresentationArgs): DayPresent
     athleteActionSummary: athleteActionSummary({ day: args.day, isSportLoadDay, plannedKpis, isKpiDay }),
     isKpiTestingDay: isKpiDay,
     showSourceExecutionInDetails: !isSportLoadDay,
-    executionSteps: buildExecutionSteps({ day: args.day, executionEntries, plannedKpis, videos: args.videos ?? [], workoutBlocks: args.workoutBlocks ?? [], conflictItems }),
+    executionSteps: buildExecutionSteps({ day: args.day, executionEntries, plannedActivities, plannedKpis, videos: args.videos ?? [], workoutBlocks: args.workoutBlocks ?? [], conflictItems }),
   };
 }
 
-function buildExecutionSteps(args: { day?: PlanDay; executionEntries: V84DayExecutionPlanEntry[]; plannedKpis: KPI[]; videos: VideoReference[]; workoutBlocks: WorkoutBlock[]; conflictItems: string[] }) {
+function buildExecutionSteps(args: { day?: PlanDay; executionEntries: V84DayExecutionPlanEntry[]; plannedActivities: ActivityPresentation[]; plannedKpis: KPI[]; videos: VideoReference[]; workoutBlocks: WorkoutBlock[]; conflictItems: string[] }) {
   const result: Record<number, DayExecutionStepPresentation> = {};
   let displaySequence = 0;
   for (const entry of args.executionEntries) {
     const hidden = shouldHideExecutionEntry({ entry, plannedKpis: args.plannedKpis, conflictItems: args.conflictItems });
+    const activity = args.plannedActivities.find((item) => item.sequenceOrder === entry.sequence);
     if (!hidden) displaySequence += 1;
     const blocks = matchingBlocks(entry, args.workoutBlocks);
     result[entry.sequence] = {
       hidden,
       displaySequence: hidden ? null : displaySequence,
-      title: entryTitle({ entry, conflictItems: args.conflictItems }),
-      subtitle: entrySubtitle({ entry, conflictItems: args.conflictItems }),
+      title: activity?.athleteTitle || entryTitle({ entry, conflictItems: args.conflictItems }),
+      subtitle: activity ? activitySubtitle(activity) : entrySubtitle({ entry, conflictItems: args.conflictItems }),
       loadImpact: entryLoadImpact({ entry, conflictItems: args.conflictItems }),
-      note: entryNote({ entry, conflictItems: args.conflictItems }),
+      note: activity?.instruction || entryNote({ entry, conflictItems: args.conflictItems }),
       blockLabels: blocks.map((block) => plainBlockName(block)),
-      guidance: stepGuidance({ day: args.day, entry, conflictItems: args.conflictItems }),
+      guidance: activityGuidance(activity) || stepGuidance({ day: args.day, entry, conflictItems: args.conflictItems }),
       videos: matchingVideos(entry, args.videos),
     };
   }
   return result;
+}
+
+function activitySubtitle(activity: ActivityPresentation) {
+  const labels: Record<ActivityPresentation["category"], string> = {
+    warmup: "Warm-up",
+    speed_stack: "Speed Stack",
+    shooting: "Shooting",
+    conditioning: "Conditioning",
+    mobility: "Mobility",
+    recovery: "Recovery",
+    iq: "Skill / awareness",
+    kpi: "KPI",
+    sport_load: "Sport Load",
+    reflection: "Reflection",
+    other: "Training",
+  };
+  return labels[activity.category];
+}
+
+function activityGuidance(activity: ActivityPresentation | undefined) {
+  if (!activity) return null;
+  return [activity.coachingCue].filter((value): value is string => Boolean(value));
 }
 
 function stepGuidance(args: { day?: PlanDay; entry: V84DayExecutionPlanEntry; conflictItems: string[] }) {
@@ -276,7 +305,7 @@ function stepGuidance(args: { day?: PlanDay; entry: V84DayExecutionPlanEntry; co
     values.push("Pick targets, reset between shots, and stop if technique breaks.");
   }
   if (entryType.includes("recovery") || title.includes("mob")) {
-    values.push("MOB-15 means mobility, cooldown, hydration, breathing, and recovery support.");
+    values.push("Do light mobility or stretching. No hard conditioning here.");
     values.push("This should help him feel better, not add fatigue.");
   }
   if (entryType.includes("skill") && args.day?.dailyMicroSkill) values.push(`Daily skill focus: ${args.day.dailyMicroSkill}.`);

@@ -2,56 +2,82 @@
 
 ## Latest Task
 
-Durable Capture of SURFACE-PRESENTATION-CONSUMER-AUDIT-001 Findings.
+QA-AUTOMATION-001-FIX2 - Replace Chrome dump-dom with Node HTTP text checks.
 
 ## Result
 
-Persisted the completed inspect-only site-wide activity presentation consumer audit into canonical repo control docs.
+Revised the local no-package QA harness so Chrome is no longer used for DOM/text extraction.
 
-The audit found that the Day page is closest to canonical because it uses `dayExecutionPlan` plus `buildDayPresentation`, while the Session page is the main divergent path because it builds a synthetic flattened workout/drill model from `sessions.json` and `drills.json`. Site-wide consumers must be classified before broad display fixes continue.
+The harness now fetches `/day/2026-06-19` and `/session/session-2026-06-19` with Node built-in `fetch`, writes the HTML artifacts, and runs HTTP/text assertions from that fetched content. Chrome is used only for optional screenshots after HTTP/text checks complete.
 
-Documented the approved target architecture: v8.4 `dayExecutionPlan` owns top-level day activity coverage and order; `sessions.json` and `drills.json` enrich details; Speed Stack child drills attach under parent Speed Stack activities; duration precedence is `dayExecutionPlan` first, session/drill detail second, code-derived fallback only when no authoritative duration exists; presentation fixes must not mutate saved data.
+If Chrome screenshot capture fails or times out, the harness records that in `report.md` but does not fail the run solely because screenshots failed. The script exits non-zero only for HTTP fetch failures or required HTTP/text assertion failures.
 
-This was documentation capture only. No app code, tests, source JSON, imports, logging behavior, Supabase, env, package files, commits, or pushes were changed.
+The validation run in this shell failed at HTTP fetch because `http://localhost:3000` was unavailable, and `report.md` was created with the Terminal 1 instruction. Start Terminal 1 with `npm run dev`, then rerun:
 
-`ACTIVITY-PRESCRIPTION-001` remains blocked/not commit-ready. The next implementation candidate is `ACTIVITY-PRESENTATION-CONTRACT-001` - Planned activity presentation contract, Day + Session parity only.
+```bash
+node scripts/qa-activity-presentation.mjs
+```
+
+This remains not product-accepted until the QA harness produces a passing report and Mike reviews it.
 
 ## Files Changed
 
-- `docs/SCOPE.md`
+- `lib/projections/activityPresentation.ts`
+- `lib/projections/activityPresentation.test.ts`
+- `lib/projections/dayPresentation.ts`
+- `app/day/[date]/page.tsx`
+- `app/session/[id]/page.tsx`
+- `components/DrillCard.tsx`
+- `scripts/qa-activity-presentation.mjs`
 - `docs/AGENT_REPORT.md`
-- `docs/SESSION_HANDOFF.md`
 
-## Audit Findings Captured
+## Implementation Notes
 
-- `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` marked `Completed`.
-- Core conclusion captured: Day is closest to canonical; Session is the main divergent path; site-wide consumers need classification before broad fixes.
-- Consumer classification captured at summary level:
-  - canonical-contract-now: Day execution, Session form/cards/summary, Training Work logging surface, v8.4 synthetic session adapter path.
-  - summary-from-contract: Today/Home, Calendar, Dashboard, History, DayEvidenceStatus, Plan summaries, KPI day summaries, Sport Load support-work summaries, future exports/reports.
-  - admin/source/reference-only exceptions: Library source catalog and debug/diagnostic session surfaces.
-  - deferred: broad Dashboard/History/KPI/Exports rewiring until Day + Session parity is stable.
+- Removed Chrome `--dump-dom` from the DOM/text path.
+- Added Node built-in `fetch` for HTML capture with `HTTP_TIMEOUT_MS = 10000`.
+- HTML artifacts are written from HTTP responses:
+  - `qa-artifacts/activity-presentation/day-2026-06-19.html`
+  - `qa-artifacts/activity-presentation/session-2026-06-19.html`
+- Chrome screenshots remain optional and non-blocking.
+- Report output now separates HTTP/text assertions, optional screenshots, skipped static-HTML checks, and human-review items.
+- Failure-report writing remains in place so `qa-artifacts/activity-presentation/report.md` is created on HTTP or Chrome failure.
+- No package scripts or dependencies were added.
 
-## Architecture Captured
+## Scope Boundaries Preserved
 
-- Added documentation-only `ActivityPresentation` and `ActivityPresentationChild` target baseline to `docs/SCOPE.md`.
-- Captured split-pass strategy:
-  - Pass 1: `projectPlannedDayActivities(date)` for master/reference plan data plus metadata only. No Supabase, saved logs, or transactional joins.
-  - Pass 2: `projectDayEvidence(date)` for saved evidence/status/logs only.
-  - Pass 3: `composeDayViewModel(date)` to compose planned presentation plus evidence.
-- Added `ACTIVITY-PRESENTATION-CONTRACT-001` as the next implementation candidate.
-- Updated `docs/SESSION_HANDOFF.md` so the next start point is completed consumer audit -> docs capture -> planned-activity projection implementation.
+- No v8.4 source JSON edits.
+- No Supabase work.
+- No saved log joins.
+- No evidence/status composition.
+- No `projectDayEvidence(date)`.
+- No `composeDayViewModel(date)`.
+- No Dashboard, History, KPI, Export, Gantt, Library, or debug page rewiring.
+- No package changes.
+- No commit or push.
 
-## Current WIP Status
+## Checks
 
-The local ACTIVITY-PRESCRIPTION-001A/B/C WIP remains intentionally uncommitted and not commit-ready. It must not be committed, reverted, or built on blindly. Future implementation should revise or discard it only through the approved canonical contract plan.
+- QA harness: `node scripts/qa-activity-presentation.mjs` failed cleanly at HTTP fetch because `http://localhost:3000` was unavailable in this shell; `qa-artifacts/activity-presentation/report.md` was created.
+- Focused tests: `npm run test -- lib/projections/activityPresentation.test.ts lib/projections/dayPresentation.test.ts lib/imports/v8_4/session.test.ts` passed.
+- TypeScript lint: `npm run lint` passed.
+- Production build: `npm run build` passed.
+- v8.4 smoke verification: `node scripts/verify-v8.4-import.mjs` passed.
+- Diff hygiene: `git diff --check` passed.
+- Git status reviewed; WIP remains uncommitted and not product-accepted.
+
+## Remaining Product QA Risks
+
+- Start Terminal 1 with `npm run dev`, rerun `node scripts/qa-activity-presentation.mjs`, then review `qa-artifacts/activity-presentation/report.md` and screenshots.
+- The harness checks HTTP 200, static HTML, forbidden raw/source strings, optional static hero/title/context text, optional Speed Stack/Shooting/Conditioning text, remaining-time text if present, and a narrow duplicate-label signal when extractable.
+- Human review is still needed for hydrated browser behavior, screenshot layout/copy quality when screenshots are available, and final product acceptance.
+- Current implementation keeps the pass narrow; site-wide summary consumers remain deferred until Day + Session parity is accepted.
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-027` updated to reference completed audit findings; `DEF-021` through `DEF-026` remain blockers; `DEF-020` remains scope review required.
-- Epics/features added/updated: `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` completed; `ACTIVITY-PRESENTATION-CONTRACT-001` added as the next implementation candidate; `ACTIVITY-PRESCRIPTION-001` remains blocked.
-- Product decisions added/updated: top-level day activity order belongs to v8.4 `dayExecutionPlan`; sessions/drills enrich but do not replace that order; duration precedence documented.
-- Data/sync/environment decisions added/updated: presentation pass must not mutate saved data, use Supabase, or perform transactional joins.
-- Testing requirements added/updated: future implementation needs Day + Session parity, duration precedence, and source-language filtering coverage.
-- Docs updated: `docs/SCOPE.md`, `docs/AGENT_REPORT.md`, `docs/SESSION_HANDOFF.md`.
-- Items intentionally deferred: app-code fixes, test edits, source JSON edits, logging changes, Dashboard/History/KPI/Exports/Gantt/Supabase work, browser checks, commit, push.
+- Defects added/updated: no new defects added.
+- Epics/features added/updated: `QA-AUTOMATION-001` now uses Node HTTP/text checks as primary evidence and Chrome screenshots as optional evidence; `ACTIVITY-PRESENTATION-CONTRACT-001` remains pending generated QA artifacts and Mike review.
+- Product decisions added/updated: no new product decisions; preserved the approved decision that `dayExecutionPlan` owns top-level planned activity order and shared projection owns display fields.
+- Data/sync/environment decisions added/updated: no changes; saved data and Supabase remain untouched.
+- Testing requirements added/updated: local evidence harness now avoids Chrome for DOM/text extraction; full artifact generation awaits a reachable local server.
+- Docs updated: `docs/AGENT_REPORT.md`.
+- Items intentionally deferred: running harness with Terminal 1 active, Mike artifact review, product acceptance, site-wide consumer rewiring, evidence/status composition, logging/schema changes, Dashboard/History/KPI/Export work, commit, push.

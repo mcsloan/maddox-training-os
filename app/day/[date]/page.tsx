@@ -5,7 +5,8 @@ import { DayEvidenceStatus } from "@/components/DayEvidenceStatus";
 import { LoadChip } from "@/components/LoadChips";
 import { getV84DayExecutionEntries, getV84SportLoadsForDate, getV84TrainingWorkEntries } from "@/lib/imports/v8_4/daily";
 import { getV84SessionByDate, getV84SessionDrills, getV84SessionWorkout } from "@/lib/imports/v8_4/session";
-import { formatPlanDate, getDayTags, getPlanDay, getPlanDayDisplayModel, getRelatedVideos, getWorkout, getWorkoutBlock, getWorkoutDrills, kpis, userFacingPlanText } from "@/lib/trainingData";
+import { formatPlanDate, getDayTags, getPlanDay, getPlanDayDisplayModel, getRelatedVideos, getWorkout, getWorkoutBlock, getWorkoutDrills, kpis } from "@/lib/trainingData";
+import { projectDayPresentationContext, projectPlannedDayActivities } from "@/lib/projections/activityPresentation";
 import { buildDayPresentation } from "@/lib/projections/dayPresentation";
 import type { WorkoutBlock } from "@/lib/types";
 
@@ -13,6 +14,8 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   const { date } = await params;
   const day = getPlanDay(date);
   const executionEntries = getV84DayExecutionEntries(date);
+  const dayContext = projectDayPresentationContext(date);
+  const plannedActivities = projectPlannedDayActivities(date);
   const trainingWorkEntries = getV84TrainingWorkEntries(date);
   const externalLoads = getV84SportLoadsForDate(date);
   const v84Session = getV84SessionByDate(date);
@@ -41,6 +44,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
     tags,
     sportLoads: externalLoads,
     executionEntries,
+    plannedActivities,
     workout,
     workoutBlocks: blocks,
     drills,
@@ -50,13 +54,10 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
     trainingWorkHref,
     trainingWorkLogHref: `/training-work/${date}`,
     fallbackTitle: v84Session?.summary,
+    dayContext,
   });
   const plannedKpiCountForStatus = presentation.isKpiTestingDay ? plannedKpis.length : 0;
-  const dayTypeLabel = day
-    ? `Week ${day.weekNumber} · ${display.methodologyPhase} · ${userFacingPlanText(day.dayRole)}`
-    : v84Session
-      ? `Week ${v84Session.week} · ${display.methodologyPhase} · ${v84Session.dayType}`
-      : "Sport load day";
+  const dayTypeLabel = dayContext.eyebrow || "Sport load day";
 
   return (
     <div className="mx-auto max-w-5xl">

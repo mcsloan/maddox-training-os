@@ -10,3 +10,6 @@ tsconfig.tsbuildinfo
 
 # Local WIP patches
 .wip/
+
+# Local QA evidence artifacts
+qa-artifacts/

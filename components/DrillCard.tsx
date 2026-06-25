@@ -1,6 +1,7 @@
 "use client";
 
 import { Drill, ExerciseCompletion, Rating } from "@/lib/types";
+import type { ActivityPresentationChild } from "@/lib/projections/activityPresentation";
 import { isUsableExternalUrl } from "@/lib/trainingData";
 import { SessionTimer } from "./SessionTimer";
 
@@ -11,8 +12,9 @@ interface DrillVideoState {
   matchStatus: string;
 }
 
-export function DrillCard({ drill, completion, onChange, videoState }: { drill: Drill; completion: ExerciseCompletion; onChange: (next: ExerciseCompletion) => void; videoState?: DrillVideoState | null }) {
+export function DrillCard({ drill, completion, onChange, presentationChildren = [], videoState }: { drill: Drill; completion: ExerciseCompletion; onChange: (next: ExerciseCompletion) => void; presentationChildren?: ActivityPresentationChild[]; videoState?: DrillVideoState | null }) {
   const update = (patch: Partial<ExerciseCompletion>) => onChange({ ...completion, ...patch });
+  const purpose = distinctPurpose(drill);
 
   return (
     <article className={`card border-2 transition ${completion.done ? "border-lime bg-lime/10" : "border-transparent"}`}>
@@ -20,7 +22,7 @@ export function DrillCard({ drill, completion, onChange, videoState }: { drill: 
         <div>
           <span className="rounded-full bg-ice px-3 py-1 text-xs font-black uppercase tracking-wide text-blue">{drill.category}</span>
           <h2 className="mt-3 text-3xl font-black leading-tight">{drill.name}</h2>
-          <p className="mt-2 text-slate-600">{drill.purpose}</p>
+          {purpose && <p className="mt-2 text-slate-600">{purpose}</p>}
         </div>
         {completion.done && <span className="rounded-full bg-lime px-3 py-1 text-sm font-black">DONE</span>}
       </div>
@@ -31,10 +33,33 @@ export function DrillCard({ drill, completion, onChange, videoState }: { drill: 
         <div><p className="label">Equipment</p><p className="font-bold">{drill.equipment.length ? drill.equipment.join(", ") : "No equipment listed"}</p></div>
       </div>
 
+      {presentationChildren.length > 0 && (
+        <div className="mb-5 rounded-2xl border border-rink bg-white p-4">
+          <p className="label">Planned drill details</p>
+          <div className="mt-3 grid gap-3">
+            {presentationChildren.map((child) => (
+              <article className="rounded-xl bg-ice p-3" key={child.id}>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <h3 className="font-black">{child.title}</h3>
+                  <p className="text-sm font-bold text-slate-600">{childPlanLabel(child)}</p>
+                </div>
+                {child.instruction && <p className="mt-2 text-sm text-slate-700">{child.instruction}</p>}
+                {child.coachingCue && child.coachingCue !== child.instruction && <p className="mt-2 text-sm font-semibold text-slate-700">{child.coachingCue}</p>}
+                {child.videoUrl && <a className="mt-2 inline-block text-sm font-bold text-blue" href={child.videoUrl} target="_blank" rel="noreferrer">Open Video Demo</a>}
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid gap-5 lg:grid-cols-2">
         <div>
-          <p className="label">Purpose</p>
-          <p>{drill.purpose}</p>
+          {purpose && (
+            <>
+              <p className="label">Purpose</p>
+              <p>{purpose}</p>
+            </>
+          )}
           <p className="label mt-5">Setup checklist</p>
           <ul className="space-y-2">
             {drill.setupChecklist.map((item) => <li key={item} className="flex gap-2"><span className="font-black text-blue">□</span><span>{item}</span></li>)}
@@ -85,6 +110,27 @@ export function DrillCard({ drill, completion, onChange, videoState }: { drill: 
       </div>
     </article>
   );
+}
+
+function childPlanLabel(child: ActivityPresentationChild) {
+  const parts = [];
+  if (child.plannedSets) parts.push(`${child.plannedSets} sets`);
+  if (child.plannedReps) parts.push(child.plannedReps);
+  if (child.plannedDurationMinutes) parts.push(`${child.plannedDurationMinutes} min`);
+  return parts.join(" · ") || "Planned detail";
+}
+
+function distinctPurpose(drill: Drill) {
+  const purpose = drill.purpose.trim();
+  if (!purpose) return "";
+  const normalizedPurpose = normalizeLabel(purpose);
+  if (normalizedPurpose === normalizeLabel(drill.category)) return "";
+  if (normalizedPurpose === normalizeLabel(drill.name)) return "";
+  return purpose;
+}
+
+function normalizeLabel(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 function planLabel(drill: Drill) {
