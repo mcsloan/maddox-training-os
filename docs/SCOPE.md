@@ -9,7 +9,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Latest pushed repo checkpoint before this docs capture: `9964e52` (`Add activity presentation contract and QA harness`).
+- Latest pushed repo checkpoint before this docs capture: `402edc8` (`test(qa): add Playwright chrome proof of life`).
 - Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
 - Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
 - Production badge confirmed: `v0.1.0 · f02bff4 · production`.
@@ -22,7 +22,9 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
 - ACTIVITY-PRESCRIPTION-001A/B/C produced local uncommitted app-code WIP, but it is blocked and not commit-ready.
 - `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` is completed as an inspect-only audit; no files were changed during the audit.
-- Next implementation candidate after this documentation capture: `ACTIVITY-PRESENTATION-CONTRACT-001` - Planned activity presentation contract, Day + Session parity only.
+- `QA-AUTOMATION-002` Playwright proof-of-life is completed: installed Google Chrome channel launched successfully on macOS Catalina `10.15.8` without bundled browser install.
+- `DEF-028` remains open/not fixed because the completed-session/read-only surface was not exercised in the passing Playwright run.
+- Next implementation candidate after this documentation capture: `DEF-028` completed-session display/projection inspect/fix.
 
 ## Scope System Rules
 
@@ -128,7 +130,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 15 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
 | 16 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
 | 17 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Formalize release gate, fixtures, and later Playwright. |
-| 18 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Scope review required | Safe lane | Later task should install/configure the smallest Playwright proof-of-life only after Mike approves package changes. |
+| 18 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Playwright installed Chrome channel proof-of-life passed locally; use it as a base for targeted DEF-028 regression after display/projection repair. |
 | 19 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
 | 20 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
 | 21 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
@@ -141,7 +143,7 @@ Every active scope item should use this structure, either as a detailed record b
 
 Current sprint: Phase 1 docs/scope-control and environment safety reconciliation are complete. The last verified pushed/deployed production baseline before this realignment was `f02bff4`. `ENV-SAFETY-RECON-001` is completed for the inspection pass.
 
-Next implementation candidate: `ACTIVITY-PRESENTATION-CONTRACT-001` - Planned activity presentation contract, Day + Session parity only.
+Next implementation candidate: `DEF-028` completed-session display/projection inspect/fix.
 
 Minimum next task brief:
 
@@ -154,6 +156,7 @@ Minimum next task brief:
 - Do not invent prescriptions.
 - Do not change logging fields or Supabase/schema behavior unless a separate safe-lane task explicitly allows it.
 - Do not follow inline TODOs or comments unless they are backed by the active `docs/SCOPE.md` ID.
+- For `DEF-028`, do not mutate saved session records; no Supabase writes, backfill, delete, or migration.
 
 Execution gate: no further cosmetic display patches or broad implementation under `ACTIVITY-PRESCRIPTION-001` until the planned-activity contract is implemented and verified for Day + Session parity.
 
@@ -188,8 +191,8 @@ Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source J
 | In progress | KPI-ROADMAP-001 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027, DEF-028 |
 | Not started | CODE-COMMENT-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, TEST-FIXTURE-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
-| Scope review required | ACTIVITY-LOGGING-001, QA-AUTOMATION-002, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
-| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, DEF-007 |
+| Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
+| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, QA-AUTOMATION-002, DEF-007 |
 
 ### P2
 
@@ -825,15 +828,15 @@ Advanced KPI scope:
 - Lane: Safe lane
 - Owner: Mike / Codex
 - Source: Completed-session presentation defect and local QA harness limits
-- Problem: Manual browser QA is finding presentation regressions that static HTTP checks cannot fully cover, including completed-session/read-only flows.
+- Problem: Manual browser QA was finding presentation regressions that static HTTP checks could not fully cover, including completed-session/read-only flows.
 - Desired outcome: Add the smallest approved Playwright proof-of-life that verifies the June 19 Day + Session title/context flow without saving, finishing, mutating production data, or relying on Mike as the only QA harness.
-- In scope: later approved package install, local proof-of-life spec, production/read-only navigation, artifact capture, and explicit no-save/no-finish guardrails.
-- Out of scope: installing packages in this planning pass, broad Playwright rollout, CI changes, bundled browser downloads before Catalina compatibility review, app code fixes, Supabase writes, data backfills, migrations, or saved-record mutation.
-- Acceptance criteria: a future task proves Playwright can launch safely, open the production Day and Session routes, detect the previous-attempt gate, reopen/edit without saving, view completed session, and record whether the completed-session surface still shows stale legacy title text.
-- Dependencies: Mike approval for package changes; macOS 10.15.8 Catalina compatibility; installed Google Chrome 128; current no-package QA harness; DEF-028.
-- Risks: latest bundled Playwright browsers may not support Catalina safely; production session routes can expose real saved data; accidental clicks on finish/save/log actions would mutate data.
-- Next action: propose an install/setup task that uses installed Chrome via Playwright `channel: "chrome"` first, keeps bundled browser install disabled unless explicitly approved, and targets one proof-of-life spec only.
-- Links / evidence: DEF-028; current package setup has Vitest only, no `@playwright/test`, no `playwright.config.*`, no top-level `tests/` or `e2e/` folder.
+- In scope: package install, local proof-of-life spec, production/read-only navigation, artifact capture, and explicit no-save/no-finish guardrails.
+- Out of scope: broad Playwright rollout, CI changes, bundled browser downloads, app code fixes, Supabase writes, data backfills, migrations, or saved-record mutation.
+- Acceptance criteria: Playwright launches installed Chrome on Catalina, opens production Day and Session routes, verifies Day title/badge, safely handles absent previous-attempt gate, and does not click Finish/Save/Submit/Start Fresh/logging actions.
+- Dependencies: macOS 10.15.8 Catalina; installed Google Chrome; current no-package QA harness; DEF-028.
+- Risks: production session data state can change, so previous-attempt/completed-session branch may not appear in every run.
+- Next action: use completed proof-of-life as base for targeted DEF-028 browser regression after completed-session display/projection repair.
+- Links / evidence: commit `402edc8`; command passed: `npx playwright test e2e/activity-presentation-proof.spec.ts --project=chrome`; Previous Attempt gate, Reopen/Edit, and View Latest Completed Session were not visible in the passing run.
 
 ### TEST-FIXTURE-001
 
@@ -1186,7 +1189,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-025 | Session form leaks stale/internal/source language | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Session form showed labels/copy such as `IQ 5 daily cue`, `Skill IQ Mindset`, `Recovery Rules`, and older scan/support/talk style copy. | Session form does not expose raw/source/workbook labels as athlete-facing primary labels or instructions. | audit Session projection output and add parity tests. | source JSON edits or invented instructions. | known forbidden/internal phrases are covered by tests in Session projection output. | FORENSIC-DAY-SESSION-MISMATCH-001 | session execution remains confusing during live training. | Audit Session form source path and display transformations. | Mike browser QA |
 | DEF-026 | Current ACTIVITY-PRESCRIPTION WIP is not commit-ready | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Browser QA failed across Day/Session consistency and missing loggable steps. | Current WIP is not committed until architecture mismatch is resolved. | forensic audit, fix plan approval, Day/Session parity implementation, browser verification. | committing or pushing current WIP. | forensic data-flow audit completed, fix plan approved, Day and Session parity implemented and browser-verified. | DEF-021, DEF-022, DEF-023, DEF-024, DEF-025 | committing WIP would preserve known critical defects. | Keep WIP uncommitted; start forensic audit. | Mike browser QA |
 | DEF-027 | Site-wide activity presentation drift risk | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | FORENSIC-DAY-SESSION-MISMATCH-001 and Mike review | Day and Session already diverged for June 19; similar display/data drift may exist wherever the app renders plan/activity/session labels, including Today, Calendar, Dashboard, History, Library, exports, and reports. | Every athlete-facing consumer of plan/activity/session display data uses or is intentionally classified against the canonical activity presentation contract. | site-wide consumer audit, canonical presentation rules for label, duration, description, source-language filtering, loggable classification, and trace fields. | broad app fixes before Day + Session planned-activity parity; broad redesign; source JSON edits. | every athlete-facing consumer is identified and classified as must consume canonical activity presentation contract now, can consume summary projection from the same contract, admin/source/reference-only exception, or deferred with explicit rationale; tests or fixtures prevent drift for critical surfaces. | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | surface-specific cosmetic patches may keep creating inconsistent athlete instructions and logging representations. | Use completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` findings to constrain `ACTIVITY-PRESENTATION-CONTRACT-001`; defer broad surfaces until Day + Session parity is stable. | Mike review; Day/Session forensic audit; completed consumer audit |
-| DEF-028 | Completed-session surfaces bypass ActivityPresentation context | Defect | Activity Presentation | P1 | Blocked | Fast lane | Mike / Codex | Production browser QA after `9964e52` | Active/edit Day + Session surfaces use the shared ActivityPresentation context, but completed-session/read-only flow still shows stale legacy title `Speed Stack C, conditioning, and shooting.` while Day and reopened/edit Session show `Acceleration and accurate shooting.` | Completed-session and previous-attempt surfaces use the same presentation contract where appropriate without mutating saved historical records. | audit completed-session/read-only presentation path; route display through shared day/session presentation context where safe; add browser regression coverage. | saved session mutation, Supabase writes, backfill, delete, migration, or changing transactional session records to fix display. | `/day/2026-06-19`, reopened/edit Session, previous-attempt gate, and View Latest Completed Session do not contradict the shared day title/context; saved data remains intact. | ACTIVITY-PRESENTATION-CONTRACT-001, QA-AUTOMATION-002 | stale completed-session copy can make accepted presentation work look inconsistent and untrusted. | Audit completed-session/read-only surfaces, then fix display/projection only; prove with Playwright proof-of-life before broad QA rollout. | Mike production flow: View Latest Completed Session shows stale title; Reopen/Edit shows corrected title |
+| DEF-028 | Completed-session surfaces bypass ActivityPresentation context | Defect | Activity Presentation | P1 | Blocked | Fast lane | Mike / Codex | Production browser QA after `9964e52` | Active/edit Day + Session surfaces use the shared ActivityPresentation context, but completed-session/read-only flow still showed stale legacy title `Speed Stack C, conditioning, and shooting.` while Day and reopened/edit Session showed `Acceleration and accurate shooting.` The later Playwright proof-of-life at `402edc8` did not reproduce this because the Previous Attempt gate and completed-session buttons were not visible during that run. | Completed-session and previous-attempt surfaces use the same presentation contract where appropriate without mutating saved historical records. | audit completed-session/read-only presentation path; route display through shared day/session presentation context where safe; add browser regression coverage. | saved session mutation, Supabase writes, backfill, delete, migration, or changing transactional session records to fix display. | `/day/2026-06-19`, reopened/edit Session, previous-attempt gate, and View Latest Completed Session do not contradict the shared day title/context; saved data remains intact. | ACTIVITY-PRESENTATION-CONTRACT-001, QA-AUTOMATION-002 | stale completed-session copy can make accepted presentation work look inconsistent and untrusted. | Inspect and fix completed-session display/projection only; keep saved session records intact; use Playwright proof-of-life as targeted regression base after fix. | Mike production flow: View Latest Completed Session showed stale title; Reopen/Edit showed corrected title. Playwright run passed but did not exercise completed-session surface. |
 | DOC-DRIFT-001 | Documentation current-state drift | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs diverged from current reality. | docs are trustworthy. | docs consolidation. | app changes. | active scope centralized. | SCOPE-CONSOLIDATION-001 | wrong next work. | Use `docs/SCOPE.md` as canonical active scope source. | `docs/DOCUMENTATION_INVENTORY.md` |
 | DOC-INV-001 | Documentation inventory/consolidation needed | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs lacked inventory. | inventory guides archive/merge. | inventory update. | deletion. | inventory reflects SCOPE canonical. | SCOPE-CONSOLIDATION-001 | stale ownership. | Use `docs/DOCUMENTATION_INVENTORY.md` for inventory only. | `docs/DOCUMENTATION_INVENTORY.md` |
 

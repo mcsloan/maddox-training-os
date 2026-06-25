@@ -3,20 +3,30 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Latest pushed repo checkpoint before this docs capture: `97a7cee` (`docs(scope): log site-wide activity presentation drift risk`).
-- Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
-- Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
-- Production badge confirmed: `v0.1.0 · f02bff4 · production`.
-- Historical pre-hardening production baseline: `7b48a3e` (`Render calendar from v8.4 day coverage`).
-- Git state is the repo source of truth; browser/build badges are runtime context only.
-- Phase 1 docs/scope-control checkpoint is complete.
-- Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
+- Latest pushed commit: `402edc8` (`test(qa): add Playwright chrome proof of life`).
+- Repo state after push: local `main` == `origin/main`.
+- `docs/SCOPE.md` remains the only canonical active scope source.
 - v8.4 app import package remains authoritative.
-- Calendar coverage from v8.4 was fixed and accepted.
-- No accepted app code work has started after the docs/safety checkpoint.
-- ACTIVITY-PRESCRIPTION-001A/B/C produced local uncommitted app-code WIP, but it is blocked and not commit-ready.
-- Completed audit: `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` - Site-wide activity presentation consumer audit.
-- Next implementation candidate after docs capture: `ACTIVITY-PRESENTATION-CONTRACT-001` - Planned activity presentation contract, Day + Session parity only.
+- Playwright is installed as a dev dependency.
+- No bundled Playwright browser install was used.
+- Installed Google Chrome channel launched successfully on macOS Catalina `10.15.8`.
+- Read-only production Playwright proof-of-life passed:
+  - `npx playwright test e2e/activity-presentation-proof.spec.ts --project=chrome`
+- No accepted app code work is pending from this checkpoint.
+- DEF-028 remains open/not fixed because the completed-session/read-only surface was not exercised in the passing proof-of-life run.
+
+## Playwright Proof-Of-Life Result
+
+- `/day/2026-06-19` loaded in production.
+- Day title assertion passed: `Acceleration and accurate shooting`.
+- Badge assertion passed: `9964e52` or `a3a41f4`.
+- `/session/session-2026-06-19` loaded in production.
+- Previous Attempt gate was not visible during this run.
+- `Reopen / Edit Latest Completed Session` was not visible.
+- `View Latest Completed Session` was not visible.
+- Therefore the completed-session surface was not exercised and DEF-028 was not reproduced during this run.
+- No Supabase/data mutation was performed.
+- The test did not click Finish Session, Save, Submit, Start Fresh Attempt, or any logging/submission action.
 
 ## Current Constraints
 
@@ -31,49 +41,47 @@
 
 ## Verified Product State
 
-- `/today` routes to canonical Day flow.
+- `/today` routes to the canonical Day flow.
 - v8.4 covers all 84 dates from `2026-06-15` through `2026-09-06`.
-- Calendar renders from v8.4 date coverage.
-- Calendar Week 1 includes June 15 through June 21.
+- Calendar renders from v8.4 date coverage; Week 1 includes June 15 through June 21.
+- June 19 Day + active/edit Session presentation parity was implemented and pushed before this checkpoint.
 - June 20 direct Day URL works and shows `Game-speed skill and shooting volume.`
-- Friday June 19 is usable enough for training.
 - Sport Load logging and Training Work logging remain separate.
-- v8.4 source JSON has not been edited for accepted Calendar coverage.
+- Playwright proof-of-life validates production Day + Session route loading, but did not exercise completed-session/read-only state.
+- DEF-028 remains open for completed-session display/projection repair.
+- v8.4 source JSON has not been edited for accepted Calendar or Activity Presentation work.
 
 ## Documentation Reconciliation State
 
-- `docs/SCOPE.md` is now the canonical owner for active scope, priority, sequencing, roadmap, defect summary, KPI roadmap, training/source epics, source-review items, and next-task planning.
-- `docs/SCOPE.md` is the only active scope source.
+- `docs/SCOPE.md` is the canonical owner for active scope, priority, sequencing, roadmap, defect summary, KPI roadmap, training/source epics, source-review items, and next-task planning.
 - `docs/SESSION_HANDOFF.md` owns current checkpoint/handoff only.
 - `docs/DOCUMENTATION_INVENTORY.md` owns documentation inventory only.
-- `docs/AGENT_REPORT.md` owns latest agent report.
+- `docs/AGENT_REPORT.md` owns the latest agent report.
 - Former scope-like docs are dead-end stubs; do not read them for current scope.
 
 ## Current Next Work Sequence
 
 See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Codex Task.
 
-Current sequence starts with:
+Recommended next lane:
 
-1. Durable capture of completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` findings.
-2. Planned activity presentation contract, Day + Session parity only (`ACTIVITY-PRESENTATION-CONTRACT-001`).
-3. Activity Prescription Display Layer (`ACTIVITY-PRESCRIPTION-001`) remains blocked until Day + Session parity is implemented and product-reviewed.
-4. Test fixture discovery / comment audit if Mike chooses to run those before app code.
-5. Future-day readiness audit from June 23 onward.
-
-Next code-task boundaries:
-
-- Start from the completed site-wide consumer audit.
-- Implement canonical planned-activity projection first: `projectPlannedDayActivities(date)`.
-- Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source JSON in the next code task.
-- Do not build on current WIP blindly; revise or discard WIP only through the approved canonical contract plan.
+1. `DEF-028` completed-session display/projection inspect/fix.
+2. Display/projection repair only.
+3. Do not mutate saved session records.
+4. No Supabase writes.
+5. No backfill.
+6. No delete.
+7. No migration.
 
 ## Known Caution Areas
 
-- KPI cloud-sync/backfill docs contain historical and conflicting claims. Treat cloud sync/backfill as scope-review until explicitly verified in the current checkpoint.
-- OvertimeAthlete and Gemini recommendations are scope-review inputs only.
+- DEF-028 must be fixed through display/projection, not by rewriting saved completed-session records.
+- Production Supabase contains real Maddox data; no writes without explicit target confirmation.
+- KPI cloud-sync/backfill remains scope-review unless explicitly verified in the current checkpoint.
+- OvertimeAthlete and Gemini recommendations are source-review inputs only.
 - Unconfirmed schedule/camp claims must be verified before any plan change.
-- Playwright, Husky, VS Code agent tools, and package installs are future scope only.
+- Playwright is proven locally with installed Chrome channel, but broader Playwright rollout and CI remain future scope.
+- Bundled Playwright browser installs remain avoided unless explicitly approved.
 
 ## Recommended Startup Reading
 
@@ -85,10 +93,10 @@ Next code-task boundaries:
 
 ## Scope Capture Check
 
-- Defects added/updated: documentation drift and Calendar date coverage status reconciled.
-- Epics/features added/updated: Activity Prescription Display Layer confirmed as next implementation work; source-ingestion and safety review captured as future scope.
-- Product decisions added/updated: recovery days are intentional, not blank; v8.4 remains authoritative; Gemini/OTA are source-review inputs only.
-- Data/sync/environment decisions added/updated: environment safety reconciliation completed for the inspection pass; KPI cloud-sync stash noted and not applied; production/staging safety remains mandatory.
-- Testing requirements added/updated: docs-only changes require status plus docs lint only if configured; app-code changes still require standard checks.
-- Docs updated: `SESSION_HANDOFF.md`, `SCOPE.md`, `DOCUMENTATION_INVENTORY.md`, `AGENT_REPORT.md`, `AGENTS.md`, and dead-end stubs.
-- Items intentionally deferred: Activity Prescription implementation until explicitly started, KPI cloud-sync stash, OvertimeAthlete source ingestion, agentic workflow tooling, future deploy/cloud-write work until explicit approval.
+- Defects added/updated: `DEF-028` remains open/not fixed.
+- Epics/features added/updated: `QA-AUTOMATION-002` proof-of-life is completed.
+- Product decisions added/updated: completed-session stale title must be fixed through display/projection, not saved-data mutation.
+- Data/sync/environment decisions added/updated: no Supabase mutation, no backfill, no delete, no migration for DEF-028.
+- Testing requirements added/updated: Playwright installed Chrome channel works locally on Catalina; use proof-of-life as a base for targeted browser regression.
+- Docs updated: `SESSION_HANDOFF.md`.
+- Items intentionally deferred: DEF-028 implementation, product acceptance of completed-session repair, any broad Playwright rollout, CI, Supabase/data changes.

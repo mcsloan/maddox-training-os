@@ -2,98 +2,66 @@
 
 ## Latest Task
 
-QA-AUTOMATION-002 - Playwright proof-of-life strategy and DEF-028 capture.
+Post-Playwright proof-of-life documentation update.
 
 ## Result
 
-Captured `DEF-028` in canonical scope and documented a safe Playwright proof-of-life strategy without installing packages, creating tests, changing app code, mutating data, committing, or pushing.
+Updated durable repo documentation after pushed commit `402edc8` (`test(qa): add Playwright chrome proof of life`).
 
-`DEF-028` records that completed-session/read-only surfaces can still bypass the shared ActivityPresentation context: Day and reopened/edit Session show `Acceleration and accurate shooting`, while View Latest Completed Session can show stale legacy title text, `Speed Stack C, conditioning, and shooting.`
+Repo state at this checkpoint: local `main` == `origin/main`.
+
+`QA-AUTOMATION-002` is now recorded as completed. Playwright launched installed Google Chrome successfully on macOS Catalina `10.15.8` without installing bundled browsers.
+
+`DEF-028` remains open/not fixed because the completed-session/read-only surface was not exercised in the passing Playwright run.
 
 ## Files Changed
 
+- `docs/SESSION_HANDOFF.md`
 - `docs/SCOPE.md`
 - `docs/AGENT_REPORT.md`
 
-## DEF-028
+## Proof-Of-Life Result
 
-- Location: `docs/SCOPE.md`
-- Status: `Blocked`
-- Priority: `P1`
-- Lane: `Fast lane`
-- Parent/category: Activity Presentation
-- Data rule: fix display/projection first; do not mutate saved session records, Supabase data, migrations, backfills, deletes, or transactional history.
-
-## Playwright Proof-Of-Life Recommendation
-
-Recommended path: hybrid local HTTP harness plus later Playwright proof-of-life using installed Google Chrome via Playwright `channel: "chrome"` first.
-
-Rationale:
-
-- macOS is Catalina `10.15.8`, so latest bundled Playwright browsers may be risky.
-- Google Chrome `128.0.6613.138` is already installed locally.
-- Current package setup has Vitest only; no `@playwright/test`, no `playwright.config.*`, no `tests/`, and no `e2e/`.
-- The no-package HTTP harness remains useful for static/text checks, but the completed-session defect requires real browser interaction.
-
-First proof-of-life target for a later approved task:
-
-1. Open production Day page for `2026-06-19`.
-2. Assert badge includes `9964e52` or newer.
-3. Assert Day title includes `Acceleration and accurate shooting`.
-4. Open production Session route for `session-2026-06-19`.
-5. Detect whether Previous Attempt gate appears.
-6. Click `Reopen / Edit Latest Completed Session`.
-7. Assert title includes `Acceleration and accurate shooting`.
-8. Return to Session route.
-9. Click `View Latest Completed Session`.
-10. Record whether completed-session page still says `Speed Stack C, conditioning, and shooting.`
-11. Do not click Finish Session.
-12. Do not save/log/submit anything.
-
-## Proposed Later Files
-
-Likely files for a later approved setup task:
-
-- `playwright.config.ts`
-- `e2e/activity-presentation-proof.spec.ts`
-- `qa-artifacts/playwright/` for local artifacts, ignored by existing `qa-artifacts/`
-- Optional package script in `package.json` only if Mike approves package-file changes
-
-## Proposed Later Commands
-
-Not run in this task:
+Command that passed:
 
 ```bash
-npm install -D @playwright/test
 npx playwright test e2e/activity-presentation-proof.spec.ts --project=chrome
 ```
 
-Avoid initially:
+Observed:
 
-```bash
-npx playwright install
-```
+- `/day/2026-06-19` loaded.
+- Day title assertion passed: `Acceleration and accurate shooting`.
+- Badge assertion passed: `9964e52` or `a3a41f4`.
+- `/session/session-2026-06-19` loaded.
+- Previous Attempt gate was not visible.
+- `Reopen / Edit Latest Completed Session` was not visible.
+- `View Latest Completed Session` was not visible.
+- Completed-session surface was not exercised.
+- No Supabase/data mutation occurred.
+- No Finish Session, Save, Submit, Start Fresh Attempt, or logging/submission action was clicked.
 
-Do not download bundled browsers unless Mike explicitly approves after Catalina compatibility review.
+## Status Changes
 
-## Scope Boundaries Preserved
+- `QA-AUTOMATION-002`: `Completed`.
+- `DEF-028`: remains `Blocked` / open.
+- Next recommended lane: `DEF-028` completed-session display/projection inspect/fix.
 
-- No Playwright install.
-- No npm install.
-- No package file changes.
-- No browser tests created.
-- No app code changes.
-- No source JSON edits.
-- No Supabase work.
-- No save/log/finish flow was run.
-- No commit or push.
+## DEF-028 Guardrails
+
+- Fix display/projection first.
+- Do not mutate saved session records.
+- No Supabase writes.
+- No backfill.
+- No delete.
+- No migration.
 
 ## Scope Capture Check
 
-- Defects added/updated: added `DEF-028` as `P1 / Blocked`.
-- Epics/features added/updated: added `QA-AUTOMATION-002` as `P1 / Scope review required`.
-- Product decisions added/updated: display/projection repair first; do not mutate saved completed-session records to fix stale title display.
-- Data/sync/environment decisions added/updated: no Supabase mutation, no backfill, no migration, no delete.
-- Testing requirements added/updated: proposed Playwright proof-of-life using installed Chrome channel first; keep no-package HTTP harness as static evidence layer.
-- Docs updated: `docs/SCOPE.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: package install, Playwright config/spec creation, app fix, production browser execution, commit, push.
+- Defects added/updated: `DEF-028` remains open; evidence updated to note Playwright did not exercise completed-session surface.
+- Epics/features added/updated: `QA-AUTOMATION-002` marked completed.
+- Product decisions added/updated: completed-session stale title remains display/projection repair only.
+- Data/sync/environment decisions added/updated: no Supabase mutation, no backfill, no delete, no migration.
+- Testing requirements added/updated: installed Chrome Playwright proof-of-life is now available as regression base.
+- Docs updated: `docs/SESSION_HANDOFF.md`, `docs/SCOPE.md`, `docs/AGENT_REPORT.md`.
+- Items intentionally deferred: DEF-028 implementation, broader Playwright rollout, CI, Supabase/data work, commit, push.
