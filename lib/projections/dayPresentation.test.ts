@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { buildDayPresentation } from "./dayPresentation";
-import type { V84DayExecutionPlanEntry } from "@/lib/imports/v8_4/types";
+import { projectDayPresentationContext, projectPlannedDayActivities } from "./activityPresentation";
+import { getV84CalendarDates } from "../imports/v8_4/calendar";
+import { getV84DayExecutionEntries, getV84SportLoadsForDate, getV84TrainingWorkEntries } from "../imports/v8_4/daily";
+import { getV84SessionByDate, getV84SessionDrills, getV84SessionWorkout } from "../imports/v8_4/session";
+import type { V84DayExecutionPlanEntry } from "../imports/v8_4/types";
 import type { Drill, KPI, PlannedExternalLoad, PlanDay, PlanDayDisplayModel, WorkoutBlock } from "@/lib/types";
 
 const forbiddenVisibleStrings = [
@@ -22,7 +26,71 @@ const forbiddenVisibleStrings = [
   "controlled 50-shot",
 ];
 
+const futureDayForbiddenVisibleStrings = [
+  "external-load",
+  "external load",
+  "external-load-protected",
+  "source conflict",
+  "source-plan conflict",
+  "unresolved plan",
+  "review source",
+  "SHOT-50",
+  "SHOT-100",
+  "MOB-15",
+  "CON-SHIFT",
+  "CON-RSA",
+  "Conditioning_Details_v7",
+  "Recovery_Rules_v7",
+];
+
 describe("day presentation", () => {
+  it("projects every v8.4 date into a usable athlete-facing Day payload", () => {
+    const dates = getV84CalendarDates();
+
+    expect(dates).toHaveLength(84);
+    expect(dates[0]).toBe("2026-06-15");
+    expect(dates[dates.length - 1]).toBe("2026-09-06");
+
+    for (const date of dates) {
+      const routeData = buildRouteLikeDayPresentation(date);
+      const visibleSteps = Object.values(routeData.presentation.executionSteps).filter((step) => !step.hidden);
+      const athleteFacingPayload = JSON.stringify({
+        dayTitle: routeData.presentation.dayTitle,
+        dayTypeLabel: routeData.dayContext.eyebrow,
+        plannedWorkSummary: routeData.presentation.plannedWorkSummary,
+        athleteActionSummary: routeData.presentation.athleteActionSummary,
+        parentCue: routeData.presentation.parentCue,
+        loadRule: routeData.presentation.loadRule,
+        recovery: routeData.presentation.recovery,
+        chips: routeData.presentation.chips,
+        ctas: routeData.presentation.ctas.map((cta) => ({ label: cta.label, tone: cta.tone })),
+        visibleSteps: visibleSteps.map((step) => ({
+          title: step.title,
+          subtitle: step.subtitle,
+          note: step.note,
+          guidance: step.guidance,
+        })),
+      });
+
+      expect(routeData.canResolveDayRoute, date).toBe(true);
+      expect(routeData.presentation.dayTitle.trim(), date).not.toBe("");
+      expect(routeData.dayContext.eyebrow.trim(), date).not.toBe("");
+      expect(routeData.plannedActivities.length, date).toBeGreaterThan(0);
+      expect(visibleSteps.length, date).toBeGreaterThan(0);
+      expect(routeData.presentation.plannedWorkSummary.trim(), date).not.toBe("");
+      expect(routeData.presentation.athleteActionSummary.trim(), date).not.toBe("");
+      expect(athleteFacingPayload.length, date).toBeGreaterThan(0);
+
+      if (routeData.sportLoads.length > 0 || isRecoveryOrLightDay(routeData)) {
+        expect(athleteFacingPayload, `${date} recovery/light guidance`).toMatch(/recovery|mobility|light|easy|skill|fresh|sport load/i);
+      }
+
+      for (const value of futureDayForbiddenVisibleStrings) {
+        expect(athleteFacingPayload, `${date} leaked ${value}`).not.toContain(value);
+      }
+    }
+  });
+
   it("merges duplicate KPI shooting blocks and renders clean KPI-day support copy", () => {
     const day: PlanDay = {
       date: "fixture-kpi-day",
@@ -319,6 +387,52 @@ describe("day presentation", () => {
     expect(presentation.kpiEvidenceSummary.state).toBe("planned");
   });
 });
+
+function buildRouteLikeDayPresentation(date: string) {
+  const executionEntries = getV84DayExecutionEntries(date);
+  const dayContext = projectDayPresentationContext(date);
+  const plannedActivities = projectPlannedDayActivities(date);
+  const trainingWorkEntries = getV84TrainingWorkEntries(date);
+  const sportLoads = getV84SportLoadsForDate(date);
+  const v84Session = getV84SessionByDate(date);
+  const v84Workout = v84Session ? getV84SessionWorkout(v84Session.sessionId) || undefined : undefined;
+  const trainingWorkHref = v84Session ? `/session/${v84Session.sessionId}` : "";
+  const drills = v84Session ? getV84SessionDrills(v84Session.sessionId) : [];
+
+  return {
+    canResolveDayRoute: Boolean(sportLoads.length || executionEntries.length),
+    dayContext,
+    plannedActivities,
+    sportLoads,
+    presentation: buildDayPresentation({
+      date,
+      sportLoads,
+      executionEntries,
+      plannedActivities,
+      workout: v84Workout,
+      drills,
+      logTodayHref: sportLoads[0] ? `/external-load/${encodeURIComponent(sportLoads[0].id)}` : trainingWorkHref || `/day/${date}`,
+      trainingWorkHref,
+      trainingWorkLogHref: `/training-work/${date}`,
+      fallbackTitle: v84Session?.summary,
+      dayContext,
+    }),
+    trainingWorkEntries,
+  };
+}
+
+function isRecoveryOrLightDay(routeData: ReturnType<typeof buildRouteLikeDayPresentation>) {
+  const text = [
+    routeData.presentation.dayTitle,
+    routeData.presentation.plannedWorkSummary,
+    routeData.presentation.athleteActionSummary,
+    routeData.presentation.loadRule,
+    routeData.presentation.recovery,
+    ...routeData.plannedActivities.map((activity) => `${activity.category} ${activity.athleteTitle} ${activity.instruction} ${activity.coachingCue}`),
+    ...routeData.trainingWorkEntries.map((entry) => `${entry.entryType} ${entry.entryTitle} ${entry.notes}`),
+  ].join(" ").toLowerCase();
+  return /recovery|mobility|cooldown|easy|light|fresh|deload/.test(text);
+}
 
 function drill(id: string, name: string, category: string, equipment: string[]): Drill {
   return {
