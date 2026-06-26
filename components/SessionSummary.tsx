@@ -7,12 +7,13 @@ function display(value: number | null, unit = "") {
   return value === null ? "—" : `${value}${unit}`;
 }
 
-export function SessionSummary({ workout, session, drills, kpis, onReopen, onFresh }: { workout: Workout; session: SessionLog; drills: Drill[]; kpis: KPI[]; onReopen: () => void; onFresh: () => void }) {
+export function SessionSummary({ workout, session, drills, kpis, displayTitle, onReopen, onFresh }: { workout: Workout; session: SessionLog; drills: Drill[]; kpis: KPI[]; displayTitle?: string; onReopen: () => void; onFresh: () => void }) {
+  const title = displayTitle?.trim() || workout.dayFocus;
   return (
     <div className="mx-auto max-w-4xl space-y-5">
       <article className="card bg-navy text-white">
         <p className="label text-lime">Completed session</p>
-        <h1 className="text-4xl font-black">{workout.dayFocus}</h1>
+        <h1 className="text-4xl font-black">{title}</h1>
         <p className="mt-3 text-slate-300">Started {new Date(session.startedAt).toLocaleString()} · Completed {session.completedAt ? new Date(session.completedAt).toLocaleString() : "—"}</p>
         <div className="mt-5 flex flex-wrap gap-3">
           <button className="btn-primary bg-lime text-navy hover:bg-white" onClick={onReopen}>Reopen / Edit</button>

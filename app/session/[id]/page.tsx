@@ -362,7 +362,8 @@ export default function SessionPage() {
   }
 
   if (mode === "view" && session) {
-    return <SessionSummary workout={workout} session={session} drills={drills} kpis={workoutKpis} onReopen={() => reopen()} onFresh={startFresh} />;
+    const displayTitle = dayContext?.heroTitle.trim() || workout.dayFocus;
+    return <SessionSummary workout={workout} session={session} drills={drills} kpis={workoutKpis} displayTitle={displayTitle} onReopen={() => reopen()} onFresh={startFresh} />;
   }
 
   if (!session) {
