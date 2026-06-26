@@ -6,6 +6,7 @@ import type { Drill, TrainingPlan } from "../types";
 const trainingPlan = planJson as TrainingPlan;
 
 export type ActivityPresentationCategory =
+  | "readiness"
   | "warmup"
   | "speed_stack"
   | "shooting"
@@ -170,7 +171,8 @@ export function remainingPlannedMinutesFromStep(activities: ActivityPresentation
 
 function activityCategory(entry: V84DayExecutionPlanEntry): ActivityPresentationCategory {
   const text = normalizedEntryText(entry);
-  if (entry.logType === "sportLoadLog" || text.includes("sport load")) return "sport_load";
+  if (/readiness/.test(text)) return "readiness";
+  if (entry.logType === "sportLoadLog" || entry.entryType.toLowerCase().includes("sport load")) return "sport_load";
   if (entry.logType === "kpiLog" || /\bkpi\b|baseline|test/.test(text)) return "kpi";
   if (/speed stack|ss-[abc]/.test(text)) return "speed_stack";
   if (/warmup|wu-?10|wup-?10|activation/.test(text)) return "warmup";
@@ -300,7 +302,7 @@ function inferActivityEquipment(activity: ActivityPresentation) {
   if (activity.category === "shooting" || activity.category === "iq") equipment.push("stick", "pucks or ball");
   if (activity.category === "shooting") equipment.push("net or target", "shooting pad if available");
   if (activity.category === "conditioning") equipment.push("bike or treadmill if used");
-  if (activity.category === "warmup" || activity.category === "mobility" || activity.category === "recovery") equipment.push("open floor space");
+  if (activity.category === "warmup" || activity.category === "mobility" || activity.category === "recovery" || activity.category === "readiness") equipment.push("open floor space");
   return equipment;
 }
 
@@ -311,6 +313,7 @@ function safetyNotes(activity: ActivityPresentation) {
 
 function categoryLabel(category: ActivityPresentationCategory) {
   const labels: Record<ActivityPresentationCategory, string> = {
+    readiness: "Readiness",
     warmup: "Warm-up",
     speed_stack: "Speed Stack",
     shooting: "Shooting",

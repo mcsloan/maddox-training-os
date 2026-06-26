@@ -270,6 +270,7 @@ function buildExecutionSteps(args: { day?: PlanDay; executionEntries: V84DayExec
 
 function activitySubtitle(activity: ActivityPresentation) {
   const labels: Record<ActivityPresentation["category"], string> = {
+    readiness: "Readiness",
     warmup: "Warm-up",
     speed_stack: "Speed Stack",
     shooting: "Shooting",

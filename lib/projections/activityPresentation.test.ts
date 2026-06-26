@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { buildDayPresentation } from "./dayPresentation";
 import { projectDayPresentationContext, projectPlannedDayActivities, activityToDrill, remainingPlannedMinutesFromStep, type ActivityPresentation } from "./activityPresentation";
 import { getV84DayExecutionEntries } from "../imports/v8_4/daily";
 
@@ -9,13 +10,20 @@ const forbiddenVisibleStrings = [
   "SHOT-100",
   "CON-SHIFT",
   "CON-RSA",
+  "Conditioning_Details_v7",
+  "Recovery_Rules_v7",
   "SKL-HU10",
   "TEST",
   "SS-A",
   "SS-B",
   "SS-C",
+  "external-load-protected",
+  "external load",
   "source conflict",
+  "source-plan conflict",
+  "unresolved plan",
   "unresolved plan items",
+  "review source",
   "source sheet",
   "workbook",
   "external-load",
@@ -55,6 +63,89 @@ describe("planned activity presentation", () => {
       "Cooldown / mobility",
       "End-of-day reflection",
     ]);
+  });
+
+  it("keeps Day and active Session planned activity displays on the same canonical sequence", () => {
+    const date = "2026-06-19";
+    const executionEntries = getV84DayExecutionEntries(date);
+    const plannedActivities = projectPlannedDayActivities(date);
+    const dayContext = projectDayPresentationContext(date);
+    const dayPresentation = buildDayPresentation({
+      date,
+      executionEntries,
+      plannedActivities,
+      dayContext,
+    });
+    const activeSessionDisplay = plannedActivities.map((activity, index) => ({
+      sequenceOrder: activity.sequenceOrder,
+      title: activity.athleteTitle,
+      category: activity.category,
+      plannedDurationMinutes: activity.plannedDurationMinutes,
+      headerLabel: activity.athleteTitle || `Step ${index + 1}`,
+      drill: activity.category === "reflection" || activity.athleteTitle.toLowerCase().includes("readiness")
+        ? null
+        : activityToDrill(activity),
+      childTitles: activity.children?.map((child) => child.title) ?? [],
+    }));
+
+    expect(activeSessionDisplay.map((item) => item.sequenceOrder)).toEqual(executionEntries.map((entry) => entry.sequence));
+    expect(activeSessionDisplay.map((item) => item.title)).toEqual([
+      "Readiness check",
+      "Warm-up / mobility",
+      "Speed Stack C",
+      "Controlled bike or treadmill",
+      "Shooting - 100 shots",
+      "Hockey awareness cue",
+      "Cooldown / mobility",
+      "End-of-day reflection",
+    ]);
+    expect(new Set(activeSessionDisplay.map((item) => item.category))).toEqual(new Set([
+      "readiness",
+      "warmup",
+      "speed_stack",
+      "shooting",
+      "conditioning",
+      "mobility",
+      "iq",
+      "reflection",
+    ]));
+
+    for (const activity of plannedActivities) {
+      const dayStep = dayPresentation.executionSteps[activity.sequenceOrder];
+      expect(dayStep?.hidden).toBe(false);
+      expect(dayStep?.title).toBe(activity.athleteTitle);
+      expect(executionEntries.find((entry) => entry.sequence === activity.sequenceOrder)?.plannedDurationMin ?? undefined).toBe(activity.plannedDurationMinutes);
+    }
+
+    for (const item of activeSessionDisplay) {
+      if (!item.drill) continue;
+      expect(item.drill.name).toBe(item.title);
+      if (typeof item.plannedDurationMinutes === "number") {
+        expect(item.drill.plannedDuration).toBe(item.plannedDurationMinutes * 60);
+        expect(item.drill.plannedPrescription).toBe(`${item.plannedDurationMinutes} min`);
+      }
+    }
+
+    const athleteFacingPayload = JSON.stringify({
+      day: Object.fromEntries(plannedActivities.map((activity) => {
+        const step = dayPresentation.executionSteps[activity.sequenceOrder];
+        return [activity.sequenceOrder, {
+          title: step?.title,
+          subtitle: step?.subtitle,
+          note: step?.note,
+          guidance: step?.guidance,
+        }];
+      })),
+      session: activeSessionDisplay.map((item) => ({
+        title: item.title,
+        category: item.drill?.category ?? item.category,
+        plan: item.drill?.plannedPrescription,
+        instructions: item.drill?.instructions,
+        coachingCues: item.drill?.coachingCues,
+        childTitles: item.childTitles,
+      })),
+    });
+    for (const value of forbiddenVisibleStrings) expect(athleteFacingPayload).not.toContain(value);
   });
 
   it("keeps duration out of time-based titles while preserving prescription count titles", () => {
