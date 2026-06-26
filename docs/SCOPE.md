@@ -9,7 +9,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Current checkpoint: repo clean and synced after pushed commit `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`).
+- Current checkpoint: repo clean and synced after pushed commit `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
 - Tonight's stabilization commits are pushed: `9fd4c73` (`fix(session): align completed summary title with canonical presentation`), `c20432c` (`fix(projections): align planned activity classification across day and session`), and `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`).
 - Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
 - Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
@@ -26,6 +26,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - `QA-AUTOMATION-002` Playwright proof-of-life is completed: installed Google Chrome channel launched successfully on macOS Catalina `10.15.8` without bundled browser install.
 - `DEF-028` is fixed, automated-tested, committed, and pushed at `9fd4c73`; completed-session/read-only now prefers canonical day/session presentation title without mutating saved records.
 - Day + active Session planned-activity parity is verified across all 84 v8.4 active session dates by `05019f5`.
+- All 84 v8.4 plan dates from `2026-06-15` through `2026-09-06` are verified athlete-usable at the Day projection layer by `6ab3f5e`; no manual UAT is required for this risk.
 - QA Contract Framework Loop 1B completed as inspect-only route/component discovery.
 - QA Contract Framework Loop 1C records discovered route/component ownership in QA docs only; no app behavior or test generation.
 - Next stabilization lane should be selected from the remaining P1 queue; data-write/sync tasks still require separate approval.
@@ -125,7 +126,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 6 | ACTIVITY-PRESENTATION-CONTRACT-001 | Planned activity presentation contract, Day + Session parity only | P1 | Completed | Fast lane | Implemented and pushed through `c20432c`; all 84 v8.4 active session dates are covered by `05019f5`. |
 | 7 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
 | 8 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
-| 9 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Not started | Fast lane | Audit upcoming Day/Calendar/Session usability. |
+| 9 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Completed | Fast lane | Automated proof at `6ab3f5e` verifies all 84 v8.4 plan dates are athlete-usable at the Day projection layer. |
 | 10 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
 | 11 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 84 v8.4 active session dates. |
 | 12 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
@@ -194,9 +195,9 @@ Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source J
 | --- | --- |
 | In progress | KPI-ROADMAP-001 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, FUTURE-DAY-READINESS-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
+| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
-| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, DAY-SESSION-PARITY-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
+| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
 ### P2
 
@@ -633,11 +634,11 @@ Ground Truth Baseline:
 - Desired outcome: future days load, communicate day type, show executable content when planned, and avoid misleading statuses.
 - In scope: inspect Day/Calendar/Session projections for upcoming dates; add narrow fixes only if requested.
 - Out of scope: source-plan rewrite, broad redesign, Playwright unless separately approved.
-- Acceptance criteria: June 23 onward readiness issues are listed with priority and safe next actions.
+- Acceptance criteria: all 84 v8.4 plan dates from `2026-06-15` through `2026-09-06` project athlete-usable Day readiness with nonblank titles, guidance, visible planned elements, and forbidden source/internal label filtering.
 - Dependencies: Activity Prescription may expose more day usability gaps.
 - Risks: source gaps may be confused with app projection gaps.
-- Next action: audit upcoming dates after Activity Prescription work is scoped/accepted.
-- Links / evidence: Calendar date coverage commit `7b48a3e`.
+- Next action: maintain as regression proof before broader Day/Calendar/Session readiness work.
+- Links / evidence: Calendar date coverage commit `7b48a3e`; automated proof commit `6ab3f5e`.
 
 ### ACTIVITY-LOGGING-001
 

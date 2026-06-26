@@ -3,12 +3,13 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Latest pushed commit: `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`).
+- Latest pushed commit: `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
 - Expected git state: `## main...origin/main`.
 - Tonight's pushed stabilization commits:
   - `9fd4c73` (`fix(session): align completed summary title with canonical presentation`)
   - `c20432c` (`fix(projections): align planned activity classification across day and session`)
   - `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`)
+  - `6ab3f5e` (`test(projections): cover all v8.4 day readiness`)
 - `docs/SCOPE.md` remains the only canonical active scope source.
 - v8.4 app import package remains authoritative.
 
@@ -17,6 +18,7 @@
 - `DEF-028` is fixed, automated-tested, committed, and pushed.
 - Completed-session/read-only `SessionSummary` now prefers canonical day/session presentation title when available and falls back to saved/imported workout title without mutating saved records.
 - Day + active Session planned-activity parity is verified across all 84 v8.4 active session dates.
+- All 84 v8.4 plan dates from `2026-06-15` through `2026-09-06` are verified athlete-usable at the Day projection layer.
 - The all-date parity proof covers shared planned sequence, athlete-facing titles, planned durations, categories, and forbidden source/internal label filtering.
 - No manual Mike UAT was required for these proofs because deterministic component/projection tests covered the risks.
 - No Supabase mutation, saved session rewrite, v8.4 JSON edit, logging behavior change, commit beyond the listed pushed commits, or broad surface refactor is pending from tonight's work.
@@ -65,6 +67,6 @@ Recommended next lane:
 - Epics/features added/updated: `ACTIVITY-PRESENTATION-CONTRACT-001` and `DAY-SESSION-PARITY-001` completed for Day + active Session parity.
 - Product decisions added/updated: manual Mike UAT is not required for tonight's completed proofs because automated tests covered the targeted risks.
 - Data/sync/environment decisions added/updated: no Supabase mutation, no saved-record mutation, no backfill, no delete, no migration.
-- Testing requirements added/updated: all 84 v8.4 active session dates now have Day + active Session planned-activity parity proof.
+- Testing requirements added/updated: all 84 v8.4 active session dates now have Day + active Session planned-activity parity proof; all 84 v8.4 plan dates now have Day readiness proof.
 - Docs updated: `SESSION_HANDOFF.md`.
 - Items intentionally deferred: broader surface parity, fixture architecture, Playwright expansion, CI/release gate, Supabase/data changes.
