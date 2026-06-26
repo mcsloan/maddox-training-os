@@ -2,69 +2,71 @@
 
 ## Latest Task
 
-Record DEF-028 Playwright evidence script result.
+QA Contract Framework Loop 1A - contract kernel and matrix-bloat controls.
 
 ## Result
 
-Updated durable repo documentation after DEF-028 evidence script commit `66ab959` (`test(qa): improve DEF-028 Playwright evidence logging`).
+Created the first durable QA contract framework layer for future site-wide test generation.
 
-This report records the evidence from that script run without relying on temporary local branch state.
+This was docs-only. No app code, Playwright specs, package files, source JSON, Supabase data, tests, commits, or pushes were changed/performed.
 
-`QA-AUTOMATION-002` remains completed. The existing Playwright proof-of-life now has clearer DEF-028 evidence logging.
+`QA-SYSTEM-001` now points to the contract kernel, testing pyramid, test generation rules, anti-bloat governance, route surface matrix stub, and compact test groups.
 
-`DEF-028` remains open/not fixed. The latest production run did not exercise the completed-session/read-only surface and did not reproduce DEF-028, but it did record that the Session route did not show the expected shared title in that browser state.
+`DEF-028` remains open/not fixed and is explicitly covered by the completed-session/read-only behavior contract and test group.
 
 ## Files Changed
 
 - `docs/AGENT_REPORT.md`
+- `docs/APPLICATION_BEHAVIOR_CONTRACT.md`
+- `docs/QA_MATRIX_BLOAT_CONTROLS.md`
+- `docs/QA_TESTING_PYRAMID.md`
+- `docs/ROUTE_SURFACE_COVERAGE_MATRIX.md`
 - `docs/SCOPE.md`
 - `docs/SESSION_HANDOFF.md`
+- `docs/TEST_CASES.md`
+- `docs/TEST_GENERATION_RULES.md`
+- `AGENTS.md`
 
-## Latest Playwright Evidence Result
+## Contract Kernel Summary
 
-Command that passed:
+Added `ABC-001` through `ABC-012` covering:
 
-```bash
-npx playwright test e2e/activity-presentation-proof.spec.ts --project=chrome
-```
+- day-first architecture
+- one day, one truth
+- canonical activity presentation across athlete-facing surfaces
+- forbidden raw/source labels
+- Sport Load as planned work
+- History as Week > Day > Evidence
+- missing data is not deferred data
+- completed-session/read-only consistency
+- parent/athlete factual consistency
+- read-only QA dangerous-action guardrails
+- no silent blank days
+- Today equals canonical Day
 
-Observed:
+## Testing Pyramid Summary
 
-- `/day/2026-06-19` loaded.
-- Result: `1 passed`.
-- Production badge observed: `v0.1.0 · 6b174a9 · production`.
-- Day expected title present: `true`.
-- `/session/session-2026-06-19` loaded.
-- Session expected title present: `false`.
-- Previous Attempt gate visible: `false`.
-- `Reopen / Edit Latest Completed Session` was not visible.
-- `View Latest Completed Session` was not visible.
-- Completed-session surface was not exercised.
-- DEF-028 was not reproduced by this run.
-- No Supabase/data mutation occurred.
-- No Finish Session, Save, Submit, Start Fresh Attempt, or logging/submission action was clicked.
+- Static / contract / traceability checks
+- Vitest logic/projection tests
+- Playwright browser tests
+- Manual UAT
+- Optional future CI/release gate
 
-## Status Changes
+## Matrix-Bloat Controls
 
-- `QA-AUTOMATION-002`: remains `Completed`.
-- `DEF-028`: remains `Blocked` / open.
-- Next recommended lane: `DEF-028` completed-session display/projection inspect/fix.
+Added explicit rules against giant surface x requirement x day matrices, placeholder TBD rows, and date-specific browser-test sprawl. Missing information must be marked `Status: Needs source inspection` with reason and next step.
 
-## DEF-028 Guardrails
+## Stubbed Rather Than Expanded
 
-- Fix display/projection first.
-- Do not mutate saved session records.
-- No Supabase writes.
-- No backfill.
-- No delete.
-- No migration.
+- `docs/ROUTE_SURFACE_COVERAGE_MATRIX.md` contains initial surface groups only and marks route/component ownership as needing inspection.
+- `docs/TEST_CASES.md` contains ten test groups only, not hundreds of concrete cases.
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-028` remains open; evidence updated to note completed-session was not exercised and Session expected title was absent in this production browser state.
-- Epics/features added/updated: none.
-- Product decisions added/updated: completed-session stale title remains display/projection repair only; state-dependent Playwright evidence is not product acceptance.
-- Data/sync/environment decisions added/updated: no Supabase mutation, no backfill, no delete, no migration.
-- Testing requirements added/updated: DEF-028 evidence logging improved in the Playwright proof-of-life.
-- Docs updated: `docs/SESSION_HANDOFF.md`, `docs/SCOPE.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: DEF-028 implementation, broader Playwright rollout, CI, Supabase/data work.
+- Defects added/updated: `DEF-028` remains open and is covered by `ABC-008` and `TCG-008`; no new defect created.
+- Epics/features added/updated: `QA-SYSTEM-001` updated to reference the QA contract framework docs.
+- Product decisions added/updated: tests must be contract-driven and site-wide; automated passes do not equal product acceptance.
+- Data/sync/environment decisions added/updated: read-only QA guardrails preserved; no Supabase mutation.
+- Testing requirements added/updated: testing pyramid, behavior contracts, test-generation rules, matrix-bloat controls, route surface matrix stub, and test groups.
+- Docs updated: `AGENTS.md`, `docs/QA_TESTING_PYRAMID.md`, `docs/APPLICATION_BEHAVIOR_CONTRACT.md`, `docs/TEST_GENERATION_RULES.md`, `docs/QA_MATRIX_BLOAT_CONTROLS.md`, `docs/ROUTE_SURFACE_COVERAGE_MATRIX.md`, `docs/TEST_CASES.md`, `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
+- Items intentionally deferred: route/component inspection, concrete test generation, broad Playwright expansion, CI/release gate, DEF-028 implementation.

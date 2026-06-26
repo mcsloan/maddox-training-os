@@ -25,6 +25,14 @@
   - no dangerous actions clicked; no Supabase/data mutation
 - No accepted app code work is pending from this checkpoint.
 - DEF-028 remains open/not fixed because the completed-session/read-only surface was not exercised in the passing proof-of-life run.
+- QA Contract Framework Loop 1A docs are the active QA architecture lane:
+  - `docs/QA_TESTING_PYRAMID.md`
+  - `docs/APPLICATION_BEHAVIOR_CONTRACT.md`
+  - `docs/TEST_GENERATION_RULES.md`
+  - `docs/QA_MATRIX_BLOAT_CONTROLS.md`
+  - `docs/ROUTE_SURFACE_COVERAGE_MATRIX.md`
+  - `docs/TEST_CASES.md`
+- Future QA loops should avoid one-off Playwright expansion until the contract layer and compact route/test-group docs are reviewed.
 
 ## Playwright Proof-Of-Life Result
 
@@ -77,13 +85,14 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Recommended next lane:
 
-1. `DEF-028` completed-session display/projection inspect/fix.
-2. Display/projection repair only.
-3. Do not mutate saved session records.
-4. No Supabase writes.
-5. No backfill.
-6. No delete.
-7. No migration.
+1. Review QA Contract Framework Loop 1A docs for contract kernel, pyramid, and anti-bloat rules.
+2. Loop 1B candidate: route/component inspection to fill `ROUTE_SURFACE_COVERAGE_MATRIX.md` without date-by-date expansion.
+3. Then return to `DEF-028` completed-session display/projection inspect/fix or targeted coverage as approved.
+4. Do not mutate saved session records.
+5. No Supabase writes.
+6. No backfill.
+7. No delete.
+8. No migration.
 
 ## Known Caution Areas
 
@@ -94,6 +103,7 @@ Recommended next lane:
 - Unconfirmed schedule/camp claims must be verified before any plan change.
 - Playwright is proven locally with installed Chrome channel, but broader Playwright rollout and CI remain future scope.
 - Bundled Playwright browser installs remain avoided unless explicitly approved.
+- QA matrices must stay compact; missing information should be marked `Status: Needs source inspection` instead of filled with placeholders.
 
 ## Recommended Startup Reading
 

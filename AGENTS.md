@@ -79,6 +79,17 @@ Code Comment Authority:
 - If a code comment conflicts with `docs/SCOPE.md`, ignore the comment and report the conflict.
 - Do not implement a TODO/comment unless it is explicitly in the active scope item.
 
+QA/Test Scope Authority:
+
+- Before future QA, test, Playwright, Vitest, release-gate, or fixture work, consult `docs/SCOPE.md` and the QA contract docs:
+  - `docs/QA_TESTING_PYRAMID.md`
+  - `docs/APPLICATION_BEHAVIOR_CONTRACT.md`
+  - `docs/TEST_GENERATION_RULES.md`
+  - `docs/QA_MATRIX_BLOAT_CONTROLS.md`
+  - `docs/TEST_CASES.md`
+- Do not create one-off date-specific browser tests when a reusable contract or test group should drive the coverage.
+- Do not expand matrices or test cases beyond the approved loop scope. If information is missing, record `Status: Needs source inspection`, the reason, and the next step.
+
 Before any cloud write, deploy, production-impacting operation, or data backfill:
 
 ```bash

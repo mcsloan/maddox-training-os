@@ -808,14 +808,14 @@ Advanced KPI scope:
 - Owner: Mike / Codex
 - Source: QA strategy/status docs
 - Problem: Release gates, fixture coverage, and E2E scope remain incomplete.
-- Desired outcome: critical athlete workflows have repeatable validation before release.
-- In scope: release gate, fixture strategy, test status reconciliation, future Playwright plan.
+- Desired outcome: critical athlete workflows have repeatable validation before release through contract-driven, site-wide coverage that avoids matrix bloat.
+- In scope: release gate, fixture strategy, test status reconciliation, Playwright plan, QA contract kernel, testing pyramid, test generation rules, and matrix-bloat controls.
 - Out of scope: installing Playwright or new tooling without explicit task.
-- Acceptance criteria: QA docs reflect current tooling and define release checks by risk level.
+- Acceptance criteria: QA docs reflect current tooling, define release checks by risk level, and require tests to trace to contracts/requirements/defects/scope items.
 - Dependencies: current projection model and environment safety.
-- Risks: stale QA docs can misstate coverage.
-- Next action: reconcile QA/testing docs after environment safety.
-- Links / evidence: prior QA docs merged here; use git history only.
+- Risks: stale QA docs can misstate coverage; giant matrices can obscure missing source inspection.
+- Next action: review QA Contract Framework Loop 1A docs, then run Loop 1B route/component inspection before broad test generation.
+- Links / evidence: `docs/QA_TESTING_PYRAMID.md`, `docs/APPLICATION_BEHAVIOR_CONTRACT.md`, `docs/TEST_GENERATION_RULES.md`, `docs/QA_MATRIX_BLOAT_CONTROLS.md`, `docs/ROUTE_SURFACE_COVERAGE_MATRIX.md`, `docs/TEST_CASES.md`.
 
 ### QA-AUTOMATION-002
 
