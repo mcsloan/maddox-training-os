@@ -9,6 +9,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
+- Current checkpoint supplied for QA Contract Framework Loop 1C: repo clean and synced after pushed commit `5c023db` (`docs(qa): add contract-driven testing framework`).
 - Pushed docs checkpoint before the DEF-028 evidence-script commit: `6b174a9` (`docs(qa): record Playwright proof-of-life checkpoint`).
 - Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
 - Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
@@ -24,7 +25,9 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` is completed as an inspect-only audit; no files were changed during the audit.
 - `QA-AUTOMATION-002` Playwright proof-of-life is completed: installed Google Chrome channel launched successfully on macOS Catalina `10.15.8` without bundled browser install.
 - `DEF-028` remains open/not fixed because the completed-session/read-only surface was not exercised in the passing Playwright run.
-- Next implementation candidate after this documentation capture: `DEF-028` completed-session display/projection inspect/fix.
+- QA Contract Framework Loop 1B completed as inspect-only route/component discovery.
+- QA Contract Framework Loop 1C records discovered route/component ownership in QA docs only; no app behavior or test generation.
+- Next likely lane after Loop 1C: either `DEF-028` fix design or completed-session/read-only fixture/test design, not app code until approved.
 
 ## Scope System Rules
 
@@ -129,7 +132,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 14 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
 | 15 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
 | 16 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
-| 17 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Formalize release gate, fixtures, and later Playwright. |
+| 17 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Loop 1C records route/component ownership; next approved lane is DEF-028 fix design or completed-session/read-only fixture/test design. |
 | 18 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Playwright installed Chrome channel proof-of-life passed locally; use it as a base for targeted DEF-028 regression after display/projection repair. |
 | 19 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
 | 20 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
@@ -814,7 +817,7 @@ Advanced KPI scope:
 - Acceptance criteria: QA docs reflect current tooling, define release checks by risk level, and require tests to trace to contracts/requirements/defects/scope items.
 - Dependencies: current projection model and environment safety.
 - Risks: stale QA docs can misstate coverage; giant matrices can obscure missing source inspection.
-- Next action: review QA Contract Framework Loop 1A docs, then run Loop 1B route/component inspection before broad test generation.
+- Next action: review QA Contract Framework Loop 1C route-surface map, then choose either DEF-028 fix design or completed-session/read-only fixture/test design before app code or broad test generation.
 - Links / evidence: `docs/QA_TESTING_PYRAMID.md`, `docs/APPLICATION_BEHAVIOR_CONTRACT.md`, `docs/TEST_GENERATION_RULES.md`, `docs/QA_MATRIX_BLOAT_CONTROLS.md`, `docs/ROUTE_SURFACE_COVERAGE_MATRIX.md`, `docs/TEST_CASES.md`.
 
 ### QA-AUTOMATION-002

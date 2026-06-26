@@ -3,6 +3,7 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
+- Current checkpoint supplied for Loop 1C: repo clean and synced after pushed commit `5c023db` (`docs(qa): add contract-driven testing framework`).
 - Last pushed baseline before the DEF-028 evidence-script commit: `6b174a9` (`docs(qa): record Playwright proof-of-life checkpoint`).
 - DEF-028 evidence script commit: `66ab959` (`test(qa): improve DEF-028 Playwright evidence logging`).
 - `docs/SCOPE.md` remains the only canonical active scope source.
@@ -25,13 +26,15 @@
   - no dangerous actions clicked; no Supabase/data mutation
 - No accepted app code work is pending from this checkpoint.
 - DEF-028 remains open/not fixed because the completed-session/read-only surface was not exercised in the passing proof-of-life run.
-- QA Contract Framework Loop 1A docs are the active QA architecture lane:
+- QA Contract Framework Loop 1A docs created the active QA architecture lane:
   - `docs/QA_TESTING_PYRAMID.md`
   - `docs/APPLICATION_BEHAVIOR_CONTRACT.md`
   - `docs/TEST_GENERATION_RULES.md`
   - `docs/QA_MATRIX_BLOAT_CONTROLS.md`
   - `docs/ROUTE_SURFACE_COVERAGE_MATRIX.md`
   - `docs/TEST_CASES.md`
+- QA Contract Framework Loop 1B completed as inspect-only and found actual route/component ownership for core surfaces. No app behavior was changed.
+- QA Contract Framework Loop 1C records the Loop 1B route map in QA docs only. No tests are generated in Loop 1C.
 - Future QA loops should avoid one-off Playwright expansion until the contract layer and compact route/test-group docs are reviewed.
 
 ## Playwright Proof-Of-Life Result
@@ -85,9 +88,9 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Recommended next lane:
 
-1. Review QA Contract Framework Loop 1A docs for contract kernel, pyramid, and anti-bloat rules.
-2. Loop 1B candidate: route/component inspection to fill `ROUTE_SURFACE_COVERAGE_MATRIX.md` without date-by-date expansion.
-3. Then return to `DEF-028` completed-session display/projection inspect/fix or targeted coverage as approved.
+1. Review QA Contract Framework Loop 1C route-surface map and compact TCG-008 fixture note.
+2. Choose the next approved lane: DEF-028 fix design or completed-session/read-only fixture/test design.
+3. Do not start app code until the next lane is explicitly approved.
 4. Do not mutate saved session records.
 5. No Supabase writes.
 6. No backfill.
@@ -119,6 +122,6 @@ Recommended next lane:
 - Epics/features added/updated: `QA-AUTOMATION-002` proof-of-life is completed.
 - Product decisions added/updated: completed-session stale title must be fixed through display/projection, not saved-data mutation.
 - Data/sync/environment decisions added/updated: no Supabase mutation, no backfill, no delete, no migration for DEF-028.
-- Testing requirements added/updated: Playwright installed Chrome channel works locally on Catalina; use proof-of-life as a base for targeted browser regression.
-- Docs updated: `SESSION_HANDOFF.md`.
-- Items intentionally deferred: DEF-028 implementation, product acceptance of completed-session repair, any broad Playwright rollout, CI, Supabase/data changes.
+- Testing requirements added/updated: Loop 1C route-surface ownership is recorded before concrete completed-session/read-only tests are generated.
+- Docs updated: `SESSION_HANDOFF.md`, `ROUTE_SURFACE_COVERAGE_MATRIX.md`, `TEST_CASES.md`, `AGENT_REPORT.md`, `SCOPE.md`.
+- Items intentionally deferred: DEF-028 implementation/design, completed-session/read-only fixture/test generation, product acceptance of completed-session repair, any broad Playwright rollout, CI, Supabase/data changes.
