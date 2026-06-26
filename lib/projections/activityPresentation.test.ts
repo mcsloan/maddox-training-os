@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { buildDayPresentation } from "./dayPresentation";
 import { projectDayPresentationContext, projectPlannedDayActivities, activityToDrill, remainingPlannedMinutesFromStep, type ActivityPresentation } from "./activityPresentation";
 import { getV84DayExecutionEntries } from "../imports/v8_4/daily";
+import { sessions } from "../imports/v8_4";
 
 const forbiddenVisibleStrings = [
   "MOB-15",
@@ -31,6 +32,10 @@ const forbiddenVisibleStrings = [
   "sourceBlock",
   "plannedBlockIds",
 ];
+
+const activeSessionDates = sessions
+  .filter((session) => session.hasTrainingWork)
+  .map((session) => session.date);
 
 describe("planned activity presentation", () => {
   it("projects shared day-level context for Day and Session consumers", () => {
@@ -146,6 +151,76 @@ describe("planned activity presentation", () => {
       })),
     });
     for (const value of forbiddenVisibleStrings) expect(athleteFacingPayload).not.toContain(value);
+  });
+
+  it("keeps Day and active Session planned activity displays aligned for every v8.4 active session date", () => {
+    expect(activeSessionDates).toHaveLength(84);
+
+    for (const date of activeSessionDates) {
+      const executionEntries = getV84DayExecutionEntries(date);
+      const plannedActivities = projectPlannedDayActivities(date);
+      const dayContext = projectDayPresentationContext(date);
+      const dayPresentation = buildDayPresentation({
+        date,
+        executionEntries,
+        plannedActivities,
+        dayContext,
+      });
+      const activeSessionDisplay = plannedActivities.map((activity, index) => ({
+        sequenceOrder: activity.sequenceOrder,
+        title: activity.athleteTitle,
+        category: activity.category,
+        plannedDurationMinutes: activity.plannedDurationMinutes,
+        headerLabel: activity.athleteTitle || `Step ${index + 1}`,
+        drill: activity.category === "reflection" || activity.athleteTitle.toLowerCase().includes("readiness")
+          ? null
+          : activityToDrill(activity),
+        childTitles: activity.children?.map((child) => child.title) ?? [],
+      }));
+
+      expect(plannedActivities, date).toHaveLength(executionEntries.length);
+      expect(activeSessionDisplay.map((item) => item.sequenceOrder), date).toEqual(executionEntries.map((entry) => entry.sequence));
+
+      for (const activity of plannedActivities) {
+        const dayStep = dayPresentation.executionSteps[activity.sequenceOrder];
+        expect(dayStep?.hidden, `${date} sequence ${activity.sequenceOrder}`).toBe(false);
+        expect(dayStep?.title, `${date} sequence ${activity.sequenceOrder}`).toBe(activity.athleteTitle);
+        expect(dayStep?.subtitle, `${date} sequence ${activity.sequenceOrder}`).toBe(categoryLabelForTest(activity.category));
+        expect(executionEntries.find((entry) => entry.sequence === activity.sequenceOrder)?.plannedDurationMin ?? undefined, `${date} sequence ${activity.sequenceOrder}`).toBe(activity.plannedDurationMinutes);
+      }
+
+      for (const item of activeSessionDisplay) {
+        expect(item.headerLabel, `${date} sequence ${item.sequenceOrder}`).toBe(item.title);
+        if (!item.drill) continue;
+        expect(item.drill.name, `${date} sequence ${item.sequenceOrder}`).toBe(item.title);
+        expect(item.drill.category, `${date} sequence ${item.sequenceOrder}`).toBe(categoryLabelForTest(item.category));
+        if (typeof item.plannedDurationMinutes === "number") {
+          expect(item.drill.plannedDuration, `${date} sequence ${item.sequenceOrder}`).toBe(item.plannedDurationMinutes * 60);
+          expect(item.drill.plannedPrescription, `${date} sequence ${item.sequenceOrder}`).toBe(`${item.plannedDurationMinutes} min`);
+        }
+      }
+
+      const athleteFacingPayload = JSON.stringify({
+        day: Object.fromEntries(plannedActivities.map((activity) => {
+          const step = dayPresentation.executionSteps[activity.sequenceOrder];
+          return [activity.sequenceOrder, {
+            title: step?.title,
+            subtitle: step?.subtitle,
+            note: step?.note,
+            guidance: step?.guidance,
+          }];
+        })),
+        session: activeSessionDisplay.map((item) => ({
+          title: item.title,
+          category: item.drill?.category ?? categoryLabelForTest(item.category),
+          plan: item.drill?.plannedPrescription,
+          instructions: item.drill?.instructions,
+          coachingCues: item.drill?.coachingCues,
+          childTitles: item.childTitles,
+        })),
+      });
+      for (const value of forbiddenVisibleStrings) expect(athleteFacingPayload, `${date} leaked ${value}`).not.toContain(value);
+    }
   });
 
   it("keeps duration out of time-based titles while preserving prescription count titles", () => {
@@ -273,3 +348,21 @@ describe("planned activity presentation", () => {
     expect(drill.plannedGroup).toBeUndefined();
   });
 });
+
+function categoryLabelForTest(category: ActivityPresentation["category"]) {
+  const labels: Record<ActivityPresentation["category"], string> = {
+    readiness: "Readiness",
+    warmup: "Warm-up",
+    speed_stack: "Speed Stack",
+    shooting: "Shooting",
+    conditioning: "Conditioning",
+    mobility: "Mobility",
+    recovery: "Recovery",
+    iq: "Skill / awareness",
+    kpi: "KPI",
+    sport_load: "Sport Load",
+    reflection: "Reflection",
+    other: "Planned work",
+  };
+  return labels[category];
+}
