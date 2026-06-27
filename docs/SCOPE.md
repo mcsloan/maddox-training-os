@@ -127,23 +127,24 @@ Every active scope item should use this structure, either as a detailed record b
 | 7 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
 | 8 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
 | 9 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Completed | Fast lane | Automated proof at `6ab3f5e` verifies all 84 v8.4 plan dates are athlete-usable at the Day projection layer. |
-| 10 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
-| 11 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 84 v8.4 active session dates. |
-| 12 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
-| 13 | RECOVERY-DAY-MODEL-001 | Recovery-day model completion | P1 | Not started | Source-review | Ensure intentional recovery prescriptions are represented from source. |
-| 14 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
-| 15 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
-| 16 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
-| 17 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Route/component ownership is recorded; latest projection proofs cover DEF-028 and Day/active Session parity without manual UAT. |
-| 18 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Playwright installed Chrome channel proof-of-life passed locally; use it as a base for targeted DEF-028 regression after display/projection repair. |
-| 19 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
-| 20 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
-| 21 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
-| 22 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
-| 23 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
-| 24 | DEF-029 | Controlled bike/treadmill copy clarity | P2 | Not started | Fast lane | Clarify athlete-facing controlled cardio copy in a later narrow copy/projection fix. |
-| 25 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
-| 26 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
+| 10 | CONDITIONING-CARDIO-DURATION-001 | Permanent load-based controlled bike/treadmill duration rule | P1 | Not started | Fast lane / canonical plan-source or projection-rule implementation | Implement only through the canonical plan-source/rule layer; preserve Day/active Session parity and all-84 Day readiness proof. |
+| 11 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
+| 12 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 84 v8.4 active session dates. |
+| 13 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
+| 14 | RECOVERY-DAY-MODEL-001 | Recovery-day model completion | P1 | Not started | Source-review | Ensure intentional recovery prescriptions are represented from source. |
+| 15 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
+| 16 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
+| 17 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
+| 18 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Route/component ownership is recorded; latest projection proofs cover DEF-028 and Day/active Session parity without manual UAT. |
+| 19 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Playwright installed Chrome channel proof-of-life passed locally; use it as a base for targeted DEF-028 regression after display/projection repair. |
+| 20 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
+| 21 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
+| 22 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
+| 23 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
+| 24 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
+| 25 | DEF-029 | Controlled bike/treadmill copy clarity | P2 | Not started | Fast lane | Clarify athlete-facing controlled cardio copy in a later narrow copy/projection fix. |
+| 26 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
+| 27 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
 
 ## Current Sprint / Next Codex Task
 
@@ -196,7 +197,7 @@ Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source J
 | --- | --- |
 | In progress | KPI-ROADMAP-001 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
+| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, CONDITIONING-CARDIO-DURATION-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
@@ -1139,6 +1140,36 @@ Advanced KPI scope:
 - Risks: accidental overtraining or misleading load.
 - Next action: clarify during recovery/source-review work.
 - Links / evidence: Gemini intake.
+
+### CONDITIONING-CARDIO-DURATION-001
+
+- ID: CONDITIONING-CARDIO-DURATION-001
+- Title: Permanent load-based controlled bike/treadmill duration rule
+- Type: Task
+- Parent: Training/source system
+- Priority: P1
+- Status: Not started
+- Lane: Fast lane / canonical plan-source or projection-rule implementation
+- Owner: Mike / Codex
+- Source: Mike scope registration request; related DEF-020 and CONDITIONING-MODEL-001.
+- Problem: Controlled bike/treadmill cardio duration must manage total training load instead of using a single duration across easy, medium, and hard days.
+- Desired outcome: Controlled bike/treadmill cardio uses a permanent day-load rule: easy days 45 minutes, medium days 30 minutes, hard days 20 minutes.
+- In scope: identify the canonical source/rule layer for planned controlled bike/treadmill duration, determine day load reliably, recognize controlled bike/treadmill entries, implement the smallest permanent rule, and prove Day plus active Session parity and all-84 Day readiness.
+- Out of scope: DEF-029 copy clarity unless the exact same canonical source row must be touched and the copy change is narrow and obvious; saved records; Supabase; logging behavior; KPI logic; Dashboard; History; Calendar; Exports; Gantt; broad training-plan rewrites; hardcoded date exceptions.
+- Acceptance criteria: controlled bike/treadmill cardio easy days = 45 minutes; controlled bike/treadmill cardio medium days = 30 minutes; controlled bike/treadmill cardio hard days = 20 minutes; implemented in canonical source/rule layer, not a page-specific override; Day and active Session duration parity remains verified; all-84 Day readiness proof remains passing; no saved data or Supabase mutation.
+- Dependencies: DEF-020; CONDITIONING-MODEL-001; completed ACTIVITY-PRESENTATION-CONTRACT-001 and DAY-SESSION-PARITY-001 guardrails.
+- Risks: corrupting approved plan data, masking source issues with UI-only overrides, mutating saved evidence, or accidentally changing non-bike/treadmill conditioning prescriptions.
+- Next action: implement in a later code task after confirming the authoritative planned-duration source and reliable day-load derivation.
+- Links / evidence: DEF-020; DEF-029; CONDITIONING-MODEL-001; commits `c20432c`, `05019f5`, and `6ab3f5e`.
+
+Hard rejection criteria:
+
+- Saved session rewrite.
+- Supabase mutation.
+- User-entered data mutation.
+- Logging behavior change.
+- Hardcoded date table.
+- UI-only override if a canonical source/rule exists.
 
 ### AGENTIC-WORKFLOW-002
 
