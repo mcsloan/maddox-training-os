@@ -119,7 +119,10 @@ describe("planned activity presentation", () => {
       const dayStep = dayPresentation.executionSteps[activity.sequenceOrder];
       expect(dayStep?.hidden).toBe(false);
       expect(dayStep?.title).toBe(activity.athleteTitle);
-      expect(executionEntries.find((entry) => entry.sequence === activity.sequenceOrder)?.plannedDurationMin ?? undefined).toBe(activity.plannedDurationMinutes);
+      const executionEntry = executionEntries.find((entry) => entry.sequence === activity.sequenceOrder);
+      if (!isControlledBikeTreadmillFixture(executionEntry)) {
+        expect(executionEntry?.plannedDurationMin ?? undefined).toBe(activity.plannedDurationMinutes);
+      }
     }
 
     for (const item of activeSessionDisplay) {
@@ -186,7 +189,10 @@ describe("planned activity presentation", () => {
         expect(dayStep?.hidden, `${date} sequence ${activity.sequenceOrder}`).toBe(false);
         expect(dayStep?.title, `${date} sequence ${activity.sequenceOrder}`).toBe(activity.athleteTitle);
         expect(dayStep?.subtitle, `${date} sequence ${activity.sequenceOrder}`).toBe(categoryLabelForTest(activity.category));
-        expect(executionEntries.find((entry) => entry.sequence === activity.sequenceOrder)?.plannedDurationMin ?? undefined, `${date} sequence ${activity.sequenceOrder}`).toBe(activity.plannedDurationMinutes);
+        const executionEntry = executionEntries.find((entry) => entry.sequence === activity.sequenceOrder);
+        if (!isControlledBikeTreadmillFixture(executionEntry)) {
+          expect(executionEntry?.plannedDurationMin ?? undefined, `${date} sequence ${activity.sequenceOrder}`).toBe(activity.plannedDurationMinutes);
+        }
       }
 
       for (const item of activeSessionDisplay) {
@@ -285,6 +291,32 @@ describe("planned activity presentation", () => {
     expect(speedStackDrill.plannedPrescription).toBe("35 min");
   });
 
+  it("applies load-based duration only to controlled bike/treadmill cardio", () => {
+    const easyCardio = projectPlannedDayActivities("2026-06-18").find((activity) => activity.athleteTitle === "Controlled bike or treadmill");
+    const recoveryCardio = projectPlannedDayActivities("2026-06-21").find((activity) => activity.athleteTitle === "Controlled bike or treadmill");
+    const mediumCardio = projectPlannedDayActivities("2026-06-23").find((activity) => activity.athleteTitle === "Controlled bike or treadmill");
+    const mediumBikeFlush = projectPlannedDayActivities("2026-07-01").find((activity) => activity.athleteTitle === "Controlled bike or treadmill");
+    const hardCardio = projectPlannedDayActivities("2026-06-19").find((activity) => activity.athleteTitle === "Controlled bike or treadmill");
+    const hardKpiCardio = projectPlannedDayActivities("2026-06-16").find((activity) => activity.athleteTitle === "Controlled bike or treadmill");
+
+    expect(easyCardio?.plannedDurationMinutes).toBe(45);
+    expect(recoveryCardio?.plannedDurationMinutes).toBe(45);
+    expect(mediumCardio?.plannedDurationMinutes).toBe(30);
+    expect(mediumBikeFlush?.plannedDurationMinutes).toBe(30);
+    expect(hardCardio?.plannedDurationMinutes).toBe(20);
+    expect(hardKpiCardio?.plannedDurationMinutes).toBe(20);
+  });
+
+  it("does not change non-bike/treadmill conditioning durations", () => {
+    const shiftConditioning = projectPlannedDayActivities("2026-06-20").find((activity) => activity.athleteTitle === "Shift-based conditioning");
+    const campConditioning = projectPlannedDayActivities("2026-07-06").find((activity) => activity.category === "conditioning");
+    const travelWalk = projectPlannedDayActivities("2026-07-31").find((activity) => activity.category === "conditioning");
+
+    expect(shiftConditioning?.plannedDurationMinutes).toBe(20);
+    expect(campConditioning?.plannedDurationMinutes).toBe(20);
+    expect(travelWalk?.plannedDurationMinutes).toBe(20);
+  });
+
   it("keeps generic recovery guidance off unrelated planned activities", () => {
     const activities = projectPlannedDayActivities("2026-06-19");
     const unrelatedActivities = activities.filter((activity) =>
@@ -365,4 +397,11 @@ function categoryLabelForTest(category: ActivityPresentation["category"]) {
     other: "Planned work",
   };
   return labels[category];
+}
+
+function isControlledBikeTreadmillFixture(entry: ReturnType<typeof getV84DayExecutionEntries>[number] | undefined) {
+  if (!entry) return false;
+  const title = entry.entryTitle.toLowerCase();
+  if (/con-shift|con-rsa|camp provides|short speed primer|walk \+ mob/.test(title)) return false;
+  return /\bbike\b|\btreadmill\b|\btread\b|bike-z2|bike-int|speedstack conditioning|bike flush/.test(title);
 }

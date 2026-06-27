@@ -1,6 +1,6 @@
 import planJson from "../../data/plan.json";
 import { dayExecutionPlan, drillCards, exerciseVideoMap, sessions, speedStackPrescriptions } from "../imports/v8_4";
-import type { V84DayExecutionPlanEntry } from "../imports/v8_4/types";
+import type { V84DayExecutionPlanEntry, V84SessionEntry } from "../imports/v8_4/types";
 import type { Drill, TrainingPlan } from "../types";
 
 const trainingPlan = planJson as TrainingPlan;
@@ -76,6 +76,8 @@ export type DayPresentationContext = {
   summary?: string;
 };
 
+type DayLoadTier = "easy" | "medium" | "hard";
+
 export function projectDayPresentationContext(date: string): DayPresentationContext {
   const day = trainingPlan.days.find((item) => item.date === date);
   const session = sessions.find((item) => item.date === date) || null;
@@ -121,7 +123,7 @@ export function projectPlannedDayActivities(date: string): ActivityPresentation[
       athleteTitle: activityTitle(entry),
       parentTitle: entry.entryType,
       category,
-      plannedDurationMinutes: entry.plannedDurationMin ?? undefined,
+      plannedDurationMinutes: plannedDurationMinutes(entry, session),
       instruction: activityInstruction(entry),
       coachingCue: activityCue(entry),
       logType: activityLogType(entry),
@@ -130,6 +132,28 @@ export function projectPlannedDayActivities(date: string): ActivityPresentation[
       children,
     };
   });
+}
+
+function plannedDurationMinutes(entry: V84DayExecutionPlanEntry, session: V84SessionEntry | null) {
+  if (!isControlledBikeTreadmillEntry(entry)) return entry.plannedDurationMin ?? undefined;
+  const dayLoad = controlledCardioDayLoad(entry, session);
+  if (dayLoad === "easy") return 45;
+  if (dayLoad === "medium") return 30;
+  return 20;
+}
+
+function controlledCardioDayLoad(entry: V84DayExecutionPlanEntry, session: V84SessionEntry | null): DayLoadTier {
+  const dayType = (session?.dayType || "").toLowerCase();
+  if (/recovery|aerobic recovery|deload|lighter/.test(dayType)) return "easy";
+  if (/speed stack b|skill\/shooting \+ conditioning/.test(dayType)) return "medium";
+  if (/kpi \+ technical skill|full speed stack|speed stack c/.test(dayType)) return "hard";
+  throw new Error(`[activityPresentation] Cannot determine controlled cardio day load for ${entry.date} sequence ${entry.sequence}`);
+}
+
+function isControlledBikeTreadmillEntry(entry: V84DayExecutionPlanEntry) {
+  const title = entry.entryTitle.toLowerCase();
+  if (/con-shift|con-rsa|camp provides|short speed primer|walk \+ mob/.test(title)) return false;
+  return /\bbike\b|\btreadmill\b|\btread\b|bike-z2|bike-int|speedstack conditioning|bike flush/.test(title);
 }
 
 export function activityToDrill(activity: ActivityPresentation): Drill {
