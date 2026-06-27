@@ -141,8 +141,9 @@ Every active scope item should use this structure, either as a detailed record b
 | 21 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
 | 22 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
 | 23 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
-| 24 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
-| 25 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
+| 24 | DEF-029 | Controlled bike/treadmill copy clarity | P2 | Not started | Fast lane | Clarify athlete-facing controlled cardio copy in a later narrow copy/projection fix. |
+| 25 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
+| 26 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
 
 ## Current Sprint / Next Codex Task
 
@@ -203,7 +204,7 @@ Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source J
 
 | Status | IDs |
 | --- | --- |
-| Not started | SESSION-UX-001, RECOVERY-READINESS-001, EXPORTS-REPORTING-001, HOCKEY-IQ-001, DEF-008, DEF-009, DEF-010, DEF-011, DEF-012 |
+| Not started | SESSION-UX-001, RECOVERY-READINESS-001, EXPORTS-REPORTING-001, HOCKEY-IQ-001, DEF-008, DEF-009, DEF-010, DEF-011, DEF-012, DEF-029 |
 | Scope review required | SOURCE-INGEST-OTA-001, PLAN-RECON-OTA-001, DEF-004 |
 
 ### P3
@@ -1183,6 +1184,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-010 | Weekly Load actual bar unclear | Defect | Dashboard | P2 | Not started | Fast lane | Mike / Codex | Defect log | Load visualization unclear. | Explainable load. | future UI. | now. | bar meaning clear. | dashboard model | misinterpretation. | Defer. | former defect log stub; use git history only |
 | DEF-011 | Plank Quality KPI missing separate time plus form score model | Defect | KPI model | P2 | Not started | Safe lane | Mike / Codex | Defect log | Plank metric shape incomplete. | Time and form score separated. | KPI model design. | now. | model accepted. | KPI-ROADMAP-001 | data mismatch. | Defer. | former defect log stub; use git history only |
 | DEF-012 | Puck-Control Weave needs deferred / space-unavailable state | Defect | KPI model | P2 | Not started | Safe lane | Mike / Codex | Defect log | Missing result vs deferred not explicit. | explicit deferred state. | KPI model design. | now. | deferment visible. | KPI-ROADMAP-001 | false missing data. | Defer. | former defect log stub; use git history only |
+| DEF-029 | Controlled bike/treadmill copy clarity | Defect | Activity Presentation / Conditioning | P2 | Not started | Fast lane | Mike / Codex | Production `/day/2026-06-26` Step 4 Conditioning card | Current copy says `Bike/treadmill are controlled. No treadmill sprinting for U12.` The safety intent is valid, but the wording is awkward and does not clearly tell Maddox or the parent what to do. | Athlete-facing copy clearly communicates controlled cardio: bike preferred; treadmill walk/light jog only; no treadmill sprinting; effort easy-to-moderate depending on day load. | Future narrow copy/projection fix for controlled bike/treadmill conditioning cards. | implementing now, editing v8.4 source JSON, changing conditioning prescription, changing logging behavior, or broad copy rewrites. | Card copy uses clear controlled-cardio wording, such as `Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.` | CONDITIONING-MODEL-001, DEF-020 | unclear wording can confuse athlete/parent during live training despite valid safety intent. | Defer to a narrow copy/projection fix loop. | observed production route `/day/2026-06-26`; related bike/treadmill duration/source-review work in DEF-020 and CONDITIONING-MODEL-001 |
 | DEF-013 | History is record-fragmented instead of Week -> Day -> Evidence | Defect | History | P1 | Scope review required | Safe lane | Mike / Codex | Defect log | History grouping may fragment records. | Week -> Day -> Evidence. | verify/reconcile. | now. | grouping accepted. | evidence model | confusing history. | Review later. | former defect log stub; use git history only |
 | DEF-017 | Homepage Next Session card uses stale session logic | Defect | Homepage/today | P1 | Scope review required | Fast lane | Mike / Codex | Defect log | Homepage may not use canonical Day. | Today/next card aligns with Day. | verify/fix. | now. | no stale next session. | day projection | stale nav. | Review later. | former defect log stub; use git history only |
 | DEF-019 | Blank / unclear future day state | Defect | Day readiness | P1 | Scope review required | Fast lane | Mike / Codex | Defect log | Future days may be unclear. | intentional usable day states. | future audit. | source invention. | upcoming days usable. | FUTURE-DAY-READINESS-001 | athlete blocked. | Audit after display work. | former defect log stub; use git history only |
