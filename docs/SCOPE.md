@@ -127,7 +127,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 7 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
 | 8 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
 | 9 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Completed | Fast lane | Automated proof at `6ab3f5e` verifies all 84 v8.4 plan dates are athlete-usable at the Day projection layer. |
-| 10 | CONDITIONING-CARDIO-DURATION-001 | Permanent load-based controlled bike/treadmill duration rule | P1 | Not started | Fast lane / canonical plan-source or projection-rule implementation | Implement only through the canonical plan-source/rule layer; preserve Day/active Session parity and all-84 Day readiness proof. |
+| 10 | CONDITIONING-CARDIO-DURATION-001 | Permanent load-based controlled bike/treadmill duration rule | P1 | Completed | Fast lane / canonical plan-source or projection-rule implementation | Completed by `a01beca`; shared planned-activity projection now applies load-based controlled cardio durations while preserving Day/active Session parity. |
 | 11 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
 | 12 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 84 v8.4 active session dates. |
 | 13 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
@@ -197,9 +197,9 @@ Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source J
 | --- | --- |
 | In progress | KPI-ROADMAP-001 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, CONDITIONING-CARDIO-DURATION-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
+| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
-| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
+| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
 ### P2
 
@@ -1148,7 +1148,7 @@ Advanced KPI scope:
 - Type: Task
 - Parent: Training/source system
 - Priority: P1
-- Status: Not started
+- Status: Completed
 - Lane: Fast lane / canonical plan-source or projection-rule implementation
 - Owner: Mike / Codex
 - Source: Mike scope registration request; related DEF-020 and CONDITIONING-MODEL-001.
@@ -1159,8 +1159,8 @@ Advanced KPI scope:
 - Acceptance criteria: controlled bike/treadmill cardio easy days = 45 minutes; controlled bike/treadmill cardio medium days = 30 minutes; controlled bike/treadmill cardio hard days = 20 minutes; implemented in canonical source/rule layer, not a page-specific override; Day and active Session duration parity remains verified; all-84 Day readiness proof remains passing; no saved data or Supabase mutation.
 - Dependencies: DEF-020; CONDITIONING-MODEL-001; completed ACTIVITY-PRESENTATION-CONTRACT-001 and DAY-SESSION-PARITY-001 guardrails.
 - Risks: corrupting approved plan data, masking source issues with UI-only overrides, mutating saved evidence, or accidentally changing non-bike/treadmill conditioning prescriptions.
-- Next action: implement in a later code task after confirming the authoritative planned-duration source and reliable day-load derivation.
-- Links / evidence: DEF-020; DEF-029; CONDITIONING-MODEL-001; commits `c20432c`, `05019f5`, and `6ab3f5e`.
+- Next action: keep DEF-029 copy clarity separate and deferred.
+- Links / evidence: Completed by `a01beca`; shared planned-activity projection applies controlled cardio durations of 45 minutes for easy/recovery/lighter/deload days, 30 minutes for medium days, and 20 minutes for hard days; Day and active Session consume the same projected planned duration; proof passed with `npx vitest run lib/projections/activityPresentation.test.ts lib/projections/dayPresentation.test.ts` (20/20), `npm run lint`, `npm run build`, `node scripts/verify-v8.4-import.mjs`, and `git diff --check`. Related: DEF-020; DEF-029 remains separate; CONDITIONING-MODEL-001; commits `c20432c`, `05019f5`, and `6ab3f5e`.
 
 Hard rejection criteria:
 
