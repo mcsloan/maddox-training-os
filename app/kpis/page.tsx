@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { KPIEntryForm } from "@/components/KPIEntryForm";
+import { KPIProtocolDetails } from "@/components/KPIProtocolDetails";
 import Link from "next/link";
 import { readableError } from "@/lib/errorMessage";
 import { formatPlanDate, kpis, trainingPlan, userFacingPlanText } from "@/lib/trainingData";
@@ -68,6 +69,7 @@ export default function KpisPage() {
                 <div><p className="label text-slate-300">Next test</p><p className="font-black">{nextTest ? formatPlanDate(nextTest.date, { month: "short", day: "numeric" }) : "—"}</p></div>
               </div>
               <div className="mt-4 rounded-2xl bg-cyan-50 p-4"><div className="flex justify-between gap-3 text-sm font-bold"><span>Baseline-to-target progress</span><span>{progress}%</span></div><ProgressBar progress={progress} /><p className="mt-2 text-xs text-slate-600">{kpi.targetLabel}. Target values are planning settings and can be adjusted without changing historical results.</p></div>
+              <KPIProtocolDetails kpi={kpi} />
               <details><summary className="mt-4 cursor-pointer font-bold text-blue">Add a new KPI result</summary><KPIEntryForm kpi={kpi} onSaved={refresh} /></details>
               <div className="mt-5 overflow-x-auto">
                 <table className="w-full min-w-[620px] text-left text-sm"><thead><tr className="border-b border-rink"><th className="p-2">Date/time</th><th className="p-2">Best</th><th className="p-2">Attempts</th><th className="p-2">Notes</th><th className="p-2">Actions</th></tr></thead><tbody>

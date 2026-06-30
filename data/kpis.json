@@ -179,7 +179,7 @@
     "id": "kpi-zwift-bike-3x10s-peak-power",
     "name": "Zwift Bike 3x10s Peak Power",
     "category": "Bike Power",
-    "instructions": ["Use a bike mounted to Wahoo KICKR CORE, KICKR CORE 2, or equivalent smart trainer that reports watts.", "Open Zwift and pair the trainer as Power Source and Controllable. Pair cadence if available and Zwift Click if using virtual shifting.", "Use Free Ride, not ERG workout mode. Choose a flat route such as Tempus Fugit in Watopia if available.", "Warm up 8 minutes easy.", "Sprint 1: 10 seconds hard and record peak watts.", "Easy spin 2 minutes.", "Sprint 2: 10 seconds hard and record peak watts.", "Easy spin 2 minutes.", "Sprint 3: 10 seconds hard and record peak watts.", "Cool down 3 to 5 minutes easy."],
+    "instructions": ["Use a bike mounted to Wahoo KICKR CORE / KICKR CORE 2 or equivalent smart trainer that reports watts.", "Open Zwift and pair the trainer as Power Source and Controllable. Pair cadence if available and Zwift Click if using virtual shifting.", "Use Free Ride, not ERG workout mode. Choose a flat route such as Tempus Fugit in Watopia if available.", "Warm up 8 minutes easy.", "Sprint 1: 10 seconds hard and record peak watts.", "Easy spin 2 minutes.", "Sprint 2: 10 seconds hard and record peak watts.", "Easy spin 2 minutes.", "Sprint 3: 10 seconds hard and record peak watts.", "Cool down 3 to 5 minutes easy."],
     "units": "watts",
     "attempts": 3,
     "scoringMethod": "highest",
