@@ -5,6 +5,7 @@ import { KPIEntryForm } from "@/components/KPIEntryForm";
 import { KPIProtocolDetails } from "@/components/KPIProtocolDetails";
 import Link from "next/link";
 import { readableError } from "@/lib/errorMessage";
+import { kpiNextTestDate, kpiTargetDisplay } from "@/lib/kpiDisplay";
 import { formatPlanDate, kpis, trainingPlan, userFacingPlanText } from "@/lib/trainingData";
 import { kpiBaseline, kpiBest, kpiTargetProgress, kpiTrend } from "@/lib/trainingMetrics";
 import { deleteStandaloneKpiResult, loadStandaloneKpiResults, SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
@@ -13,6 +14,7 @@ export default function KpisPage() {
   const [results, setResults] = useState<SyncedKPIResult[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState("Loading KPI history...");
+  const today = new Date().toISOString().slice(0, 10);
   const refresh = () => {
     loadStandaloneKpiResults().then((result) => {
       setResults(result.results);
@@ -44,8 +46,8 @@ export default function KpisPage() {
           const baseline = kpiBaseline(entries);
           const best = kpiBest(kpi, entries);
           const progress = kpiTargetProgress(kpi, baseline, best);
-          const nextTest = trainingPlan.days.find((day) => day.date >= new Date().toISOString().slice(0, 10) && day.kpiTestIds?.includes(kpi.id));
-          return <tr className="border-b border-rink/70" key={kpi.id}><td className="p-2 font-black">{kpi.name}</td><td className="p-2">{kpi.scoringMethod === "lowest" ? "Lower is better" : "Higher is better"}</td><td className="p-2">{valueLabel(baseline, kpi.units)}</td><td className="p-2">{valueLabel(best, kpi.units)}</td><td className="p-2">{valueLabel(kpi.targetValue ?? null, kpi.units)}</td><td className="p-2">{nextTest ? formatPlanDate(nextTest.date) : "No future test"}</td><td className="p-2"><ProgressBar progress={progress} /></td></tr>;
+          const nextTestDate = kpiNextTestDate(kpi, trainingPlan.days, today);
+          return <tr className="border-b border-rink/70" key={kpi.id}><td className="p-2 font-black">{kpi.name}</td><td className="p-2">{kpi.scoringMethod === "lowest" ? "Lower is better" : "Higher is better"}</td><td className="p-2">{valueLabel(baseline, kpi.units)}</td><td className="p-2">{valueLabel(best, kpi.units)}</td><td className="p-2">{kpiTargetDisplay(kpi)}</td><td className="p-2">{nextTestDate ? formatPlanDate(nextTestDate) : "No future test"}</td><td className="p-2"><ProgressBar progress={progress} /></td></tr>;
         })}</tbody></table></div>
       </section>
       <div className="space-y-6">
@@ -56,7 +58,7 @@ export default function KpisPage() {
           const best = kpiBest(kpi, entries);
           const trend = kpiTrend(kpi, entries);
           const progress = kpiTargetProgress(kpi, baseline, best);
-          const nextTest = trainingPlan.days.find((day) => day.date >= new Date().toISOString().slice(0, 10) && day.kpiTestIds?.includes(kpi.id));
+          const nextTestDate = kpiNextTestDate(kpi, trainingPlan.days, today);
           return (
             <article className="card" key={kpi.id}>
               <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="label">{kpi.category} · {kpi.scoringMethod === "lowest" ? "Lower is better" : "Higher is better"}</p><h2 className="text-2xl font-black">{kpi.name}</h2><p className="mt-1 text-sm font-semibold text-blue">{kpi.motivationalCue}</p></div><span className="rounded-full bg-ice px-3 py-1 text-sm font-black">{entries.length} entries</span></div>
@@ -64,9 +66,9 @@ export default function KpisPage() {
                 <div><p className="label text-slate-300">Baseline</p><p className="font-black">{baseline ?? "—"}</p></div>
                 <div><p className="label text-slate-300">Recent</p><p className="font-black">{recent?.bestResult ?? "—"}</p></div>
                 <div><p className="label text-slate-300">Best</p><p className="font-black">{best ?? "—"}</p></div>
-                <div><p className="label text-slate-300">Target</p><p className="font-black">{kpi.targetValue ?? "Set later"}</p></div>
+                <div><p className="label text-slate-300">Target</p><p className="font-black">{kpiTargetDisplay(kpi)}</p></div>
                 <div><p className="label text-slate-300">Trend</p><p className="font-black">{trend}</p></div>
-                <div><p className="label text-slate-300">Next test</p><p className="font-black">{nextTest ? formatPlanDate(nextTest.date, { month: "short", day: "numeric" }) : "—"}</p></div>
+                <div><p className="label text-slate-300">Next test</p><p className="font-black">{nextTestDate ? formatPlanDate(nextTestDate, { month: "short", day: "numeric" }) : "—"}</p></div>
               </div>
               <div className="mt-4 rounded-2xl bg-cyan-50 p-4"><div className="flex justify-between gap-3 text-sm font-bold"><span>Baseline-to-target progress</span><span>{progress}%</span></div><ProgressBar progress={progress} /><p className="mt-2 text-xs text-slate-600">{kpi.targetLabel}. Target values are planning settings and can be adjusted without changing historical results.</p></div>
               <KPIProtocolDetails kpi={kpi} />
