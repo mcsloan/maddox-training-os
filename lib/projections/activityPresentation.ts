@@ -78,6 +78,8 @@ export type DayPresentationContext = {
 
 type DayLoadTier = "easy" | "medium" | "hard";
 
+const CONTROLLED_CARDIO_COPY = "Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.";
+
 export function projectDayPresentationContext(date: string): DayPresentationContext {
   const day = trainingPlan.days.find((item) => item.date === date);
   const session = sessions.find((item) => item.date === date) || null;
@@ -258,6 +260,7 @@ function activityCue(entry: V84DayExecutionPlanEntry) {
   if (category === "mobility") return "Do light mobility or stretching. No hard conditioning here.";
   if (category === "shooting") return "Call the target and reset before the next shot.";
   if (category === "speed_stack") return "Stop if pain or technique breakdown appears.";
+  if (category === "conditioning" && isControlledBikeTreadmillEntry(entry)) return CONTROLLED_CARDIO_COPY;
   return cleanInstruction(entry.notes);
 }
 

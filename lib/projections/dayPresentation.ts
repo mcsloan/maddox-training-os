@@ -84,6 +84,8 @@ export interface BuildDayPresentationArgs {
   dayContext?: DayPresentationContext;
 }
 
+const CONTROLLED_CARDIO_COPY = "Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.";
+
 export function normalizeChips(args: { display?: PlanDayDisplayModel; tags?: string[]; sportLoads?: PlannedExternalLoad[] }) {
   const chips: PresentationChip[] = [];
   if (args.display) addChip(chips, phaseChip(args.display.methodologyPhase));
@@ -522,6 +524,7 @@ function displayShootingDetail(value?: string) {
 }
 
 function displayEntryNote(entry: V84DayExecutionPlanEntry) {
+  if (isControlledBikeTreadmillEntry(entry)) return CONTROLLED_CARDIO_COPY;
   if (isShootingEntry(entry)) {
     return entry.notes
       .replace(/100\+?\s+shots?\s+on\s+shooting\s+days;?\s*/i, "")
@@ -560,7 +563,7 @@ function entryTitle(args: { entry: V84DayExecutionPlanEntry; conflictItems: stri
 }
 
 function entryNote(args: { entry: V84DayExecutionPlanEntry; conflictItems: string[] }) {
-  if (isEasyConditioningEntry(args.entry)) return "Easy aerobic flush only. Skip if tired or sore. No sprinting.";
+  if (isEasyConditioningEntry(args.entry)) return CONTROLLED_CARDIO_COPY;
   if (hasShootingVolumeMismatch(args.conflictItems) && isShootingEntry(args.entry)) return "Take 50 shots at targets while fresh. Count target hits. Stop after 50; no extra shooting volume today.";
   return displayEntryNote(args.entry);
 }
@@ -611,6 +614,12 @@ function plannedKpisIncludeShooting(plannedKpis: KPI[]) {
 function isEasyConditioningEntry(entry: V84DayExecutionPlanEntry) {
   const text = `${entry.entryType} ${entry.entryTitle} ${entry.notes} ${entry.appRenderHint}`.toLowerCase();
   return text.includes("bike") || text.includes("treadmill") || (entry.entryType.toLowerCase().includes("conditioning") && text.includes("fresh"));
+}
+
+function isControlledBikeTreadmillEntry(entry: V84DayExecutionPlanEntry) {
+  const title = entry.entryTitle.toLowerCase();
+  if (/con-shift|con-rsa|camp provides|short speed primer|walk \+ mob/.test(title)) return false;
+  return /\bbike\b|\btreadmill\b|\btread\b|bike-z2|bike-int|speedstack conditioning|bike flush/.test(title);
 }
 
 function matchingBlocks(entry: V84DayExecutionPlanEntry, blocks: WorkoutBlock[]) {

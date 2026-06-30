@@ -162,7 +162,7 @@ describe("day presentation", () => {
         logType: "trainingWorkLog",
         requiredOptional: "Optional",
         loadImpact: "Aerobic/repeat-effort",
-        notes: "Bike/treadmill are controlled. No treadmill sprinting for U12.",
+        notes: "Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.",
         appRenderHint: "timer",
       },
       {
@@ -224,7 +224,7 @@ describe("day presentation", () => {
       displaySequence: 3,
       title: "Optional Easy Bike — only if fresh",
       subtitle: "Recovery conditioning",
-      note: "Easy aerobic flush only. Skip if tired or sore. No sprinting.",
+      note: "Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.",
       blockLabels: [],
     });
     expect(presentation.executionSteps[4]).toMatchObject({

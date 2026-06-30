@@ -37,6 +37,8 @@ const activeSessionDates = sessions
   .filter((session) => session.hasTrainingWork)
   .map((session) => session.date);
 
+const controlledCardioCopy = "Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.";
+
 describe("planned activity presentation", () => {
   it("projects shared day-level context for Day and Session consumers", () => {
     const dayContext = projectDayPresentationContext("2026-06-19");
@@ -305,6 +307,8 @@ describe("planned activity presentation", () => {
     expect(mediumBikeFlush?.plannedDurationMinutes).toBe(30);
     expect(hardCardio?.plannedDurationMinutes).toBe(20);
     expect(hardKpiCardio?.plannedDurationMinutes).toBe(20);
+    expect(hardCardio?.coachingCue).toBe(controlledCardioCopy);
+    expect(activityToDrill(hardCardio!).coachingCues).toEqual([controlledCardioCopy]);
   });
 
   it("does not change non-bike/treadmill conditioning durations", () => {
