@@ -1,5 +1,5 @@
 import type { V84DayExecutionPlanEntry } from "@/lib/imports/v8_4/types";
-import { projectDayPresentationContext, projectPlannedDayActivities, type ActivityPresentation, type DayPresentationContext } from "./activityPresentation";
+import { isJune30KpiHotfixDate, projectDayPresentationContext, projectPlannedDayActivities, type ActivityPresentation, type DayPresentationContext } from "./activityPresentation";
 import type { DayProjection } from "./dayProjection";
 import type { Drill, KPI, PlannedExternalLoad, PlanDay, PlanDayDisplayModel, VideoReference, Workout, WorkoutBlock } from "../types";
 
@@ -250,14 +250,17 @@ export function buildDayPresentation(args: BuildDayPresentationArgs): DayPresent
 function buildExecutionSteps(args: { day?: PlanDay; executionEntries: V84DayExecutionPlanEntry[]; plannedActivities: ActivityPresentation[]; plannedKpis: KPI[]; videos: VideoReference[]; workoutBlocks: WorkoutBlock[]; conflictItems: string[] }) {
   const result: Record<number, DayExecutionStepPresentation> = {};
   let displaySequence = 0;
+  const plannedDisplaySequences = new Map(args.plannedActivities.map((activity, index) => [activity.sequenceOrder, index + 1]));
   for (const entry of args.executionEntries) {
-    const hidden = shouldHideExecutionEntry({ entry, plannedKpis: args.plannedKpis, conflictItems: args.conflictItems });
     const activity = args.plannedActivities.find((item) => item.sequenceOrder === entry.sequence);
+    const hidden = shouldHideExecutionEntry({ entry, plannedKpis: args.plannedKpis, conflictItems: args.conflictItems })
+      || (isJune30KpiHotfixDate(entry.date) && !activity);
     if (!hidden) displaySequence += 1;
+    const projectedDisplaySequence = isJune30KpiHotfixDate(entry.date) ? plannedDisplaySequences.get(entry.sequence) : undefined;
     const blocks = matchingBlocks(entry, args.workoutBlocks);
     result[entry.sequence] = {
       hidden,
-      displaySequence: hidden ? null : displaySequence,
+      displaySequence: hidden ? null : projectedDisplaySequence ?? displaySequence,
       title: activity?.athleteTitle || entryTitle({ entry, conflictItems: args.conflictItems }),
       subtitle: activity ? activitySubtitle(activity) : entrySubtitle({ entry, conflictItems: args.conflictItems }),
       loadImpact: entryLoadImpact({ entry, conflictItems: args.conflictItems }),

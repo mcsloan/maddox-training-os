@@ -91,6 +91,44 @@ describe("day presentation", () => {
     }
   });
 
+  it("renders June 30 KPI day/session projection as the cleaned five-step flow", () => {
+    const routeData = buildRouteLikeDayPresentation("2026-06-30");
+    const visibleSteps = Object.entries(routeData.presentation.executionSteps)
+      .map(([sequence, step]) => ({ sequence: Number(sequence), ...step }))
+      .filter((step) => !step.hidden)
+      .sort((a, b) => (a.displaySequence ?? a.sequence) - (b.displaySequence ?? b.sequence));
+    const payload = JSON.stringify({
+      dayTitle: routeData.presentation.dayTitle,
+      dayContext: routeData.dayContext,
+      plannedActivities: routeData.plannedActivities,
+      visibleSteps,
+    });
+
+    expect(routeData.presentation.dayTitle).toBe("KPI Baseline / Technique Check");
+    expect(routeData.presentation.dayTitle).not.toContain("Jun29");
+    expect(routeData.plannedActivities.map((activity) => activity.athleteTitle)).toEqual([
+      "Readiness check",
+      "Warm-up / mobility",
+      "KPI testing",
+      "Cooldown / mobility",
+      "End-of-day reflection",
+    ]);
+    expect(visibleSteps.map((step) => step.title)).toEqual([
+      "Readiness check",
+      "Warm-up / mobility",
+      "KPI testing",
+      "Cooldown / mobility",
+      "End-of-day reflection",
+    ]);
+    expect(routeData.plannedActivities.findIndex((activity) => activity.athleteTitle === "Warm-up / mobility")).toBeLessThan(routeData.plannedActivities.findIndex((activity) => activity.athleteTitle === "KPI testing"));
+    expect(visibleSteps.find((step) => step.title === "KPI testing")?.note).toContain("/kpis");
+    expect(payload).not.toContain("Jun29");
+    expect(payload).not.toContain("Controlled bike or treadmill");
+    expect(payload).not.toContain("SHOT 110");
+    expect(payload).not.toContain("SHOT-110");
+    expect(payload).not.toContain("Hockey awareness cue");
+  });
+
   it("merges duplicate KPI shooting blocks and renders clean KPI-day support copy", () => {
     const day: PlanDay = {
       date: "fixture-kpi-day",

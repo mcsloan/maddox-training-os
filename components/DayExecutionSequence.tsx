@@ -26,7 +26,13 @@ export function DayExecutionSequence({
   plannedKpiNames?: string[];
   stepPresentation?: Record<number, DayExecutionStepPresentation>;
 }) {
-  const visibleEntries = entries.filter((entry) => !stepPresentation[entry.sequence]?.hidden);
+  const visibleEntries = entries
+    .filter((entry) => !stepPresentation[entry.sequence]?.hidden)
+    .sort((a, b) => {
+      const left = stepPresentation[a.sequence]?.displaySequence ?? a.sequence;
+      const right = stepPresentation[b.sequence]?.displaySequence ?? b.sequence;
+      return left - right;
+    });
   if (!visibleEntries.length) return null;
 
   return (
@@ -71,7 +77,7 @@ export function DayExecutionSequence({
                   <ul className="mt-2 grid gap-1 text-sm text-slate-700 sm:grid-cols-2">
                     {plannedKpiNames.map((name) => <li key={name}>• {name}</li>)}
                   </ul>
-                  <Link className="btn-secondary mt-3" href="/kpis">Review KPI Results</Link>
+                  <Link className="btn-secondary mt-3" href="/kpis">Open KPI Page</Link>
                 </div>
               )}
               {!compact && presentation && presentation.videos.length > 0 && (

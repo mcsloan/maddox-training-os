@@ -79,6 +79,14 @@ export type DayPresentationContext = {
 type DayLoadTier = "easy" | "medium" | "hard";
 
 const CONTROLLED_CARDIO_COPY = "Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.";
+const JUNE_30_KPI_DATE = "2026-06-30";
+export const JUNE_30_KPI_TITLE = "KPI Baseline / Technique Check";
+export const KPI_RESULT_ENTRY_COPY = "Enter actual KPI results on the KPI page.";
+export const KPI_RESULT_ENTRY_HREF = "/kpis";
+
+export function isJune30KpiHotfixDate(date: string) {
+  return date === JUNE_30_KPI_DATE;
+}
 
 export function projectDayPresentationContext(date: string): DayPresentationContext {
   const day = trainingPlan.days.find((item) => item.date === date);
@@ -86,7 +94,7 @@ export function projectDayPresentationContext(date: string): DayPresentationCont
   const weekNumber = day?.weekNumber || trainingPlan.weeks.find((week) => date >= week.startDate && date <= week.endDate)?.weekNumber || session?.week || 1;
   const phaseLabel = weekLoadLabel(weekNumber);
   const dayRoleLabel = day ? contextUserFacingPlanText(day.dayRole) : undefined;
-  const heroTitle = day?.primarySession || session?.summary || "Recovery / planning day";
+  const heroTitle = isJune30KpiHotfixDate(date) ? JUNE_30_KPI_TITLE : day?.primarySession || session?.summary || "Recovery / planning day";
   const eyebrow = day
     ? `Week ${day.weekNumber} · ${phaseLabel} · ${dayRoleLabel}`
     : session
@@ -109,7 +117,7 @@ export function projectPlannedDayActivities(date: string): ActivityPresentation[
     .filter((entry) => entry.date === date)
     .sort((a, b) => a.sequence - b.sequence);
   const session = sessions.find((item) => item.date === date) || null;
-  return entries.map((entry) => {
+  const activities = entries.map((entry) => {
     const category = activityCategory(entry);
     const children = category === "speed_stack" && session ? speedStackChildren(entry) : [];
     return {
@@ -134,6 +142,25 @@ export function projectPlannedDayActivities(date: string): ActivityPresentation[
       children,
     };
   });
+  return isJune30KpiHotfixDate(date) ? june30KpiChecklistActivities(activities) : activities;
+}
+
+function june30KpiChecklistActivities(activities: ActivityPresentation[]) {
+  const readiness = activities.find((activity) => activity.category === "readiness");
+  const warmup = activities.find((activity) => activity.category === "warmup");
+  const kpi = activities.find((activity) => activity.category === "kpi");
+  const cooldown = activities.find((activity) => activity.category === "mobility" || activity.category === "recovery");
+  const reflection = activities.find((activity) => activity.category === "reflection");
+  return [readiness, warmup, kpi ? june30KpiActivity(kpi) : null, cooldown, reflection].filter((activity): activity is ActivityPresentation => Boolean(activity));
+}
+
+function june30KpiActivity(activity: ActivityPresentation): ActivityPresentation {
+  return {
+    ...activity,
+    athleteTitle: "KPI testing",
+    instruction: `${KPI_RESULT_ENTRY_COPY} ${KPI_RESULT_ENTRY_HREF}`,
+    coachingCue: `Use ${KPI_RESULT_ENTRY_HREF} for the test values, then return here and mark this checklist step done.`,
+  };
 }
 
 function plannedDurationMinutes(entry: V84DayExecutionPlanEntry, session: V84SessionEntry | null) {

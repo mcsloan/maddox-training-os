@@ -5,6 +5,15 @@ import { projectDayPresentationContext, projectPlannedDayActivities, activityToD
 import { getV84DayExecutionEntries } from "../imports/v8_4/daily";
 import { sessions } from "../imports/v8_4";
 
+const june30KpiTitle = "KPI Baseline / Technique Check";
+const june30KpiStepTitles = [
+  "Readiness check",
+  "Warm-up / mobility",
+  "KPI testing",
+  "Cooldown / mobility",
+  "End-of-day reflection",
+];
+
 const forbiddenVisibleStrings = [
   "MOB-15",
   "SHOT-50",
@@ -53,6 +62,52 @@ describe("planned activity presentation", () => {
       dayTypeLabel: "Speed Stack C Day",
       summary: "Speed Stack C, conditioning, and shooting.",
     });
+  });
+
+  it("projects June 30 KPI day as a five-step checklist with KPI results entered on /kpis", () => {
+    const entries = getV84DayExecutionEntries("2026-06-30");
+    const activities = projectPlannedDayActivities("2026-06-30");
+    const dayContext = projectDayPresentationContext("2026-06-30");
+    const dayPresentation = buildDayPresentation({
+      date: "2026-06-30",
+      executionEntries: entries,
+      plannedActivities: activities,
+      dayContext,
+    });
+    const activeSessionDisplay = activities.map((activity) => ({
+      sequenceOrder: activity.sequenceOrder,
+      title: activity.athleteTitle,
+      category: activity.category,
+      drill: activity.category === "reflection" || activity.athleteTitle.toLowerCase().includes("readiness")
+        ? null
+        : activityToDrill(activity),
+    }));
+    const visibleDaySteps = entries
+      .filter((entry) => !dayPresentation.executionSteps[entry.sequence]?.hidden)
+      .sort((a, b) => (dayPresentation.executionSteps[a.sequence]?.displaySequence ?? a.sequence) - (dayPresentation.executionSteps[b.sequence]?.displaySequence ?? b.sequence))
+      .map((entry) => dayPresentation.executionSteps[entry.sequence]);
+    const payload = JSON.stringify({
+      dayTitle: dayPresentation.dayTitle,
+      dayContext,
+      visibleDaySteps,
+      session: activeSessionDisplay,
+    });
+
+    expect(dayContext.heroTitle).toBe(june30KpiTitle);
+    expect(dayContext.heroTitle).not.toContain("Jun29");
+    expect(dayPresentation.dayTitle).toBe(june30KpiTitle);
+    expect(activities).toHaveLength(5);
+    expect(activities.map((activity) => activity.athleteTitle)).toEqual(june30KpiStepTitles);
+    expect(activeSessionDisplay.map((item) => item.title)).toEqual(june30KpiStepTitles);
+    expect(visibleDaySteps).toHaveLength(5);
+    expect(visibleDaySteps.map((step) => step.title)).toEqual(june30KpiStepTitles);
+    expect(activities.findIndex((activity) => activity.athleteTitle === "Warm-up / mobility")).toBeLessThan(activities.findIndex((activity) => activity.athleteTitle === "KPI testing"));
+    expect(payload).toContain("/kpis");
+    expect(payload).not.toContain("Jun29");
+    expect(payload).not.toContain("Controlled bike or treadmill");
+    expect(payload).not.toContain("SHOT 110");
+    expect(payload).not.toContain("SHOT-110");
+    expect(payload).not.toContain("Hockey awareness cue");
   });
 
   it("projects June 19 top-level activities from dayExecutionPlan order", () => {
@@ -183,8 +238,13 @@ describe("planned activity presentation", () => {
         childTitles: activity.children?.map((child) => child.title) ?? [],
       }));
 
-      expect(plannedActivities, date).toHaveLength(executionEntries.length);
-      expect(activeSessionDisplay.map((item) => item.sequenceOrder), date).toEqual(executionEntries.map((entry) => entry.sequence));
+      if (date === "2026-06-30") {
+        expect(plannedActivities, date).toHaveLength(5);
+        expect(activeSessionDisplay.map((item) => item.sequenceOrder), date).toEqual([1, 3, 2, 7, 8]);
+      } else {
+        expect(plannedActivities, date).toHaveLength(executionEntries.length);
+        expect(activeSessionDisplay.map((item) => item.sequenceOrder), date).toEqual(executionEntries.map((entry) => entry.sequence));
+      }
 
       for (const activity of plannedActivities) {
         const dayStep = dayPresentation.executionSteps[activity.sequenceOrder];

@@ -10,7 +10,7 @@ import { SessionKPIForm } from "@/components/SessionKPIForm";
 import { SessionProgress } from "@/components/SessionProgress";
 import { SessionSummary } from "@/components/SessionSummary";
 import { getV84SessionById, getV84SessionWorkout, getV84VideoForDrillId } from "@/lib/imports/v8_4/session";
-import { activityToDrill, projectDayPresentationContext, projectPlannedDayActivities, remainingPlannedMinutesFromStep } from "@/lib/projections/activityPresentation";
+import { KPI_RESULT_ENTRY_COPY, KPI_RESULT_ENTRY_HREF, activityToDrill, projectDayPresentationContext, projectPlannedDayActivities, remainingPlannedMinutesFromStep, type ActivityPresentation } from "@/lib/projections/activityPresentation";
 import { getWorkout, getWorkoutDrills, kpis as allKpis } from "@/lib/trainingData";
 import { loadCloudSessionById, loadCloudSessionsByWorkoutId, saveCloudSessionProgress } from "@/lib/storage/cloudSessionProgressRepository";
 import { localKpiRepository } from "@/lib/storage/localKpiRepository";
@@ -373,7 +373,8 @@ export default function SessionPage() {
   const totalSteps = v84Session ? Math.max(plannedActivities.length, 1) : drills.length + workoutKpis.length + 2;
   const step = Math.max(0, Math.min(session.currentStep, totalSteps - 1));
   const activeActivity = v84Session ? plannedActivities[step] : null;
-  const drill = v84Session ? activeActivity && !isReadinessActivity(activeActivity) && activeActivity.category !== "reflection" ? drills[step] : null : step > 0 && step <= drills.length ? drills[step - 1] : null;
+  const isV84KpiActivity = Boolean(v84Session && activeActivity?.category === "kpi");
+  const drill = v84Session ? activeActivity && !isReadinessActivity(activeActivity) && activeActivity.category !== "reflection" && activeActivity.category !== "kpi" ? drills[step] : null : step > 0 && step <= drills.length ? drills[step - 1] : null;
   const kpiIndex = v84Session ? -1 : step - drills.length - 1;
   const kpi = !v84Session && kpiIndex >= 0 && kpiIndex < workoutKpis.length ? workoutKpis[kpiIndex] : null;
   const isReadiness = v84Session ? Boolean(activeActivity && isReadinessActivity(activeActivity)) : step === 0;
@@ -423,6 +424,13 @@ export default function SessionPage() {
         <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm font-bold text-slate-200"><span>{v84Session ? activeActivity?.athleteTitle || `Step ${step + 1}` : drill ? `Drill ${step} of ${drills.length}` : kpi ? `KPI test ${kpiIndex + 1} of ${workoutKpis.length}` : isReflection ? "Final reflection" : "Readiness check"}</span><span>{remainingLabel}</span><span>{saveFeedback}</span></div>
       </div>
       {isReadiness && <ReadinessCheck value={session.readiness} onChange={(readiness) => update({ ...session!, readiness })} />}
+      {isV84KpiActivity && activeActivity && (
+        <KpiChecklistStep
+          activity={activeActivity}
+          completion={session.exercises[activeActivity.id] || emptyExerciseCompletion(activeActivity.id)}
+          onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [activeActivity.id]: completion } })}
+        />
+      )}
       {drill && <DrillCard drill={drill} completion={session.exercises[drill.id] || emptyExerciseCompletion(drill.id)} presentationChildren={plannedActivities.find((activity) => activity.id === drill.id)?.children} videoState={v84Session ? getV84VideoForDrillId(drill.id) : null} onChange={(completion) => update({ ...session!, exercises: { ...session!.exercises, [drill.id]: completion } })} />}
       {kpi && <SessionKPIForm kpi={kpi} result={session.kpiResults[kpi.id]} onChange={(result) => update({ ...session!, kpiResults: { ...session!.kpiResults, [kpi.id]: result } })} />}
       {isReflection && <ReflectionForm value={session.reflection} onChange={(reflection) => update({ ...session!, reflection })} />}
@@ -431,6 +439,32 @@ export default function SessionPage() {
         {isReflection ? <button className="btn-primary min-h-16 text-lg" disabled={isCompleting} onClick={complete}>{isCompleting ? "Saving..." : "Finish Session"}</button> : <button className="btn-primary min-h-16 text-lg" onClick={() => move(step + 1)}>{drill ? "Next Drill" : "Continue"}</button>}
       </div>
     </div>
+  );
+}
+
+function KpiChecklistStep({ activity, completion, onChange }: { activity: ActivityPresentation; completion: ExerciseCompletion; onChange: (next: ExerciseCompletion) => void }) {
+  return (
+    <article className={`card border-2 transition ${completion.done ? "border-lime bg-lime/10" : "border-cyan-200 bg-cyan-50"}`}>
+      <div className="mb-5 flex items-start justify-between gap-3">
+        <div>
+          <span className="rounded-full bg-white px-3 py-1 text-xs font-black uppercase tracking-wide text-blue">KPI checklist</span>
+          <h2 className="mt-3 text-3xl font-black leading-tight">{activity.athleteTitle}</h2>
+          <p className="mt-2 text-lg font-semibold text-slate-700">{KPI_RESULT_ENTRY_COPY}</p>
+        </div>
+        {completion.done && <span className="rounded-full bg-lime px-3 py-1 text-sm font-black">DONE</span>}
+      </div>
+      <div className="rounded-2xl bg-white p-4">
+        <p className="font-semibold text-slate-700">{activity.instruction}</p>
+        {activity.coachingCue && <p className="mt-2 text-sm font-bold text-slate-600">{activity.coachingCue}</p>}
+        <Link className="btn-primary mt-4" href={KPI_RESULT_ENTRY_HREF}>Open KPI Page</Link>
+      </div>
+      <button
+        className={`mt-5 min-h-20 w-full rounded-2xl text-xl font-black ${completion.done ? "bg-lime text-navy" : "bg-blue text-white"}`}
+        onClick={() => onChange({ ...completion, done: !completion.done })}
+      >
+        {completion.done ? "Checklist Step Done" : "Mark Checklist Step Done"}
+      </button>
+    </article>
   );
 }
 
