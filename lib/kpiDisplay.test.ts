@@ -2,11 +2,19 @@ import { describe, expect, it } from "vitest";
 
 import kpisJson from "../data/kpis.json";
 import planJson from "../data/plan.json";
-import { BASELINE_PENDING_KPI_DATE, BASELINE_PENDING_KPI_IDS, kpiNextTestDate, kpiTargetDisplay } from "./kpiDisplay";
+import { JUNE_30_NEW_KPI_DATE, JUNE_30_NEW_KPI_IDS, kpiNextTestDate, kpiTargetDisplay } from "./kpiDisplay";
 import type { KPI, TrainingPlan } from "./types";
 
 const kpis = kpisJson as KPI[];
 const trainingPlan = planJson as TrainingPlan;
+const newKpiTargets: Record<string, string> = {
+  "kpi-100m-sprint": "16.5 seconds",
+  "kpi-45-second-shuttle": "120 metres",
+  "kpi-push-ups": "25 reps",
+  "kpi-flexed-arm-hang": "20 seconds",
+  "kpi-zwift-bike-3x10s-peak-power": "300 watts",
+  "kpi-vertical-jump": "35 centimeters",
+};
 
 function byId(id: string) {
   const kpi = kpis.find((item) => item.id === id);
@@ -15,13 +23,13 @@ function byId(id: string) {
 }
 
 describe("KPI display helpers", () => {
-  it("shows new KPIs as baseline-pending targets scheduled for June 30", () => {
-    for (const id of BASELINE_PENDING_KPI_IDS) {
+  it("shows new KPIs with exact targets scheduled for June 30", () => {
+    for (const id of JUNE_30_NEW_KPI_IDS) {
       const kpi = byId(id);
 
-      expect(kpi.targetValue, id).toBeUndefined();
-      expect(kpiTargetDisplay(kpi), id).toBe("Set after baseline");
-      expect(kpiNextTestDate(kpi, trainingPlan.days, "2026-06-30"), id).toBe(BASELINE_PENDING_KPI_DATE);
+      expect(kpiTargetDisplay(kpi), id).toBe(newKpiTargets[id]);
+      expect(kpiTargetDisplay(kpi), id).not.toBe("Set after baseline");
+      expect(kpiNextTestDate(kpi, trainingPlan.days, "2026-06-30"), id).toBe(JUNE_30_NEW_KPI_DATE);
     }
   });
 

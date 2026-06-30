@@ -130,7 +130,8 @@
     "fields": [{ "id": "result", "label": "Time", "type": "number", "unit": "sec" }],
     "coachingNotes": ["Run through the finish and allow full recovery between attempts."],
     "safetyNotes": "Complete a full warm-up. Stop for pain and avoid slippery or crowded surfaces.",
-    "targetLabel": "Set after baseline",
+    "targetValue": 16.5,
+    "targetLabel": "Adjustable offseason target",
     "motivationalCue": "Smooth acceleration, then finish clean."
   },
   {
@@ -144,7 +145,8 @@
     "fields": [{ "id": "result", "label": "Total distance", "type": "number", "unit": "m" }],
     "coachingNotes": ["Purpose: measure repeated acceleration, deceleration, turn quality, and short-shift work capacity.", "Example: 10 completed lengths plus 0.73m partial final distance = 100.73m.", "Use the same 10m setup and scoring formula for every retest."],
     "safetyNotes": "Warm up first. Use a clear, flat, dry surface. Stop if pain, slipping, dizziness, or form breaks down. Prioritize controlled turns over reckless cutting.",
-    "targetLabel": "Set after baseline",
+    "targetValue": 120,
+    "targetLabel": "Adjustable offseason target",
     "motivationalCue": "Game-speed effort with clean control."
   },
   {
@@ -158,7 +160,8 @@
     "fields": [{ "id": "result", "label": "Strict push-ups", "type": "number", "unit": "reps" }],
     "coachingNotes": ["Quality over quantity.", "Do not count reps after body position breaks."],
     "safetyNotes": "Stop for wrist, shoulder, elbow, or back pain.",
-    "targetLabel": "Set after baseline",
+    "targetValue": 25,
+    "targetLabel": "Adjustable offseason target",
     "motivationalCue": "Strong reps, clean line."
   },
   {
@@ -172,7 +175,8 @@
     "fields": [{ "id": "result", "label": "Hold time", "type": "number", "unit": "sec" }],
     "coachingNotes": ["No kipping or swinging.", "Use the same bar and setup each time."],
     "safetyNotes": "Adult supervision required. Use a secure bar and safe landing area. Stop for shoulder, elbow, wrist, or grip pain.",
-    "targetLabel": "Set after baseline",
+    "targetValue": 20,
+    "targetLabel": "Adjustable offseason target",
     "motivationalCue": "Hold strong and stay controlled."
   },
   {
@@ -186,7 +190,8 @@
     "fields": [{ "id": "result", "label": "Peak watts", "type": "number", "unit": "W" }],
     "coachingNotes": ["Use the same trainer, bike, route, and approximate starting virtual gear each retest.", "If a virtual gear is recorded, use the same gear next time.", "Do not compare directly to outdoor rides or different bikes/trainers."],
     "safetyNotes": "Bike must be securely mounted. Use fan and water. Stop if pain, dizziness, unusual discomfort, or unstable setup occurs. Do not force an all-out sprint if setup feels unstable.",
-    "targetLabel": "Set after baseline",
+    "targetValue": 300,
+    "targetLabel": "Adjustable offseason target",
     "motivationalCue": "Short power, stable setup."
   },
   {
@@ -200,7 +205,8 @@
     "fields": [{ "id": "result", "label": "Jump height", "type": "number", "unit": "cm" }],
     "coachingNotes": ["Use the same measurement method each time.", "Stick the landing before the next attempt."],
     "safetyNotes": "Use a safe landing area. Stop for knee, ankle, hip, or back pain.",
-    "targetLabel": "Set after baseline",
+    "targetValue": 35,
+    "targetLabel": "Adjustable offseason target",
     "motivationalCue": "Explode up, land quietly."
   }
 ]
