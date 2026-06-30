@@ -21,6 +21,7 @@ No active work should read stub files for scope.
 | Current checkpoint / handoff | `docs/SESSION_HANDOFF.md` |
 | Latest agent report | `docs/AGENT_REPORT.md` |
 | Documentation inventory | `docs/DOCUMENTATION_INVENTORY.md` |
+| Closed-Loop methodology design package | `docs/design/` |
 | App training data source | `imports/v8.4/` |
 
 ## Dead-End Scope Stubs
@@ -68,6 +69,22 @@ These files may still be read for implementation context, QA scenarios, or proje
 - `docs/TEST_CASES.md`
 - `imports/v8.4/CODEX_IMPORT_PROMPT.md`
 - `imports/v8.4/README.md`
+
+## Active Design Package Docs
+
+These files support active scope in `docs/SCOPE.md`; they do not authorize implementation by themselves:
+
+- `docs/design/DESIGN_GATE.md`
+- `docs/design/CLOSED_LOOP_CONCEPTUAL_DESIGN.md`
+- `docs/design/PROGRAMMATIC_SCORING_CONCEPTUAL_DESIGN.md`
+- `docs/design/OPEN_SOURCE_RESEARCH_REPOSITORIES.md`
+- `docs/design/RULE_BASED_SCORING_ENGINE_APPROACH.md`
+- `docs/design/ARCHITECTURE_GOVERNANCE_TRACKS.md`
+- `docs/design/FUNCTIONAL_DESIGN_BACKLOG.md`
+- `docs/design/TECHNICAL_DESIGN_BACKLOG.md`
+- `docs/design/ROLE_RACI.md`
+- `docs/design/RISK_REGISTER.md`
+- `docs/design/DECISION_LOG.md`
 
 ## Archive Later
 

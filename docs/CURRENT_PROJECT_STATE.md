@@ -1,6 +1,20 @@
 # Current Project State
 
-## Current Verified State - June 22, 2026
+## Current Verified State - June 30, 2026
+
+This section is the current checkpoint. Historical June 22 and June 17/18 state is preserved below and should not be treated as current unless restated here.
+
+- Branch: `main`.
+- Expected current commit before docs capture: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
+- `docs/SCOPE.md` is the canonical owner for active scope, defects, priorities, roadmap, and next-task ownership.
+- Product QA after `f5c35a8` reopened `DEF-029` and added `DEF-030`, `DEF-031`, and `DEF-032`.
+- Next bounded discovery task is `AUDIT-LOAD-CLASSIFICATION-001`.
+- Closed-Loop Training Intelligence is registered as future design-governed architecture, not current app behavior.
+- `docs/design/` contains the supporting design-gate, conceptual, research, scoring, RACI, risk, decision, functional backlog, and technical backlog docs.
+- v8.4 app import package remains authoritative for current app training data.
+- No app behavior, tests, source JSON, Supabase, package, build, commit, or push action is implied by the docs capture.
+
+## Historical Current Verified State - June 22, 2026
 
 This section is the current checkpoint. Historical June 17/18 state is preserved below and should not be treated as current unless restated here.
 

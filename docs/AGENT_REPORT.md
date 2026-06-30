@@ -2,45 +2,45 @@
 
 ## Latest Task
 
-Log Medium Defect - controlled bike/treadmill copy clarity.
+Docs Capture - Product QA Defects + Closed-Loop Design Governance + Research/Scoring Architecture.
 
 ## Result
 
-Logged `DEF-029` as a medium/P2 athlete-facing copy clarity defect.
-
-Observed production route: `/day/2026-06-26`, Step 4 Conditioning card, `Controlled bike or treadmill`.
-
-Current copy recorded:
-
-`Bike/treadmill are controlled. No treadmill sprinting for U12.`
-
-Problem recorded: the safety intent is valid, but the wording is awkward and unclear for Maddox or the parent.
-
-Suggested copy recorded for future implementation:
-
-`Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.`
-
-This was docs-only. No app code, tests, package files, v8.4 source JSON, Supabase data, commits, or pushes were changed/performed.
+Captured product QA defects found after `f5c35a8` and registered the Closed-Loop Training Intelligence program as a gated future architecture effort. This was documentation-only. No app code, tests, source JSON, Supabase data/schema, packages, builds, commits, or pushes were changed/performed.
 
 ## Files Changed
 
-- `docs/AGENT_REPORT.md`
 - `docs/SCOPE.md`
+- `docs/SESSION_HANDOFF.md`
+- `docs/AGENT_REPORT.md`
+- `docs/DOCUMENTATION_INVENTORY.md`
+- `docs/design/DESIGN_GATE.md`
+- `docs/design/CLOSED_LOOP_CONCEPTUAL_DESIGN.md`
+- `docs/design/PROGRAMMATIC_SCORING_CONCEPTUAL_DESIGN.md`
+- `docs/design/OPEN_SOURCE_RESEARCH_REPOSITORIES.md`
+- `docs/design/RULE_BASED_SCORING_ENGINE_APPROACH.md`
+- `docs/design/ARCHITECTURE_GOVERNANCE_TRACKS.md`
+- `docs/design/FUNCTIONAL_DESIGN_BACKLOG.md`
+- `docs/design/TECHNICAL_DESIGN_BACKLOG.md`
+- `docs/design/ROLE_RACI.md`
+- `docs/design/RISK_REGISTER.md`
+- `docs/design/DECISION_LOG.md`
 
 ## Status Updates
 
-- `DEF-029` added to the active execution queue as P2 / Not started.
-- `DEF-029` added to the P2 index.
-- `DEF-029` added to the detailed defect table.
-- Linked to `CONDITIONING-MODEL-001` and `DEF-020`.
-- Implementation explicitly deferred.
+- `DEF-029` reopened as P1 because production QA found incomplete rendering-path coverage.
+- `DEF-030`, `DEF-031`, and `DEF-032` added as P1 product-trust defects.
+- `AUDIT-LOAD-CLASSIFICATION-001` added as the next inspect-only discovery task.
+- `DESIGN-GATE-001`, `TRANSITION-001`, `DATA-GOV-001`, `SOURCE-VALIDATION-001`, `RESEARCH-REPOSITORIES-001`, `KNOWLEDGE-INGESTION-001`, `HEURISTIC-SCORING-001`, `ATHLETE-PERSONALIZATION-001`, `SENSOR-FEEDBACK-001`, `MODEL-GOVERNANCE-001`, and `STACK-EVOLUTION-001` added/updated.
+- Methodology Epic group added/updated: `METHODOLOGY-001`, `DOMAIN-001`, `DOMAIN-DECISION-001`, `LOAD-001`, `ANALYTICS-001`, `PHASE-001`, `KPI-DOMAIN-001`, `READINESS-001`, `VISUALIZATION-001`, `RECOMMENDATION-001`, `QA-SAFETY-001`, `MLOPS-001`.
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-029` added.
-- Epics/features added/updated: none.
-- Product decisions added/updated: none.
-- Data/sync/environment decisions added/updated: none.
-- Testing requirements added/updated: none.
-- Docs updated: `docs/SCOPE.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: controlled bike/treadmill copy implementation, tests, app code, v8.4 source edits, Supabase/data changes.
+- Defects added/updated: `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added.
+- Epics/features added/updated: Closed-Loop methodology architecture track and Epics added.
+- Product decisions added/updated: design gate, current-app protection, no silent plan rewrites, parent approval, LLM/scoring separation, baseline/effective-load separation, no final source/domain/stack selections.
+- Data/sync/environment decisions added/updated: data retention, provenance, no-data-loss, no Supabase mutation, no schema change.
+- Testing requirements added/updated: all-day classification audit; future adversarial QA/safety testing design.
+- Training-plan/source items added/updated: v8.4 remains current source of truth; research repositories captured as candidates only.
+- Docs updated: listed above.
+- Items intentionally deferred: app behavior fixes, tests, Playwright, build, source JSON edits, Supabase work, methodology implementation, final domain/source/stack decisions, LLM extraction/scoring/sensor/recommendation implementation.

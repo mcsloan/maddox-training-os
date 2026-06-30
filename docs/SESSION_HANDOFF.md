@@ -3,25 +3,27 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Latest pushed commit: `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
-- Expected git state: `## main...origin/main`.
-- Tonight's pushed stabilization commits:
-  - `9fd4c73` (`fix(session): align completed summary title with canonical presentation`)
-  - `c20432c` (`fix(projections): align planned activity classification across day and session`)
-  - `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`)
-  - `6ab3f5e` (`test(projections): cover all v8.4 day readiness`)
+- Latest expected commit before docs capture: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
+- Repo was clean before the docs-only capture.
 - `docs/SCOPE.md` remains the only canonical active scope source.
-- v8.4 app import package remains authoritative.
+- v8.4 app import package remains authoritative for current app training data.
 
-## Verified Product State
+## Current Product QA State
 
-- `DEF-028` is fixed, automated-tested, committed, and pushed.
-- Completed-session/read-only `SessionSummary` now prefers canonical day/session presentation title when available and falls back to saved/imported workout title without mutating saved records.
-- Day + active Session planned-activity parity is verified across all 84 v8.4 active session dates.
-- All 84 v8.4 plan dates from `2026-06-15` through `2026-09-06` are verified athlete-usable at the Day projection layer.
-- The all-date parity proof covers shared planned sequence, athlete-facing titles, planned durations, categories, and forbidden source/internal label filtering.
-- No manual Mike UAT was required for these proofs because deterministic component/projection tests covered the risks.
-- No Supabase mutation, saved session rewrite, v8.4 JSON edit, logging behavior change, commit beyond the listed pushed commits, or broad surface refactor is pending from tonight's work.
+- Product QA after `f5c35a8` found current-app production defects that technical checks did not fully catch.
+- `DEF-029` is reopened: `/day/2026-06-30` still displayed `Bike/treadmill are controlled. No treadmill sprinting for U12.` while production badge `f5c35a8` was visible.
+- `DEF-030` added: `/day/2026-06-30` showed `STEP 4 · KPI` for `Controlled bike or treadmill`.
+- `DEF-031` added: `/day/2026-07-06` uses `Today's Simple Plan` while `/day/2026-06-30` uses `Planned Execution Sequence`; fixes may not apply consistently across rendering paths.
+- `DEF-032` added: controlled cardio duration/load-tier classification is not explainable; `/day/2026-06-29` showed 20 minutes with `Recovery conditioning`, which needs audit.
+- `AUDIT-LOAD-CLASSIFICATION-001` is the next bounded discovery task for these defects. It is discovery only and must not implement the future methodology architecture.
+
+## Closed-Loop Architecture State
+
+- Closed-Loop Training Intelligence is future architecture, not current app behavior.
+- `DESIGN-GATE-001` now gates methodology work through conceptual, functional, technical, research/validation, transition, data-retention, QA/safety, build-readiness, and implementation stages.
+- The forbidden shortcut is: Conceptual Design -> Codex prompt -> retrofit into app.
+- Supporting design package lives in `docs/design/`.
+- No final domain count, data source, biomechanics repository, graph/vector DB, ML service, commercial API, LLM provider, scoring runtime, recommendation strategy, or sensor/video integration is selected.
 
 ## Current Constraints
 
@@ -29,6 +31,7 @@
 - Do not push unless explicitly asked.
 - Do not edit `imports/v8.4/data/*.json` unless explicitly asked.
 - Do not mutate Supabase data without explicit target confirmation.
+- Do not change Supabase schema without approved technical design.
 - Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.
 - Do not apply the KPI cloud-sync stash during unrelated tasks.
 - Run `node scripts/preflight.mjs` before production-risk work.
@@ -40,19 +43,11 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Recommended next lane:
 
-1. Select the next P1 stabilization item after DEF-028 and Day/Session parity.
-2. Prefer low data-risk work with automated proof.
-3. Avoid data-write/sync/Supabase tasks unless separately approved.
-4. Keep QA matrices compact and contract-driven.
-
-## Known Caution Areas
-
-- Production Supabase contains real Maddox data; no writes without explicit target confirmation.
-- KPI cloud-sync/backfill remains scope-review unless explicitly verified in the current checkpoint.
-- OvertimeAthlete and Gemini recommendations are source-review inputs only.
-- Unconfirmed schedule/camp claims must be verified before any plan change.
-- Broader Playwright rollout and CI remain future scope.
-- Bundled Playwright browser installs remain avoided unless explicitly approved.
+1. Run `AUDIT-LOAD-CLASSIFICATION-001` as inspect-only discovery.
+2. Map all day/activity classification and controlled cardio duration outputs across v8.4.
+3. Identify rendering paths that still leak old copy or raw KPI categories.
+4. Do not implement the Closed-Loop methodology architecture during the audit.
+5. Fix DEF-029/030/031/032 only after the audit defines the bounded current-app path.
 
 ## Recommended Startup Reading
 
@@ -63,10 +58,10 @@ Recommended next lane:
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-028` fixed and pushed.
-- Epics/features added/updated: `ACTIVITY-PRESENTATION-CONTRACT-001` and `DAY-SESSION-PARITY-001` completed for Day + active Session parity.
-- Product decisions added/updated: manual Mike UAT is not required for tonight's completed proofs because automated tests covered the targeted risks.
-- Data/sync/environment decisions added/updated: no Supabase mutation, no saved-record mutation, no backfill, no delete, no migration.
-- Testing requirements added/updated: all 84 v8.4 active session dates now have Day + active Session planned-activity parity proof; all 84 v8.4 plan dates now have Day readiness proof.
-- Docs updated: `SESSION_HANDOFF.md`.
-- Items intentionally deferred: broader surface parity, fixture architecture, Playwright expansion, CI/release gate, Supabase/data changes.
+- Defects added/updated: `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added.
+- Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`.
+- Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation.
+- Data/sync/environment decisions added/updated: no Supabase/data mutation; future no-data-loss/provenance requirements captured.
+- Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit added as next discovery.
+- Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`.
+- Items intentionally deferred: behavior fixes, app code, tests, Playwright, builds, source JSON edits, Supabase changes, methodology implementation, final domain/source/stack choices.

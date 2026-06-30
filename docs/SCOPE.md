@@ -9,7 +9,10 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Current checkpoint: repo clean and synced after pushed commit `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
+- Current checkpoint: docs capture after pushed commit `f5c35a8` (`fix(projections): clarify controlled cardio copy`); repo was clean before this docs-only capture.
+- Product QA after `f5c35a8` found remaining production Day rendering defects: `DEF-029` is reopened, and `DEF-030`, `DEF-031`, and `DEF-032` are added as P1 product-trust defects.
+- Closed-Loop Training Intelligence is registered as a future design-governed architecture program. It is not current app behavior and must not be retrofitted into the current application until `DESIGN-GATE-001` passes.
+- Previous projection-readiness checkpoint: repo clean and synced after pushed commit `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
 - Tonight's stabilization commits are pushed: `9fd4c73` (`fix(session): align completed summary title with canonical presentation`), `c20432c` (`fix(projections): align planned activity classification across day and session`), and `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`).
 - Earlier settled production baseline: local `main` == `origin/main` == Vercel production at the time of Phase 1 completion.
 - Last verified pushed/deployed production baseline before this realignment: `f02bff4` (`docs(scope): correct checkpoint wording before push`).
@@ -76,6 +79,7 @@ Every active scope item should use this structure, either as a detailed record b
 - Scope review required
 - Not started
 - In progress
+- Reopened / product QA found incomplete rendering-path coverage
 - Blocked
 - Completed
 - Deferred
@@ -113,6 +117,12 @@ Every active scope item should use this structure, either as a detailed record b
 | DEC-KPI-002 | Do not use flat 400m as the primary hockey-shift test; prefer a 45-second repeated shuttle / shift simulation. | Completed | KPI roadmap intake |
 | DEC-AI-001 | AI Coach recommends; parent approves. | Not started | Prior AI Coach strategy content merged here; use git history only |
 | DEC-SOURCE-REVIEW-001 | Gemini/OvertimeAthlete recommendations are source-review inputs only, not source of truth. | Completed | Gemini intake |
+| DEC-DESIGN-GATE-001 | Closed-Loop Training Intelligence implementation is forbidden until conceptual, functional, technical, research/validation, transition, data-retention, integration, QA/safety, and build-readiness gates are accepted. | In progress | `DESIGN-GATE-001`, `docs/design/DESIGN_GATE.md` |
+| DEC-CURRENT-APP-001 | Current Maddox Training OS remains the production system; v8.4 remains authoritative while future methodology architecture is designed in parallel. | In progress | `TRANSITION-001`, `docs/design/DESIGN_GATE.md` |
+| DEC-METHODOLOGY-001 | No silent plan rewrites; future recommendation-driven adjustments require parent approval and audit trail. | In progress | `MODEL-GOVERNANCE-001`, `docs/design/DECISION_LOG.md` |
+| DEC-SCORING-001 | LLMs may extract structured exercise attributes, but final exercise-domain scores must come from deterministic, testable scoring rules plus review/approval gates. | In progress | `KNOWLEDGE-INGESTION-001`, `HEURISTIC-SCORING-001` |
+| DEC-LOAD-VECTOR-001 | Expert/rule-derived baseline domain vectors and athlete-specific personalized effective load vectors are separate concepts; athlete output must not mutate the global baseline matrix. | In progress | `ATHLETE-PERSONALIZATION-001` |
+| DEC-RESEARCH-001 | Open-source/research repositories may inform validation and thresholds, but no repository, dataset, commercial API, graph DB, vector DB, ML service, or final domain count is selected by this docs capture. | In progress | `RESEARCH-REPOSITORIES-001`, `DOMAIN-DECISION-001`, `docs/design/DECISION_LOG.md` |
 
 ## Active Execution Queue
 
@@ -142,43 +152,37 @@ Every active scope item should use this structure, either as a detailed record b
 | 22 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
 | 23 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
 | 24 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
-| 25 | DEF-029 | Controlled bike/treadmill copy clarity | P2 | Not started | Fast lane | Clarify athlete-facing controlled cardio copy in a later narrow copy/projection fix. |
-| 26 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust. |
-| 27 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
+| 25 | DEF-029 | Controlled bike/treadmill copy clarity | P1 | Reopened / product QA found incomplete rendering-path coverage | Fast lane | Run `AUDIT-LOAD-CLASSIFICATION-001` before another narrow rendering fix. |
+| 26 | DEF-030 | Controlled cardio activity displays as KPI | P1 | Not started | Fast lane | Audit Day rendering/classification path for `/day/2026-06-30`; do not change behavior in docs capture. |
+| 27 | DEF-031 | Multiple day presentation formats produce inconsistent day/activity rendering | P1 | Not started | Fast lane | Audit Simple Plan vs Planned Execution Sequence paths for classification, safety copy, and source-label suppression. |
+| 28 | DEF-032 | Controlled cardio duration/load-tier classification is not explainable | P1 | Not started | Source-review / Fast lane audit | Run all-day load classification audit; explain controlled-cardio duration sources before changing rules. |
+| 29 | AUDIT-LOAD-CLASSIFICATION-001 | All-day load classification audit | P1 | Not started | Docs-only / inspect-only | Discovery only: map day/activity classification, durations, copy leaks, KPI category leaks, and rendering paths. |
+| 30 | DESIGN-GATE-001 | Conceptual to Functional to Technical Design Governance | P1 | In progress | Docs-only / design-governance | Gate Closed-Loop methodology through accepted design packages before implementation. |
+| 31 | TRANSITION-001 | Current App Protection and Closed-Loop Architecture Transition Plan | P1 | In progress | Docs-only / architecture-safety | Keep current app stable; design methodology layer in parallel before integration. |
+| 32 | DATA-GOV-001 | Data Retention, Provenance, and Integrity Design | P1 | In progress | Docs-only / data-governance | Define versioning, provenance, audit, no-data-loss, and no silent mutation requirements. |
+| 33 | SOURCE-VALIDATION-001 | Exercise Domain Scoring Source and Validation Strategy | P1 | In progress | Docs-only / research-capture | Define source/validation candidates and scoring governance without selecting authoritative sources. |
+| 34 | METHODOLOGY-001 | Closed-Loop Training Methodology Architecture | P1 | Scope review required | Future roadmap / design-gated | Future multi-Epic architecture track; implementation priority not decided. |
+| 35 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust and methodology governance. |
+| 36 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
 
 ## Current Sprint / Next Codex Task
 
-Current sprint: Phase 1 docs/scope-control and environment safety reconciliation are complete. The last verified pushed/deployed production baseline before this realignment was `f02bff4`. `ENV-SAFETY-RECON-001` is completed for the inspection pass.
+Current sprint: product QA after `f5c35a8` found remaining production Day rendering defects. `DEF-029` is reopened, `DEF-030` through `DEF-032` are added, and the next bounded task is `AUDIT-LOAD-CLASSIFICATION-001`.
 
-Next implementation candidate: select the next P1 stabilization item after tonight's completed DEF-028 and Day/Session parity work; avoid data-write/sync tasks unless separately approved.
-
-Minimum next task brief:
+Next task brief:
 
 - Read `AGENTS.md`, `docs/SESSION_HANDOFF.md`, and this file first.
-- Start from completed `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` findings.
-- Implement Pass 1 only: `projectPlannedDayActivities(date)` for master/reference planned activity presentation and metadata.
-- Wire Day + Session planned-activity parity only.
-- Do not include Supabase, saved logs, transactional joins, Dashboard, History, KPI, Exports, Gantt, or source JSON edits.
+- Run `AUDIT-LOAD-CLASSIFICATION-001` as inspect-only discovery.
+- Determine how every day and controlled bike/treadmill activity is currently classified.
+- Explain why controlled bike/treadmill durations appear as 20, 30, 45, 10-15, or other.
+- Identify rendering paths that still leak old copy or raw KPI categories.
+- Identify whether current behavior is source-data-driven, projection-driven, or page-render-path-driven.
+- Feed findings into `DEF-029`, `DEF-030`, `DEF-031`, `DEF-032`, and future design work.
+- Do not implement Closed-Loop methodology architecture during the audit.
 - Do not edit `imports/v8.4/data/*.json`.
-- Do not invent prescriptions.
-- Do not change logging fields or Supabase/schema behavior unless a separate safe-lane task explicitly allows it.
-- Do not follow inline TODOs or comments unless they are backed by the active `docs/SCOPE.md` ID.
-- For `DEF-028`, do not mutate saved session records; no Supabase writes, backfill, delete, or migration.
+- Do not mutate Supabase or saved records.
 
-Execution gate: no further cosmetic display patches or broad implementation under `ACTIVITY-PRESCRIPTION-001` until the planned-activity contract is implemented and verified for Day + Session parity.
-
-Completed audit findings identified:
-
-1. Day page source path.
-2. Session form source path.
-3. Why planned steps differ.
-4. Why duration/title conflicts occur.
-5. The canonical projection layer both surfaces must use.
-6. Which current WIP changes should be kept, revised, or reverted.
-7. Every athlete-facing consumer of plan/activity/session display data.
-8. Which consumers must use the canonical contract now, can use summaries from it, are admin/source/reference-only exceptions, or are deferred with rationale.
-
-Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source JSON in the next code task.
+Execution gate: tactical current-app defects may be fixed separately as bounded work after discovery, but Closed-Loop methodology implementation remains gated by `DESIGN-GATE-001`.
 
 ## Scope Item Index By Priority And Status
 
@@ -195,17 +199,18 @@ Do not touch Dashboard, History, KPI, Exports, Gantt, Supabase, or v8.4 source J
 
 | Status | IDs |
 | --- | --- |
-| In progress | KPI-ROADMAP-001 |
+| In progress | KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001 |
+| Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
-| Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
+| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
+| Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
 ### P2
 
 | Status | IDs |
 | --- | --- |
-| Not started | SESSION-UX-001, RECOVERY-READINESS-001, EXPORTS-REPORTING-001, HOCKEY-IQ-001, DEF-008, DEF-009, DEF-010, DEF-011, DEF-012, DEF-029 |
+| Not started | SESSION-UX-001, RECOVERY-READINESS-001, EXPORTS-REPORTING-001, HOCKEY-IQ-001, DEF-008, DEF-009, DEF-010, DEF-011, DEF-012 |
 | Scope review required | SOURCE-INGEST-OTA-001, PLAN-RECON-OTA-001, DEF-004 |
 
 ### P3
@@ -1159,8 +1164,8 @@ Advanced KPI scope:
 - Acceptance criteria: controlled bike/treadmill cardio easy days = 45 minutes; controlled bike/treadmill cardio medium days = 30 minutes; controlled bike/treadmill cardio hard days = 20 minutes; implemented in canonical source/rule layer, not a page-specific override; Day and active Session duration parity remains verified; all-84 Day readiness proof remains passing; no saved data or Supabase mutation.
 - Dependencies: DEF-020; CONDITIONING-MODEL-001; completed ACTIVITY-PRESENTATION-CONTRACT-001 and DAY-SESSION-PARITY-001 guardrails.
 - Risks: corrupting approved plan data, masking source issues with UI-only overrides, mutating saved evidence, or accidentally changing non-bike/treadmill conditioning prescriptions.
-- Next action: keep DEF-029 copy clarity separate and deferred.
-- Links / evidence: Completed by `a01beca`; shared planned-activity projection applies controlled cardio durations of 45 minutes for easy/recovery/lighter/deload days, 30 minutes for medium days, and 20 minutes for hard days; Day and active Session consume the same projected planned duration; proof passed with `npx vitest run lib/projections/activityPresentation.test.ts lib/projections/dayPresentation.test.ts` (20/20), `npm run lint`, `npm run build`, `node scripts/verify-v8.4-import.mjs`, and `git diff --check`. Related: DEF-020; DEF-029 remains separate; CONDITIONING-MODEL-001; commits `c20432c`, `05019f5`, and `6ab3f5e`.
+- Next action: keep the completed duration rule unchanged; use `AUDIT-LOAD-CLASSIFICATION-001` to explain current duration/load-tier rendering and feed `DEF-032`.
+- Links / evidence: Completed by `a01beca`; shared planned-activity projection applies controlled cardio durations of 45 minutes for easy/recovery/lighter/deload days, 30 minutes for medium days, and 20 minutes for hard days; Day and active Session consume the same projected planned duration; proof passed with `npx vitest run lib/projections/activityPresentation.test.ts lib/projections/dayPresentation.test.ts` (20/20), `npm run lint`, `npm run build`, `node scripts/verify-v8.4-import.mjs`, and `git diff --check`. Related: DEF-020; DEF-029 was reopened by later product QA; DEF-032 now owns explainability concerns; CONDITIONING-MODEL-001; commits `c20432c`, `05019f5`, `6ab3f5e`, and `f5c35a8`.
 
 Hard rejection criteria:
 
@@ -1192,6 +1197,146 @@ Hard rejection criteria:
 - Next action: defer.
 - Links / evidence: Gemini intake.
 
+## Closed-Loop Design Governance Records
+
+These records capture future architecture and governance only. They do not authorize app behavior changes, Supabase/schema changes, source JSON edits, package installs, model implementation, recommendation behavior, sensor/video capture, or methodology retrofit into the current app.
+
+### DESIGN-GATE-001
+
+- ID: DESIGN-GATE-001
+- Title: Conceptual to Functional to Technical Design Governance
+- Type: Initiative
+- Parent: Closed-Loop Training Intelligence
+- Priority: P1
+- Status: In progress
+- Lane: Docs-only / design-governance
+- Owner: Mike / Codex
+- Source: Product QA after `f5c35a8`; architecture checkpoint
+- Problem: Tactical controlled-cardio defects exposed multiple rendering paths, inconsistent classification, source/raw wording leaks, ad hoc load classification risk, and no accepted methodology-grade day/activity/domain load model.
+- Desired outcome: Closed-Loop methodology moves through Conceptual Design -> Functional Design -> Technical Design -> Research / Validation Design -> Current-App Transition Plan -> Data-Retention / No-Data-Loss Plan -> QA / Safety Design -> Build Readiness -> Implementation.
+- In scope: design gates, role/RACI, required design packages, current-app protection, no-data-loss requirements, and build-readiness criteria.
+- Out of scope: implementation, current-app retrofit, final domain count selection, final data source selection, Supabase mutation, source JSON edits, app code edits.
+- Acceptance criteria: no Closed-Loop implementation begins until conceptual, functional, technical, research/validation, transition, data-retention, integration/retrofit, QA/test, and build-readiness gates are accepted.
+- Dependencies: TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, DOMAIN-DECISION-001.
+- Risks: conceptual design could be mistaken for accepted implementation scope.
+- Next action: complete design package review; do not implement.
+- Links / evidence: `docs/design/DESIGN_GATE.md`, `docs/design/ROLE_RACI.md`, `docs/design/DECISION_LOG.md`.
+
+### TRANSITION-001
+
+- ID: TRANSITION-001
+- Title: Current App Protection and Closed-Loop Architecture Transition Plan
+- Type: Initiative
+- Parent: DESIGN-GATE-001
+- Priority: P1
+- Status: In progress
+- Lane: Docs-only / architecture-safety
+- Owner: Mike / Codex
+- Source: Architecture checkpoint
+- Problem: Future methodology architecture could destabilize current production app or silently change saved training history if retrofitted too early.
+- Desired outcome: current app remains production system; v8.4 remains authoritative; future methodology layer is designed in parallel before integration.
+- In scope: current-app protection, compatibility requirements, rollback/no-data-loss strategy, source JSON protection, Supabase/schema protection, saved-data immutability.
+- Out of scope: migrations, schema changes, Supabase writes, source edits, behavior changes.
+- Acceptance criteria: implementation cannot start without approved transition, integration/retrofit, rollback, and no-data-loss plan.
+- Dependencies: DATA-GOV-001, TD-006, TD-012.
+- Risks: tactical defects could become stealth methodology implementation.
+- Next action: define current-app transition functional and technical designs.
+- Links / evidence: `docs/design/DESIGN_GATE.md`, `docs/design/FUNCTIONAL_DESIGN_BACKLOG.md`, `docs/design/TECHNICAL_DESIGN_BACKLOG.md`.
+
+### DATA-GOV-001
+
+- ID: DATA-GOV-001
+- Title: Data Retention, Provenance, and Integrity Design
+- Type: Initiative
+- Parent: DESIGN-GATE-001
+- Priority: P1
+- Status: In progress
+- Lane: Docs-only / data-governance
+- Owner: Mike / Codex
+- Source: Architecture checkpoint
+- Problem: Future domain scoring, personalization, recommendations, and plan adjustments require versioning, provenance, auditability, and no-data-loss rules before persistence work.
+- Desired outcome: version every exercise-domain profile, methodology model, and scoring rule set; preserve provenance, confidence, validation status, recommendation audit trail, and parent approval/rejection/defer decisions.
+- In scope: data-retention design, immutable production history rule, reversible/replayable migration requirement, child-athlete privacy/safety considerations.
+- Out of scope: current Supabase mutation, schema changes, data migration.
+- Acceptance criteria: future methodology data cannot overwrite production history, silently rewrite plans, or mutate global baseline matrix scores from athlete-specific output.
+- Dependencies: MODEL-GOVERNANCE-001, ATHLETE-PERSONALIZATION-001.
+- Risks: model/scoring changes could become untraceable.
+- Next action: define data retention/provenance functional and technical designs.
+- Links / evidence: `docs/design/DECISION_LOG.md`, `docs/design/TECHNICAL_DESIGN_BACKLOG.md`.
+
+### SOURCE-VALIDATION-001
+
+- ID: SOURCE-VALIDATION-001
+- Title: Exercise Domain Scoring Source and Validation Strategy
+- Type: Source Review
+- Parent: DESIGN-GATE-001
+- Priority: P1
+- Status: In progress
+- Lane: Docs-only / research-capture
+- Owner: Mike / Codex
+- Source: Architecture checkpoint
+- Problem: The app lacks an accepted way to source and validate exercise-domain scores without in-house sports science staff.
+- Desired outcome: candidate source classes are evaluated without treating any one source as authoritative.
+- In scope: commercial metadata APIs, open-source biomechanics datasets, literature review, manual expert review, deterministic heuristic scoring, LLM-assisted attribute extraction.
+- Out of scope: selecting final source, final score model, final domain count, commercial API, or production scoring dataset.
+- Acceptance criteria: LLMs may extract structured biomechanical attributes but may not directly assign final 0-10 exercise-domain scores without deterministic rules and validation.
+- Dependencies: RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001.
+- Risks: adult/elite biomechanics or commercial metadata could be misapplied to a U12 athlete.
+- Next action: evaluate source credibility, licensing, validation use, production use, conflict handling, and approval workflow.
+- Links / evidence: `docs/design/OPEN_SOURCE_RESEARCH_REPOSITORIES.md`, `docs/design/RULE_BASED_SCORING_ENGINE_APPROACH.md`.
+
+### Research, Scoring, Personalization, Governance, and Stack Records
+
+| ID | Title | Type | Priority | Status | Lane | Purpose / next action |
+| --- | --- | --- | --- | --- | --- | --- |
+| RESEARCH-REPOSITORIES-001 | Open-Source Research Repository Evaluation | Source Review | P1 | In progress | Docs-only / research-capture | Evaluate OpenBiomechanics, AddBiomechanics, OpenCap, SPORTDiscus, and commercial metadata sources as candidates only; preserve exact source links. |
+| KNOWLEDGE-INGESTION-001 | Programmatic Exercise Attribute Ingestion Pipeline | Initiative | P1 | In progress | Docs-only / future design | Design LLM-assisted attribute extraction into validated schema; LLM must not assign final scores. |
+| HEURISTIC-SCORING-001 | Deterministic Exercise Domain Scoring Engine | Initiative | P1 | In progress | Docs-only / future design | Translate raw attributes into inspectable, testable, rule-derived 0-10 vectors with constraints, confidence, provenance, and review status. |
+| ATHLETE-PERSONALIZATION-001 | Personalized Effective Load Vector | Initiative | P1 | In progress | Docs-only / future design | Keep baseline domain vectors stable while computing session/day-specific personalized effective load from actual output and readiness context. |
+| SENSOR-FEEDBACK-001 | Wearable / IMU / Video Feedback Integration | Initiative | P1 | In progress | Docs-only / future design | Document future signal candidates only; no wearable, IMU, or video integration is current scope. |
+| MODEL-GOVERNANCE-001 | Baseline Matrix Versioning and Human Approval | Initiative | P1 | In progress | Docs-only / governance | Version matrices, rules, domain model, personalized scaling, and recommendations; require human/parent approval and rollback capability. |
+| STACK-EVOLUTION-001 | Technical Stack Evolution Strategy | Initiative | P1 | In progress | Docs-only / architecture | Evaluate Postgres, JSONB, graph-style relational modeling, vector/similarity search, rule engine, offline scoring, ML service, and MLOps candidates without selecting final stack. |
+
+### Methodology Epic Group
+
+This is a multi-Epic architecture track governed by DESIGN-GATE-001. Implementation priority is not decided.
+
+| ID | Title | Type | Priority | Status | Purpose |
+| --- | --- | --- | --- | --- | --- |
+| METHODOLOGY-001 | Closed-Loop Training Methodology Architecture | Epic | P1 | Scope review required | Define the full architecture connecting plan design, exercise domains, activity load, completed work, KPI response, readiness, and parent-approved recommendations. |
+| DOMAIN-001 | Exercise Domain Matrix | Epic | P1 | Scope review required | Define and validate the exercise/activity domain model. Candidate A is the 12-domain hockey-specific model; Candidate B is the 9-domain generalized model; neither is final. |
+| DOMAIN-DECISION-001 | Domain Model Selection Study | Task | P1 | Scope review required | Evaluate whether the final model should use the 12-domain hockey-specific model, 9-domain generalized model, or another approved model. |
+| LOAD-001 | Day and Activity Load Classification | Epic | P1 | Scope review required | Replace ad hoc title/string matching with a consistent load model after discovery and design approval. |
+| ANALYTICS-001 | Planned vs Actual Domain Load Analytics | Epic | P1 | Scope review required | Convert planned and completed work into domain-load analytics. |
+| PHASE-001 | Phase Target vs Actual Alignment | Epic | P1 | Scope review required | Compare actual training exposure against intended phase goals. |
+| KPI-DOMAIN-001 | KPI-to-Domain Feedback System | Epic | P1 | Scope review required | Connect KPI results to the domains that should influence them. |
+| READINESS-001 | Readiness and Recovery Modifier | Epic | P1 | Scope review required | Ensure recovery context can override analytics. |
+| VISUALIZATION-001 | Domain Heatmaps and Methodology Visuals | Epic | P1 | Scope review required | Eventually explain load and development visually. |
+| RECOMMENDATION-001 | Parent-Approved Training Adjustment Engine | Epic | P1 | Scope review required | Future recommendation system only; no current behavior. |
+| QA-SAFETY-001 | Adversarial Safety and Guardrail Testing Design | Epic | P1 | Scope review required | Design synthetic/adversarial cases for unsafe recommendations, bad matrix values, malformed scores, U12 violations, bypass attempts, noisy sensors, and hallucinated metadata. |
+| MLOPS-001 | Methodology Model Monitoring and Drift Governance | Epic | P1 | Scope review required | Future monitoring for recommendation quality, safety overrides, drift, latency, auditability, rule/model version changes, and scoring drift. |
+
+### AUDIT-LOAD-CLASSIFICATION-001
+
+- ID: AUDIT-LOAD-CLASSIFICATION-001
+- Title: All-day load classification audit
+- Type: Task
+- Parent: DEF-029 / DEF-030 / DEF-031 / DEF-032
+- Priority: P1
+- Status: Not started
+- Lane: Docs-only / inspect-only
+- Owner: Mike / Codex
+- Source: Product QA after `f5c35a8`
+- Problem: Current production QA indicates copy, category, and duration rendering may vary by Day presentation path.
+- Desired outcome: determine how every day and controlled bike/treadmill activity is currently classified; explain 20/30/45/10-15/other durations; identify old-copy leaks and raw KPI category leaks; identify whether behavior is source-data-driven, projection-driven, or page-render-path-driven.
+- In scope: discovery only across all v8.4 days and relevant rendering paths.
+- Out of scope: behavior fixes, all-day methodology implementation, source JSON edits, tests, Playwright, Supabase.
+- Acceptance criteria: audit feeds DEF-029/030/031/032 and future design program without implementing the methodology architecture.
+- Dependencies: current app source inspection only.
+- Risks: another narrow fix could miss a rendering path without this audit.
+- Next action: run the audit as the next bounded current-app discovery task.
+- Links / evidence: production `/day/2026-06-30`, `/day/2026-06-29`, `/day/2026-07-06` QA.
+
 ## Defect Summary Records
 
 Detailed defect summary records are owned here. Historical detail is recoverable through git history for the former defect log stub.
@@ -1215,7 +1360,10 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-010 | Weekly Load actual bar unclear | Defect | Dashboard | P2 | Not started | Fast lane | Mike / Codex | Defect log | Load visualization unclear. | Explainable load. | future UI. | now. | bar meaning clear. | dashboard model | misinterpretation. | Defer. | former defect log stub; use git history only |
 | DEF-011 | Plank Quality KPI missing separate time plus form score model | Defect | KPI model | P2 | Not started | Safe lane | Mike / Codex | Defect log | Plank metric shape incomplete. | Time and form score separated. | KPI model design. | now. | model accepted. | KPI-ROADMAP-001 | data mismatch. | Defer. | former defect log stub; use git history only |
 | DEF-012 | Puck-Control Weave needs deferred / space-unavailable state | Defect | KPI model | P2 | Not started | Safe lane | Mike / Codex | Defect log | Missing result vs deferred not explicit. | explicit deferred state. | KPI model design. | now. | deferment visible. | KPI-ROADMAP-001 | false missing data. | Defer. | former defect log stub; use git history only |
-| DEF-029 | Controlled bike/treadmill copy clarity | Defect | Activity Presentation / Conditioning | P2 | Not started | Fast lane | Mike / Codex | Production `/day/2026-06-26` Step 4 Conditioning card | Current copy says `Bike/treadmill are controlled. No treadmill sprinting for U12.` The safety intent is valid, but the wording is awkward and does not clearly tell Maddox or the parent what to do. | Athlete-facing copy clearly communicates controlled cardio: bike preferred; treadmill walk/light jog only; no treadmill sprinting; effort easy-to-moderate depending on day load. | Future narrow copy/projection fix for controlled bike/treadmill conditioning cards. | implementing now, editing v8.4 source JSON, changing conditioning prescription, changing logging behavior, or broad copy rewrites. | Card copy uses clear controlled-cardio wording, such as `Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.` | CONDITIONING-MODEL-001, DEF-020 | unclear wording can confuse athlete/parent during live training despite valid safety intent. | Defer to a narrow copy/projection fix loop. | observed production route `/day/2026-06-26`; related bike/treadmill duration/source-review work in DEF-020 and CONDITIONING-MODEL-001 |
+| DEF-029 | Controlled bike/treadmill copy clarity | Defect | Activity Presentation / Conditioning | P1 | Reopened / product QA found incomplete rendering-path coverage | Fast lane | Mike / Codex | Production QA after `f5c35a8`; `/day/2026-06-30` | Earlier projection copy fix passed technical checks, but production badge `f5c35a8` was visible and `/day/2026-06-30` still displayed `Bike/treadmill are controlled. No treadmill sprinting for U12.` Product acceptance is not complete. | All athlete-facing controlled cardio rendering paths use `Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.` | Audit and bounded current-app rendering-path fix after discovery. | methodology retrofit, source JSON edits, conditioning duration changes, logging changes, Supabase, broad redesign. | Old copy no longer appears on any production Day rendering path; product QA accepts the result separately from technical checks. | DEF-030, DEF-031, DEF-032, AUDIT-LOAD-CLASSIFICATION-001 | multiple rendering paths can pass tests while leaking source/raw wording in production. | Run all-day load classification/rendering-path audit before another fix. | production badge `f5c35a8`; `/day/2026-06-30` old copy visible; exact approved copy remains `Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.` |
+| DEF-030 | Controlled cardio activity displays as KPI | Defect | Activity Presentation / Classification | P1 | Not started | Fast lane | Mike / Codex | Production QA after `f5c35a8`; `/day/2026-06-30` | `/day/2026-06-30` shows `STEP 4 · KPI` for `Controlled bike or treadmill`. Raw source entry type or projection classification may be leaking into athlete-facing UI. | Controlled bike/treadmill displays as Conditioning, Recovery Conditioning, or another approved non-KPI activity type unless it is a true KPI protocol. | Audit classification source and bounded current-app fix after discovery. | methodology implementation, source JSON edits, KPI model redesign. | Controlled cardio is not labeled KPI unless it is a true KPI protocol. | AUDIT-LOAD-CLASSIFICATION-001, DEF-031 | athlete/parent may mistake cardio for a test protocol. | Include category rendering in all-day audit. | production `/day/2026-06-30` screenshot QA. |
+| DEF-031 | Multiple day presentation formats produce inconsistent day/activity rendering | Defect | Day Presentation / Activity Presentation | P1 | Not started | Fast lane | Mike / Codex | Production QA after `f5c35a8`; `/day/2026-07-06` and `/day/2026-06-30` | `/day/2026-07-06` uses `Today's Simple Plan` while `/day/2026-06-30` uses `Planned Execution Sequence`; copy/category fixes may not apply consistently across Day presentation paths. | Page format may vary by day type, but activity classification, safety copy, source-label suppression, and one day/one truth remain consistent. | Audit presentation paths and define bounded current-app fix. | broad UI redesign, methodology retrofit, Dashboard/History/Calendar/Gantt/Exports/KPI changes. | Same canonical classification/copy rules apply across Simple Plan and Planned Execution Sequence paths. | AUDIT-LOAD-CLASSIFICATION-001, DEF-029, DEF-030 | rendering-path drift undermines product trust. | Include Day format/path mapping in all-day audit. | production `/day/2026-07-06` and `/day/2026-06-30` screenshot QA. |
+| DEF-032 | Controlled cardio duration/load-tier classification is not explainable | Defect | Conditioning / Load Classification | P1 | Not started | Source-review / Fast lane audit | Mike / Codex | Product QA after controlled-cardio duration rule | User has not found obvious 30-minute or 45-minute bike/treadmill days after the duration rule; `/day/2026-06-29` shows `Controlled bike or treadmill` as 20 minutes with `Recovery conditioning`, which may be correct hard-day duration with misleading label or incorrect duration for a recovery-classified block. | System can explain why controlled cardio is 20, 30, 45, 10-15, or other minutes; classification should not depend only on ad hoc title/string matching. | All-day classification audit and explanation of current duration/classification sources. | changing durations, changing conditioning model, source JSON edits, methodology implementation. | Audit identifies every controlled cardio duration, load tier, source basis, and rendering label mismatch. | CONDITIONING-CARDIO-DURATION-001, AUDIT-LOAD-CLASSIFICATION-001, LOAD-001 | unexplainable load rules reduce trust and may hide incorrect recovery/hard-day classification. | Run all-day classification audit. | `/day/2026-06-29` screenshot QA; completed rule from `CONDITIONING-CARDIO-DURATION-001`. |
 | DEF-013 | History is record-fragmented instead of Week -> Day -> Evidence | Defect | History | P1 | Scope review required | Safe lane | Mike / Codex | Defect log | History grouping may fragment records. | Week -> Day -> Evidence. | verify/reconcile. | now. | grouping accepted. | evidence model | confusing history. | Review later. | former defect log stub; use git history only |
 | DEF-017 | Homepage Next Session card uses stale session logic | Defect | Homepage/today | P1 | Scope review required | Fast lane | Mike / Codex | Defect log | Homepage may not use canonical Day. | Today/next card aligns with Day. | verify/fix. | now. | no stale next session. | day projection | stale nav. | Review later. | former defect log stub; use git history only |
 | DEF-019 | Blank / unclear future day state | Defect | Day readiness | P1 | Scope review required | Fast lane | Mike / Codex | Defect log | Future days may be unclear. | intentional usable day states. | future audit. | source invention. | upcoming days usable. | FUTURE-DAY-READINESS-001 | athlete blocked. | Audit after display work. | former defect log stub; use git history only |
