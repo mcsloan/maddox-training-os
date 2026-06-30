@@ -3,13 +3,19 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Latest expected commit before docs capture: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
+- Latest expected commit before docs capture: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
+- Vercel Preview branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
+- Preview `/kpis` displayed existing KPI results/baselines similar to production. This is unverified evidence only; do not conclude Preview uses production Supabase without env/runtime proof.
+- Previous docs checkpoint: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
 - Repo was clean before the docs-only capture.
 - `docs/SCOPE.md` remains the only canonical active scope source.
 - v8.4 app import package remains authoritative for current app training data.
 
 ## Current Product QA State
 
+- `ENV-PREVIEW-DB-001` added: Vercel Preview Supabase target is unverified and may be sharing production-like KPI data.
+- `ENV-PREVIEW-DB-AUDIT-001` added: verify Vercel Production, Vercel Preview, and local Supabase project refs without exposing secrets before any Preview write testing.
+- Operational rule: do not save KPI results or perform write-capable workflows in Vercel Preview until the Preview DB target is confirmed staging/non-production, or Preview is explicitly classified read-only.
 - Product QA after `f5c35a8` found current-app production defects that technical checks did not fully catch.
 - `DEF-029` is reopened: `/day/2026-06-30` still displayed `Bike/treadmill are controlled. No treadmill sprinting for U12.` while production badge `f5c35a8` was visible.
 - `DEF-030` added: `/day/2026-06-30` showed `STEP 4 · KPI` for `Controlled bike or treadmill`.
@@ -32,6 +38,7 @@
 - Do not edit `imports/v8.4/data/*.json` unless explicitly asked.
 - Do not mutate Supabase data without explicit target confirmation.
 - Do not change Supabase schema without approved technical design.
+- Do not save KPI results in Vercel Preview until `ENV-PREVIEW-DB-AUDIT-001` confirms the Preview database target is staging/non-production or Preview is explicitly treated read-only.
 - Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.
 - Do not apply the KPI cloud-sync stash during unrelated tasks.
 - Run `node scripts/preflight.mjs` before production-risk work.
@@ -58,10 +65,10 @@ Recommended next lane:
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added.
+- Defects added/updated: `ENV-PREVIEW-DB-001` added; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added.
 - Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`.
 - Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation.
-- Data/sync/environment decisions added/updated: no Supabase/data mutation; future no-data-loss/provenance requirements captured.
+- Data/sync/environment decisions added/updated: Preview DB isolation is unverified; no Preview saves until `ENV-PREVIEW-DB-AUDIT-001` confirms staging/non-production target or read-only classification; no Supabase/data mutation.
 - Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit added as next discovery.
 - Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`.
 - Items intentionally deferred: behavior fixes, app code, tests, Playwright, builds, source JSON edits, Supabase changes, methodology implementation, final domain/source/stack choices.

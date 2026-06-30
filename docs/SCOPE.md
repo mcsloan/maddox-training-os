@@ -9,7 +9,9 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Current checkpoint: docs capture after pushed commit `f5c35a8` (`fix(projections): clarify controlled cardio copy`); repo was clean before this docs-only capture.
+- Current checkpoint: docs capture after commit `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`); Vercel Preview for `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
+- Preview `/kpis` displayed existing KPI results/baselines similar to production. This does not prove Preview is using production Supabase; database target is unverified and must be audited before any Preview write testing.
+- Previous docs checkpoint: docs capture after pushed commit `f5c35a8` (`fix(projections): clarify controlled cardio copy`); repo was clean before that docs-only capture.
 - Product QA after `f5c35a8` found remaining production Day rendering defects: `DEF-029` is reopened, and `DEF-030`, `DEF-031`, and `DEF-032` are added as P1 product-trust defects.
 - Closed-Loop Training Intelligence is registered as a future design-governed architecture program. It is not current app behavior and must not be retrofitted into the current application until `DESIGN-GATE-001` passes.
 - Previous projection-readiness checkpoint: repo clean and synced after pushed commit `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
@@ -130,40 +132,42 @@ Every active scope item should use this structure, either as a detailed record b
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | SCOPE-CONSOLIDATION-001 | Scope system consolidation | P0 | Completed | Docs-only | Phase 1 docs/scope-control checkpoint is complete after the `f02bff4` pushed/deployed baseline. |
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
-| 3 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
-| 4 | FORENSIC-DAY-SESSION-MISMATCH-001 | Forensic Day/Session data-flow audit | P1 | Completed | Fast lane | Audit found Day and Session use divergent presentation paths; use findings to drive canonical contract. |
-| 5 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Completed | Fast lane | Audit completed; use findings to constrain the next Day + Session parity implementation. |
-| 6 | ACTIVITY-PRESENTATION-CONTRACT-001 | Planned activity presentation contract, Day + Session parity only | P1 | Completed | Fast lane | Implemented and pushed through `c20432c`; all 84 v8.4 active session dates are covered by `05019f5`. |
-| 7 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
-| 8 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
-| 9 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Completed | Fast lane | Automated proof at `6ab3f5e` verifies all 84 v8.4 plan dates are athlete-usable at the Day projection layer. |
-| 10 | CONDITIONING-CARDIO-DURATION-001 | Permanent load-based controlled bike/treadmill duration rule | P1 | Completed | Fast lane / canonical plan-source or projection-rule implementation | Completed by `a01beca`; shared planned-activity projection now applies load-based controlled cardio durations while preserving Day/active Session parity. |
-| 11 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
-| 12 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 84 v8.4 active session dates. |
-| 13 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
-| 14 | RECOVERY-DAY-MODEL-001 | Recovery-day model completion | P1 | Not started | Source-review | Ensure intentional recovery prescriptions are represented from source. |
-| 15 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
-| 16 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
-| 17 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
-| 18 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Route/component ownership is recorded; latest projection proofs cover DEF-028 and Day/active Session parity without manual UAT. |
-| 19 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Playwright installed Chrome channel proof-of-life passed locally; use it as a base for targeted DEF-028 regression after display/projection repair. |
-| 20 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
-| 21 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
-| 22 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
-| 23 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
-| 24 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
-| 25 | DEF-029 | Controlled bike/treadmill copy clarity | P1 | Reopened / product QA found incomplete rendering-path coverage | Fast lane | Run `AUDIT-LOAD-CLASSIFICATION-001` before another narrow rendering fix. |
-| 26 | DEF-030 | Controlled cardio activity displays as KPI | P1 | Not started | Fast lane | Audit Day rendering/classification path for `/day/2026-06-30`; do not change behavior in docs capture. |
-| 27 | DEF-031 | Multiple day presentation formats produce inconsistent day/activity rendering | P1 | Not started | Fast lane | Audit Simple Plan vs Planned Execution Sequence paths for classification, safety copy, and source-label suppression. |
-| 28 | DEF-032 | Controlled cardio duration/load-tier classification is not explainable | P1 | Not started | Source-review / Fast lane audit | Run all-day load classification audit; explain controlled-cardio duration sources before changing rules. |
-| 29 | AUDIT-LOAD-CLASSIFICATION-001 | All-day load classification audit | P1 | Not started | Docs-only / inspect-only | Discovery only: map day/activity classification, durations, copy leaks, KPI category leaks, and rendering paths. |
-| 30 | DESIGN-GATE-001 | Conceptual to Functional to Technical Design Governance | P1 | In progress | Docs-only / design-governance | Gate Closed-Loop methodology through accepted design packages before implementation. |
-| 31 | TRANSITION-001 | Current App Protection and Closed-Loop Architecture Transition Plan | P1 | In progress | Docs-only / architecture-safety | Keep current app stable; design methodology layer in parallel before integration. |
-| 32 | DATA-GOV-001 | Data Retention, Provenance, and Integrity Design | P1 | In progress | Docs-only / data-governance | Define versioning, provenance, audit, no-data-loss, and no silent mutation requirements. |
-| 33 | SOURCE-VALIDATION-001 | Exercise Domain Scoring Source and Validation Strategy | P1 | In progress | Docs-only / research-capture | Define source/validation candidates and scoring governance without selecting authoritative sources. |
-| 34 | METHODOLOGY-001 | Closed-Loop Training Methodology Architecture | P1 | Scope review required | Future roadmap / design-gated | Future multi-Epic architecture track; implementation priority not decided. |
-| 35 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust and methodology governance. |
-| 36 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
+| 3 | ENV-PREVIEW-DB-001 | Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data | P1 | Not started | Docs-only / environment-safety | Treat Vercel Preview as no-write until `ENV-PREVIEW-DB-AUDIT-001` verifies target isolation. |
+| 4 | ENV-PREVIEW-DB-AUDIT-001 | Verify Vercel Preview Supabase target | P1 | Not started | Docs-only / environment-safety | Verify Production, Preview, and local Supabase project refs without exposing secrets before Preview write testing. |
+| 5 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
+| 6 | FORENSIC-DAY-SESSION-MISMATCH-001 | Forensic Day/Session data-flow audit | P1 | Completed | Fast lane | Audit found Day and Session use divergent presentation paths; use findings to drive canonical contract. |
+| 7 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Completed | Fast lane | Audit completed; use findings to constrain the next Day + Session parity implementation. |
+| 8 | ACTIVITY-PRESENTATION-CONTRACT-001 | Planned activity presentation contract, Day + Session parity only | P1 | Completed | Fast lane | Implemented and pushed through `c20432c`; all 84 v8.4 active session dates are covered by `05019f5`. |
+| 9 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
+| 10 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
+| 11 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Completed | Fast lane | Automated proof at `6ab3f5e` verifies all 84 v8.4 plan dates are athlete-usable at the Day projection layer. |
+| 12 | CONDITIONING-CARDIO-DURATION-001 | Permanent load-based controlled bike/treadmill duration rule | P1 | Completed | Fast lane / canonical plan-source or projection-rule implementation | Completed by `a01beca`; shared planned-activity projection now applies load-based controlled cardio durations while preserving Day/active Session parity. |
+| 13 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Scope review required | Safe lane | Define fields after prescription display is stable. |
+| 14 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 84 v8.4 active session dates. |
+| 15 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Not started | Source-review | Review title/block mismatches against v8.4 source. |
+| 16 | RECOVERY-DAY-MODEL-001 | Recovery-day model completion | P1 | Not started | Source-review | Ensure intentional recovery prescriptions are represented from source. |
+| 17 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
+| 18 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
+| 19 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
+| 20 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Route/component ownership is recorded; latest projection proofs cover DEF-028 and Day/active Session parity without manual UAT. |
+| 21 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Playwright installed Chrome channel proof-of-life passed locally; use it as a base for targeted DEF-028 regression after display/projection repair. |
+| 22 | SESSION-UX-001 | Medium Session UX backlog | P2 | Not started | Fast lane | Improve session usability after core workflow readiness. |
+| 23 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
+| 24 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
+| 25 | EXPORTS-REPORTING-001 | Exports/reporting | P2 | Not started | Safe lane | Reconcile after evidence model is trusted. |
+| 26 | HOCKEY-IQ-001 | Hockey IQ system | P2 | Not started | Source-review | Build Watch -> Apply -> Reflect later from approved sources. |
+| 27 | DEF-029 | Controlled bike/treadmill copy clarity | P1 | Reopened / product QA found incomplete rendering-path coverage | Fast lane | Run `AUDIT-LOAD-CLASSIFICATION-001` before another narrow rendering fix. |
+| 28 | DEF-030 | Controlled cardio activity displays as KPI | P1 | Not started | Fast lane | Audit Day rendering/classification path for `/day/2026-06-30`; do not change behavior in docs capture. |
+| 29 | DEF-031 | Multiple day presentation formats produce inconsistent day/activity rendering | P1 | Not started | Fast lane | Audit Simple Plan vs Planned Execution Sequence paths for classification, safety copy, and source-label suppression. |
+| 30 | DEF-032 | Controlled cardio duration/load-tier classification is not explainable | P1 | Not started | Source-review / Fast lane audit | Run all-day load classification audit; explain controlled-cardio duration sources before changing rules. |
+| 31 | AUDIT-LOAD-CLASSIFICATION-001 | All-day load classification audit | P1 | Not started | Docs-only / inspect-only | Discovery only: map day/activity classification, durations, copy leaks, KPI category leaks, and rendering paths. |
+| 32 | DESIGN-GATE-001 | Conceptual to Functional to Technical Design Governance | P1 | In progress | Docs-only / design-governance | Gate Closed-Loop methodology through accepted design packages before implementation. |
+| 33 | TRANSITION-001 | Current App Protection and Closed-Loop Architecture Transition Plan | P1 | In progress | Docs-only / architecture-safety | Keep current app stable; design methodology layer in parallel before integration. |
+| 34 | DATA-GOV-001 | Data Retention, Provenance, and Integrity Design | P1 | In progress | Docs-only / data-governance | Define versioning, provenance, audit, no-data-loss, and no silent mutation requirements. |
+| 35 | SOURCE-VALIDATION-001 | Exercise Domain Scoring Source and Validation Strategy | P1 | In progress | Docs-only / research-capture | Define source/validation candidates and scoring governance without selecting authoritative sources. |
+| 36 | METHODOLOGY-001 | Closed-Loop Training Methodology Architecture | P1 | Scope review required | Future roadmap / design-gated | Future multi-Epic architecture track; implementation priority not decided. |
+| 37 | AI-COACH-001 | AI Coach strategy | P3 | Not started | Future roadmap | Start only after data/sync/QA trust and methodology governance. |
+| 38 | AGENTIC-WORKFLOW-001 | Agentic workflow evaluation | P3 | Scope review required | Future roadmap | Review workflow tools/process after product P1s. |
 
 ## Current Sprint / Next Codex Task
 
@@ -202,7 +206,7 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | In progress | KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001 |
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
+| Not started | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
@@ -380,6 +384,62 @@ Environment Safety Findings:
   - Starting the app is caution-required because user interaction can create cloud writes if env points at a configured Supabase target.
   - Vercel deploy is not present as a package script, but any deploy command or push intended to deploy remains forbidden without explicit approval.
   - `.env.local` and env backup files were not read; key names were discovered from code/docs only.
+
+### ENV-PREVIEW-DB-001
+
+- ID: ENV-PREVIEW-DB-001
+- Title: Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data
+- Type: Defect
+- Parent: Data integrity / production safety
+- Priority: P1
+- Status: Not started
+- Lane: Docs-only / environment-safety
+- Owner: Mike / Codex
+- Source: Vercel Preview smoke after `1c336a0`
+- Problem: Vercel Preview deployment for branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`, and Preview `/kpis` displayed existing KPI results/baselines similar to production. Current evidence does not prove whether Preview is using production Supabase, staging Supabase seeded/copied with similar data, or another mirrored source.
+- Desired outcome: Preview database target is verified before any Preview write testing.
+- In scope: docs capture of unverified risk, no-write operational rule, and verification task.
+- Out of scope: env var changes, Vercel configuration changes, Supabase changes, app code, tests, deploys, or writes.
+- Acceptance criteria: Preview write testing remains blocked until `ENV-PREVIEW-DB-AUDIT-001` confirms Preview points to staging/non-production or is explicitly treated as read-only.
+- Dependencies: Vercel environment variable inspection or safe runtime evidence that does not expose secret values.
+- Risks: Preview KPI saves or other write flows could mutate production data if Preview env vars point to production Supabase.
+- Next action: run `ENV-PREVIEW-DB-AUDIT-001` before any Preview save/write testing.
+- Links / evidence: Preview badge `1c336a0 · preview`; Preview `/kpis` production-like KPI results/baselines; user recalls staging/preview Supabase setup exists; no deterministic proof captured yet.
+
+### ENV-PREVIEW-DB-AUDIT-001
+
+- ID: ENV-PREVIEW-DB-AUDIT-001
+- Title: Verify Vercel Preview Supabase target
+- Type: Task
+- Parent: ENV-PREVIEW-DB-001
+- Priority: P1
+- Status: Not started
+- Lane: Docs-only / environment-safety
+- Owner: Mike / Codex
+- Source: ENV-PREVIEW-DB-001
+- Problem: Preview DB isolation cannot be assumed from visible KPI data or build badge alone.
+- Desired outcome: determine whether Production, Preview, and local development use separate Supabase project refs without exposing secret values.
+- In scope: verify Supabase project refs/URLs by redacted Vercel env var review, safe non-secret runtime evidence, or approved read-only environment confirmation.
+- Out of scope: changing env vars, changing Vercel config, changing Supabase, running writes, migrations, schema changes, or deploys.
+- Acceptance criteria: answers are captured for all required verification questions; Preview writes are either allowed only against staging/non-production or explicitly disabled/treated read-only.
+- Dependencies: access to Vercel env configuration or safe runtime target labeling.
+- Risks: exposing secrets while verifying, or testing writes before target isolation is known.
+- Next action: answer the verification questions below before any Preview write test.
+- Links / evidence: `scripts/env-whoami.mjs`, `scripts/preflight.mjs`, `scripts/confirm-write-target.mjs`, Vercel project env settings.
+
+Required verification questions:
+
+- What Supabase URL/project ref is configured for Vercel Production?
+- What Supabase URL/project ref is configured for Vercel Preview?
+- What Supabase URL/project ref is configured locally in `.env.local`?
+- Are Preview and Production using different Supabase project refs?
+- If Preview uses staging, does staging contain copied/backfilled KPI rows that explain the visible data?
+- Does the app expose a safe non-secret environment label or build badge that indicates DB target?
+- Should preview writes be disabled until staging isolation is proven?
+
+Operational rule:
+
+- Do not save KPI results or perform any write-capable workflow in Vercel Preview until `ENV-PREVIEW-DB-AUDIT-001` confirms the Preview database target is staging/non-production, or Preview is explicitly classified as read-only.
 
 ### CODE-COMMENT-AUDIT-001
 
@@ -1397,6 +1457,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 - Local development must point to staging once staging exists.
 - Vercel Preview must point to staging once staging exists.
 - Vercel Production must point to production.
+- Vercel Preview database target is currently unverified after Preview `/kpis` showed production-like KPI data at badge `1c336a0 · preview`; do not save KPI results or perform write-capable flows in Preview until `ENV-PREVIEW-DB-AUDIT-001` confirms staging/non-production isolation or Preview is explicitly treated read-only.
 - No fake/test records in production.
 - KPI cloud-sync stash exists and is not applied.
 - `.env.local.production-backup` exists locally and contains secrets; do not commit or display it.

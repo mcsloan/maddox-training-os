@@ -5,7 +5,12 @@
 This section is the current checkpoint. Historical June 22 and June 17/18 state is preserved below and should not be treated as current unless restated here.
 
 - Branch: `main`.
-- Expected current commit before docs capture: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
+- Current commit before environment-risk docs capture: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
+- Vercel Preview branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
+- Preview `/kpis` displayed existing KPI results/baselines similar to production; this is unverified and does not prove whether Preview uses production Supabase, staging Supabase seeded/copied with similar data, or another mirrored source.
+- `ENV-PREVIEW-DB-001` and `ENV-PREVIEW-DB-AUDIT-001` are now active in `docs/SCOPE.md`.
+- Do not save KPI results or perform write-capable workflows in Vercel Preview until `ENV-PREVIEW-DB-AUDIT-001` confirms Preview uses staging/non-production, or Preview is explicitly classified read-only.
+- Previous docs checkpoint: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
 - `docs/SCOPE.md` is the canonical owner for active scope, defects, priorities, roadmap, and next-task ownership.
 - Product QA after `f5c35a8` reopened `DEF-029` and added `DEF-030`, `DEF-031`, and `DEF-032`.
 - Next bounded discovery task is `AUDIT-LOAD-CLASSIFICATION-001`.
