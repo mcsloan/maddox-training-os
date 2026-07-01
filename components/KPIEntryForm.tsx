@@ -4,6 +4,7 @@ import { useState } from "react";
 import { KPI, KPIAttempt, KPIResult } from "../lib/types";
 import { readableError } from "../lib/errorMessage";
 import { calculateShuttleTotalMetres } from "../lib/kpiShuttle";
+import { getLocalDateString } from "../lib/localDate";
 import { saveStandaloneKpiResult } from "../lib/storage/cloudKpiRepository";
 
 const SHUTTLE_KPI_ID = "kpi-45-second-shuttle";
@@ -35,11 +36,12 @@ export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: ()
   async function save() {
     setSaving(true);
     setStatus("Saving local backup...");
+    const now = new Date();
     const result = {
       id: existing?.id || `${kpi.id}-${Date.now()}`,
       kpiId: kpi.id,
-      date: existing?.date || new Date().toISOString().slice(0, 10),
-      enteredAt: existing?.enteredAt || new Date().toISOString(),
+      date: existing?.date || getLocalDateString(now),
+      enteredAt: existing?.enteredAt || now.toISOString(),
       attempts: displayAttempts,
       bestResult: best,
       notes,

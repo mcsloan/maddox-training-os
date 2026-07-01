@@ -1,6 +1,7 @@
 "use client";
 
 import { KPI, KPIAttempt, KPIResult } from "@/lib/types";
+import { getLocalDateString } from "@/lib/localDate";
 
 export function SessionKPIForm({ kpi, result, onChange }: { kpi: KPI; result?: KPIResult; onChange: (result: KPIResult) => void }) {
   const attempts = result?.attempts || Array.from({ length: kpi.attempts }, () => ({ result: "" }));
@@ -8,11 +9,12 @@ export function SessionKPIForm({ kpi, result, onChange }: { kpi: KPI; result?: K
   const best = values.length ? (kpi.scoringMethod === "lowest" ? Math.min(...values) : Math.max(...values)) : null;
 
   function update(nextAttempts: KPIAttempt[], notes = result?.notes || "") {
+    const now = new Date();
     onChange({
       id: result?.id || `${kpi.id}-${Date.now()}`,
       kpiId: kpi.id,
-      date: result?.date || new Date().toISOString().slice(0, 10),
-      enteredAt: result?.enteredAt || new Date().toISOString(),
+      date: result?.date || getLocalDateString(now),
+      enteredAt: result?.enteredAt || now.toISOString(),
       attempts: nextAttempts,
       bestResult: (() => {
         const nextValues = nextAttempts.map((attempt) => Number(attempt.result)).filter((value) => Number.isFinite(value) && value > 0);
