@@ -1,0 +1,271 @@
+{
+  "id": "weakness-overlay-2026-07-01",
+  "title": "June 30 KPI Weakness Overlay",
+  "status": "reviewable_additive_overlay",
+  "dateRange": {
+    "start": "2026-07-01",
+    "end": "2026-07-14"
+  },
+  "subtitle": "Add-on work based on June 30 KPI results. Do not complete if tired, sore, sick, or camp load is high.",
+  "principles": [
+    "Do not replace the v8.4 plan.",
+    "Do not add extra conditioning.",
+    "Camp is the primary stimulus during Chase Hull camp.",
+    "Overlay work is optional and parent-reviewable unless listed as light recovery."
+  ],
+  "focusAreas": [
+    "shooting accuracy",
+    "pulling strength / flexed-arm hang",
+    "elastic lower-body power / landing mechanics",
+    "push-up strength",
+    "speed/agility maintenance",
+    "puck-control maintenance"
+  ],
+  "shortTermTargets": [
+    "50-shot hits: 3 -> 8-12",
+    "flexed-arm hang: 2.33 sec -> 5-8 sec",
+    "push-ups: 15 -> 18-20",
+    "vertical jump: 27.3 cm -> 30 cm",
+    "broad jump: 134 recent / 142 best -> 145+ consistent",
+    "10-yard sprint: 2.13 -> 2.08-2.10",
+    "5-10-5: 5.86 -> 5.75-5.80",
+    "quick hands: 95 -> 100"
+  ],
+  "modules": [
+    {
+      "id": "shooting-accuracy-rebuild",
+      "title": "Shooting Accuracy Rebuild",
+      "frequency": "3x/week outside camp",
+      "duration": "20-25 minutes",
+      "structure": [
+        "10 warm-up shots",
+        "20 close-range target shots",
+        "20 normal-distance target shots",
+        "10-20 controlled movement shots"
+      ],
+      "rules": [
+        "call the target before every shot",
+        "reset feet/hands before every shot",
+        "count only clean target hits",
+        "stop if mechanics break down",
+        "start closer if hit rate is too low"
+      ],
+      "cue": "Pick the spot before the puck leaves the blade."
+    },
+    {
+      "id": "pull-strength-flexed-arm-hang",
+      "title": "Pull Strength / Flexed-Arm Hang",
+      "frequency": "2-3x/week outside camp",
+      "duration": "12-15 minutes",
+      "exercises": [
+        "band rows or towel rows: 3x10",
+        "supported flexed-arm hold: 4x5-8 sec",
+        "scapular hang / shoulder set: 2x5",
+        "incline push-ups: 3x6-10",
+        "dead bug: 2x6/side"
+      ],
+      "safety": [
+        "foot support allowed",
+        "no kipping",
+        "no painful hangs",
+        "no max-effort daily hanging"
+      ],
+      "cue": "Shoulders strong, ribs down, hold clean."
+    },
+    {
+      "id": "elastic-power-landing-mechanics",
+      "title": "Elastic Power / Landing Mechanics",
+      "frequency": "2x/week outside camp",
+      "duration": "10-12 minutes",
+      "exercises": [
+        "pogo hops: 3x10",
+        "broad jump + stick landing: 4x2",
+        "skater bound + stick: 3x4/side",
+        "vertical jump: 4x2",
+        "side plank: 2x20-30 sec/side"
+      ],
+      "safety": [
+        "full rest",
+        "quality only",
+        "no high-volume plyometrics"
+      ],
+      "cue": "Explode fast. Land quiet. Freeze strong."
+    },
+    {
+      "id": "push-up-strength",
+      "title": "Push-Up Strength",
+      "frequency": "2x/week outside camp",
+      "exercises": [
+        "incline push-up or strict push-up: 3x6-10",
+        "plank shoulder taps: 2x8/side",
+        "bear crawl: 2x10-15 yards",
+        "push-up halfway hold: 3x5 sec"
+      ],
+      "cue": "Straight line. Chest down. Push the floor away."
+    },
+    {
+      "id": "speed-agility-maintenance",
+      "title": "Speed / Agility Maintenance",
+      "frequency": "2x/week outside camp",
+      "exercises": [
+        "wall march / wall switch: 2x10 sec",
+        "falling starts: 4 reps",
+        "10-yard sprint: 4-6 reps",
+        "5-10-5 technique walk-through: 2 reps",
+        "5-10-5 timed reps: 2-3 max"
+      ],
+      "safety": [
+        "full rest",
+        "safe surface only",
+        "do not turn this into conditioning"
+      ],
+      "cue": "First three steps are powerful, not busy."
+    },
+    {
+      "id": "puck-control-maintenance",
+      "title": "Puck-Control Maintenance",
+      "frequency": "short daily or near-daily",
+      "duration": "8-12 minutes",
+      "focus": [
+        "quick hands",
+        "head-up callouts",
+        "puck-control while moving",
+        "fake before attack",
+        "scan before touch"
+      ],
+      "cue": "Scan before touch. Attack space with the puck."
+    }
+  ],
+  "schedule": [
+    {
+      "date": "2026-07-01",
+      "items": [
+        { "moduleId": "shooting-accuracy-rebuild", "label": "Shooting Accuracy Rebuild", "classification": "optional_additive" },
+        { "moduleId": "pull-strength-flexed-arm-hang", "label": "Pull Strength / Flexed-Arm Hang", "classification": "optional_additive" }
+      ]
+    },
+    {
+      "date": "2026-07-02",
+      "items": [
+        { "moduleId": "speed-agility-maintenance", "label": "Speed / Agility Maintenance", "classification": "optional_additive" },
+        { "moduleId": "elastic-power-landing-mechanics", "label": "Elastic Power / Landing Mechanics", "classification": "optional_additive" }
+      ]
+    },
+    {
+      "date": "2026-07-03",
+      "items": [
+        { "moduleId": "shooting-accuracy-rebuild", "label": "Shooting Accuracy Rebuild", "classification": "optional_additive" },
+        { "moduleId": "push-up-strength", "label": "Push-Up Strength", "classification": "optional_additive" },
+        { "moduleId": "pull-strength-flexed-arm-hang", "label": "Pull Strength / Flexed-Arm Hang", "classification": "optional_additive" }
+      ]
+    },
+    {
+      "date": "2026-07-04",
+      "items": [
+        { "moduleId": "puck-control-maintenance", "label": "Optional light puck touches", "classification": "optional_light" },
+        { "moduleId": "mobility-only", "label": "Mobility only", "classification": "light_recovery" },
+        { "moduleId": "no-hard-dryland", "label": "No hard dryland", "classification": "restriction" }
+      ]
+    },
+    {
+      "date": "2026-07-05",
+      "items": [
+        { "moduleId": "pre-camp-taper", "label": "Pre-camp taper", "classification": "light_recovery" },
+        { "moduleId": "shooting-accuracy-rebuild", "label": "Light shooting", "classification": "optional_light" },
+        { "moduleId": "puck-control-maintenance", "label": "Light puck touches", "classification": "optional_light" },
+        { "moduleId": "mobility-only", "label": "Mobility", "classification": "light_recovery" },
+        { "moduleId": "no-fatigue-chasing", "label": "No fatigue chasing", "classification": "restriction" }
+      ]
+    },
+    {
+      "date": "2026-07-06",
+      "campAdjustment": true,
+      "items": [
+        { "moduleId": "camp-primary-stimulus", "label": "Camp is the primary stimulus.", "classification": "camp_rule" },
+        { "moduleId": "no-extra-hard-dryland", "label": "No extra hard dryland.", "classification": "restriction" },
+        { "moduleId": "no-max-hang-testing", "label": "No max hang testing.", "classification": "restriction" },
+        { "moduleId": "no-hard-sprinting", "label": "No hard sprinting.", "classification": "restriction" },
+        { "moduleId": "no-conditioning-add-ons", "label": "No conditioning add-ons.", "classification": "restriction" },
+        { "moduleId": "camp-allowed-recovery", "label": "Allowed only: 8-12 min mobility; 5-10 min light puck touches; easy shooting only if fresh; hydration and sleep focus.", "classification": "light_recovery" }
+      ]
+    },
+    {
+      "date": "2026-07-07",
+      "campAdjustment": true,
+      "items": [
+        { "moduleId": "camp-primary-stimulus", "label": "Camp is the primary stimulus.", "classification": "camp_rule" },
+        { "moduleId": "no-extra-hard-dryland", "label": "No extra hard dryland.", "classification": "restriction" },
+        { "moduleId": "no-max-hang-testing", "label": "No max hang testing.", "classification": "restriction" },
+        { "moduleId": "no-hard-sprinting", "label": "No hard sprinting.", "classification": "restriction" },
+        { "moduleId": "no-conditioning-add-ons", "label": "No conditioning add-ons.", "classification": "restriction" },
+        { "moduleId": "camp-allowed-recovery", "label": "Allowed only: 8-12 min mobility; 5-10 min light puck touches; easy shooting only if fresh; hydration and sleep focus.", "classification": "light_recovery" }
+      ]
+    },
+    {
+      "date": "2026-07-08",
+      "campAdjustment": true,
+      "items": [
+        { "moduleId": "camp-primary-stimulus", "label": "Camp is the primary stimulus.", "classification": "camp_rule" },
+        { "moduleId": "no-extra-hard-dryland", "label": "No extra hard dryland.", "classification": "restriction" },
+        { "moduleId": "no-max-hang-testing", "label": "No max hang testing.", "classification": "restriction" },
+        { "moduleId": "no-hard-sprinting", "label": "No hard sprinting.", "classification": "restriction" },
+        { "moduleId": "no-conditioning-add-ons", "label": "No conditioning add-ons.", "classification": "restriction" },
+        { "moduleId": "camp-allowed-recovery", "label": "Allowed only: 8-12 min mobility; 5-10 min light puck touches; easy shooting only if fresh; hydration and sleep focus.", "classification": "light_recovery" }
+      ]
+    },
+    {
+      "date": "2026-07-09",
+      "campAdjustment": true,
+      "items": [
+        { "moduleId": "camp-primary-stimulus", "label": "Camp is the primary stimulus.", "classification": "camp_rule" },
+        { "moduleId": "no-extra-hard-dryland", "label": "No extra hard dryland.", "classification": "restriction" },
+        { "moduleId": "no-max-hang-testing", "label": "No max hang testing.", "classification": "restriction" },
+        { "moduleId": "no-hard-sprinting", "label": "No hard sprinting.", "classification": "restriction" },
+        { "moduleId": "no-conditioning-add-ons", "label": "No conditioning add-ons.", "classification": "restriction" },
+        { "moduleId": "camp-allowed-recovery", "label": "Allowed only: 8-12 min mobility; 5-10 min light puck touches; easy shooting only if fresh; hydration and sleep focus.", "classification": "light_recovery" }
+      ]
+    },
+    {
+      "date": "2026-07-10",
+      "campAdjustment": true,
+      "items": [
+        { "moduleId": "camp-primary-stimulus", "label": "Camp is the primary stimulus.", "classification": "camp_rule" },
+        { "moduleId": "no-extra-hard-dryland", "label": "No extra hard dryland.", "classification": "restriction" },
+        { "moduleId": "no-max-hang-testing", "label": "No max hang testing.", "classification": "restriction" },
+        { "moduleId": "no-hard-sprinting", "label": "No hard sprinting.", "classification": "restriction" },
+        { "moduleId": "no-conditioning-add-ons", "label": "No conditioning add-ons.", "classification": "restriction" },
+        { "moduleId": "camp-allowed-recovery", "label": "Allowed only: 8-12 min mobility; 5-10 min light puck touches; easy shooting only if fresh; hydration and sleep focus.", "classification": "light_recovery" }
+      ]
+    },
+    {
+      "date": "2026-07-11",
+      "items": [
+        { "moduleId": "recovery-check", "label": "Recovery check", "classification": "light_recovery" },
+        { "moduleId": "mobility-only", "label": "Mobility", "classification": "light_recovery" },
+        { "moduleId": "puck-control-maintenance", "label": "Light puck touches", "classification": "optional_light" },
+        { "moduleId": "shooting-accuracy-rebuild", "label": "Optional easy shooting only if fresh", "classification": "optional_light" }
+      ]
+    },
+    {
+      "date": "2026-07-12",
+      "items": [
+        { "moduleId": "active-recovery", "label": "Off or active recovery", "classification": "light_recovery" },
+        { "moduleId": "no-testing", "label": "No testing", "classification": "restriction" }
+      ]
+    },
+    {
+      "date": "2026-07-13",
+      "items": [
+        { "moduleId": "shooting-accuracy-rebuild", "label": "Shooting Accuracy Rebuild", "classification": "optional_additive" },
+        { "moduleId": "pull-strength-flexed-arm-hang", "label": "Pull Strength / Flexed-Arm Hang", "classification": "optional_additive" }
+      ]
+    },
+    {
+      "date": "2026-07-14",
+      "items": [
+        { "moduleId": "speed-agility-maintenance", "label": "Speed / Agility Maintenance", "classification": "optional_additive" },
+        { "moduleId": "elastic-power-landing-mechanics", "label": "Elastic Power / Landing Mechanics", "classification": "optional_additive" }
+      ]
+    }
+  ]
+}

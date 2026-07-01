@@ -8,6 +8,7 @@ import { getV84SessionByDate, getV84SessionDrills, getV84SessionWorkout } from "
 import { formatPlanDate, getDayTags, getPlanDay, getPlanDayDisplayModel, getRelatedVideos, getWorkout, getWorkoutBlock, getWorkoutDrills, kpis } from "@/lib/trainingData";
 import { projectDayPresentationContext, projectPlannedDayActivities } from "@/lib/projections/activityPresentation";
 import { buildDayPresentation } from "@/lib/projections/dayPresentation";
+import { getWeaknessOverlayForDate } from "@/lib/weaknessOverlay";
 import type { WorkoutBlock } from "@/lib/types";
 
 export default async function DayPreviewPage({ params }: { params: Promise<{ date: string }> }) {
@@ -58,6 +59,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   });
   const plannedKpiCountForStatus = presentation.isKpiTestingDay ? plannedKpis.length : 0;
   const dayTypeLabel = dayContext.eyebrow || "Sport load day";
+  const weaknessOverlay = getWeaknessOverlayForDate(date);
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -116,6 +118,36 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
       )}
 
       {!isSportLoadDay && <DayEvidenceStatus date={date} logTodayHref={logTodayHref} mode="summary" plannedKpiCount={plannedKpiCountForStatus} showTrainingWorkCta={!trainingWorkHref} sportLoads={externalLoads} trainingWorkLogHref={`/training-work/${date}`} />}
+      {weaknessOverlay && (
+        <section className="card mt-6 border-2 border-blue/20 bg-ice">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="label">Optional / additive</p>
+              <h2 className="text-2xl font-black">Weakness Overlay</h2>
+              <p className="mt-2 max-w-3xl text-sm font-semibold text-slate-700">{weaknessOverlay.subtitle}</p>
+            </div>
+            {weaknessOverlay.day.campAdjustment && <span className="rounded-full bg-amber-100 px-3 py-1 text-sm font-black text-amber-900">Camp adjustment</span>}
+          </div>
+          <div className="mt-4 grid gap-3">
+            {weaknessOverlay.day.items.map((item) => {
+              const module = weaknessOverlay.modules.find((candidate) => candidate.id === item.moduleId);
+              return (
+                <article className="rounded-2xl border border-rink bg-white p-4" key={`${item.moduleId}-${item.label}`}>
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="label">{overlayClassificationLabel(item.classification)}</p>
+                      <h3 className="text-lg font-black">{item.label}</h3>
+                    </div>
+                    {module?.duration && <span className="text-sm font-bold text-slate-600">{module.duration}</span>}
+                  </div>
+                  {module?.cue && <p className="mt-2 text-sm font-bold text-blue">{module.cue}</p>}
+                  {module && <OverlayModuleDetails module={module} />}
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
       {!isSportLoadDay && (
         <DayExecutionSequence
           entries={executionEntries}
@@ -151,6 +183,33 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
       )}
     </div>
   );
+}
+
+function OverlayModuleDetails({ module }: { module: NonNullable<ReturnType<typeof getWeaknessOverlayForDate>>["modules"][number] }) {
+  const details = [
+    ...(module.structure ?? []),
+    ...(module.exercises ?? []),
+    ...(module.focus ?? []),
+    ...(module.rules ?? []),
+    ...(module.safety ?? []),
+  ];
+  if (!details.length) return null;
+  return (
+    <ul className="mt-3 grid gap-1 text-sm font-semibold text-slate-700 sm:grid-cols-2">
+      {details.map((detail) => <li key={detail}>• {detail}</li>)}
+    </ul>
+  );
+}
+
+function overlayClassificationLabel(value: string) {
+  const labels: Record<string, string> = {
+    optional_additive: "Optional additive",
+    optional_light: "Optional light",
+    light_recovery: "Light recovery",
+    restriction: "Do not add",
+    camp_rule: "Camp rule",
+  };
+  return labels[value] || "Overlay";
 }
 
 function SimplePlanItem({ body, label, title }: { body: string; label: string; title: string }) {

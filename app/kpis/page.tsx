@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { KPIEntryForm } from "@/components/KPIEntryForm";
 import { KPIProtocolDetails } from "@/components/KPIProtocolDetails";
 import Link from "next/link";
+import packageJson from "@/package.json";
 import { readableError } from "@/lib/errorMessage";
+import { buildKpiHydratedExport } from "@/lib/kpiExport";
 import { kpiNextTestDate, kpiTargetDisplay } from "@/lib/kpiDisplay";
 import { formatPlanDate, kpis, trainingPlan, userFacingPlanText } from "@/lib/trainingData";
 import { kpiBaseline, kpiBest, kpiTargetProgress, kpiTrend } from "@/lib/trainingMetrics";
@@ -14,7 +16,9 @@ export default function KpisPage() {
   const [results, setResults] = useState<SyncedKPIResult[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState("Loading KPI history...");
+  const [exportStatus, setExportStatus] = useState("");
   const today = new Date().toISOString().slice(0, 10);
+  const environmentBadge = `v${packageJson.version} · ${(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.NEXT_PUBLIC_LOCAL_GIT_COMMIT_SHA || "local").slice(0, 7)} · ${process.env.NEXT_PUBLIC_VERCEL_ENV || "local"}`;
   const refresh = () => {
     loadStandaloneKpiResults().then((result) => {
       setResults(result.results);
@@ -35,9 +39,61 @@ export default function KpisPage() {
     }
   }
 
+  function buildExportJson() {
+    const generatedAt = new Date().toISOString();
+    const pageUrl = typeof window === "undefined" ? "/kpis" : window.location.href;
+    return JSON.stringify(buildKpiHydratedExport({
+      generatedAt,
+      environmentBadge,
+      cloudSyncStatus: syncStatus,
+      pageUrl,
+      kpis,
+      days: trainingPlan.days,
+      results,
+      today,
+    }), null, 2);
+  }
+
+  async function copyKpiJson() {
+    try {
+      await navigator.clipboard.writeText(buildExportJson());
+      setExportStatus("KPI JSON copied");
+    } catch {
+      setExportStatus("Unable to copy JSON");
+    }
+  }
+
+  function downloadKpiJson() {
+    const blob = new Blob([buildExportJson()], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `maddox-kpi-export-${today}.json`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+    setExportStatus("KPI JSON downloaded");
+  }
+
   return (
     <div>
       <div className="mb-6"><p className="label">Measure progress</p><h1 className="text-4xl font-black">KPI Dashboard</h1><p className="mt-2 text-slate-500">History and trends sync to cloud when available. Use the same setup each time.</p><p className="mt-2 text-sm font-bold text-blue">{syncStatus}</p></div>
+      <section className="card mb-6 border-2 border-blue/20 bg-ice">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="label">KPI JSON export</p>
+            <h2 className="text-xl font-black">Export visible KPI data</h2>
+            <p className="mt-2 text-sm font-semibold text-slate-600">Generated from the hydrated KPI page state currently rendering the scoreboard and result rows.</p>
+            <p className="mt-2 text-xs font-bold text-slate-500">{environmentBadge}</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button className="btn-secondary" onClick={copyKpiJson}>Copy KPI JSON</button>
+            <button className="btn-primary" onClick={downloadKpiJson}>Download KPI JSON</button>
+          </div>
+        </div>
+        {exportStatus && <p className="mt-3 text-sm font-black text-blue">{exportStatus}</p>}
+      </section>
       <section className="card mb-6 border-2 border-cyan-200"><h2 className="text-xl font-black">Planned KPI Checkpoints</h2><div className="mt-4 rounded-2xl bg-cyan-50 p-4 text-sm"><p className="font-black">Beat your best cleanly.</p><p>Clean technique beats ugly numbers.</p><p className="font-semibold text-red-700">Do not test hard if sore, sick, tired, or low energy.</p></div><div className="mt-4 space-y-3">{trainingPlan.days.filter((day) => day.kpiTestIds?.length).map((day) => <Link className="block rounded-2xl bg-ice p-4 hover:ring-2 hover:ring-blue" href={`/day/${day.date}`} key={day.date}><p className="label">{formatPlanDate(day.date)} · Week {day.weekNumber}</p><p className="font-black">{day.primarySession}</p><p className="mt-2 text-sm text-amber-900">{userFacingPlanText(day.recoveryRule)}</p></Link>)}</div></section>
       <section className="card mb-6">
         <p className="label">Plan vs actual</p><h2 className="text-2xl font-black">Offseason KPI Scoreboard</h2>
