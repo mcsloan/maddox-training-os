@@ -2,42 +2,48 @@
 
 ## Latest Task
 
-Register Bell Sensplex 4v4 Summer Hockey Schedule as P1 Planned Sport Load Scope.
+Implement `SPORT-LOAD-4V4-SUMMER-2026` as Planned Sport Load Source Import v1.
 
 ## Result
 
-Captured Maddox's July-August 2026 Bell Sensplex 4v4 summer hockey schedule as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item.
+Added Maddox's July-August 2026 Bell Sensplex 4v4 summer hockey schedule to the v8.4 source import package as planned Sport Load.
 
-The docs frame 4v4 as a high-value hockey development stimulus that supports game-speed decisions, puck touches under pressure, compete, scanning, shift-like conditioning, and confidence attacking space. It is not documented as an automatic overload emergency.
+The implementation uses one planned Sport Load record per date and preserves both same-day game slots in each record's details. The Day Execution Plan also receives one matching Sport Load entry per date so Day and Calendar projections can surface the games as part of the offseason plan.
 
-This was docs-only. No app code, v8.4 import JSON, Supabase data/schema, KPI code, completed logs, commits, or pushes were changed/performed.
+This remains a planned hockey stimulus, not an automatic overload/risk rule. Surrounding work should be adjusted only based on readiness, soreness, camp stacking, travel, or parent observation.
+
+No Supabase data/schema, completed logs, KPI code, KPI targets, Weakness Overlay, commits, or pushes were changed/performed.
 
 ## Files Changed
 
-- `docs/SCOPE.md`
-- `docs/SESSION_HANDOFF.md`
+- `imports/v8.4/data/sportLoads.json`
+- `imports/v8.4/data/dayExecutionPlan.json`
+- `imports/v8.4/data/importQaReport.json`
+- `imports/v8.4/manifest.json`
+- `imports/v8.4/README.md`
+- `lib/imports/v8_4/index.ts`
+- `lib/imports/v8_4/calendar.test.ts`
+- `scripts/verify-v8.4-import.mjs`
 - `docs/AGENT_REPORT.md`
 
 ## Status Updates
 
-- Added `SPORT-LOAD-4V4-SUMMER-2026`: Bell Sensplex 4v4 Summer Hockey Integration.
-- Marked it P1, `Scope review required`, lane `Source-review -> Safe lane app import`.
-- Preserved the full July-August 2026 schedule with dates, times, and Bell Sensplex arenas.
-- Captured scheduling interaction dates:
-  - 2026-07-05: day before Chase Hull camp.
-  - 2026-08-03: return-from-trip day, VIA52 arrival 13:11.
-  - 2026-08-05: during Carleton camp week.
-  - 2026-08-16: possible Marc O'Connor + 4v4 same day.
-  - 2026-08-23: day before Sensplex camp.
-- Captured planning rule: do not auto-cancel training because of 4v4; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation.
+- Added 9 planned Sport Load source records for 2026-07-05, 2026-07-12, 2026-07-19, 2026-07-26, 2026-08-03, 2026-08-05, 2026-08-09, 2026-08-16, and 2026-08-23.
+- Added 9 matching Day Execution Plan Sport Load entries using `logType: "sportLoadLog"` and `appRenderHint: "sport-card"`.
+- Updated v8.4 count metadata and import verification expectations:
+  - `sportLoads.json`: 28 -> 37
+  - `dayExecutionPlan.json`: 621 -> 630
+- Preserved existing same-day Sport Loads on Aug 3, Aug 5, and Aug 16 while adding 4v4 as an additional planned Sport Load.
+- Added focused v8.4 calendar/import tests covering the 4v4 dates, details, same-day Sport Load preservation, absence of completed logs, and updated counts.
+- Plan/Gantt was not changed in this increment; the locked Gantt lane count remains unchanged.
 
 ## Scope Capture Check
 
 - Defects added/updated: none.
-- Epics/features added/updated: `SPORT-LOAD-4V4-SUMMER-2026` added as P1 planned Sport Load integration scope.
-- Product decisions added/updated: 4v4 is planned Sport Load and part of the offseason development environment, not automatic load risk.
-- Data/sync/environment decisions added/updated: no Supabase or data mutation; future implementation must preserve Sport Load and Training Work evidence separation.
-- Testing requirements added/updated: future implementation should verify Day Execution Plan, Calendar, and Gantt projection once imported.
-- Training-plan/source items added/updated: full Bell Sensplex 4v4 schedule captured for source-review and safe-lane app import.
-- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: app implementation, v8.4 JSON edits, completed logs, Supabase writes, workout rewrites, KPI work, AI Coach, broad Gantt redesign, automatic training cancellation rules.
+- Epics/features added/updated: `SPORT-LOAD-4V4-SUMMER-2026` implemented locally as Planned Sport Load Source Import v1.
+- Product decisions added/updated: 4v4 remains planned hockey stimulus; no automatic dryland cancellation or overload/risk classification was introduced.
+- Data/sync/environment decisions added/updated: v8.4 source import counts updated; no Supabase writes or completed logs were created.
+- Testing requirements added/updated: focused v8.4 calendar/import tests now cover the 4v4 source import and counts.
+- Training-plan/source items added/updated: Bell Sensplex 4v4 dates are now in planned Sport Load source data and Day Execution Plan source data.
+- Docs updated: `imports/v8.4/README.md`, `docs/AGENT_REPORT.md`.
+- Items intentionally deferred: Plan/Gantt hardcoded rendering, completed Sport Load logging, Supabase writes, KPI work, Weakness Overlay changes, AI Coach, workout rewrites, production deploy, commit, push.

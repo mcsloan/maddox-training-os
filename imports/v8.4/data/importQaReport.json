@@ -3,7 +3,7 @@
   "sourceWorkbook": "Maddox_Training_OS_v8_3_Source_Of_Truth_Lock.xlsx",
   "generatedAt": "2026-06-16T04:53:11+00:00",
   "recordCounts": {
-    "dayExecutionPlan.json": 621,
+    "dayExecutionPlan.json": 630,
     "sessions.json": 84,
     "drills.json": 154,
     "workoutBlockDetails.json": 154,
@@ -11,7 +11,7 @@
     "speedStackPrescriptions.json": 616,
     "kpis.json": 7,
     "kpiProtocols.json": 6,
-    "sportLoads.json": 28,
+    "sportLoads.json": 37,
     "phaseMap.json": 12,
     "phaseLabels.json": 12,
     "hockeyIq.json": 6,

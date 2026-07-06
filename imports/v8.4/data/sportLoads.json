@@ -54,6 +54,15 @@
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
   },
   {
+    "date": "2026-07-05",
+    "week": 3,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex Canadian Tire Arena: 3:15-3:40 PM and 4:15-4:40 PM. Planned 4v4 hockey stimulus; day before Chase Hull camp.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
+  },
+  {
     "date": "2026-07-06",
     "week": 4,
     "day": "Monday",
@@ -99,6 +108,15 @@
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
   },
   {
+    "date": "2026-07-12",
+    "week": 4,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex Myers Automotive Arena: 4:30-4:55 PM and 4:55-5:20 PM. Planned 4v4 hockey stimulus.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
+  },
+  {
     "date": "2026-07-18",
     "week": 5,
     "day": "Saturday",
@@ -108,6 +126,15 @@
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
   },
   {
+    "date": "2026-07-19",
+    "week": 5,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex BrokerLink Arena: 3:30-3:55 PM and 3:55-4:20 PM. Planned 4v4 hockey stimulus.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
+  },
+  {
     "date": "2026-07-25",
     "week": 6,
     "day": "Saturday",
@@ -115,6 +142,15 @@
     "details": "Powerskating & Pucks 12:45-1:45",
     "intensity15": 4,
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-07-26",
+    "week": 6,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex Canadian Tire Arena: 2:15-2:40 PM and 2:40-3:05 PM. Planned 4v4 hockey stimulus.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
   },
   {
     "date": "2026-07-31",
@@ -153,6 +189,15 @@
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
   },
   {
+    "date": "2026-08-03",
+    "week": 8,
+    "day": "Monday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex BrokerLink Arena: 3:25-3:50 PM and 4:00-4:25 PM. Planned 4v4 hockey stimulus on return-from-trip day after VIA52 arrival 13:11.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
+  },
+  {
     "date": "2026-08-04",
     "week": 8,
     "day": "Tuesday",
@@ -169,6 +214,15 @@
     "details": "All day camp; 2–3 hours ice/day",
     "intensity15": 5,
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-05",
+    "week": 8,
+    "day": "Wednesday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex BrokerLink Arena: 7:00-7:25 PM and 7:25-7:50 PM. Planned 4v4 hockey stimulus during Carleton camp week.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
   },
   {
     "date": "2026-08-06",
@@ -189,6 +243,15 @@
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
   },
   {
+    "date": "2026-08-09",
+    "week": 8,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex Myers Automotive Arena: 4:30-4:55 PM and 4:55-5:20 PM. Planned 4v4 hockey stimulus.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
+  },
+  {
     "date": "2026-08-15",
     "week": 9,
     "day": "Saturday",
@@ -205,6 +268,24 @@
     "details": "Tryout session 3-4",
     "intensity15": 4,
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-08-16",
+    "week": 9,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex Myers Automotive Arena: 6:55-7:20 PM and 7:55-8:20 PM. Planned 4v4 hockey stimulus; possible Marc O’Connor same-day on-ice stack.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
+  },
+  {
+    "date": "2026-08-23",
+    "week": 10,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "Bell Sensplex Myers Automotive Arena: 3:25-3:50 PM and 4:00-4:25 PM. Planned 4v4 hockey stimulus; day before Sensplex camp.",
+    "intensity15": 3,
+    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
   },
   {
     "date": "2026-08-24",

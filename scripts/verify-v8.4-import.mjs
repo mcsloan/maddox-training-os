@@ -35,10 +35,12 @@ const normalizedNeedsReviewCount = Array.isArray(needsReview)
   ? needsReview.filter((row) => String(row?.canonicalExerciseId || "") !== "NO_REMAINING_REVIEW_ROWS").length
   : null;
 
-if (!Array.isArray(dayExecutionPlan) || dayExecutionPlan.length !== 621) issues.push("dayExecutionPlan.json should contain 621 records.");
+if (!Array.isArray(dayExecutionPlan) || dayExecutionPlan.length !== 630) issues.push("dayExecutionPlan.json should contain 630 records.");
 if (!Array.isArray(sessions) || sessions.length !== 84) issues.push("sessions.json should contain 84 records.");
 if (!Array.isArray(drillCards) || drillCards.length !== 154) issues.push("drillCards.json should contain 154 records.");
 if (!Array.isArray(exerciseVideoMap) || exerciseVideoMap.length !== 154) issues.push("exerciseVideoMap.json should contain 154 records.");
+const sportLoads = readJson(path.join(packageDir, "data/sportLoads.json"));
+if (!Array.isArray(sportLoads) || sportLoads.length !== 37) issues.push("sportLoads.json should contain 37 records.");
 if (normalizedNeedsReviewCount !== 0) issues.push("needsReview.json should normalize to 0 active records.");
 if (!ganttModel || !Array.isArray(ganttModel.weeks) || !Array.isArray(ganttModel.lanes)) issues.push("ganttModel.json should include weeks and lanes.");
 if (!ganttModel || ganttModel.lanes.length !== 17) issues.push("ganttModel.json should contain 17 lanes.");

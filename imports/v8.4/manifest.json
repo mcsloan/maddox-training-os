@@ -7,8 +7,8 @@
   "files": [
     {
       "file": "data/dayExecutionPlan.json",
-      "recordCount": 621,
-      "sha256": "c079b45a40c3de5fb088cd2042cb1415452b98a68a41094a930bbd9d2fa2fff2"
+      "recordCount": 630,
+      "sha256": "05c47ff86e7d729797fdbc71d05a9ee07a86b070cef386519b351084c058d008"
     },
     {
       "file": "data/drillCards.json",
@@ -38,7 +38,7 @@
     {
       "file": "data/importQaReport.json",
       "recordCount": 7,
-      "sha256": "34ad7ee3da090479fbd895517009cd3ce0132afe6cda7dd2cd2538a05839861b"
+      "sha256": "e9e257aa57ea9eb110ffcc5a0ba58d4fd2c9273f3ca03d18d94747246153b425"
     },
     {
       "file": "data/integratedSkillSessions.json",
@@ -117,8 +117,8 @@
     },
     {
       "file": "data/sportLoads.json",
-      "recordCount": 28,
-      "sha256": "9e6dae65f14d47dd53fda386ebdd73c980301b2c52e3d7ceffd885bcd7948f86"
+      "recordCount": 37,
+      "sha256": "1b19fc7e0d31d78265abae5b223fe7bfb2031652d79753669b6c1f30cd80c4d5"
     },
     {
       "file": "data/videoCoverageReport.json",

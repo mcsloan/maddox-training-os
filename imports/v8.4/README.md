@@ -33,7 +33,7 @@ The app should import these files and render the approved plan. Codex must not r
 
 ```json
 {
-  "dayExecutionPlan.json": 621,
+  "dayExecutionPlan.json": 630,
   "sessions.json": 84,
   "drills.json": 154,
   "workoutBlockDetails.json": 154,
@@ -41,7 +41,7 @@ The app should import these files and render the approved plan. Codex must not r
   "speedStackPrescriptions.json": 616,
   "kpis.json": 7,
   "kpiProtocols.json": 6,
-  "sportLoads.json": 28,
+  "sportLoads.json": 37,
   "phaseMap.json": 12,
   "phaseLabels.json": 12,
   "hockeyIq.json": 6,

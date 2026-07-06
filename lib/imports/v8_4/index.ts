@@ -273,8 +273,8 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
     issues.push({ file: "data/exerciseVideoMap.json", message: "Video map should contain 154 records." });
   }
 
-  if (dayExecutionPlan.length !== 621) {
-    issues.push({ file: "data/dayExecutionPlan.json", message: "Day execution plan should contain 621 records." });
+  if (dayExecutionPlan.length !== 630) {
+    issues.push({ file: "data/dayExecutionPlan.json", message: "Day execution plan should contain 630 records." });
   }
 
   if (needsReview.length !== 0) {
@@ -301,8 +301,8 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
     issues.push({ file: "data/kpiProtocols.json", message: "KPI protocols should contain 6 records." });
   }
 
-  if (sportLoads.length !== 28) {
-    issues.push({ file: "data/sportLoads.json", message: "Sport loads should contain 28 records." });
+  if (sportLoads.length !== 37) {
+    issues.push({ file: "data/sportLoads.json", message: "Sport loads should contain 37 records." });
   }
 
   if (phaseMap.length !== 12 || phaseLabels.length !== 12) {
