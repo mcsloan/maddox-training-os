@@ -14,6 +14,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - Previous docs checkpoint: docs capture after pushed commit `f5c35a8` (`fix(projections): clarify controlled cardio copy`); repo was clean before that docs-only capture.
 - Product QA after `f5c35a8` found remaining production Day rendering defects: `DEF-029` is reopened, and `DEF-030`, `DEF-031`, and `DEF-032` are added as P1 product-trust defects.
 - Bell Sensplex 4v4 summer hockey schedule for July-August 2026 is captured as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item. It is a high-value hockey stimulus, not an automatic overload emergency.
+- Summer 4v4 implementation chain after `d922217`: source import, Day/Today, Calendar, and Plan/Gantt are fixed locally through `PLAN-GANTT-SPORTLOAD-V84-001`; return to the broader pre-4v4 queue after this tactical fix.
 - Closed-Loop Training Intelligence is registered as a future design-governed architecture program. It is not current app behavior and must not be retrofitted into the current application until `DESIGN-GATE-001` passes.
 - Previous projection-readiness checkpoint: repo clean and synced after pushed commit `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
 - Tonight's stabilization commits are pushed: `9fd4c73` (`fix(session): align completed summary title with canonical presentation`), `c20432c` (`fix(projections): align planned activity classification across day and session`), and `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`).
@@ -135,7 +136,8 @@ Every active scope item should use this structure, either as a detailed record b
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
 | 3 | ENV-PREVIEW-DB-001 | Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data | P1 | Not started | Docs-only / environment-safety | Treat Vercel Preview as no-write until `ENV-PREVIEW-DB-AUDIT-001` verifies target isolation. |
 | 4 | ENV-PREVIEW-DB-AUDIT-001 | Verify Vercel Preview Supabase target | P1 | Not started | Docs-only / environment-safety | Verify Production, Preview, and local Supabase project refs without exposing secrets before Preview write testing. |
-| 4.5 | SPORT-LOAD-4V4-SUMMER-2026 | Bell Sensplex 4v4 Summer Hockey Integration | P1 | Scope review required | Source-review -> Safe lane app import | Integrate confirmed July-August 2026 Bell Sensplex 4v4 games as planned Sport Load in the offseason plan, Calendar, Day Execution Plan, and Gantt without treating them as automatic load-risk days. |
+| 4.5 | SPORT-LOAD-4V4-SUMMER-2026 | Bell Sensplex 4v4 Summer Hockey Integration | P1 | Completed locally | Source-review -> Safe lane app import | Source import, Day/Today, Calendar, and Plan/Gantt are implemented locally; post-commit/deploy smoke remains the release acceptance step. |
+| 4.6 | PLAN-GANTT-SPORTLOAD-V84-001 | Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads | P1 | Completed locally | Fast lane | Plan/Gantt now derives Sport Load overlay rows and week summaries from v8.4 `sportLoads`; return to `AUDIT-LOAD-CLASSIFICATION-001` after release acceptance. |
 | 5 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 6 | FORENSIC-DAY-SESSION-MISMATCH-001 | Forensic Day/Session data-flow audit | P1 | Completed | Fast lane | Audit found Day and Session use divergent presentation paths; use findings to drive canonical contract. |
 | 7 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Completed | Fast lane | Audit completed; use findings to constrain the next Day + Session parity implementation. |
@@ -173,7 +175,7 @@ Every active scope item should use this structure, either as a detailed record b
 
 ## Current Sprint / Next Codex Task
 
-Current sprint: product QA after `f5c35a8` found remaining production Day rendering defects. `DEF-029` is reopened, `DEF-030` through `DEF-032` are added, and the next bounded task is `AUDIT-LOAD-CLASSIFICATION-001`.
+Current sprint: tactical 4v4 Sport Load rendering fixes are completing on top of the broader product QA queue. After `SPORT-LOAD-4V4-SUMMER-2026` and `PLAN-GANTT-SPORTLOAD-V84-001` are committed/deployed/accepted, return to product QA after `f5c35a8`: `DEF-029` is reopened, `DEF-030` through `DEF-032` are added, and the next bounded task is `AUDIT-LOAD-CLASSIFICATION-001`.
 
 Next task brief:
 
@@ -209,8 +211,8 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
 | Not started | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
-| Scope review required | SPORT-LOAD-4V4-SUMMER-2026, ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
-| Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
+| Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
+| Completed | SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
 ### P2
 
@@ -716,7 +718,7 @@ Ground Truth Baseline:
 - Type: Feature
 - Parent: Evidence model
 - Priority: P1
-- Status: Scope review required
+- Status: Completed locally
 - Lane: Safe lane
 - Owner: Mike / Codex
 - Source: Friday readiness QA and training log observations
@@ -1177,15 +1179,15 @@ Advanced KPI scope:
 - Lane: Source-review -> Safe lane app import
 - Owner: Mike / Codex
 - Source: Mike-provided Bell Sensplex 4v4 summer hockey schedule.
-- Problem: Confirmed July-August 2026 Bell Sensplex 4v4 games are not yet represented as planned Sport Load in the current offseason plan surfaces.
+- Problem: Confirmed July-August 2026 Bell Sensplex 4v4 games were not represented as planned Sport Load in the current offseason plan surfaces.
 - Desired outcome: 4v4 appears as planned Sport Load and part of Maddox's offseason development environment across the approved app surfaces.
-- In scope: source capture, schedule verification against user-provided times/arenas, and a later safe-lane app import into planned Sport Load, Day Execution Plan, Calendar, and Gantt.
+- In scope: source capture, schedule verification against user-provided times/arenas, and safe-lane app import into planned Sport Load, Day Execution Plan, Calendar, Day/Today, and Plan/Gantt.
 - Out of scope: app implementation in this docs-only task, `imports/v8.4/data/*.json` edits, Supabase writes, completed logs, workout rewrites, KPI work, AI Coach, automatic load-risk labeling, or automatic dryland cancellation.
-- Acceptance criteria: the exact schedule is preserved; 4v4 is framed as planned hockey development and Sport Load; integration rules avoid automatic cancellation and use readiness-based adjustment only.
+- Acceptance criteria: the exact schedule is preserved; 4v4 is framed as planned hockey development and Sport Load; integration rules avoid automatic cancellation and use readiness-based adjustment only; source import, Day/Today, Calendar, and Plan/Gantt render the planned Sport Loads.
 - Dependencies: source-review approval for the import path; current Sport Load display/logging rules; v8.4 source-update or overlay-import strategy if approved later.
 - Risks: treating 4v4 as an overload emergency would misframe the product decision; treating it as non-plan work would hide a high-value hockey stimulus from Day/Calendar/Gantt planning.
-- Next action: implement a safe-lane import/update so these 4v4 events appear as planned Sport Load in Day Execution Plan, Calendar, and Gantt while preserving Sport Load and Training Work evidence separation.
-- Links / evidence: Mike source-capture request on 2026-07-05.
+- Next action: post-commit/deploy smoke for Plan/Gantt, then return to `AUDIT-LOAD-CLASSIFICATION-001`.
+- Links / evidence: Mike source-capture request on 2026-07-05; commits `0bba866`, `d922217`; local `PLAN-GANTT-SPORTLOAD-V84-001` fix.
 
 Product interpretation:
 
@@ -1226,6 +1228,27 @@ Scheduling interactions to consider, not automatic risk dates:
 - 2026-08-05: during Carleton camp week.
 - 2026-08-16: possible Marc O'Connor + 4v4 same day.
 - 2026-08-23: day before Sensplex camp.
+
+### PLAN-GANTT-SPORTLOAD-V84-001
+
+- ID: PLAN-GANTT-SPORTLOAD-V84-001
+- Title: Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads
+- Type: Defect / Feature
+- Parent: `SPORT-LOAD-4V4-SUMMER-2026`
+- Priority: P1
+- Status: Completed locally
+- Lane: Fast lane
+- Owner: Mike / Codex
+- Source: Production/source-impact QA after `0bba866` and `d922217`.
+- Problem: Plan/Gantt still used stale hardcoded/legacy Sport Load interpretation while Day/Today and Calendar rendered v8.4 planned Sport Loads correctly.
+- Desired outcome: Plan/Gantt Sport Load overlays and week summaries derive from v8.4 `sportLoads` so July-August 4v4 and existing Sport Loads are visible without duplicating the schedule.
+- In scope: bounded Plan page helper and rendering update, focused tests, docs handoff/report update.
+- Out of scope: source JSON edits, v8.4 count changes, Supabase, completed logs, Day/Calendar/KPI/Weakness Overlay changes, Gantt visual redesign.
+- Acceptance criteria: Plan/Gantt includes Bell Sensplex 4v4 dates and existing Sport Loads; derives from v8.4 data; user-facing copy avoids `External Load`; no forbidden wording.
+- Dependencies: v8.4 `sportLoads.json`; existing locked Gantt weeks/phase model.
+- Risks: stale hardcoded Plan rows can hide newly imported Sport Loads or mislead planning.
+- Next action: post-deploy smoke, then return to `AUDIT-LOAD-CLASSIFICATION-001`.
+- Links / evidence: local helper `lib/planSportLoadOverlay.ts`; tests `lib/planSportLoadOverlay.test.ts`.
 
 ### TRAINING-SAFETY-U12-001
 

@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ExternalLoadChip, LoadChip, LoadChipLegend, PhaseChip, PlanTagChip } from "@/components/LoadChips";
+import { LoadChip, LoadChipLegend, PhaseChip, PlanTagChip } from "@/components/LoadChips";
 import { WeeklyLoadChart } from "@/components/WeeklyLoadChart";
 import { ganttModel, phaseLabels, phaseMap } from "@/lib/imports/v8_4";
-import { formatPlanDate, getWeekExternalLoads, getWeekPlanSummary, trainingPlan } from "@/lib/trainingData";
-import { ExternalLoadType } from "@/lib/types";
+import { buildPlanSportLoadOverlayRows, getPlanSportLoadOverlayItemsForWeek, type PlanSportLoadOverlayKind } from "@/lib/planSportLoadOverlay";
+import { formatPlanDate, getWeekPlanSummary, trainingPlan } from "@/lib/trainingData";
 
 export default function PlanPage() {
   const { overview, weeks, version, sourceTag } = trainingPlan;
@@ -53,7 +53,7 @@ export default function PlanPage() {
 
       <section className="mt-6 grid gap-4 lg:grid-cols-2">
         {weeks.map((week) => {
-          const loads = getWeekExternalLoads(week);
+          const loads = getPlanSportLoadOverlayItemsForWeek(week.weekNumber);
           const summary = getWeekPlanSummary(week);
           const kpiDays = trainingPlan.days.filter((day) => day.weekNumber === week.weekNumber && day.kpiTestIds?.length);
           return (
@@ -96,7 +96,14 @@ export default function PlanPage() {
               {loads.length > 0 && (
                 <div className="mt-4">
                   <p className="label">Sport load summary</p>
-                  <div className="flex flex-wrap gap-2">{uniqueSportLoadTypes(loads.map((load) => load.type)).map((type) => <ExternalLoadChip key={type} type={type} />)}</div>
+                  <div className="grid gap-2">
+                    {loads.map((load) => (
+                      <Link className="rounded-xl bg-ice p-3 text-sm font-semibold text-slate-700 hover:text-blue" href={`/day/${load.date}`} key={`${load.date}-${load.title}`}>
+                        <span className="font-black text-navy">{formatPlanDate(load.date, { month: "short", day: "numeric" })} · {load.title}</span>
+                        <span className="mt-1 block">{load.details}</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               )}
               {kpiDays.length > 0 && (
@@ -113,11 +120,6 @@ export default function PlanPage() {
       <p className="mt-6 text-xs text-slate-500">Plan seed {version}. {sourceTag}.</p>
     </div>
   );
-}
-
-function uniqueSportLoadTypes(types: ExternalLoadType[]) {
-  const family = (type: (typeof types)[number]) => type.startsWith("lacrosse") ? "lacrosse" : type === "hockey_camp" ? "camp" : "on-ice";
-  return types.filter((type, index) => types.findIndex((candidate) => family(candidate) === family(type)) === index);
 }
 
 function MethodologyPanel() {
@@ -176,7 +178,7 @@ function PhaseGantt() {
 type GanttRow =
   | {
       label: string;
-      kind: "testing";
+      kind: "testing" | "sportMarkers" | "campMarkers" | "onIceMarkers" | "travelMarkers";
       markers: { week: number; label: string; shortLabel: string }[];
     }
   | {
@@ -215,24 +217,27 @@ function buildLockedGanttRows(): GanttRow[] {
     }
   }
 
+  const sportLoadRows = buildPlanSportLoadOverlayRows().map((row): Extract<GanttRow, { markers: unknown[] }> => ({
+    label: row.label,
+    kind: markerKindFor(row.kind),
+    markers: row.markers.map((marker) => ({
+      week: marker.week,
+      label: marker.label,
+      shortLabel: marker.shortLabel,
+    })),
+  }));
+
   return [
     { label: "Perf Testing", kind: "testing", markers: [1, 3, 5, 7, 10, 12].map((week) => ({ week, label: "Perf Testing", shortLabel: "Test" })) },
     { label: "GPP / Foundation", shortLabel: "GPP / Foundation", startWeek: 1, endWeek: 2, kind: "phase" },
-    { label: "Lacrosse", shortLabel: "Lacrosse", startWeek: 1, endWeek: 2, kind: "sport" },
-    { label: "4v4", shortLabel: "4v4", startWeek: 1, endWeek: 2, kind: "sport" },
+    ...sportLoadRows,
     { label: "Strength + Acceleration", shortLabel: "Strength + Accel", startWeek: 3, endWeek: 4, kind: "phase" },
     { label: "Chase Hull Camp", shortLabel: "Chase Camp", startWeek: 4, endWeek: 4, kind: "camp" },
     { label: "Power Transition", shortLabel: "Power Transition", startWeek: 5, endWeek: 6, kind: "phase" },
-    { label: "Marc O’Connor Ice", shortLabel: "Marc Ice", startWeek: 5, endWeek: 5, kind: "onIce" },
-    { label: "Marc O’Connor Ice", shortLabel: "Marc Ice", startWeek: 6, endWeek: 6, kind: "onIce" },
     { label: "Deload", shortLabel: "Deload", startWeek: 7, endWeek: 7, kind: "deload" },
-    { label: "Toronto Trip / Travel", shortLabel: "Travel", startWeek: 7, endWeek: 7, kind: "deload" },
     { label: "Power/Agility + Carleton", shortLabel: "Power/Agility", startWeek: 8, endWeek: 10, kind: "phase" },
-    { label: "Carleton Camp", shortLabel: "Carleton", startWeek: 8, endWeek: 8, kind: "camp" },
-    { label: "Marc O’Connor Ice", shortLabel: "Marc Ice", startWeek: 9, endWeek: 9, kind: "onIce" },
     { label: "Game-Speed / Sprint", shortLabel: "Game-Speed / Sprint", startWeek: 9, endWeek: 10, kind: "phase" },
     { label: "Tryout Sim", shortLabel: "Tryout Sim", startWeek: 11, endWeek: 11, kind: "phase" },
-    { label: "Sensplex Camp", shortLabel: "Sensplex", startWeek: 11, endWeek: 11, kind: "camp" },
     { label: "Taper + Peak", shortLabel: "Taper", startWeek: 12, endWeek: 12, kind: "taper" },
   ];
 }
@@ -259,23 +264,53 @@ function GanttSpanRow({ row }: { row: Extract<GanttRow, { kind: Exclude<GanttRow
   );
 }
 
-function GanttMarkerRow({ row }: { row: Extract<GanttRow, { kind: "testing" }> }) {
+function GanttMarkerRow({ row }: { row: Extract<GanttRow, { markers: unknown[] }> }) {
   return (
     <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-0.5">
       <div className="pr-2 text-[12px] font-black leading-tight text-slate-800">{row.label}</div>
       <div className="grid h-5 grid-cols-12 gap-0.5" style={{ gridColumn: "2 / span 12" }}>
         {Array.from({ length: 12 }, (_, index) => {
           const week = index + 1;
-          const marker = row.markers.find((item) => item.week === week);
+          const markers = row.markers.filter((item) => item.week === week);
+          const markerLabel = markers.length > 1 ? `${markers[0].shortLabel} x${markers.length}` : markers[0]?.shortLabel;
+          const markerTitle = markers.map((marker) => marker.label).join("; ");
           return (
             <div key={week} className="h-5 border border-slate-200 bg-white">
-              {marker ? <div className="h-full w-full border border-cyan-900/15 bg-cyan-500 px-2 py-0.5 text-[10px] font-black leading-tight text-cyan-950 shadow-sm"><span className="block truncate">{marker.shortLabel}</span></div> : null}
+              {markers.length > 0 ? <div className="h-full w-full border px-2 py-0.5 text-[10px] font-black leading-tight shadow-sm" style={ganttMarkerStyleFor(row.kind)} title={markerTitle}><span className="block truncate">{markerLabel}</span></div> : null}
             </div>
           );
         })}
       </div>
     </div>
   );
+}
+
+function markerKindFor(kind: PlanSportLoadOverlayKind): Extract<GanttRow, { markers: unknown[] }>["kind"] {
+  switch (kind) {
+    case "camp":
+      return "campMarkers";
+    case "onIce":
+      return "onIceMarkers";
+    case "travel":
+      return "travelMarkers";
+    case "sport":
+      return "sportMarkers";
+  }
+}
+
+function ganttMarkerStyleFor(kind: Extract<GanttRow, { markers: unknown[] }>["kind"]) {
+  switch (kind) {
+    case "testing":
+      return { backgroundColor: "#06b6d4", borderColor: "rgba(22, 78, 99, 0.15)", color: "#083344" };
+    case "sportMarkers":
+      return { backgroundColor: "#ddd6fe", borderColor: "#7c3aed", color: "#3b0764" };
+    case "campMarkers":
+      return { backgroundColor: "#fdba74", borderColor: "#ea580c", color: "#7c2d12" };
+    case "onIceMarkers":
+      return { backgroundColor: "#c7d2fe", borderColor: "#4338ca", color: "#312e81" };
+    case "travelMarkers":
+      return { backgroundColor: "#99f6e4", borderColor: "#0f766e", color: "#134e4a" };
+  }
 }
 
 function ganttFillStyleFor(kind: Exclude<GanttRow["kind"], "testing">) {
@@ -310,6 +345,7 @@ function planPageText(text: string) {
     .replace(/recovery protected/gi, "Recovery")
     .replace(/camp protection/gi, "Camp")
     .replace(/protection/gi, "recovery")
+    .replace(/\bprotected\b/gi, "planned")
     .replace(/consolidation/gi, "Deload");
 }
 

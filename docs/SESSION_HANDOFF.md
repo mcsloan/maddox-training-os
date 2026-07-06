@@ -3,6 +3,7 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
+- Latest local checkpoint for current task: `d922217` (`fix(day): render stacked sport loads correctly`) plus local Plan/Gantt Sport Load rendering fix.
 - Latest expected commit before docs capture: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
 - Vercel Preview branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
 - Preview `/kpis` displayed existing KPI results/baselines similar to production. This is unverified evidence only; do not conclude Preview uses production Supabase without env/runtime proof.
@@ -11,6 +12,7 @@
 - `docs/SCOPE.md` remains the only canonical active scope source.
 - v8.4 app import package remains authoritative for current app training data.
 - Bell Sensplex 4v4 summer hockey schedule for July-August 2026 is captured in `docs/SCOPE.md` as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item.
+- `SPORT-LOAD-4V4-SUMMER-2026` implementation chain is now source import + Day/Today + Calendar + Plan/Gantt fixed locally; post-commit/deploy smoke remains the release acceptance step.
 
 ## Current Product QA State
 
@@ -24,6 +26,7 @@
 - `DEF-032` added: controlled cardio duration/load-tier classification is not explainable; `/day/2026-06-29` showed 20 minutes with `Recovery conditioning`, which needs audit.
 - `AUDIT-LOAD-CLASSIFICATION-001` is the next bounded discovery task for these defects. It is discovery only and must not implement the future methodology architecture.
 - `SPORT-LOAD-4V4-SUMMER-2026` added: Bell Sensplex 4v4 summer hockey should be integrated as planned Sport Load. It is a high-value hockey stimulus for game-speed decisions, puck touches under pressure, compete, scanning, shift-like conditioning, and confidence attacking space, not an automatic overload emergency.
+- `PLAN-GANTT-SPORTLOAD-V84-001` added/completed locally: Plan/Gantt Sport Load overlays now derive from v8.4 `sportLoads` instead of stale hardcoded rows.
 
 ## Closed-Loop Architecture State
 
@@ -57,7 +60,7 @@ Recommended next lane:
 3. Identify rendering paths that still leak old copy or raw KPI categories.
 4. Do not implement the Closed-Loop methodology architecture during the audit.
 5. Fix DEF-029/030/031/032 only after the audit defines the bounded current-app path.
-6. Plan `SPORT-LOAD-4V4-SUMMER-2026` as a source-review -> safe-lane app import so the confirmed 4v4 schedule appears in planned Sport Load, Day Execution Plan, Calendar, and Gantt. Do not auto-cancel training; adjust surrounding work only from readiness, soreness, camp stacking, travel, or parent observation.
+6. After Plan/Gantt 4v4 release acceptance, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032`.
 
 ## Recommended Startup Reading
 
@@ -69,9 +72,9 @@ Recommended next lane:
 ## Scope Capture Check
 
 - Defects added/updated: `ENV-PREVIEW-DB-001` added; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added.
-- Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` added as P1 planned Sport Load integration scope.
+- Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` planned Sport Load integration now fixed locally through source import, Day/Today, Calendar, and Plan/Gantt; `PLAN-GANTT-SPORTLOAD-V84-001` added/completed locally.
 - Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation; 4v4 is planned Sport Load, not non-plan work or an automatic load-risk trigger.
 - Data/sync/environment decisions added/updated: Preview DB isolation is unverified; no Preview saves until `ENV-PREVIEW-DB-AUDIT-001` confirms staging/non-production target or read-only classification; no Supabase/data mutation.
-- Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit added as next discovery.
+- Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit remains next discovery; Plan/Gantt Sport Load overlay tests added locally.
 - Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`; later source-capture update added the 4v4 schedule.
 - Items intentionally deferred: behavior fixes, app code, tests, Playwright, builds, source JSON edits, Supabase changes, methodology implementation, final domain/source/stack choices.
