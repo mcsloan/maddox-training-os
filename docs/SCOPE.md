@@ -13,6 +13,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - Preview `/kpis` displayed existing KPI results/baselines similar to production. This does not prove Preview is using production Supabase; database target is unverified and must be audited before any Preview write testing.
 - Previous docs checkpoint: docs capture after pushed commit `f5c35a8` (`fix(projections): clarify controlled cardio copy`); repo was clean before that docs-only capture.
 - Product QA after `f5c35a8` found remaining production Day rendering defects: `DEF-029` is reopened, and `DEF-030`, `DEF-031`, and `DEF-032` are added as P1 product-trust defects.
+- Bell Sensplex 4v4 summer hockey schedule for July-August 2026 is captured as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item. It is a high-value hockey stimulus, not an automatic overload emergency.
 - Closed-Loop Training Intelligence is registered as a future design-governed architecture program. It is not current app behavior and must not be retrofitted into the current application until `DESIGN-GATE-001` passes.
 - Previous projection-readiness checkpoint: repo clean and synced after pushed commit `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
 - Tonight's stabilization commits are pushed: `9fd4c73` (`fix(session): align completed summary title with canonical presentation`), `c20432c` (`fix(projections): align planned activity classification across day and session`), and `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`).
@@ -134,6 +135,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
 | 3 | ENV-PREVIEW-DB-001 | Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data | P1 | Not started | Docs-only / environment-safety | Treat Vercel Preview as no-write until `ENV-PREVIEW-DB-AUDIT-001` verifies target isolation. |
 | 4 | ENV-PREVIEW-DB-AUDIT-001 | Verify Vercel Preview Supabase target | P1 | Not started | Docs-only / environment-safety | Verify Production, Preview, and local Supabase project refs without exposing secrets before Preview write testing. |
+| 4.5 | SPORT-LOAD-4V4-SUMMER-2026 | Bell Sensplex 4v4 Summer Hockey Integration | P1 | Scope review required | Source-review -> Safe lane app import | Integrate confirmed July-August 2026 Bell Sensplex 4v4 games as planned Sport Load in the offseason plan, Calendar, Day Execution Plan, and Gantt without treating them as automatic load-risk days. |
 | 5 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 6 | FORENSIC-DAY-SESSION-MISMATCH-001 | Forensic Day/Session data-flow audit | P1 | Completed | Fast lane | Audit found Day and Session use divergent presentation paths; use findings to drive canonical contract. |
 | 7 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Completed | Fast lane | Audit completed; use findings to constrain the next Day + Session parity implementation. |
@@ -207,7 +209,7 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
 | Not started | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
-| Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
+| Scope review required | SPORT-LOAD-4V4-SUMMER-2026, ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
 ### P2
@@ -1164,6 +1166,67 @@ Advanced KPI scope:
 - Next action: apply during source-review tasks.
 - Links / evidence: AGENTS source-of-truth rules.
 
+### SPORT-LOAD-4V4-SUMMER-2026
+
+- ID: SPORT-LOAD-4V4-SUMMER-2026
+- Title: Bell Sensplex 4v4 Summer Hockey Integration
+- Type: Source Review / Feature
+- Parent: Training/source system
+- Priority: P1
+- Status: Scope review required
+- Lane: Source-review -> Safe lane app import
+- Owner: Mike / Codex
+- Source: Mike-provided Bell Sensplex 4v4 summer hockey schedule.
+- Problem: Confirmed July-August 2026 Bell Sensplex 4v4 games are not yet represented as planned Sport Load in the current offseason plan surfaces.
+- Desired outcome: 4v4 appears as planned Sport Load and part of Maddox's offseason development environment across the approved app surfaces.
+- In scope: source capture, schedule verification against user-provided times/arenas, and a later safe-lane app import into planned Sport Load, Day Execution Plan, Calendar, and Gantt.
+- Out of scope: app implementation in this docs-only task, `imports/v8.4/data/*.json` edits, Supabase writes, completed logs, workout rewrites, KPI work, AI Coach, automatic load-risk labeling, or automatic dryland cancellation.
+- Acceptance criteria: the exact schedule is preserved; 4v4 is framed as planned hockey development and Sport Load; integration rules avoid automatic cancellation and use readiness-based adjustment only.
+- Dependencies: source-review approval for the import path; current Sport Load display/logging rules; v8.4 source-update or overlay-import strategy if approved later.
+- Risks: treating 4v4 as an overload emergency would misframe the product decision; treating it as non-plan work would hide a high-value hockey stimulus from Day/Calendar/Gantt planning.
+- Next action: implement a safe-lane import/update so these 4v4 events appear as planned Sport Load in Day Execution Plan, Calendar, and Gantt while preserving Sport Load and Training Work evidence separation.
+- Links / evidence: Mike source-capture request on 2026-07-05.
+
+Product interpretation:
+
+- 4v4 is planned Sport Load and part of Maddox's offseason development environment.
+- It supports game-speed decisions, puck touches under pressure, compete, scanning, shift-like conditioning, and confidence attacking space.
+- Mike is not concerned that Maddox is overtired; Maddox is faring well.
+- Do not label these dates as automatic load-risk days.
+- Do not auto-cancel training because of 4v4.
+- Adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation.
+
+Schedule to integrate:
+
+| Date | Time | Venue |
+| --- | --- | --- |
+| 2026-07-05 | 3:15-3:40 PM | Bell Sensplex Canadian Tire Arena |
+| 2026-07-05 | 4:15-4:40 PM | Bell Sensplex Canadian Tire Arena |
+| 2026-07-12 | 4:30-4:55 PM | Bell Sensplex Myers Automotive Arena |
+| 2026-07-12 | 4:55-5:20 PM | Bell Sensplex Myers Automotive Arena |
+| 2026-07-19 | 3:30-3:55 PM | Bell Sensplex BrokerLink Arena |
+| 2026-07-19 | 3:55-4:20 PM | Bell Sensplex BrokerLink Arena |
+| 2026-07-26 | 2:15-2:40 PM | Bell Sensplex Canadian Tire Arena |
+| 2026-07-26 | 2:40-3:05 PM | Bell Sensplex Canadian Tire Arena |
+| 2026-08-03 | 3:25-3:50 PM | Bell Sensplex BrokerLink Arena |
+| 2026-08-03 | 4:00-4:25 PM | Bell Sensplex BrokerLink Arena |
+| 2026-08-05 | 7:00-7:25 PM | Bell Sensplex BrokerLink Arena |
+| 2026-08-05 | 7:25-7:50 PM | Bell Sensplex BrokerLink Arena |
+| 2026-08-09 | 4:30-4:55 PM | Bell Sensplex Myers Automotive Arena |
+| 2026-08-09 | 4:55-5:20 PM | Bell Sensplex Myers Automotive Arena |
+| 2026-08-16 | 6:55-7:20 PM | Bell Sensplex Myers Automotive Arena |
+| 2026-08-16 | 7:55-8:20 PM | Bell Sensplex Myers Automotive Arena |
+| 2026-08-23 | 3:25-3:50 PM | Bell Sensplex Myers Automotive Arena |
+| 2026-08-23 | 4:00-4:25 PM | Bell Sensplex Myers Automotive Arena |
+
+Scheduling interactions to consider, not automatic risk dates:
+
+- 2026-07-05: day before Chase Hull camp.
+- 2026-08-03: return-from-trip day, VIA52 arrival 13:11.
+- 2026-08-05: during Carleton camp week.
+- 2026-08-16: possible Marc O'Connor + 4v4 same day.
+- 2026-08-23: day before Sensplex camp.
+
 ### TRAINING-SAFETY-U12-001
 
 - ID: TRAINING-SAFETY-U12-001
@@ -1446,6 +1509,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 - OvertimeAthlete source ingestion/review is future source-review only.
 - U12 safety guardrails are source-review scope, not immediate app changes.
 - Hockey conditioning intervals must be distinguished from recovery Zone 2 cardio.
+- Bell Sensplex 4v4 summer hockey is planned Sport Load and a high-value hockey stimulus; integrate `SPORT-LOAD-4V4-SUMMER-2026` through source-review and safe-lane app import rather than treating it as non-plan work.
 - Instruction/video coverage audit is required for athlete-actionable items.
 - v8.4 remains authoritative unless Mike explicitly approves a source update.
 - Unverified schedule claims must remain "verify before plan change".

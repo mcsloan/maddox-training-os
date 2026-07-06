@@ -2,36 +2,42 @@
 
 ## Latest Task
 
-Docs Capture - Preview Supabase environment verification risk.
+Register Bell Sensplex 4v4 Summer Hockey Schedule as P1 Planned Sport Load Scope.
 
 ## Result
 
-Captured an unverified Vercel Preview database-isolation risk after the `preprod/kpi-protocols-2026-06-30` Preview deployment showed badge `1c336a0 · preview` and `/kpis` displayed existing KPI results/baselines similar to production.
+Captured Maddox's July-August 2026 Bell Sensplex 4v4 summer hockey schedule as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item.
 
-This is recorded as unverified/suspected only. The docs do not assert that Preview is using production Supabase because no deterministic env/runtime proof was captured.
+The docs frame 4v4 as a high-value hockey development stimulus that supports game-speed decisions, puck touches under pressure, compete, scanning, shift-like conditioning, and confidence attacking space. It is not documented as an automatic overload emergency.
 
-This was docs-only. No app code, tests, `data/kpis.json`, Supabase data/schema, Vercel config, packages, commits, or pushes were changed/performed.
+This was docs-only. No app code, v8.4 import JSON, Supabase data/schema, KPI code, completed logs, commits, or pushes were changed/performed.
 
 ## Files Changed
 
 - `docs/SCOPE.md`
 - `docs/SESSION_HANDOFF.md`
 - `docs/AGENT_REPORT.md`
-- `docs/CURRENT_PROJECT_STATE.md`
 
 ## Status Updates
 
-- Added `ENV-PREVIEW-DB-001`: Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data.
-- Added `ENV-PREVIEW-DB-AUDIT-001`: verify Vercel Preview Supabase target before write testing.
-- Captured operational rule: do not save KPI results or perform write-capable workflows in Vercel Preview until Preview DB target is confirmed staging/non-production, or Preview is explicitly classified read-only.
+- Added `SPORT-LOAD-4V4-SUMMER-2026`: Bell Sensplex 4v4 Summer Hockey Integration.
+- Marked it P1, `Scope review required`, lane `Source-review -> Safe lane app import`.
+- Preserved the full July-August 2026 schedule with dates, times, and Bell Sensplex arenas.
+- Captured scheduling interaction dates:
+  - 2026-07-05: day before Chase Hull camp.
+  - 2026-08-03: return-from-trip day, VIA52 arrival 13:11.
+  - 2026-08-05: during Carleton camp week.
+  - 2026-08-16: possible Marc O'Connor + 4v4 same day.
+  - 2026-08-23: day before Sensplex camp.
+- Captured planning rule: do not auto-cancel training because of 4v4; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation.
 
 ## Scope Capture Check
 
-- Defects added/updated: `ENV-PREVIEW-DB-001` added.
-- Epics/features added/updated: none.
-- Product decisions added/updated: Preview write testing is blocked pending DB target verification.
-- Data/sync/environment decisions added/updated: `ENV-PREVIEW-DB-AUDIT-001` added with required verification questions for Production, Preview, and local Supabase refs.
-- Testing requirements added/updated: Preview write/smoke testing must wait for DB isolation verification.
-- Training-plan/source items added/updated: none.
-- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`, `docs/CURRENT_PROJECT_STATE.md`.
-- Items intentionally deferred: env var inspection, Vercel config changes, Supabase changes, app code, tests, data changes, commits, pushes, preview writes.
+- Defects added/updated: none.
+- Epics/features added/updated: `SPORT-LOAD-4V4-SUMMER-2026` added as P1 planned Sport Load integration scope.
+- Product decisions added/updated: 4v4 is planned Sport Load and part of the offseason development environment, not automatic load risk.
+- Data/sync/environment decisions added/updated: no Supabase or data mutation; future implementation must preserve Sport Load and Training Work evidence separation.
+- Testing requirements added/updated: future implementation should verify Day Execution Plan, Calendar, and Gantt projection once imported.
+- Training-plan/source items added/updated: full Bell Sensplex 4v4 schedule captured for source-review and safe-lane app import.
+- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
+- Items intentionally deferred: app implementation, v8.4 JSON edits, completed logs, Supabase writes, workout rewrites, KPI work, AI Coach, broad Gantt redesign, automatic training cancellation rules.
