@@ -9,6 +9,7 @@ import { formatPlanDate, getDayTags, getPlanDay, getPlanDayDisplayModel, getRela
 import { projectDayPresentationContext, projectPlannedDayActivities } from "@/lib/projections/activityPresentation";
 import { buildDayPresentation } from "@/lib/projections/dayPresentation";
 import { getWeaknessOverlayForDate } from "@/lib/weaknessOverlay";
+import { buildDaySportLoadPlanItems, buildDaySportLoadSummaryLabel, sportLoadPlanLabel, type DaySportLoadPlanItem } from "@/lib/daySportLoadPlan";
 import type { WorkoutBlock } from "@/lib/types";
 
 export default async function DayPreviewPage({ params }: { params: Promise<{ date: string }> }) {
@@ -37,7 +38,9 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
   const hasPlannedTrainingWork = Boolean(workout || blocks.length > 0 || trainingWorkEntries.length > 0 || (day?.durationMinutes || 0) > 0);
   const isSportLoadDay = externalLoads.length > 0;
   const logTodayHref = externalLoads[0] ? `/external-load/${encodeURIComponent(externalLoads[0].id)}` : trainingWorkHref || `/day/${date}`;
-  const sportLoadLabel = externalLoads[0]?.title?.toLowerCase().includes("lacrosse") ? "Lacrosse" : "Sport load";
+  const sportLoadSummaryLabel = buildDaySportLoadSummaryLabel(externalLoads);
+  const sportLoadPlanItems = buildDaySportLoadPlanItems(externalLoads);
+  const simplePlanSupportStartLabel = sportLoadPlanLabel(externalLoads.length);
   const presentation = buildDayPresentation({
     date,
     day,
@@ -68,9 +71,9 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
         <p className="label text-lime">{dayTypeLabel}</p>
         <h1 className="text-3xl font-black sm:text-5xl">{presentation.dayTitle}</h1>
         <p className="mt-3 text-slate-200">{formatPlanDate(date, { weekday: "long", month: "long", day: "numeric", year: "numeric" })} · Load {intensity}/5</p>
-        {isSportLoadDay && <p className="mt-2 font-semibold text-lime">Load {intensity}/5 because {sportLoadLabel.toLowerCase()} is today’s main workload.</p>}
+        {isSportLoadDay && <p className="mt-2 font-semibold text-lime">Load {intensity}/5 because {sportLoadSummaryLabel.lowerText} {sportLoadSummaryLabel.verb} today’s main workload.</p>}
         <div className="mt-4 flex flex-wrap gap-2">{presentation.chips.map((chip) => <LoadChip key={chip.key} kind={chip.kind} label={chip.label} />)}</div>
-        <div className="mt-6 flex flex-wrap gap-3">{!isSportLoadDay && trainingWorkHref && <Link className="btn-primary bg-blue text-lg" href={trainingWorkHref}>Start / Log Today&apos;s Training</Link>}{isSportLoadDay && <span className="rounded-2xl bg-red-100 px-5 py-3 font-bold text-red-800">Lacrosse / sport load is the hard work today</span>}{!isSportLoadDay && <Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link>}</div>
+        <div className="mt-6 flex flex-wrap gap-3">{!isSportLoadDay && trainingWorkHref && <Link className="btn-primary bg-blue text-lg" href={trainingWorkHref}>Start / Log Today&apos;s Training</Link>}{isSportLoadDay && <span className="rounded-2xl bg-red-100 px-5 py-3 font-bold text-red-800">{sportLoadSummaryLabel.text} {sportLoadSummaryLabel.verb} the hard work today</span>}{!isSportLoadDay && <Link className="btn-secondary border-white/30 bg-white/10 text-white" href="/library">Open Library</Link>}</div>
       </section>
 
       {isSportLoadDay && (
@@ -79,7 +82,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
             <div>
               <p className="label text-navy">Athlete plan</p>
               <h2 className="text-3xl font-black">Today’s Simple Plan</h2>
-              <p className="mt-2 text-lg font-semibold text-slate-700">{sportLoadLabel} is the main workload today. Keep extra work skill-focused, not conditioning-focused.</p>
+              <p className="mt-2 text-lg font-semibold text-slate-700">{sportLoadSummaryLabel.text} {sportLoadSummaryLabel.verb} the main workload today. Keep extra work skill-focused, not conditioning-focused.</p>
             </div>
             <div className="max-w-sm">
               <DayEvidenceStatus date={date} logTodayHref={logTodayHref} mode="sport-load" plannedKpiCount={plannedKpiCountForStatus} sportLoads={externalLoads} />
@@ -87,28 +90,26 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
             </div>
           </div>
           <div className="mt-5 grid gap-3">
+            {sportLoadPlanItems.map((item) => (
+              <SportLoadPlanItem key={item.href} item={item} />
+            ))}
             <SimplePlanItem
-              label="A"
-              title={externalLoads[0]?.title || "Sport load"}
-              body="Play the game. Afterward, open the day log to record or update duration, effort, energy, confidence, soreness, and pain."
-            />
-            <SimplePlanItem
-              label="B"
+              label={simplePlanSupportStartLabel}
               title="Head-up puck touches — 10 minutes"
               body="Use a puck or ball. Keep eyes up. Every few seconds, look up and call out a number, colour, object, or parent signal. Smooth hands, quiet body, no rushing."
             />
             <SimplePlanItem
-              label="C"
+              label={sportLoadPlanLabel(externalLoads.length + 1)}
               title="Accuracy shooting — 25 to 50 quality shots"
               body="This is skill work, not a conditioning workout. Pick corners or targets. Reset between shots. Shoot with good form. Track hits if practical. Stop only for pain, unsafe setup, or mechanics falling apart."
             />
             <SimplePlanItem
-              label="D"
+              label={sportLoadPlanLabel(externalLoads.length + 2)}
               title="Cooldown bike — 10 to 15 minutes easy"
               body="Easy spin only. Conversational pace. No intervals, no race effort. Goal is cooldown and recovery, not extra conditioning."
             />
-            <SimplePlanItem label="E" title="Recovery mobility — 8 to 10 minutes" body="Easy recovery only: 2 min easy walk or breathing; 1 min ankle rocks each side; 1 min hip flexor stretch each side; 1 min hamstring stretch each side; 1 min child’s pose or easy back stretch. Move smoothly. Nothing should hurt." />
-            <SimplePlanItem label="F" title="End-of-day reflection" body="Log one thing learned, energy, soreness, confidence, and whether tomorrow should be easier." />
+            <SimplePlanItem label={sportLoadPlanLabel(externalLoads.length + 3)} title="Recovery mobility — 8 to 10 minutes" body="Easy recovery only: 2 min easy walk or breathing; 1 min ankle rocks each side; 1 min hip flexor stretch each side; 1 min hamstring stretch each side; 1 min child’s pose or easy back stretch. Move smoothly. Nothing should hurt." />
+            <SimplePlanItem label={sportLoadPlanLabel(externalLoads.length + 4)} title="End-of-day reflection" body="Log one thing learned, energy, soreness, confidence, and whether tomorrow should be easier." />
           </div>
           <div className="mt-4 rounded-xl bg-white/80 p-3 text-sm font-bold text-amber-900">
             <p>Shooting today is accuracy and mechanics only — not a fatigue workout.</p>
@@ -176,7 +177,7 @@ export default async function DayPreviewPage({ params }: { params: Promise<{ dat
             <article className="rounded-2xl bg-ice p-4"><p className="label">Parent cue</p><p className="font-semibold">{presentation.parentCue}</p></article>
             <article className="rounded-2xl bg-ice p-4"><p className="label">Load rule</p><p className="font-semibold">{presentation.loadRule}</p></article>
             <article className="rounded-2xl bg-ice p-4"><p className="label">Recovery</p><p className="font-semibold">{presentation.recovery}</p></article>
-            <article className="rounded-2xl bg-ice p-4"><p className="label">Source plan</p><p className="font-semibold">{day?.primarySession || v84Session?.summary || externalLoads[0]?.title}</p></article>
+            <article className="rounded-2xl bg-ice p-4"><p className="label">Source plan</p><p className="font-semibold">{day?.primarySession || v84Session?.summary || externalLoads.map((load) => load.title).join(", ")}</p></article>
           </div>
           {presentation.showSourceExecutionInDetails && <div className="mt-5"><DayExecutionSequence entries={executionEntries} stepPresentation={presentation.executionSteps} /></div>}
         </details>
@@ -222,6 +223,22 @@ function SimplePlanItem({ body, label, title }: { body: string; label: string; t
         </div>
       </div>
       <p className="mt-3 text-base font-semibold text-slate-700">{body}</p>
+    </article>
+  );
+}
+
+function SportLoadPlanItem({ item }: { item: DaySportLoadPlanItem }) {
+  return (
+    <article className="rounded-2xl border border-rink bg-white p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="label">Required {item.label} · Planned Sport Load</p>
+          <h3 className="text-xl font-black">{item.title}</h3>
+        </div>
+        <Link className="btn-secondary" href={item.href}>Log Sport Load</Link>
+      </div>
+      <p className="mt-3 text-base font-semibold text-slate-700">{item.details}</p>
+      <p className="mt-2 text-sm font-bold text-slate-600">Status: {item.status}.</p>
     </article>
   );
 }

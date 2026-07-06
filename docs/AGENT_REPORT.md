@@ -2,48 +2,44 @@
 
 ## Latest Task
 
-Implement `SPORT-LOAD-4V4-SUMMER-2026` as Planned Sport Load Source Import v1.
+Fix Day/Today incorrect Lacrosse Sport Load label.
 
 ## Result
 
-Added Maddox's July-August 2026 Bell Sensplex 4v4 summer hockey schedule to the v8.4 source import package as planned Sport Load.
+Fixed `DEF-4V4-DAY-LABEL-001`, where UAT found the Day/Today Sport Load summary could show a stale or incorrect Lacrosse label when the actual planned Sport Load was not lacrosse.
 
-The implementation uses one planned Sport Load record per date and preserves both same-day game slots in each record's details. The Day Execution Plan also receives one matching Sport Load entry per date so Day and Calendar projections can surface the games as part of the offseason plan.
+Root cause: `app/day/[date]/page.tsx` had Sport Load summary label logic separate from the actual planned Sport Load cards. That label logic could summarize by stale/hardcoded sport type assumptions instead of deriving the visible summary from the planned Sport Load records for the date.
 
-This remains a planned hockey stimulus, not an automatic overload/risk rule. Surrounding work should be adjusted only based on readiness, soreness, camp stacking, travel, or parent observation.
+The Day page now uses `buildDaySportLoadSummaryLabel()`:
+- one planned Sport Load: use that record's title, such as `4v4 Hockey`.
+- multiple planned Sport Loads: use a neutral count label, such as `2 Sport Loads Planned`.
+- `Lacrosse` appears only when the planned Sport Load title itself is lacrosse.
 
-No Supabase data/schema, completed logs, KPI code, KPI targets, Weakness Overlay, commits, or pushes were changed/performed.
+No source import JSON, Supabase data/schema, completed logs, KPI code, KPI targets, Weakness Overlay, commits, or pushes were changed/performed.
 
 ## Files Changed
 
-- `imports/v8.4/data/sportLoads.json`
-- `imports/v8.4/data/dayExecutionPlan.json`
-- `imports/v8.4/data/importQaReport.json`
-- `imports/v8.4/manifest.json`
-- `imports/v8.4/README.md`
-- `lib/imports/v8_4/index.ts`
-- `lib/imports/v8_4/calendar.test.ts`
-- `scripts/verify-v8.4-import.mjs`
+- `app/day/[date]/page.tsx`
+- `lib/daySportLoadPlan.ts`
+- `lib/daySportLoadPlan.test.ts`
+- `docs/SCOPE.md`
 - `docs/AGENT_REPORT.md`
 
 ## Status Updates
 
-- Added 9 planned Sport Load source records for 2026-07-05, 2026-07-12, 2026-07-19, 2026-07-26, 2026-08-03, 2026-08-05, 2026-08-09, 2026-08-16, and 2026-08-23.
-- Added 9 matching Day Execution Plan Sport Load entries using `logType: "sportLoadLog"` and `appRenderHint: "sport-card"`.
-- Updated v8.4 count metadata and import verification expectations:
-  - `sportLoads.json`: 28 -> 37
-  - `dayExecutionPlan.json`: 621 -> 630
-- Preserved existing same-day Sport Loads on Aug 3, Aug 5, and Aug 16 while adding 4v4 as an additional planned Sport Load.
-- Added focused v8.4 calendar/import tests covering the 4v4 dates, details, same-day Sport Load preservation, absence of completed logs, and updated counts.
-- Plan/Gantt was not changed in this increment; the locked Gantt lane count remains unchanged.
+- Added `buildDaySportLoadSummaryLabel()` beside the existing Sport Load plan item helper.
+- Updated the Day-page red summary chip and workload copy to use the actual planned Sport Load title/count.
+- Preserved stacked Sport Load cards and log links from `DEF-4V4-DAY-STACK-001`.
+- Added tests proving July 5 renders `4v4 Hockey` without `Lacrosse`, stacked dates use correct individual titles, and a lacrosse label appears only on an actual lacrosse Sport Load date.
+- Registered `DEF-4V4-DAY-LABEL-001` in `docs/SCOPE.md` as completed locally.
 
 ## Scope Capture Check
 
-- Defects added/updated: none.
-- Epics/features added/updated: `SPORT-LOAD-4V4-SUMMER-2026` implemented locally as Planned Sport Load Source Import v1.
-- Product decisions added/updated: 4v4 remains planned hockey stimulus; no automatic dryland cancellation or overload/risk classification was introduced.
-- Data/sync/environment decisions added/updated: v8.4 source import counts updated; no Supabase writes or completed logs were created.
-- Testing requirements added/updated: focused v8.4 calendar/import tests now cover the 4v4 source import and counts.
-- Training-plan/source items added/updated: Bell Sensplex 4v4 dates are now in planned Sport Load source data and Day Execution Plan source data.
-- Docs updated: `imports/v8.4/README.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: Plan/Gantt hardcoded rendering, completed Sport Load logging, Supabase writes, KPI work, Weakness Overlay changes, AI Coach, workout rewrites, production deploy, commit, push.
+- Defects added/updated: `DEF-4V4-DAY-LABEL-001` added and marked completed locally; `DEF-4V4-DAY-STACK-001` behavior preserved.
+- Epics/features added/updated: `SPORT-LOAD-4V4-SUMMER-2026` Day-page display path now derives summary labels from actual planned Sport Load records.
+- Product decisions added/updated: Day/Today Sport Load summary labels use actual load titles or neutral counts; no stale lacrosse label when lacrosse is not planned.
+- Data/sync/environment decisions added/updated: no Supabase writes, source JSON edits, completed logs, or persistence changes.
+- Testing requirements added/updated: `lib/daySportLoadPlan.test.ts` covers stacked/non-stacked Sport Load items and Sport Load summary label rules.
+- Training-plan/source items added/updated: none; existing v8.4 source import preserved.
+- Docs updated: `docs/SCOPE.md`, `docs/AGENT_REPORT.md`.
+- Items intentionally deferred: production deploy, post-deploy smoke, completed Sport Load logging changes, Calendar changes, Plan/Gantt work, KPI work, Weakness Overlay changes, commit, push.
