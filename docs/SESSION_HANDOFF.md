@@ -3,9 +3,9 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Current clean checkpoint: `f247959` (`fix(plan): render sport loads from v8.4`).
+- Current clean checkpoint before environment-mapping audit: `897b42b` (`docs(scope): capture environment and QA automation defects`).
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering and stale Lacrosse label risk, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
-- Latest expected commit before docs capture: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
+- Historical KPI preview checkpoint: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
 - Vercel Preview branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
 - Preview `/kpis` displayed existing KPI results/baselines similar to production. This is unverified evidence only; do not conclude Preview uses production Supabase without env/runtime proof.
 - Previous docs checkpoint: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
@@ -39,6 +39,33 @@
 - `DEF-QA-CODEX-RUNNER-001` added: Codex is being used too often as a recurring manual smoke-test runner.
 - `DEF-QA-USAGE-LEDGER-001` added: no prompt-level Codex usage ledger exists.
 
+## Current Environment Mapping Status
+
+Safe local audit on 2026-07-08 found:
+
+| Environment / project | Supabase project ref | Status |
+| --- | --- | --- |
+| Local development | `npuankmkxbjtlokbpczz` | Known; `.env.local` points to staging and `scripts/env-whoami.mjs` classifies local as staging. |
+| Supabase staging | `npuankmkxbjtlokbpczz` | Known; project name `maddox-training-os-staging`. |
+| Supabase production | `mbjcedhysniabbaigsko` | Known from `.env.local.production-backup` URL ref and historical docs; treat as production Maddox data. |
+| Vercel Preview | Unknown | Needs dashboard confirmation; no local `.vercel/project.json` or `vercel.json` exists and env values were not pulled. |
+| Vercel Production | Unknown from safe local repo inspection | Needs dashboard confirmation; expected target is production ref `mbjcedhysniabbaigsko`, but this is not verified Vercel configuration yet. |
+
+Manual/dashboard confirmation required:
+
+- Confirm Vercel Production `NEXT_PUBLIC_SUPABASE_URL` points to project ref `mbjcedhysniabbaigsko`.
+- Confirm Vercel Preview `NEXT_PUBLIC_SUPABASE_URL` points to project ref `npuankmkxbjtlokbpczz`, or explicitly classify Preview as read-only if it points to production.
+- Confirm whether Vercel Development env vars exist and whether they match staging.
+- Do not copy, paste, screenshot, or commit Supabase keys, tokens, JWTs, passwords, or full secret values.
+- Do not perform Preview write testing until Preview mapping is confirmed.
+
+Staging auto-pause context:
+
+- Supabase warning applies to staging project `maddox-training-os-staging`, project ref `npuankmkxbjtlokbpczz`.
+- Mike reported the project is not paused yet, but may auto-pause if inactive.
+- If staging pauses, local development and correctly configured Preview QA may fail until staging is resumed.
+- No keepalive, billing, Supabase, or Vercel changes have been made.
+
 ## Closed-Loop Architecture State
 
 - Closed-Loop Training Intelligence is future architecture, not current app behavior.
@@ -66,7 +93,7 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Recommended next implementation order:
 
-1. `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` — inspect/document environment mapping, no changes.
+1. `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` — complete Vercel dashboard confirmation for Preview/Production Supabase URL project refs, no changes.
 2. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
 3. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
 4. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
@@ -82,10 +109,10 @@ After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATI
 
 ## Scope Capture Check
 
-- Defects added/updated: `ENV-PREVIEW-DB-001` added; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added; `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` added.
+- Defects added/updated: `ENV-PREVIEW-DB-001` added; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added; `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` added; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-SUPABASE-STAGING-AUTOPAUSE-001` now have local audit findings with dashboard confirmation still required for Vercel env values.
 - Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` planned Sport Load integration pushed through source import, Day/Today, Calendar, and Plan/Gantt v8.4 Sport Load sourcing; `PLAN-GANTT-SPORTLOAD-V84-001` completed; `QA-AUTOMATION-OWNERSHIP-001` and `QA-PLAYWRIGHT-SMOKE-001` added.
 - Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation; 4v4 is planned Sport Load, not non-plan work or an automatic load-risk trigger.
-- Data/sync/environment decisions added/updated: Preview DB isolation is unverified; no Preview saves until `ENV-PREVIEW-DB-AUDIT-001` confirms staging/non-production target or read-only classification; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-SUPABASE-STAGING-AUTOPAUSE-001` added; no Supabase/data mutation.
+- Data/sync/environment decisions added/updated: local development maps to staging ref `npuankmkxbjtlokbpczz`; Supabase staging is `maddox-training-os-staging` / `npuankmkxbjtlokbpczz`; Supabase production ref is `mbjcedhysniabbaigsko`; Vercel Preview and Production mappings still require dashboard confirmation; no Preview saves until staging/non-production target or read-only classification is confirmed; no Supabase/data mutation.
 - Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit remains pending; Plan/Gantt Sport Load overlay tests added locally; deterministic Playwright smoke scope added through `QA-PLAYWRIGHT-SMOKE-001`.
 - Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`; later source-capture update added the 4v4 schedule and this capture added Gantt duration, environment-safety, and QA automation ownership scope.
-- Items intentionally deferred: behavior fixes, app code, tests, Playwright implementation, builds, source JSON edits, Supabase changes, Vercel env changes, methodology implementation, final domain/source/stack choices.
+- Items intentionally deferred: Vercel dashboard confirmation, behavior fixes, app code, tests, Playwright implementation, builds, source JSON edits, Supabase changes, Vercel env changes, staging keepalive/billing decision, methodology implementation, final domain/source/stack choices.
