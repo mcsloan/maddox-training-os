@@ -2,47 +2,54 @@
 
 ## Latest Task
 
-Fix Plan/Gantt Sport Load rendering from v8.4 Sport Loads.
+Capture Next Scope — Gantt, QA Automation, and Environment Safety.
 
 ## Result
 
-Fixed `PLAN-GANTT-SPORTLOAD-V84-001`, where the Plan/Gantt page still used stale hardcoded/legacy Sport Load interpretation even though v8.4 Sport Loads now include the July-August Bell Sensplex 4v4 schedule.
+Captured the next open product defect, environment-safety defects, and QA automation/workflow ownership items before any implementation work.
 
-Root cause: `app/plan/page.tsx` built Gantt Sport Load rows from a hardcoded row list and week cards from legacy `data/externalLoads.json` through `getWeekExternalLoads()`. That meant Day/Today and Calendar could show the new v8.4 Sport Loads while Plan/Gantt lagged behind.
+Current checkpoint is `f247959` (`fix(plan): render sport loads from v8.4`). The 4v4 chain is pushed through scope capture, source import, Day/Today/Calendar rendering, and Plan/Gantt v8.4 Sport Load sourcing.
 
-The Plan page now derives Sport Load overlays from v8.4 `sportLoads` through `lib/planSportLoadOverlay.ts`:
-- Plan week cards list the v8.4 Sport Loads for each week with date, title, and details.
-- Phase Gantt keeps the locked methodology/phase rows but inserts Sport Load marker rows generated from v8.4 Sport Loads.
-- Multiple same-week markers are shown with a count in the Gantt cell.
+New scope captured:
 
-No source import JSON, v8.4 count files, Supabase data/schema, completed logs, KPI code, Weakness Overlay, commits, or pushes were changed/performed.
+- `DEF-GANTT-SPORTLOAD-DURATION-001` — Plan/Gantt displays day-specific Sport Loads as full-week duration bars.
+- `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` — Preview/Staging/Production Supabase mapping is not sufficiently visible.
+- `DEF-SUPABASE-STAGING-AUTOPAUSE-001` — Supabase staging project at risk of inactivity auto-pause.
+- `QA-AUTOMATION-OWNERSHIP-001` — shift recurring smoke/regression testing from Codex to deterministic scripts and CI.
+- `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite for core routes.
+- `DEF-QA-CODEX-RUNNER-001` — Codex is being used as a recurring manual smoke-test runner.
+- `DEF-QA-USAGE-LEDGER-001` — no prompt-level Codex usage ledger exists.
+
+No app code changed. No source import data changed. No Supabase operations were performed. No Vercel environment variables were changed. No tests or builds were run.
 
 ## Files Changed
 
-- `app/plan/page.tsx`
-- `lib/planSportLoadOverlay.ts`
-- `lib/planSportLoadOverlay.test.ts`
 - `docs/SCOPE.md`
 - `docs/SESSION_HANDOFF.md`
 - `docs/AGENT_REPORT.md`
 
 ## Status Updates
 
-- Added a v8.4-derived Plan Sport Load overlay helper.
-- Replaced Plan week-card Sport Load summaries from legacy data to v8.4 Sport Loads.
-- Replaced hardcoded Gantt Sport Load rows with v8.4-derived marker rows while preserving locked phase/camp/taper method rows.
-- Verified the Bell Sensplex 4v4 dates are present in the helper output:
-  - 2026-07-05, 2026-07-12, 2026-07-19, 2026-07-26, 2026-08-03, 2026-08-05, 2026-08-09, 2026-08-16, 2026-08-23.
-- Verified existing Sport Loads remain present: Toronto Trip, Carleton Ravens Camp, Marc O'Connor Ice, Sensplex Camp.
-- Updated `docs/SCOPE.md` and `docs/SESSION_HANDOFF.md` so the next broader queue returns to `AUDIT-LOAD-CLASSIFICATION-001` after 4v4 release acceptance.
+- Updated `docs/SCOPE.md` active queue, current sprint, priority index, detailed records, and defect summary.
+- Updated `docs/SESSION_HANDOFF.md` with checkpoint `f247959`, new open defects/QA items, and the recommended next implementation order.
+- Updated this report with the scope-capture summary and explicit no-code/no-data/no-build status.
+
+Recommended next implementation order:
+
+1. `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` — inspect/document environment mapping, no changes.
+2. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
+3. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
+4. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
+
+After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032`.
 
 ## Scope Capture Check
 
-- Defects added/updated: `PLAN-GANTT-SPORTLOAD-V84-001` added and marked completed locally.
-- Epics/features added/updated: `SPORT-LOAD-4V4-SUMMER-2026` implementation chain now includes Plan/Gantt fixed locally.
-- Product decisions added/updated: Plan/Gantt Sport Load display derives from actual v8.4 Sport Loads, not stale hardcoded rows.
-- Data/sync/environment decisions added/updated: no source JSON edits, import count changes, Supabase writes, or completed logs.
-- Testing requirements added/updated: `lib/planSportLoadOverlay.test.ts` covers v8.4-derived Plan/Gantt Sport Load overlay data, 4v4 dates, existing Sport Loads, and forbidden wording.
-- Training-plan/source items added/updated: no source data changed; v8.4 source data is now consumed by Plan/Gantt.
+- Defects added/updated: `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` added.
+- Epics/features added/updated: `QA-AUTOMATION-OWNERSHIP-001` and `QA-PLAYWRIGHT-SMOKE-001` added; `SPORT-LOAD-4V4-SUMMER-2026` and `PLAN-GANTT-SPORTLOAD-V84-001` context preserved as completed chain.
+- Product decisions added/updated: recurring smoke/regression should move from Codex-as-runner to deterministic scripts/CI; Mike performs product acceptance.
+- Data/sync/environment decisions added/updated: environment mapping and staging auto-pause risks captured; no Supabase writes or environment changes.
+- Testing requirements added/updated: deterministic Playwright smoke suite scope captured; no tests created or run in this docs-only task.
+- Training-plan/source items added/updated: Gantt date semantics defect captured; no source data changed.
 - Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: commit, push, production deploy/smoke, broader `AUDIT-LOAD-CLASSIFICATION-001`, Closed-Loop methodology work, Plan/Gantt redesign.
+- Items intentionally deferred: app implementation, Playwright implementation, tests, builds, source JSON edits, Supabase changes, Vercel env changes, commit, push, Closed-Loop methodology work.

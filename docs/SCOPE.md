@@ -9,12 +9,15 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Current checkpoint: docs capture after commit `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`); Vercel Preview for `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
+- Current checkpoint: `f247959` (`fix(plan): render sport loads from v8.4`) is pushed, and the working tree was clean before this docs-only scope capture.
+- Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
+- New next-scope capture: `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` are now the immediate scope-control items before additional implementation.
+- Earlier docs capture after commit `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`); Vercel Preview for `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
 - Preview `/kpis` displayed existing KPI results/baselines similar to production. This does not prove Preview is using production Supabase; database target is unverified and must be audited before any Preview write testing.
 - Previous docs checkpoint: docs capture after pushed commit `f5c35a8` (`fix(projections): clarify controlled cardio copy`); repo was clean before that docs-only capture.
 - Product QA after `f5c35a8` found remaining production Day rendering defects: `DEF-029` is reopened, and `DEF-030`, `DEF-031`, and `DEF-032` are added as P1 product-trust defects.
 - Bell Sensplex 4v4 summer hockey schedule for July-August 2026 is captured as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item. It is a high-value hockey stimulus, not an automatic overload emergency.
-- Summer 4v4 implementation chain after `d922217`: source import, Day/Today, Calendar, and Plan/Gantt are fixed locally through `PLAN-GANTT-SPORTLOAD-V84-001`; return to the broader pre-4v4 queue after this tactical fix.
+- Summer 4v4 implementation chain is pushed through `f247959`: source import, Day/Today, Calendar, and Plan/Gantt now derive planned Sport Loads from v8.4 where expected.
 - Closed-Loop Training Intelligence is registered as a future design-governed architecture program. It is not current app behavior and must not be retrofitted into the current application until `DESIGN-GATE-001` passes.
 - Previous projection-readiness checkpoint: repo clean and synced after pushed commit `6ab3f5e` (`test(projections): cover all v8.4 day readiness`).
 - Tonight's stabilization commits are pushed: `9fd4c73` (`fix(session): align completed summary title with canonical presentation`), `c20432c` (`fix(projections): align planned activity classification across day and session`), and `05019f5` (`test(projections): cover day-session parity across v8.4 sessions`).
@@ -136,8 +139,15 @@ Every active scope item should use this structure, either as a detailed record b
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
 | 3 | ENV-PREVIEW-DB-001 | Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data | P1 | Not started | Docs-only / environment-safety | Treat Vercel Preview as no-write until `ENV-PREVIEW-DB-AUDIT-001` verifies target isolation. |
 | 4 | ENV-PREVIEW-DB-AUDIT-001 | Verify Vercel Preview Supabase target | P1 | Not started | Docs-only / environment-safety | Verify Production, Preview, and local Supabase project refs without exposing secrets before Preview write testing. |
-| 4.5 | SPORT-LOAD-4V4-SUMMER-2026 | Bell Sensplex 4v4 Summer Hockey Integration | P1 | Completed locally | Source-review -> Safe lane app import | Source import, Day/Today, Calendar, and Plan/Gantt are implemented locally; post-commit/deploy smoke remains the release acceptance step. |
-| 4.6 | PLAN-GANTT-SPORTLOAD-V84-001 | Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads | P1 | Completed locally | Fast lane | Plan/Gantt now derives Sport Load overlay rows and week summaries from v8.4 `sportLoads`; return to `AUDIT-LOAD-CLASSIFICATION-001` after release acceptance. |
+| 4.5 | SPORT-LOAD-4V4-SUMMER-2026 | Bell Sensplex 4v4 Summer Hockey Integration | P1 | Completed | Source-review -> Safe lane app import | Source import, Day/Today, Calendar, and Plan/Gantt Sport Load sourcing are pushed through `f247959`. |
+| 4.6 | PLAN-GANTT-SPORTLOAD-V84-001 | Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads | P1 | Completed | Fast lane | Plan/Gantt now derives Sport Load overlay rows and week summaries from v8.4 `sportLoads`. |
+| 4.7 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | P1 | Not started | Docs-only / environment-safety | Inspect and document Local, Vercel Preview, Vercel Production, staging, and production Supabase mapping without changing env vars or writing data. |
+| 4.8 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | P1 | Not started | Fast lane | Fix Plan/Gantt date semantics so single-day Sport Loads are markers/chips and multi-day Sport Loads show actual spans. |
+| 4.9 | QA-AUTOMATION-OWNERSHIP-001 | Shift recurring smoke/regression testing from Codex to deterministic scripts and CI | P1 | Not started | Docs-only / QA ownership | Define ownership model: Codex writes tests, scripts/CI run repeatable tests, Codex analyzes failures, Mike does product acceptance. |
+| 4.10 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | Not started | Safe lane / QA automation | Add read-only smoke coverage for Today, Day, Calendar, Plan/Gantt, and KPI visibility after ownership scope is captured. |
+| 4.11 | DEF-QA-CODEX-RUNNER-001 | Codex is being used as a recurring manual smoke-test runner | P1 | Not started | Docs-only / QA workflow | Capture the workflow defect and move repeat smoke checks into deterministic scripts/CI. |
+| 4.12 | DEF-SUPABASE-STAGING-AUTOPAUSE-001 | Supabase staging project at risk of inactivity auto-pause | P2 | Not started | Docs-only / environment-safety | Decide whether to allow pause/manual resume, add a safe read-only staging health check, or upgrade if staging uptime matters. |
+| 4.13 | DEF-QA-USAGE-LEDGER-001 | No prompt-level Codex usage ledger exists | P2 | Not started | Docs-only / workflow | Define a lightweight usage ledger after the environment and Gantt duration items are handled. |
 | 5 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 6 | FORENSIC-DAY-SESSION-MISMATCH-001 | Forensic Day/Session data-flow audit | P1 | Completed | Fast lane | Audit found Day and Session use divergent presentation paths; use findings to drive canonical contract. |
 | 7 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Completed | Fast lane | Audit completed; use findings to constrain the next Day + Session parity implementation. |
@@ -175,19 +185,18 @@ Every active scope item should use this structure, either as a detailed record b
 
 ## Current Sprint / Next Codex Task
 
-Current sprint: tactical 4v4 Sport Load rendering fixes are completing on top of the broader product QA queue. After `SPORT-LOAD-4V4-SUMMER-2026` and `PLAN-GANTT-SPORTLOAD-V84-001` are committed/deployed/accepted, return to product QA after `f5c35a8`: `DEF-029` is reopened, `DEF-030` through `DEF-032` are added, and the next bounded task is `AUDIT-LOAD-CLASSIFICATION-001`.
+Current sprint: tactical 4v4 Sport Load sourcing is complete through `f247959`, but Plan/Gantt still needs date-semantics cleanup for single-day versus multi-day Sport Loads. Before more implementation, capture and sequence the environment-safety and QA-automation ownership work so Codex is not repeatedly used as an ad hoc smoke-test runner.
 
 Next task brief:
 
 - Read `AGENTS.md`, `docs/SESSION_HANDOFF.md`, and this file first.
-- Run `AUDIT-LOAD-CLASSIFICATION-001` as inspect-only discovery.
-- Determine how every day and controlled bike/treadmill activity is currently classified.
-- Explain why controlled bike/treadmill durations appear as 20, 30, 45, 10-15, or other.
-- Identify rendering paths that still leak old copy or raw KPI categories.
-- Identify whether current behavior is source-data-driven, projection-driven, or page-render-path-driven.
-- Feed findings into `DEF-029`, `DEF-030`, `DEF-031`, `DEF-032`, and future design work.
-- Do not implement Closed-Loop methodology architecture during the audit.
-- Do not edit `imports/v8.4/data/*.json`.
+- First run `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` as inspect/document-only work: identify local, Vercel Preview, Vercel Production, staging, and production Supabase mapping without env changes or writes.
+- Then fix `DEF-GANTT-SPORTLOAD-DURATION-001`: single-day Sport Loads render as date-specific markers/chips; multi-day Sport Loads render as actual date spans.
+- Then implement `QA-PLAYWRIGHT-SMOKE-001` under `QA-AUTOMATION-OWNERSHIP-001` so recurring route smoke checks move to deterministic scripts/CI.
+- Then capture/implement `DEF-QA-USAGE-LEDGER-001`.
+- Preserve the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` remains the next bounded discovery task for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032` after the newly captured environment/Gantt/QA sequencing work.
+- Do not implement Closed-Loop methodology architecture during any of these current-app tasks.
+- Do not edit `imports/v8.4/data/*.json` unless a later task explicitly asks.
 - Do not mutate Supabase or saved records.
 
 Execution gate: tactical current-app defects may be fixed separately as bounded work after discovery, but Closed-Loop methodology implementation remains gated by `DESIGN-GATE-001`.
@@ -210,7 +219,7 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | In progress | KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001 |
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
+| Not started | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-GANTT-SPORTLOAD-DURATION-001, QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
@@ -218,7 +227,7 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 
 | Status | IDs |
 | --- | --- |
-| Not started | SESSION-UX-001, RECOVERY-READINESS-001, EXPORTS-REPORTING-001, HOCKEY-IQ-001, DEF-008, DEF-009, DEF-010, DEF-011, DEF-012 |
+| Not started | DEF-SUPABASE-STAGING-AUTOPAUSE-001, DEF-QA-USAGE-LEDGER-001, SESSION-UX-001, RECOVERY-READINESS-001, EXPORTS-REPORTING-001, HOCKEY-IQ-001, DEF-008, DEF-009, DEF-010, DEF-011, DEF-012 |
 | Scope review required | SOURCE-INGEST-OTA-001, PLAN-RECON-OTA-001, DEF-004 |
 
 ### P3
@@ -900,7 +909,7 @@ Advanced KPI scope:
 - Type: Task
 - Parent: QA-SYSTEM-001
 - Priority: P1
-- Status: Scope review required
+- Status: Completed
 - Lane: Safe lane
 - Owner: Mike / Codex
 - Source: Completed-session presentation defect and local QA harness limits
@@ -1236,7 +1245,7 @@ Scheduling interactions to consider, not automatic risk dates:
 - Type: Defect / Feature
 - Parent: `SPORT-LOAD-4V4-SUMMER-2026`
 - Priority: P1
-- Status: Completed locally
+- Status: Completed
 - Lane: Fast lane
 - Owner: Mike / Codex
 - Source: Production/source-impact QA after `0bba866` and `d922217`.
@@ -1249,6 +1258,172 @@ Scheduling interactions to consider, not automatic risk dates:
 - Risks: stale hardcoded Plan rows can hide newly imported Sport Loads or mislead planning.
 - Next action: post-deploy smoke, then return to `AUDIT-LOAD-CLASSIFICATION-001`.
 - Links / evidence: local helper `lib/planSportLoadOverlay.ts`; tests `lib/planSportLoadOverlay.test.ts`.
+
+### DEF-GANTT-SPORTLOAD-DURATION-001
+
+- ID: DEF-GANTT-SPORTLOAD-DURATION-001
+- Title: Plan/Gantt displays day-specific Sport Loads as full-week duration bars
+- Type: Defect
+- Parent: Plan/Gantt / Sport Load presentation
+- Priority: P1
+- Status: Not started
+- Lane: Fast lane
+- Owner: Mike / Codex
+- Source: Mike product QA after `f247959`.
+- Problem: Daily Sport Loads such as 4v4 Hockey, lacrosse, and Marc O'Connor ice should not render as full-week duration bars. They occur on specific dates inside a week and need date-specific markers/chips. Multi-day Sport Loads such as Toronto Trip should show actual date ranges, not full-week duration.
+- Desired outcome: Plan/Gantt date semantics distinguish single-day Sport Loads from multi-day Sport Loads while preserving v8.4 as the source of truth.
+- In scope: bounded Plan/Gantt presentation fix, v8.4-derived Sport Load date/span logic, focused tests, and no data mutation.
+- Out of scope: source JSON edits, import count changes, Supabase, completed logs, Calendar/Day/KPI changes, broad Gantt redesign, or new training content.
+- Acceptance criteria:
+  - Single-day Sport Loads render as date-specific markers/chips.
+  - Multi-day Sport Loads render as actual date spans.
+  - 4v4 appears in every scheduled date's correct week.
+  - Lacrosse appears only on actual lacrosse dates.
+  - Marc O'Connor appears only on actual Marc O'Connor dates.
+  - Toronto Trip shows its real multi-day range.
+  - Camps show actual camp date ranges.
+  - Gantt must not imply a single-day Sport Load lasts a full week.
+- Dependencies: `PLAN-GANTT-SPORTLOAD-V84-001`; v8.4 `sportLoads`; existing Plan/Gantt helper.
+- Risks: week-wide bars can mislead Mike/Maddox into thinking a single-day Sport Load lasts all week.
+- Next action: implement after `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` is documented.
+- Links / evidence: Mike scope-capture request after production smoke passed for `/plan`.
+
+### DEF-ENV-PREVIEW-SUPABASE-MAPPING-001
+
+- ID: DEF-ENV-PREVIEW-SUPABASE-MAPPING-001
+- Title: Preview/Staging/Production Supabase mapping is not sufficiently visible
+- Type: Defect
+- Parent: Environment safety
+- Priority: P1
+- Status: Not started
+- Lane: Docs-only / environment-safety
+- Owner: Mike / Codex
+- Source: Mike environment-safety concern after preview/staging observations.
+- Problem: The project previously had confusion about whether Vercel Preview was connected to the production Supabase database. A new Supabase warning for `maddox-training-os-staging` highlights that staging may auto-pause, making environment mapping more important.
+- Desired outcome: Environment mapping is documented clearly enough that Mike can tell whether local, Preview, and Production operations are safe before any write-capable test.
+- In scope: inspect/document mapping for local development, Vercel Preview, Vercel Production, Supabase staging, and Supabase production; document staging auto-pause behavior; confirm no writes or env changes during audit.
+- Out of scope: changing environment variables, rotating keys, mutating Supabase, adding keepalive automation, or deploying.
+- Acceptance criteria:
+  - Identify which Supabase project local development uses.
+  - Identify which Supabase project Vercel Preview uses.
+  - Identify which Supabase project Vercel Production uses.
+  - Document staging auto-pause risk.
+  - Document what happens if staging is paused.
+  - Confirm no environment variables are changed during the audit.
+  - Confirm no Supabase writes are performed.
+- Dependencies: `scripts/preflight.mjs`, `scripts/env-whoami.mjs`, Vercel/Supabase environment access where available.
+- Risks: Preview or local testing could accidentally point to production; a paused staging project can look like an app failure.
+- Next action: inspect/document environment mapping with no changes.
+- Links / evidence: prior `ENV-PREVIEW-DB-001`, `ENV-PREVIEW-DB-AUDIT-001`, and Supabase staging warning for project `npuankmkxbjtlokbpczz`.
+
+### DEF-SUPABASE-STAGING-AUTOPAUSE-001
+
+- ID: DEF-SUPABASE-STAGING-AUTOPAUSE-001
+- Title: Supabase staging project at risk of inactivity auto-pause
+- Type: Defect
+- Parent: Environment safety
+- Priority: P2
+- Status: Not started
+- Lane: Docs-only / environment-safety
+- Owner: Mike / Codex
+- Source: Supabase inactivity warning reported by Mike.
+- Problem: Supabase sent an inactivity warning for `maddox-training-os-staging`, project ID `npuankmkxbjtlokbpczz`. The project is not paused yet, but may be paused automatically if it continues not to receive sufficient activity.
+- Desired outcome: Decide how staging uptime should be handled without confusing staging failures with production app defects.
+- In scope: document the warning, staging/local QA impact, and decision options.
+- Out of scope: keepalive implementation, paid-plan upgrade, Supabase writes, or environment changes in this docs capture.
+- Acceptance criteria: Production is not identified in the warning; staging/local QA failure mode is documented; decision options are captured.
+- Dependencies: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`.
+- Risks: paused staging can break local/preview QA and drive accidental production testing.
+- Next action: decide whether to allow staging to pause and manually resume, create a safe read-only staging health check, or upgrade Supabase if staging uptime becomes important.
+- Links / evidence: Supabase warning for `maddox-training-os-staging`, project ID `npuankmkxbjtlokbpczz`.
+
+### QA-AUTOMATION-OWNERSHIP-001
+
+- ID: QA-AUTOMATION-OWNERSHIP-001
+- Title: Shift recurring smoke/regression testing from Codex to deterministic scripts and CI
+- Type: Epic
+- Parent: QA system
+- Priority: P1
+- Status: Not started
+- Lane: Docs-only / QA ownership
+- Owner: Mike / Codex
+- Source: Mike workflow concern after repeated production smoke tasks.
+- Problem: Codex is being used too often as a recurring manual test runner. This burns context, 5-hour limit, weekly limit, and Mike approval time.
+- Desired outcome: Recurring QA moves into deterministic scripts and CI, with Codex used to write tests and analyze failures rather than repeatedly click or fetch the same pages.
+- In scope: ownership model, QA automation sequencing, smoke-suite scope, and usage-reduction guardrails.
+- Out of scope: implementing Playwright tests in this docs capture, installing packages, GitHub Actions, or production smoke execution.
+- Acceptance criteria:
+  - Codex writes tests.
+  - npm scripts / Terminal / CI run repeatable tests.
+  - Codex analyzes failures.
+  - Mike performs product acceptance only.
+- Dependencies: `QA-PLAYWRIGHT-SMOKE-001`, existing QA contract docs.
+- Risks: continued manual smoke work burns Codex usage and increases approval friction.
+- Next action: capture ownership model, then create deterministic smoke suite scope.
+- Links / evidence: post-4v4 smoke workflow and Mike usage concern.
+
+### QA-PLAYWRIGHT-SMOKE-001
+
+- ID: QA-PLAYWRIGHT-SMOKE-001
+- Title: Create deterministic Playwright smoke suite for core routes
+- Type: Task
+- Parent: `QA-AUTOMATION-OWNERSHIP-001`
+- Priority: P1
+- Status: Not started
+- Lane: Safe lane / QA automation
+- Owner: Mike / Codex
+- Source: Mike workflow concern and repeated read-only production smoke checks.
+- Problem: Core-route smoke validation is being performed manually/ad hoc by Codex instead of repeatable automation.
+- Desired outcome: Read-only deterministic smoke tests cover Today, Day, Calendar, Plan/Gantt, and KPI visibility so recurring route checks do not require bespoke Codex sessions.
+- In scope: reusable Playwright smoke suite design and implementation in a later task using existing approved tooling.
+- Out of scope: Playwright install in this docs capture, production writes, save/submit flows, broad QA matrix expansion, or app behavior changes.
+- Acceptance criteria: repeatable smoke command validates core route rendering and key labels without mutating data.
+- Dependencies: `QA-AUTOMATION-OWNERSHIP-001`, QA contract docs, existing Playwright proof-of-life.
+- Risks: without deterministic smoke coverage, product acceptance continues to rely on screenshots and one-off Codex runs.
+- Next action: implement after environment mapping and Gantt duration semantics are handled.
+- Links / evidence: `QA-AUTOMATION-002`; repeated post-deploy smoke tasks.
+
+### DEF-QA-CODEX-RUNNER-001
+
+- ID: DEF-QA-CODEX-RUNNER-001
+- Title: Codex is being used as a recurring manual smoke-test runner
+- Type: Defect
+- Parent: `QA-AUTOMATION-OWNERSHIP-001`
+- Priority: P1
+- Status: Not started
+- Lane: Docs-only / QA workflow
+- Owner: Mike / Codex
+- Source: Mike workflow concern.
+- Problem: Codex sessions are repeatedly used for manual browser/fetch smoke checks that should be deterministic scripts.
+- Desired outcome: Recurring smoke checks become scripted/CI-owned, with Codex reserved for test creation, interpretation, and fixes.
+- In scope: workflow defect capture and linkage to `QA-PLAYWRIGHT-SMOKE-001`.
+- Out of scope: implementing tests in this docs capture.
+- Acceptance criteria: recurring smoke scope has a deterministic owner and no longer defaults to ad hoc Codex sessions.
+- Dependencies: `QA-AUTOMATION-OWNERSHIP-001`.
+- Risks: Codex usage limits and Mike approval burden continue to be consumed by repeat validation.
+- Next action: include in QA ownership scope.
+- Links / evidence: repeated production smoke requests after 4v4 Day/Plan fixes.
+
+### DEF-QA-USAGE-LEDGER-001
+
+- ID: DEF-QA-USAGE-LEDGER-001
+- Title: No prompt-level Codex usage ledger exists
+- Type: Defect / Task
+- Parent: `QA-AUTOMATION-OWNERSHIP-001`
+- Priority: P2
+- Status: Not started
+- Lane: Docs-only / workflow
+- Owner: Mike / Codex
+- Source: Mike usage concern.
+- Problem: There is no lightweight ledger that helps track when Codex usage is spent on implementation, QA automation creation, repeated smoke execution, or planning.
+- Desired outcome: A prompt-level usage ledger or equivalent workflow record helps avoid spending Codex time on repeatable test-running work.
+- In scope: define a small usage-ledger approach after higher-priority environment and Gantt items.
+- Out of scope: building dashboards, automating billing/usage introspection, or changing Codex product settings.
+- Acceptance criteria: future sessions can classify usage by task type and identify repeat work that should move to scripts/CI.
+- Dependencies: `QA-AUTOMATION-OWNERSHIP-001`.
+- Risks: usage concerns remain anecdotal and hard to improve.
+- Next action: create ledger scope/design after `QA-PLAYWRIGHT-SMOKE-001` is underway.
+- Links / evidence: Mike concern that Codex is burning context, the 5-hour limit, weekly limit, and approval time.
 
 ### TRAINING-SAFETY-U12-001
 
@@ -1503,6 +1678,11 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-007 | Calendar June 15 Sport Load showed not logged despite logged data | Defect | Calendar | P1 | Completed | Fast lane | Codex | Defect log | Calendar did not show logged state. | logged state preserved. | Completed. | none. | state accepted. | regression coverage | regression risk. | Preserve in future. | former defect log stub; use git history only |
 | DEF-4V4-DAY-STACK-001 | Day page only renders first planned Sport Load on stacked Sport Load days | Defect | Day / Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | Production smoke after `0bba866`; `/day/2026-08-03`, `/day/2026-08-05`, `/day/2026-08-16` | Calendar rendered stacked Sport Loads correctly, but Day simple-plan rendering used the first planned Sport Load for the main card/action and hid the added 4v4 item on stacked dates. | Day page renders every planned Sport Load for a date as visible/actionable planned Sport Load work without creating completed logs. | Bounded Day presentation fix and regression tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | Aug 3 shows Toronto Trip + 4v4; Aug 5 shows Carleton Ravens Camp + 4v4; Aug 16 shows Marc O'Connor Ice + 4v4; Jul 5 still shows 4v4. | SPORT-LOAD-4V4-SUMMER-2026 | stacked Sport Loads can be hidden if render paths collapse to first record. | Post-deploy smoke after fix. | local fix in current worktree |
 | DEF-4V4-DAY-LABEL-001 | Today/Day page shows stale or incorrect Lacrosse Sport Load chip when no lacrosse is planned | Defect | Day / Today Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | UAT after stacked Sport Load fix | Day Sport Load summary label could show a lacrosse-derived/hardcoded summary instead of the actual planned Sport Load title/count for the date. | Visible Sport Load labels derive from the actual planned Sport Load records; `Lacrosse` appears only when a planned lacrosse Sport Load exists. | Bounded Day label-rule fix and helper tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | `/today` via Day route and `/day/2026-07-05` do not show Lacrosse unless lacrosse is planned; stacked dates still show individual Sport Load titles. | DEF-4V4-DAY-STACK-001, SPORT-LOAD-4V4-SUMMER-2026 | stale/hardcoded labels can misrepresent planned sport work. | Post-deploy smoke after fix. | local fix in current worktree |
+| DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | Defect | Plan/Gantt / Sport Load presentation | P1 | Not started | Fast lane | Mike / Codex | Mike QA after `f247959` | Daily Sport Loads such as 4v4, lacrosse, and Marc O'Connor ice should be date-specific markers/chips, while multi-day trips/camps should show actual spans. | Gantt date semantics reflect real single-day and multi-day Sport Load timing. | bounded Plan/Gantt presentation fix and tests. | source JSON edits, Supabase writes, completed logs, broad Gantt redesign. | single-day markers/chips; multi-day actual spans; 4v4, lacrosse, Marc O'Connor, Toronto Trip, and camps render on correct dates/ranges. | PLAN-GANTT-SPORTLOAD-V84-001 | full-week bars misrepresent daily Sport Loads. | Implement after environment mapping docs. | current docs capture |
+| DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | Defect | Environment safety | P1 | Not started | Docs-only / environment-safety | Mike / Codex | Preview DB concern plus staging warning | Local/Preview/Production Supabase target mapping is not visible enough for safe write-testing decisions. | Document local, Preview, Production, staging, and production Supabase mapping without changing env vars or writing data. | inspect/document mapping and staging pause risk. | env var changes, key rotation, Supabase writes, Vercel changes. | project refs/targets are identified; staging pause behavior documented; no env changes or writes. | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001 | accidental production writes or confusing paused-staging failures. | Inspect/document first. | current docs capture |
+| DEF-SUPABASE-STAGING-AUTOPAUSE-001 | Supabase staging project at risk of inactivity auto-pause | Defect | Environment safety | P2 | Not started | Docs-only / environment-safety | Mike / Codex | Supabase warning | `maddox-training-os-staging` project `npuankmkxbjtlokbpczz` may auto-pause if inactivity continues. | Decide whether to allow pause/manual resume, add a safe read-only health check, or upgrade if uptime matters. | document warning and decision options. | keepalive implementation, Supabase writes, env changes. | warning captured; production not identified in warning; staging/local QA failure mode documented. | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | paused staging can derail QA and encourage unsafe production testing. | Decide after mapping audit. | current docs capture |
+| DEF-QA-CODEX-RUNNER-001 | Codex is being used as a recurring manual smoke-test runner | Defect | QA automation ownership | P1 | Not started | Docs-only / QA workflow | Mike / Codex | Mike usage concern | Codex is repeatedly running manual/ad hoc smoke checks that should be deterministic scripts. | Move recurring smoke checks to scripts/CI, with Codex writing tests and analyzing failures. | workflow capture linked to Playwright smoke scope. | implementing tests now. | recurring smoke has deterministic owner and no longer defaults to ad hoc Codex sessions. | QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001 | usage and approval burden remain high. | Capture in QA ownership scope. | current docs capture |
+| DEF-QA-USAGE-LEDGER-001 | No prompt-level Codex usage ledger exists | Defect / Task | QA automation ownership | P2 | Not started | Docs-only / workflow | Mike / Codex | Mike usage concern | There is no lightweight way to track prompt-level Codex usage by implementation, QA automation, smoke execution, or planning. | Define a usage ledger so repeated runner work can be identified and shifted to automation. | ledger approach/design later. | dashboards, product setting changes, automated billing introspection. | future sessions can classify usage and identify repeat work. | QA-AUTOMATION-OWNERSHIP-001 | usage concerns stay anecdotal. | Create after higher-priority env/Gantt/QA smoke work. | current docs capture |
 | DEF-008 | Dashboard metrics ambiguous | Defect | Dashboard | P2 | Not started | Safe lane | Mike / Codex | Defect log | Parent summaries unclear. | Clear metrics. | future projection work. | now. | metrics map to evidence. | KPI-HISTORY-DASHBOARD-001 | misread progress. | Defer. | former defect log stub; use git history only |
 | DEF-009 | Needs Attention false positives | Defect | Dashboard | P2 | Not started | Safe lane | Mike / Codex | Defect log | App may flag incorrectly. | Accurate attention rules. | future audit. | now. | false positives reduced. | dashboard model | alert fatigue. | Defer. | former defect log stub; use git history only |
 | DEF-010 | Weekly Load actual bar unclear | Defect | Dashboard | P2 | Not started | Fast lane | Mike / Codex | Defect log | Load visualization unclear. | Explainable load. | future UI. | now. | bar meaning clear. | dashboard model | misinterpretation. | Defer. | former defect log stub; use git history only |

@@ -3,7 +3,8 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Latest local checkpoint for current task: `d922217` (`fix(day): render stacked sport loads correctly`) plus local Plan/Gantt Sport Load rendering fix.
+- Current clean checkpoint: `f247959` (`fix(plan): render sport loads from v8.4`).
+- Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering and stale Lacrosse label risk, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
 - Latest expected commit before docs capture: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
 - Vercel Preview branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
 - Preview `/kpis` displayed existing KPI results/baselines similar to production. This is unverified evidence only; do not conclude Preview uses production Supabase without env/runtime proof.
@@ -12,7 +13,10 @@
 - `docs/SCOPE.md` remains the only canonical active scope source.
 - v8.4 app import package remains authoritative for current app training data.
 - Bell Sensplex 4v4 summer hockey schedule for July-August 2026 is captured in `docs/SCOPE.md` as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item.
-- `SPORT-LOAD-4V4-SUMMER-2026` implementation chain is now source import + Day/Today + Calendar + Plan/Gantt fixed locally; post-commit/deploy smoke remains the release acceptance step.
+- `SPORT-LOAD-4V4-SUMMER-2026` implementation chain is pushed through source import + Day/Today + Calendar + Plan/Gantt v8.4 Sport Load sourcing.
+- New open product defect: `DEF-GANTT-SPORTLOAD-DURATION-001` — Plan/Gantt displays day-specific Sport Loads as full-week duration bars.
+- New environment/data-safety defects: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-SUPABASE-STAGING-AUTOPAUSE-001`.
+- New QA automation ownership scope: `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001`.
 
 ## Current Product QA State
 
@@ -26,7 +30,14 @@
 - `DEF-032` added: controlled cardio duration/load-tier classification is not explainable; `/day/2026-06-29` showed 20 minutes with `Recovery conditioning`, which needs audit.
 - `AUDIT-LOAD-CLASSIFICATION-001` is the next bounded discovery task for these defects. It is discovery only and must not implement the future methodology architecture.
 - `SPORT-LOAD-4V4-SUMMER-2026` added: Bell Sensplex 4v4 summer hockey should be integrated as planned Sport Load. It is a high-value hockey stimulus for game-speed decisions, puck touches under pressure, compete, scanning, shift-like conditioning, and confidence attacking space, not an automatic overload emergency.
-- `PLAN-GANTT-SPORTLOAD-V84-001` added/completed locally: Plan/Gantt Sport Load overlays now derive from v8.4 `sportLoads` instead of stale hardcoded rows.
+- `PLAN-GANTT-SPORTLOAD-V84-001` completed: Plan/Gantt Sport Load overlays now derive from v8.4 `sportLoads` instead of stale hardcoded rows.
+- `DEF-GANTT-SPORTLOAD-DURATION-001` added: Plan/Gantt must stop rendering single-day Sport Loads as full-week duration bars. Single-day Sport Loads need date-specific markers/chips; multi-day Sport Loads need actual date ranges.
+- `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` added: Local, Vercel Preview, Vercel Production, staging, and production Supabase mapping must be documented without env changes or writes.
+- `DEF-SUPABASE-STAGING-AUTOPAUSE-001` added: Supabase staging project `maddox-training-os-staging` / `npuankmkxbjtlokbpczz` may auto-pause from inactivity; decide whether to allow manual resume, add a safe read-only health check, or upgrade if uptime matters.
+- `QA-AUTOMATION-OWNERSHIP-001` added: recurring smoke/regression work should shift from Codex-as-runner to deterministic scripts and CI.
+- `QA-PLAYWRIGHT-SMOKE-001` added: create read-only smoke tests for Today, Day, Calendar, Plan/Gantt, and KPI visibility.
+- `DEF-QA-CODEX-RUNNER-001` added: Codex is being used too often as a recurring manual smoke-test runner.
+- `DEF-QA-USAGE-LEDGER-001` added: no prompt-level Codex usage ledger exists.
 
 ## Closed-Loop Architecture State
 
@@ -53,14 +64,14 @@
 
 See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Codex Task.
 
-Recommended next lane:
+Recommended next implementation order:
 
-1. Run `AUDIT-LOAD-CLASSIFICATION-001` as inspect-only discovery.
-2. Map all day/activity classification and controlled cardio duration outputs across v8.4.
-3. Identify rendering paths that still leak old copy or raw KPI categories.
-4. Do not implement the Closed-Loop methodology architecture during the audit.
-5. Fix DEF-029/030/031/032 only after the audit defines the bounded current-app path.
-6. After Plan/Gantt 4v4 release acceptance, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032`.
+1. `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` — inspect/document environment mapping, no changes.
+2. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
+3. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
+4. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
+
+After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032`.
 
 ## Recommended Startup Reading
 
@@ -71,10 +82,10 @@ Recommended next lane:
 
 ## Scope Capture Check
 
-- Defects added/updated: `ENV-PREVIEW-DB-001` added; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added.
-- Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` planned Sport Load integration now fixed locally through source import, Day/Today, Calendar, and Plan/Gantt; `PLAN-GANTT-SPORTLOAD-V84-001` added/completed locally.
+- Defects added/updated: `ENV-PREVIEW-DB-001` added; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added; `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` added.
+- Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` planned Sport Load integration pushed through source import, Day/Today, Calendar, and Plan/Gantt v8.4 Sport Load sourcing; `PLAN-GANTT-SPORTLOAD-V84-001` completed; `QA-AUTOMATION-OWNERSHIP-001` and `QA-PLAYWRIGHT-SMOKE-001` added.
 - Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation; 4v4 is planned Sport Load, not non-plan work or an automatic load-risk trigger.
-- Data/sync/environment decisions added/updated: Preview DB isolation is unverified; no Preview saves until `ENV-PREVIEW-DB-AUDIT-001` confirms staging/non-production target or read-only classification; no Supabase/data mutation.
-- Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit remains next discovery; Plan/Gantt Sport Load overlay tests added locally.
-- Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`; later source-capture update added the 4v4 schedule.
-- Items intentionally deferred: behavior fixes, app code, tests, Playwright, builds, source JSON edits, Supabase changes, methodology implementation, final domain/source/stack choices.
+- Data/sync/environment decisions added/updated: Preview DB isolation is unverified; no Preview saves until `ENV-PREVIEW-DB-AUDIT-001` confirms staging/non-production target or read-only classification; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-SUPABASE-STAGING-AUTOPAUSE-001` added; no Supabase/data mutation.
+- Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit remains pending; Plan/Gantt Sport Load overlay tests added locally; deterministic Playwright smoke scope added through `QA-PLAYWRIGHT-SMOKE-001`.
+- Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`; later source-capture update added the 4v4 schedule and this capture added Gantt duration, environment-safety, and QA automation ownership scope.
+- Items intentionally deferred: behavior fixes, app code, tests, Playwright implementation, builds, source JSON edits, Supabase changes, Vercel env changes, methodology implementation, final domain/source/stack choices.
