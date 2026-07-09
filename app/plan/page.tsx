@@ -179,7 +179,7 @@ type GanttRow =
   | {
       label: string;
       kind: "testing" | "sportMarkers" | "campMarkers" | "onIceMarkers" | "travelMarkers";
-      markers: { week: number; label: string; shortLabel: string }[];
+      markers: { week: number; label: string; shortLabel: string; dateLabel: string; title: string }[];
     }
   | {
       label: string;
@@ -224,15 +224,16 @@ function buildLockedGanttRows(): GanttRow[] {
       week: marker.week,
       label: marker.label,
       shortLabel: marker.shortLabel,
+      dateLabel: marker.dateLabel,
+      title: marker.title,
     })),
   }));
 
   return [
-    { label: "Perf Testing", kind: "testing", markers: [1, 3, 5, 7, 10, 12].map((week) => ({ week, label: "Perf Testing", shortLabel: "Test" })) },
+    { label: "Perf Testing", kind: "testing", markers: [1, 3, 5, 7, 10, 12].map((week) => ({ week, label: "Perf Testing", shortLabel: "Test", dateLabel: `W${week}`, title: "Perf Testing" })) },
     { label: "GPP / Foundation", shortLabel: "GPP / Foundation", startWeek: 1, endWeek: 2, kind: "phase" },
     ...sportLoadRows,
     { label: "Strength + Acceleration", shortLabel: "Strength + Accel", startWeek: 3, endWeek: 4, kind: "phase" },
-    { label: "Chase Hull Camp", shortLabel: "Chase Camp", startWeek: 4, endWeek: 4, kind: "camp" },
     { label: "Power Transition", shortLabel: "Power Transition", startWeek: 5, endWeek: 6, kind: "phase" },
     { label: "Deload", shortLabel: "Deload", startWeek: 7, endWeek: 7, kind: "deload" },
     { label: "Power/Agility + Carleton", shortLabel: "Power/Agility", startWeek: 8, endWeek: 10, kind: "phase" },
@@ -266,17 +267,26 @@ function GanttSpanRow({ row }: { row: Extract<GanttRow, { kind: Exclude<GanttRow
 
 function GanttMarkerRow({ row }: { row: Extract<GanttRow, { markers: unknown[] }> }) {
   return (
-    <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-0.5">
+    <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] items-stretch gap-0.5">
       <div className="pr-2 text-[12px] font-black leading-tight text-slate-800">{row.label}</div>
-      <div className="grid h-5 grid-cols-12 gap-0.5" style={{ gridColumn: "2 / span 12" }}>
+      <div className="grid min-h-8 grid-cols-12 gap-0.5" style={{ gridColumn: "2 / span 12" }}>
         {Array.from({ length: 12 }, (_, index) => {
           const week = index + 1;
           const markers = row.markers.filter((item) => item.week === week);
-          const markerLabel = markers.length > 1 ? `${markers[0].shortLabel} x${markers.length}` : markers[0]?.shortLabel;
           const markerTitle = markers.map((marker) => marker.label).join("; ");
           return (
-            <div key={week} className="h-5 border border-slate-200 bg-white">
-              {markers.length > 0 ? <div className="h-full w-full border px-2 py-0.5 text-[10px] font-black leading-tight shadow-sm" style={ganttMarkerStyleFor(row.kind)} title={markerTitle}><span className="block truncate">{markerLabel}</span></div> : null}
+            <div key={week} className="min-h-8 border border-slate-200 bg-white p-0.5">
+              {markers.map((marker) => (
+                <div
+                  className="mb-0.5 w-full border px-1 py-0.5 text-[9px] font-black leading-tight shadow-sm last:mb-0"
+                  key={`${marker.dateLabel}-${marker.shortLabel}`}
+                  style={ganttMarkerStyleFor(row.kind)}
+                  title={markerTitle}
+                >
+                  <span className="block truncate">{marker.dateLabel}</span>
+                  <span className="block truncate">{marker.shortLabel}</span>
+                </div>
+              ))}
             </div>
           );
         })}

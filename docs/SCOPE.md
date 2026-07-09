@@ -9,10 +9,11 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Current checkpoint before this docs update: `c9a51cb` (`docs(env): confirm Vercel preview uses production Supabase`), and the working tree was clean before recording Mike's completed Vercel environment split.
+- Current checkpoint before this implementation: `4ab509f` (`docs(env): record production runtime smoke`), and the working tree was clean.
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
 - Next environment-safety scope: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` are Production-runtime-verified and awaiting fresh Preview runtime verification before Preview write-capable testing.
-- Previously captured next-scope items remain: `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001`.
+- `DEF-GANTT-SPORTLOAD-DURATION-001` is fixed locally: Plan/Gantt Sport Loads now render as date-specific chips/ranges instead of week-duration bars.
+- Previously captured next-scope items remain: `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001`.
 - Earlier docs capture after commit `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`); Vercel Preview for `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
 - Preview `/kpis` displayed existing KPI results/baselines similar to production. Mike's later Vercel dashboard check confirmed Preview previously pointed to production Supabase through All-Environments variables; the Vercel config has since been split by environment.
 - Previous docs checkpoint: docs capture after pushed commit `f5c35a8` (`fix(projections): clarify controlled cardio copy`); repo was clean before that docs-only capture.
@@ -89,6 +90,7 @@ Every active scope item should use this structure, either as a detailed record b
 - In progress
 - Reopened / product QA found incomplete rendering-path coverage
 - Blocked
+- Completed locally
 - Completed
 - Deferred
 - Historical
@@ -144,7 +146,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 4.6 | PLAN-GANTT-SPORTLOAD-V84-001 | Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads | P1 | Completed | Fast lane | Plan/Gantt now derives Sport Load overlay rows and week summaries from v8.4 `sportLoads`. |
 | 4.7 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | P1 | Production runtime verified / Preview runtime pending | Docs-only / environment-safety | Production served `87355a4`, referenced production ref, and did not reference staging ref; fresh Preview verification remains pending. |
 | 4.8 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Production runtime smoke passed after env split; verify a fresh Preview deployment uses staging before write testing. |
-| 4.9 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | P1 | Not started | Fast lane | Fix Plan/Gantt date semantics so single-day Sport Loads are markers/chips and multi-day Sport Loads show actual spans. |
+| 4.9 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | P1 | Completed locally | Fast lane | Commit/deploy after review, then smoke `/plan` for date-specific Sport Load chips/ranges. |
 | 4.10 | QA-AUTOMATION-OWNERSHIP-001 | Shift recurring smoke/regression testing from Codex to deterministic scripts and CI | P1 | Not started | Docs-only / QA ownership | Define ownership model: Codex writes tests, scripts/CI run repeatable tests, Codex analyzes failures, Mike does product acceptance. |
 | 4.11 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | Not started | Safe lane / QA automation | Add read-only smoke coverage for Today, Day, Calendar, Plan/Gantt, and KPI visibility after ownership scope is captured. |
 | 4.12 | DEF-QA-CODEX-RUNNER-001 | Codex is being used as a recurring manual smoke-test runner | P1 | Not started | Docs-only / QA workflow | Capture the workflow defect and move repeat smoke checks into deterministic scripts/CI. |
@@ -187,13 +189,13 @@ Every active scope item should use this structure, either as a detailed record b
 
 ## Current Sprint / Next Codex Task
 
-Current sprint: tactical 4v4 Sport Load sourcing is complete through `f247959`, but Plan/Gantt still needs date-semantics cleanup for single-day versus multi-day Sport Loads. Before more implementation, capture and sequence the environment-safety and QA-automation ownership work so Codex is not repeatedly used as an ad hoc smoke-test runner.
+Current sprint: tactical 4v4 Sport Load sourcing is complete through `f247959`, and Plan/Gantt date-semantics cleanup is fixed locally. The remaining step for this defect is commit/deploy plus read-only production smoke after review.
 
 Next task brief:
 
 - Read `AGENTS.md`, `docs/SESSION_HANDOFF.md`, and this file first.
 - First verify a fresh Preview deployment uses staging before any Preview write testing.
-- Then fix `DEF-GANTT-SPORTLOAD-DURATION-001`: single-day Sport Loads render as date-specific markers/chips; multi-day Sport Loads render as actual date spans.
+- After commit/deploy, smoke `DEF-GANTT-SPORTLOAD-DURATION-001` on `/plan`.
 - Then implement `QA-PLAYWRIGHT-SMOKE-001` under `QA-AUTOMATION-OWNERSHIP-001` so recurring route smoke checks move to deterministic scripts/CI.
 - Then capture/implement `DEF-QA-USAGE-LEDGER-001`.
 - Preserve the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` remains the next bounded discovery task for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032` after the newly captured environment/Gantt/QA sequencing work.
@@ -222,7 +224,8 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | Production runtime verified / Preview runtime pending | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 |
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Not started | DEF-GANTT-SPORTLOAD-DURATION-001, QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
+| Completed locally | DEF-GANTT-SPORTLOAD-DURATION-001 |
+| Not started | QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
@@ -1279,7 +1282,7 @@ Scheduling interactions to consider, not automatic risk dates:
 - Type: Defect
 - Parent: Plan/Gantt / Sport Load presentation
 - Priority: P1
-- Status: Not started
+- Status: Completed locally
 - Lane: Fast lane
 - Owner: Mike / Codex
 - Source: Mike product QA after `f247959`.
@@ -1298,8 +1301,13 @@ Scheduling interactions to consider, not automatic risk dates:
   - Gantt must not imply a single-day Sport Load lasts a full week.
 - Dependencies: `PLAN-GANTT-SPORTLOAD-V84-001`; v8.4 `sportLoads`; existing Plan/Gantt helper.
 - Risks: week-wide bars can mislead Mike/Maddox into thinking a single-day Sport Load lasts all week.
-- Next action: implement after `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` is documented.
-- Links / evidence: Mike scope-capture request after production smoke passed for `/plan`.
+- Findings: Plan/Gantt already derived Sport Load rows from v8.4, but marker cells compressed same-week events into week-level labels and one old static Chase Hull Camp row still rendered a full-week camp bar. Multi-day Sport Loads needed explicit date-range labels, and single-day Sport Loads needed visible date labels.
+- Week mapping clarification: app week boundaries are Week 7 `2026-07-27` to `2026-08-02` and Week 8 `2026-08-03` to `2026-08-09`; therefore Aug 3 4v4 and Aug 3 Toronto Trip return day are Week 8.
+- Local fix: `lib/planSportLoadOverlay.ts` now derives date-labelled Sport Load markers from v8.4 data. Single-day Sport Loads stay single-day markers. Consecutive camp/travel records collapse into actual date ranges such as `Jul 31-Aug 3`, `Jul 6-10`, `Aug 4-7`, and `Aug 24-28`.
+- UI fix: `app/plan/page.tsx` renders Sport Load marker rows as visible date chips/ranges inside week cells and no longer renders the old static Chase Hull Camp full-week bar.
+- Tests: `lib/planSportLoadOverlay.test.ts` covers 4v4 date-to-week mapping, Aug 3 as Week 8, single-day markers, multi-day ranges, and forbidden wording absence.
+- Next action: commit/deploy after review, then run read-only `/plan` smoke to confirm date chips/ranges in production.
+- Links / evidence: Mike scope-capture request after production smoke passed for `/plan`; local files `app/plan/page.tsx`, `lib/planSportLoadOverlay.ts`, `lib/planSportLoadOverlay.test.ts`.
 
 ### DEF-ENV-PREVIEW-SUPABASE-MAPPING-001
 
@@ -1773,7 +1781,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-007 | Calendar June 15 Sport Load showed not logged despite logged data | Defect | Calendar | P1 | Completed | Fast lane | Codex | Defect log | Calendar did not show logged state. | logged state preserved. | Completed. | none. | state accepted. | regression coverage | regression risk. | Preserve in future. | former defect log stub; use git history only |
 | DEF-4V4-DAY-STACK-001 | Day page only renders first planned Sport Load on stacked Sport Load days | Defect | Day / Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | Production smoke after `0bba866`; `/day/2026-08-03`, `/day/2026-08-05`, `/day/2026-08-16` | Calendar rendered stacked Sport Loads correctly, but Day simple-plan rendering used the first planned Sport Load for the main card/action and hid the added 4v4 item on stacked dates. | Day page renders every planned Sport Load for a date as visible/actionable planned Sport Load work without creating completed logs. | Bounded Day presentation fix and regression tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | Aug 3 shows Toronto Trip + 4v4; Aug 5 shows Carleton Ravens Camp + 4v4; Aug 16 shows Marc O'Connor Ice + 4v4; Jul 5 still shows 4v4. | SPORT-LOAD-4V4-SUMMER-2026 | stacked Sport Loads can be hidden if render paths collapse to first record. | Post-deploy smoke after fix. | local fix in current worktree |
 | DEF-4V4-DAY-LABEL-001 | Today/Day page shows stale or incorrect Lacrosse Sport Load chip when no lacrosse is planned | Defect | Day / Today Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | UAT after stacked Sport Load fix | Day Sport Load summary label could show a lacrosse-derived/hardcoded summary instead of the actual planned Sport Load title/count for the date. | Visible Sport Load labels derive from the actual planned Sport Load records; `Lacrosse` appears only when a planned lacrosse Sport Load exists. | Bounded Day label-rule fix and helper tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | `/today` via Day route and `/day/2026-07-05` do not show Lacrosse unless lacrosse is planned; stacked dates still show individual Sport Load titles. | DEF-4V4-DAY-STACK-001, SPORT-LOAD-4V4-SUMMER-2026 | stale/hardcoded labels can misrepresent planned sport work. | Post-deploy smoke after fix. | local fix in current worktree |
-| DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | Defect | Plan/Gantt / Sport Load presentation | P1 | Not started | Fast lane | Mike / Codex | Mike QA after `f247959` | Daily Sport Loads such as 4v4, lacrosse, and Marc O'Connor ice should be date-specific markers/chips, while multi-day trips/camps should show actual spans. | Gantt date semantics reflect real single-day and multi-day Sport Load timing. | bounded Plan/Gantt presentation fix and tests. | source JSON edits, Supabase writes, completed logs, broad Gantt redesign. | single-day markers/chips; multi-day actual spans; 4v4, lacrosse, Marc O'Connor, Toronto Trip, and camps render on correct dates/ranges. | PLAN-GANTT-SPORTLOAD-V84-001 | full-week bars misrepresent daily Sport Loads. | Implement after environment mapping docs. | current docs capture |
+| DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | Defect | Plan/Gantt / Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | Mike QA after `f247959` | Daily Sport Loads such as 4v4, lacrosse, and Marc O'Connor ice should be date-specific markers/chips, while multi-day trips/camps should show actual spans. | Gantt date semantics reflect real single-day and multi-day Sport Load timing. | bounded Plan/Gantt presentation fix and tests. | source JSON edits, Supabase writes, completed logs, broad Gantt redesign. | single-day markers/chips; multi-day actual spans; 4v4, lacrosse, Marc O'Connor, Toronto Trip, and camps render on correct dates/ranges; Aug 3 is Week 8 by app week boundaries. | PLAN-GANTT-SPORTLOAD-V84-001 | full-week bars misrepresent daily Sport Loads. | Commit/deploy after review, then smoke `/plan`. | local fix in current worktree |
 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | Defect | Environment safety | P1 | Production runtime verified / Preview runtime pending | Docs-only / environment-safety | Mike / Codex | Preview DB concern, Mike Vercel dashboard confirmation, production runtime smoke | Vercel Preview and Development previously inherited production Supabase ref `mbjcedhysniabbaigsko`; Mike split Vercel variables by environment and Production runtime smoke passed. | Document final mapping, Production runtime evidence, and Preview runtime caveat. | docs capture of completed split, Production smoke, and risk. | env var changes, key rotation, Supabase writes, Vercel changes. | Production served `87355a4`; production ref present; staging ref absent; KPI export returned cloud count `21`; Preview runtime pending. | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | old Preview deployments may still be production-risk until replaced or verified. | Verify fresh Preview deployment uses staging before write testing. | current docs capture plus production smoke |
 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | Defect / Task | Environment safety | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Mike / Codex | Confirmed `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` finding and production runtime smoke | Vercel Supabase variables were scoped to All Environments, so Preview and Development inherited production. | Production remains on `mbjcedhysniabbaigsko`; Preview and Development use staging ref `npuankmkxbjtlokbpczz`. | docs capture of Mike-completed Vercel env split, Production runtime smoke, and future Preview verification. | this docs-only task, Supabase writes, app code changes, key rotation unless explicitly approved. | Preview/Development point to staging for new deployments; Production runtime passed; no All Environments Supabase rows; no secrets exposed; no Supabase writes. | staging project, production project, Vercel settings access | old Preview deployments may still point to production until replaced. | Verify a fresh Preview deployment uses staging before Preview write testing. | Mike manual Vercel config update and production smoke on 2026-07-09 |
 | DEF-SUPABASE-STAGING-AUTOPAUSE-001 | Supabase staging project at risk of inactivity auto-pause | Defect | Environment safety | P2 | In progress | Docs-only / environment-safety | Mike / Codex | Supabase warning | `maddox-training-os-staging` project `npuankmkxbjtlokbpczz` may auto-pause if inactivity continues. | Decide whether to allow pause/manual resume, add a safe read-only health check, or upgrade if uptime matters. | document warning and decision options. | keepalive implementation, Supabase writes, env changes. | warning captured; production not identified in warning; staging/local QA failure mode documented. | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | paused staging can derail QA and encourage unsafe production testing. | Decide whether to allow manual resume, add a safe read-only health check, or upgrade. | current docs capture plus local audit |
