@@ -2,18 +2,23 @@
 
 ## Latest Task
 
-Document Confirmed Vercel Supabase Environment Mapping.
+Document Completed Vercel Supabase Environment Split.
 
 ## Result
 
-Documented Mike's manual Vercel dashboard confirmation for `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`.
+Documented Mike's completed Vercel environment split for `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`.
 
-Confirmed Vercel mapping:
+Manual Vercel change summary supplied by Mike:
 
-- Vercel Production `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko` production Supabase.
-- Vercel Preview `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko` production Supabase.
-- Vercel Development `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko` production Supabase.
-- Vercel shows these Supabase variables as "All Environments."
+- Production has exactly two Supabase rows and no All Environments Supabase rows.
+- Preview has exactly two Supabase rows and no All Environments Supabase rows.
+- Development has exactly two Supabase rows and no All Environments Supabase rows.
+- Production `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko`.
+- Preview `NEXT_PUBLIC_SUPABASE_URL` points to `npuankmkxbjtlokbpczz`.
+- Development `NEXT_PUBLIC_SUPABASE_URL` points to `npuankmkxbjtlokbpczz`.
+- Production anon key was restored as Production-scoped.
+- Preview anon key was set from staging.
+- Development anon key was set from staging.
 
 Known local/Supabase mapping:
 
@@ -21,15 +26,16 @@ Known local/Supabase mapping:
 - Supabase staging: `npuankmkxbjtlokbpczz`, project name `maddox-training-os-staging`.
 - Supabase production: `mbjcedhysniabbaigsko`, known from `.env.local.production-backup` URL ref and historical docs.
 
-Confirmed defect:
+Defect status:
 
-- Vercel Preview and Vercel Development currently inherit production Supabase variables through "All Environments."
-- Preview/Development deployments can read/write production Supabase unless app logic, RLS, or operator discipline prevents it.
+- `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` is configuration-corrected and awaiting runtime verification.
+- `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` is configuration-completed and awaiting runtime verification.
 
-New follow-up defect:
+Runtime note:
 
-- `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` — Configure Vercel Preview and Development Supabase variables to use staging.
-- Required future behavior: Production -> `mbjcedhysniabbaigsko`; Preview -> `npuankmkxbjtlokbpczz`; Development -> `npuankmkxbjtlokbpczz`.
+- Environment-variable changes affect new deployments.
+- Existing old Preview deployments should still be treated as production-risk until replaced or verified.
+- Production was not redeployed as part of this docs task.
 
 Staging auto-pause status captured:
 
@@ -37,7 +43,7 @@ Staging auto-pause status captured:
 - Mike reported staging is not paused yet, but may auto-pause if inactive.
 - If staging pauses, local development and correctly configured Preview QA may fail until staging is resumed.
 
-No secrets were captured or printed. No Supabase or Vercel changes occurred. No app code, source import data, tests, build, commit, or push actions were performed.
+No secrets were captured or printed. Codex made no Supabase changes, Vercel changes, redeploys, app code changes, source import data changes, tests, build, commit, or push actions.
 
 ## Files Changed
 
@@ -47,28 +53,29 @@ No secrets were captured or printed. No Supabase or Vercel changes occurred. No 
 
 ## Status Updates
 
-- Updated `docs/SCOPE.md` with the confirmed Vercel mapping under `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`.
-- Added `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` as the follow-up P1 environment-safety item.
-- Updated `docs/SCOPE.md` Data / Sync / Environment Scope with the confirmed All-Environments production inheritance risk.
-- Updated `docs/SESSION_HANDOFF.md` with current mapping status and the revised next order.
-- Updated this report with Mike's manual dashboard confirmation and no-secrets/no-change confirmations.
+- Updated `docs/SCOPE.md` with the final Vercel mapping and no-All-Environments state.
+- Marked `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` as configuration-corrected / awaiting runtime verification.
+- Marked `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` as configuration-completed / awaiting runtime verification.
+- Updated `docs/SESSION_HANDOFF.md` with the completed split, old Preview deployment caveat, and revised next order.
+- Updated this report with Mike's manual Vercel change summary and no-secrets/no-redeploy confirmations.
 
 Recommended next implementation order:
 
-1. `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` — decide/fix Vercel Preview/Development staging override, no secret exposure.
-2. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
-3. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
-4. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
+1. Commit the environment docs.
+2. Later verify a fresh Preview deployment uses staging before Preview write testing.
+3. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
+4. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
+5. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
 
 After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032`.
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` updated to confirmed finding / follow-up required; `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` added; `DEF-SUPABASE-STAGING-AUTOPAUSE-001` preserved.
+- Defects added/updated: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` marked configuration-corrected / awaiting runtime verification; `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` marked configuration-completed / awaiting runtime verification; `DEF-SUPABASE-STAGING-AUTOPAUSE-001` preserved.
 - Epics/features added/updated: none.
-- Product decisions added/updated: Preview/Development write testing remains blocked until staging overrides are configured or those deployments are explicitly treated read-only.
-- Data/sync/environment decisions added/updated: Vercel Production points to production; Vercel Preview and Development currently point to production through All Environments; required future mapping captured.
+- Product decisions added/updated: fresh Preview runtime verification is required before Preview write testing.
+- Data/sync/environment decisions added/updated: Vercel Production points to production; Vercel Preview and Development are configured to staging for new deployments; no Supabase variables remain scoped to All Environments; old Preview deployments remain production-risk until replaced or verified.
 - Testing requirements added/updated: none.
 - Training-plan/source items added/updated: none.
 - Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: Vercel env var changes, Supabase changes, keepalive/billing decisions, app implementation, tests, builds, source JSON edits, commit, push.
+- Items intentionally deferred: runtime verification of fresh Preview deployment, Supabase changes, redeploys, keepalive/billing decisions, app implementation, tests, builds, source JSON edits, commit, push.

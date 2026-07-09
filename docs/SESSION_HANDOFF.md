@@ -3,11 +3,11 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Current clean checkpoint before this docs update: `cd5d8ae` (`docs(env): audit Supabase environment mapping`).
+- Current clean checkpoint before this docs update: `c9a51cb` (`docs(env): confirm Vercel preview uses production Supabase`).
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering and stale Lacrosse label risk, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
 - Historical KPI preview checkpoint: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
 - Vercel Preview branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
-- Preview `/kpis` displayed existing KPI results/baselines similar to production. Mike's later Vercel dashboard check confirmed Preview currently points to production Supabase through All-Environments variables.
+- Preview `/kpis` displayed existing KPI results/baselines similar to production. Mike's later Vercel dashboard check confirmed Preview previously pointed to production Supabase through All-Environments variables; the Vercel config has since been split by environment.
 - Previous docs checkpoint: `f5c35a8` (`fix(projections): clarify controlled cardio copy`).
 - Repo was clean before the docs-only capture.
 - `docs/SCOPE.md` remains the only canonical active scope source.
@@ -48,18 +48,26 @@ Safe local audit on 2026-07-08 found:
 | Supabase staging | `npuankmkxbjtlokbpczz` | Known; project name `maddox-training-os-staging`. |
 | Supabase production | `mbjcedhysniabbaigsko` | Known from `.env.local.production-backup` URL ref and historical docs; treat as production Maddox data. |
 | Vercel Production | `mbjcedhysniabbaigsko` | Confirmed by Mike in Vercel Project Settings; correct production target. |
-| Vercel Preview | `mbjcedhysniabbaigsko` | Confirmed defect; Preview inherits production Supabase via variables scoped to "All Environments." |
-| Vercel Development | `mbjcedhysniabbaigsko` | Confirmed defect; Development inherits production Supabase via variables scoped to "All Environments." |
+| Vercel Preview | `npuankmkxbjtlokbpczz` | Confirmed final config for new deployments; existing old Preview deployments remain production-risk until replaced or verified. |
+| Vercel Development | `npuankmkxbjtlokbpczz` | Confirmed final config for new deployments. |
 
-Confirmed Vercel dashboard finding supplied by Mike:
+Completed Vercel environment split supplied by Mike on 2026-07-09:
 
-- Vercel Project Settings -> Environments for `maddox-training-os` shows Supabase variables as "All Environments."
+- Production has exactly two Supabase rows and no All Environments Supabase rows.
+- Preview has exactly two Supabase rows and no All Environments Supabase rows.
+- Development has exactly two Supabase rows and no All Environments Supabase rows.
 - Production `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko`.
-- Preview `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko`.
-- Development `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko`.
-- Required future behavior: Production -> `mbjcedhysniabbaigsko`; Preview -> `npuankmkxbjtlokbpczz`; Development -> `npuankmkxbjtlokbpczz`.
+- Preview `NEXT_PUBLIC_SUPABASE_URL` points to `npuankmkxbjtlokbpczz`.
+- Development `NEXT_PUBLIC_SUPABASE_URL` points to `npuankmkxbjtlokbpczz`.
+- Production anon key was restored as Production-scoped.
+- Preview anon key was set from staging.
+- Development anon key was set from staging.
+- No Supabase variables remain scoped to All Environments.
 - Do not copy, paste, screenshot, or commit Supabase keys, tokens, JWTs, passwords, or full secret values.
-- Do not perform Preview or Vercel Development write testing until `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` is fixed or those deployments are explicitly treated read-only.
+- Environment-variable changes affect new deployments.
+- Existing old Preview deployments should still be treated as production-risk until replaced or verified.
+- Do not redeploy Production as part of the docs-only environment capture.
+- Do not perform Preview write testing until a fresh Preview deployment is verified to use staging.
 
 Staging auto-pause context:
 
@@ -83,7 +91,7 @@ Staging auto-pause context:
 - Do not edit `imports/v8.4/data/*.json` unless explicitly asked.
 - Do not mutate Supabase data without explicit target confirmation.
 - Do not change Supabase schema without approved technical design.
-- Do not save KPI results in Vercel Preview or Vercel Development until `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` maps those environments to staging or they are explicitly treated read-only.
+- Do not save KPI results in Vercel Preview until a fresh Preview deployment is verified to use staging or the deployment is explicitly treated read-only.
 - Do not display or commit `.env.local`, `.env.local.production-backup`, or any Supabase keys.
 - Do not apply the KPI cloud-sync stash during unrelated tasks.
 - Run `node scripts/preflight.mjs` before production-risk work.
@@ -95,10 +103,11 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Recommended next implementation order:
 
-1. `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` — decide/fix Vercel Preview/Development staging override, no secret exposure.
-2. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
-3. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
-4. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
+1. Commit the environment docs.
+2. Later verify a fresh Preview deployment uses staging before Preview write testing.
+3. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
+4. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
+5. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
 
 After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032`.
 
@@ -111,10 +120,10 @@ After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATI
 
 ## Scope Capture Check
 
-- Defects added/updated: `ENV-PREVIEW-DB-001` added; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added; `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` added; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` now has confirmed Vercel dashboard findings; `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` added.
+- Defects added/updated: `ENV-PREVIEW-DB-001` added/completed; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added; `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` added; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` are configuration-corrected/completed and awaiting fresh Preview runtime verification.
 - Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` planned Sport Load integration pushed through source import, Day/Today, Calendar, and Plan/Gantt v8.4 Sport Load sourcing; `PLAN-GANTT-SPORTLOAD-V84-001` completed; `QA-AUTOMATION-OWNERSHIP-001` and `QA-PLAYWRIGHT-SMOKE-001` added.
 - Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation; 4v4 is planned Sport Load, not non-plan work or an automatic load-risk trigger.
-- Data/sync/environment decisions added/updated: local development maps to staging ref `npuankmkxbjtlokbpczz`; Supabase staging is `maddox-training-os-staging` / `npuankmkxbjtlokbpczz`; Supabase production ref is `mbjcedhysniabbaigsko`; Vercel Production points to production; Vercel Preview and Development currently point to production through All Environments variables; no Preview/Development writes until staging override is fixed or those deployments are explicitly read-only; no Supabase/data mutation.
+- Data/sync/environment decisions added/updated: local development maps to staging ref `npuankmkxbjtlokbpczz`; Supabase staging is `maddox-training-os-staging` / `npuankmkxbjtlokbpczz`; Supabase production ref is `mbjcedhysniabbaigsko`; Vercel Production points to production; Vercel Preview and Development are now configured to staging for new deployments; no Supabase variables remain scoped to All Environments; old Preview deployments remain production-risk until replaced or verified; no Supabase/data mutation.
 - Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit remains pending; Plan/Gantt Sport Load overlay tests added locally; deterministic Playwright smoke scope added through `QA-PLAYWRIGHT-SMOKE-001`.
 - Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`; later source-capture update added the 4v4 schedule and this capture added Gantt duration, environment-safety, and QA automation ownership scope.
 - Items intentionally deferred: Vercel env changes, behavior fixes, app code, tests, Playwright implementation, builds, source JSON edits, Supabase changes, staging keepalive/billing decision, methodology implementation, final domain/source/stack choices.
