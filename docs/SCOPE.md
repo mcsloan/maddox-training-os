@@ -11,7 +11,7 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - Branch: `main`.
 - Current checkpoint before this docs update: `c9a51cb` (`docs(env): confirm Vercel preview uses production Supabase`), and the working tree was clean before recording Mike's completed Vercel environment split.
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
-- Next environment-safety scope: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` is now configuration-corrected, and `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` is configuration-completed awaiting fresh Preview runtime verification before Preview write-capable testing.
+- Next environment-safety scope: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` are Production-runtime-verified and awaiting fresh Preview runtime verification before Preview write-capable testing.
 - Previously captured next-scope items remain: `DEF-GANTT-SPORTLOAD-DURATION-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001`.
 - Earlier docs capture after commit `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`); Vercel Preview for `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
 - Preview `/kpis` displayed existing KPI results/baselines similar to production. Mike's later Vercel dashboard check confirmed Preview previously pointed to production Supabase through All-Environments variables; the Vercel config has since been split by environment.
@@ -142,8 +142,8 @@ Every active scope item should use this structure, either as a detailed record b
 | 4 | ENV-PREVIEW-DB-AUDIT-001 | Verify Vercel Preview Supabase target | P1 | Completed | Docs-only / environment-safety | Vercel mapping is confirmed; active follow-up is `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`. |
 | 4.5 | SPORT-LOAD-4V4-SUMMER-2026 | Bell Sensplex 4v4 Summer Hockey Integration | P1 | Completed | Source-review -> Safe lane app import | Source import, Day/Today, Calendar, and Plan/Gantt Sport Load sourcing are pushed through `f247959`. |
 | 4.6 | PLAN-GANTT-SPORTLOAD-V84-001 | Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads | P1 | Completed | Fast lane | Plan/Gantt now derives Sport Load overlay rows and week summaries from v8.4 `sportLoads`. |
-| 4.7 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | P1 | Configuration corrected / awaiting runtime verification | Docs-only / environment-safety | Mike split the Vercel Supabase variables by environment; old Preview deployments remain production-risk until replaced or verified. |
-| 4.8 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | P1 | Configuration completed / awaiting runtime verification | Environment safety / config change | Vercel Production is production-scoped; Preview and Development are staging-scoped; verify a fresh Preview deployment before write testing. |
+| 4.7 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | P1 | Production runtime verified / Preview runtime pending | Docs-only / environment-safety | Production served `87355a4`, referenced production ref, and did not reference staging ref; fresh Preview verification remains pending. |
+| 4.8 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Production runtime smoke passed after env split; verify a fresh Preview deployment uses staging before write testing. |
 | 4.9 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | P1 | Not started | Fast lane | Fix Plan/Gantt date semantics so single-day Sport Loads are markers/chips and multi-day Sport Loads show actual spans. |
 | 4.10 | QA-AUTOMATION-OWNERSHIP-001 | Shift recurring smoke/regression testing from Codex to deterministic scripts and CI | P1 | Not started | Docs-only / QA ownership | Define ownership model: Codex writes tests, scripts/CI run repeatable tests, Codex analyzes failures, Mike does product acceptance. |
 | 4.11 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | Not started | Safe lane / QA automation | Add read-only smoke coverage for Today, Day, Calendar, Plan/Gantt, and KPI visibility after ownership scope is captured. |
@@ -192,7 +192,7 @@ Current sprint: tactical 4v4 Sport Load sourcing is complete through `f247959`, 
 Next task brief:
 
 - Read `AGENTS.md`, `docs/SESSION_HANDOFF.md`, and this file first.
-- First commit these environment docs, then verify a fresh Preview deployment uses staging before any Preview write testing.
+- First verify a fresh Preview deployment uses staging before any Preview write testing.
 - Then fix `DEF-GANTT-SPORTLOAD-DURATION-001`: single-day Sport Loads render as date-specific markers/chips; multi-day Sport Loads render as actual date spans.
 - Then implement `QA-PLAYWRIGHT-SMOKE-001` under `QA-AUTOMATION-OWNERSHIP-001` so recurring route smoke checks move to deterministic scripts/CI.
 - Then capture/implement `DEF-QA-USAGE-LEDGER-001`.
@@ -219,10 +219,9 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | Status | IDs |
 | --- | --- |
 | In progress | KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001 |
-| Configuration corrected / awaiting runtime verification | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 |
+| Production runtime verified / Preview runtime pending | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 |
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026, DEF-027 |
-| Configuration completed / awaiting runtime verification | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 |
 | Not started | DEF-GANTT-SPORTLOAD-DURATION-001, QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, PLAN-CONTENT-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-031, DEF-032 |
 | Scope review required | ACTIVITY-LOGGING-001, TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
@@ -1309,7 +1308,7 @@ Scheduling interactions to consider, not automatic risk dates:
 - Type: Defect
 - Parent: Environment safety
 - Priority: P1
-- Status: Configuration corrected / awaiting runtime verification
+- Status: Production runtime verified / Preview runtime pending
 - Lane: Docs-only / environment-safety
 - Owner: Mike / Codex
 - Source: Mike environment-safety concern after preview/staging observations.
@@ -1327,7 +1326,7 @@ Scheduling interactions to consider, not automatic risk dates:
   - Confirm no Supabase writes are performed.
 - Dependencies: `scripts/preflight.mjs`, `scripts/env-whoami.mjs`, Vercel/Supabase environment access where available.
 - Risks: old Preview deployments may still use production Supabase until redeployed; Preview write testing before runtime verification could still mutate production data.
-- Next action: commit docs, then verify a fresh Preview deployment uses staging before any Preview write testing.
+- Next action: verify a fresh Preview deployment uses staging before any Preview write testing, then resume `DEF-GANTT-SPORTLOAD-DURATION-001`.
 - Links / evidence: prior `ENV-PREVIEW-DB-001`, `ENV-PREVIEW-DB-AUDIT-001`, and Supabase staging warning for project `npuankmkxbjtlokbpczz`.
 
 Audit findings on 2026-07-08:
@@ -1355,6 +1354,22 @@ Confirmed Vercel dashboard update supplied by Mike on 2026-07-09:
 - Existing old Preview deployments should still be treated as production-risk until replaced or verified.
 - Do not redeploy Production as part of this docs task.
 
+Production runtime smoke on 2026-07-09:
+
+- Production runtime verification passed.
+- The served Production deployment output contained commit/hash `87355a4`, which was pushed after the Vercel environment split.
+- Production routes returned 200: `/`, `/today`, `/plan`, `/calendar`, `/dashboard`, `/kpis`, `/history`.
+- Production output/bundles referenced production Supabase ref `mbjcedhysniabbaigsko`.
+- Production output/bundles did not reference staging Supabase ref `npuankmkxbjtlokbpczz`.
+- `/api/kpi-export` returned 200 JSON.
+- KPI export mode: `cloud`.
+- KPI export count: `21`.
+- Expected Maddox KPI indicators were visible/readable.
+- No writes, config changes, redeploys, commits, pushes, Supabase changes, file edits, or secrets occurred during the smoke.
+- Preview/Development runtime verification remains pending.
+- Old Preview deployments remain production-risk until replaced or verified.
+- A fresh Preview deployment must be verified as staging before Preview write testing.
+
 ### DEF-ENV-PREVIEW-STAGING-OVERRIDE-001
 
 - ID: DEF-ENV-PREVIEW-STAGING-OVERRIDE-001
@@ -1362,7 +1377,7 @@ Confirmed Vercel dashboard update supplied by Mike on 2026-07-09:
 - Type: Defect / Task
 - Parent: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`
 - Priority: P1
-- Status: Configuration completed / awaiting runtime verification
+- Status: Production runtime verified / Preview runtime pending
 - Lane: Environment safety / config change
 - Owner: Mike / Codex
 - Source: Mike manual Vercel dashboard confirmation on 2026-07-08.
@@ -1376,8 +1391,8 @@ Confirmed Vercel dashboard update supplied by Mike on 2026-07-09:
 - Out of scope: Supabase mutation, key rotation unless explicitly approved, app code changes, source JSON edits, tests/builds in this docs capture.
 - Acceptance criteria: Production remains mapped to production; Preview and Development map to staging; no Supabase variables remain scoped to All Environments; no secret values are exposed in terminal, docs, screenshots, or commits; no Supabase writes occur during the config change.
 - Dependencies: staging project `npuankmkxbjtlokbpczz`; production project `mbjcedhysniabbaigsko`; Vercel project settings access.
-- Risks: existing old Preview deployments may still point to production until replaced; runtime verification is still required before Preview write testing.
-- Next action: commit docs, then verify a fresh Preview deployment uses staging before Preview write testing.
+- Risks: existing old Preview deployments may still point to production until replaced; Preview runtime verification is still required before Preview write testing.
+- Next action: verify a fresh Preview deployment uses staging before Preview write testing, then resume `DEF-GANTT-SPORTLOAD-DURATION-001`.
 - Links / evidence: Mike manual Vercel Project Settings confirmation on 2026-07-09; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`.
 
 ### DEF-SUPABASE-STAGING-AUTOPAUSE-001
@@ -1759,8 +1774,8 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-4V4-DAY-STACK-001 | Day page only renders first planned Sport Load on stacked Sport Load days | Defect | Day / Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | Production smoke after `0bba866`; `/day/2026-08-03`, `/day/2026-08-05`, `/day/2026-08-16` | Calendar rendered stacked Sport Loads correctly, but Day simple-plan rendering used the first planned Sport Load for the main card/action and hid the added 4v4 item on stacked dates. | Day page renders every planned Sport Load for a date as visible/actionable planned Sport Load work without creating completed logs. | Bounded Day presentation fix and regression tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | Aug 3 shows Toronto Trip + 4v4; Aug 5 shows Carleton Ravens Camp + 4v4; Aug 16 shows Marc O'Connor Ice + 4v4; Jul 5 still shows 4v4. | SPORT-LOAD-4V4-SUMMER-2026 | stacked Sport Loads can be hidden if render paths collapse to first record. | Post-deploy smoke after fix. | local fix in current worktree |
 | DEF-4V4-DAY-LABEL-001 | Today/Day page shows stale or incorrect Lacrosse Sport Load chip when no lacrosse is planned | Defect | Day / Today Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | UAT after stacked Sport Load fix | Day Sport Load summary label could show a lacrosse-derived/hardcoded summary instead of the actual planned Sport Load title/count for the date. | Visible Sport Load labels derive from the actual planned Sport Load records; `Lacrosse` appears only when a planned lacrosse Sport Load exists. | Bounded Day label-rule fix and helper tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | `/today` via Day route and `/day/2026-07-05` do not show Lacrosse unless lacrosse is planned; stacked dates still show individual Sport Load titles. | DEF-4V4-DAY-STACK-001, SPORT-LOAD-4V4-SUMMER-2026 | stale/hardcoded labels can misrepresent planned sport work. | Post-deploy smoke after fix. | local fix in current worktree |
 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | Defect | Plan/Gantt / Sport Load presentation | P1 | Not started | Fast lane | Mike / Codex | Mike QA after `f247959` | Daily Sport Loads such as 4v4, lacrosse, and Marc O'Connor ice should be date-specific markers/chips, while multi-day trips/camps should show actual spans. | Gantt date semantics reflect real single-day and multi-day Sport Load timing. | bounded Plan/Gantt presentation fix and tests. | source JSON edits, Supabase writes, completed logs, broad Gantt redesign. | single-day markers/chips; multi-day actual spans; 4v4, lacrosse, Marc O'Connor, Toronto Trip, and camps render on correct dates/ranges. | PLAN-GANTT-SPORTLOAD-V84-001 | full-week bars misrepresent daily Sport Loads. | Implement after environment mapping docs. | current docs capture |
-| DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | Defect | Environment safety | P1 | Configuration corrected / awaiting runtime verification | Docs-only / environment-safety | Mike / Codex | Preview DB concern plus Mike Vercel dashboard confirmation | Vercel Preview and Development previously inherited production Supabase ref `mbjcedhysniabbaigsko`; Mike split Vercel variables by environment. | Document final mapping and runtime verification caveat. | docs capture of completed split and risk. | env var changes, key rotation, Supabase writes, Vercel changes. | Production -> `mbjcedhysniabbaigsko`; Preview -> `npuankmkxbjtlokbpczz`; Development -> `npuankmkxbjtlokbpczz`; no All Environments Supabase rows; no secrets exposed; no changes made by Codex. | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | old Preview deployments may still be production-risk until replaced or verified. | Commit docs, then verify fresh Preview deployment uses staging before write testing. | current docs capture plus Mike dashboard confirmation |
-| DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | Defect / Task | Environment safety | P1 | Configuration completed / awaiting runtime verification | Environment safety / config change | Mike / Codex | Confirmed `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` finding | Vercel Supabase variables were scoped to All Environments, so Preview and Development inherited production. | Production remains on `mbjcedhysniabbaigsko`; Preview and Development use staging ref `npuankmkxbjtlokbpczz`. | docs capture of Mike-completed Vercel env split and future runtime verification. | this docs-only task, Supabase writes, app code changes, key rotation unless explicitly approved. | Preview/Development point to staging; Production remains production; no All Environments Supabase rows; no secrets exposed; no Supabase writes. | staging project, production project, Vercel settings access | old Preview deployments may still point to production until replaced. | Verify a fresh Preview deployment uses staging before Preview write testing. | Mike manual Vercel config update on 2026-07-09 |
+| DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | Defect | Environment safety | P1 | Production runtime verified / Preview runtime pending | Docs-only / environment-safety | Mike / Codex | Preview DB concern, Mike Vercel dashboard confirmation, production runtime smoke | Vercel Preview and Development previously inherited production Supabase ref `mbjcedhysniabbaigsko`; Mike split Vercel variables by environment and Production runtime smoke passed. | Document final mapping, Production runtime evidence, and Preview runtime caveat. | docs capture of completed split, Production smoke, and risk. | env var changes, key rotation, Supabase writes, Vercel changes. | Production served `87355a4`; production ref present; staging ref absent; KPI export returned cloud count `21`; Preview runtime pending. | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | old Preview deployments may still be production-risk until replaced or verified. | Verify fresh Preview deployment uses staging before write testing. | current docs capture plus production smoke |
+| DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | Defect / Task | Environment safety | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Mike / Codex | Confirmed `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` finding and production runtime smoke | Vercel Supabase variables were scoped to All Environments, so Preview and Development inherited production. | Production remains on `mbjcedhysniabbaigsko`; Preview and Development use staging ref `npuankmkxbjtlokbpczz`. | docs capture of Mike-completed Vercel env split, Production runtime smoke, and future Preview verification. | this docs-only task, Supabase writes, app code changes, key rotation unless explicitly approved. | Preview/Development point to staging for new deployments; Production runtime passed; no All Environments Supabase rows; no secrets exposed; no Supabase writes. | staging project, production project, Vercel settings access | old Preview deployments may still point to production until replaced. | Verify a fresh Preview deployment uses staging before Preview write testing. | Mike manual Vercel config update and production smoke on 2026-07-09 |
 | DEF-SUPABASE-STAGING-AUTOPAUSE-001 | Supabase staging project at risk of inactivity auto-pause | Defect | Environment safety | P2 | In progress | Docs-only / environment-safety | Mike / Codex | Supabase warning | `maddox-training-os-staging` project `npuankmkxbjtlokbpczz` may auto-pause if inactivity continues. | Decide whether to allow pause/manual resume, add a safe read-only health check, or upgrade if uptime matters. | document warning and decision options. | keepalive implementation, Supabase writes, env changes. | warning captured; production not identified in warning; staging/local QA failure mode documented. | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | paused staging can derail QA and encourage unsafe production testing. | Decide whether to allow manual resume, add a safe read-only health check, or upgrade. | current docs capture plus local audit |
 | DEF-QA-CODEX-RUNNER-001 | Codex is being used as a recurring manual smoke-test runner | Defect | QA automation ownership | P1 | Not started | Docs-only / QA workflow | Mike / Codex | Mike usage concern | Codex is repeatedly running manual/ad hoc smoke checks that should be deterministic scripts. | Move recurring smoke checks to scripts/CI, with Codex writing tests and analyzing failures. | workflow capture linked to Playwright smoke scope. | implementing tests now. | recurring smoke has deterministic owner and no longer defaults to ad hoc Codex sessions. | QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001 | usage and approval burden remain high. | Capture in QA ownership scope. | current docs capture |
 | DEF-QA-USAGE-LEDGER-001 | No prompt-level Codex usage ledger exists | Defect / Task | QA automation ownership | P2 | Not started | Docs-only / workflow | Mike / Codex | Mike usage concern | There is no lightweight way to track prompt-level Codex usage by implementation, QA automation, smoke execution, or planning. | Define a usage ledger so repeated runner work can be identified and shifted to automation. | ledger approach/design later. | dashboards, product setting changes, automated billing introspection. | future sessions can classify usage and identify repeat work. | QA-AUTOMATION-OWNERSHIP-001 | usage concerns stay anecdotal. | Create after higher-priority env/Gantt/QA smoke work. | current docs capture |
@@ -1811,6 +1826,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 - Vercel Development is confirmed by Mike's dashboard check to point to staging Supabase ref `npuankmkxbjtlokbpczz` for new deployments.
 - No Supabase variables remain scoped to All Environments in Vercel.
 - Existing old Preview deployments remain production-risk until replaced or verified because environment-variable changes affect new deployments.
+- Production runtime smoke after the env split passed on the served `87355a4` deployment: production ref `mbjcedhysniabbaigsko` was present, staging ref `npuankmkxbjtlokbpczz` was absent, `/api/kpi-export` returned cloud JSON with count `21`, and key production routes returned 200.
 - Do not save KPI results or perform write-capable flows in Vercel Preview until a fresh Preview deployment is verified to use staging, or that deployment is explicitly treated read-only.
 - Supabase staging auto-pause warning is active context for project `npuankmkxbjtlokbpczz`; if staging pauses, local and Preview QA may fail until the project is resumed.
 - No fake/test records in production.

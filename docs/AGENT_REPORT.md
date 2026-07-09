@@ -2,23 +2,23 @@
 
 ## Latest Task
 
-Document Completed Vercel Supabase Environment Split.
+Document Production Runtime Smoke After Vercel Env Split.
 
 ## Result
 
-Documented Mike's completed Vercel environment split for `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`.
+Documented the read-only production runtime smoke performed after the Vercel environment split and after `87355a4` was served by Production.
 
-Manual Vercel change summary supplied by Mike:
+Smoke method and result:
 
-- Production has exactly two Supabase rows and no All Environments Supabase rows.
-- Preview has exactly two Supabase rows and no All Environments Supabase rows.
-- Development has exactly two Supabase rows and no All Environments Supabase rows.
-- Production `NEXT_PUBLIC_SUPABASE_URL` points to `mbjcedhysniabbaigsko`.
-- Preview `NEXT_PUBLIC_SUPABASE_URL` points to `npuankmkxbjtlokbpczz`.
-- Development `NEXT_PUBLIC_SUPABASE_URL` points to `npuankmkxbjtlokbpczz`.
-- Production anon key was restored as Production-scoped.
-- Preview anon key was set from staging.
-- Development anon key was set from staging.
+- Read-only fetch/text inspection checked Production routes: `/`, `/today`, `/plan`, `/calendar`, `/dashboard`, `/kpis`, `/history`.
+- All checked routes returned 200.
+- Production output contained commit/hash `87355a4`.
+- Production output/bundles referenced production Supabase ref `mbjcedhysniabbaigsko`.
+- Production output/bundles did not reference staging Supabase ref `npuankmkxbjtlokbpczz`.
+- `/api/kpi-export` returned 200 JSON.
+- KPI export mode: `cloud`.
+- KPI export count: `21`.
+- Expected Maddox KPI indicators were visible/readable.
 
 Known local/Supabase mapping:
 
@@ -28,14 +28,15 @@ Known local/Supabase mapping:
 
 Defect status:
 
-- `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` is configuration-corrected and awaiting runtime verification.
-- `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` is configuration-completed and awaiting runtime verification.
+- `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` is production-runtime-verified and Preview-runtime-pending.
+- `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` is production-runtime-verified and Preview-runtime-pending.
 
 Runtime note:
 
-- Environment-variable changes affect new deployments.
-- Existing old Preview deployments should still be treated as production-risk until replaced or verified.
-- Production was not redeployed as part of this docs task.
+- Production runtime verification passed because the current served Production deployment showed `87355a4`, which was pushed after the Vercel env split.
+- Preview/Development runtime verification is still not complete.
+- Old Preview deployments remain production-risk until replaced or verified.
+- Fresh Preview deployment must be verified as staging before Preview write testing.
 
 Staging auto-pause status captured:
 
@@ -43,7 +44,7 @@ Staging auto-pause status captured:
 - Mike reported staging is not paused yet, but may auto-pause if inactive.
 - If staging pauses, local development and correctly configured Preview QA may fail until staging is resumed.
 
-No secrets were captured or printed. Codex made no Supabase changes, Vercel changes, redeploys, app code changes, source import data changes, tests, build, commit, or push actions.
+No secrets were captured or printed. No writes, config changes, redeploys, commits, pushes, Supabase changes, file edits, app code changes, source JSON changes, tests, or build occurred during the smoke.
 
 ## Files Changed
 
@@ -53,15 +54,15 @@ No secrets were captured or printed. Codex made no Supabase changes, Vercel chan
 
 ## Status Updates
 
-- Updated `docs/SCOPE.md` with the final Vercel mapping and no-All-Environments state.
-- Marked `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` as configuration-corrected / awaiting runtime verification.
-- Marked `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` as configuration-completed / awaiting runtime verification.
-- Updated `docs/SESSION_HANDOFF.md` with the completed split, old Preview deployment caveat, and revised next order.
-- Updated this report with Mike's manual Vercel change summary and no-secrets/no-redeploy confirmations.
+- Updated `docs/SCOPE.md` with the production runtime smoke evidence.
+- Marked `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` as production-runtime-verified / Preview-runtime-pending.
+- Marked `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` as production-runtime-verified / Preview-runtime-pending.
+- Updated `docs/SESSION_HANDOFF.md` with the production smoke result and revised next order.
+- Updated this report with the smoke method/result and no-writes/no-config/no-redeploy/no-secrets confirmations.
 
 Recommended next implementation order:
 
-1. Commit the environment docs.
+1. Commit the production runtime smoke docs.
 2. Later verify a fresh Preview deployment uses staging before Preview write testing.
 3. `DEF-GANTT-SPORTLOAD-DURATION-001` — fix Gantt date semantics.
 4. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
@@ -71,11 +72,11 @@ After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATI
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` marked configuration-corrected / awaiting runtime verification; `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` marked configuration-completed / awaiting runtime verification; `DEF-SUPABASE-STAGING-AUTOPAUSE-001` preserved.
+- Defects added/updated: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` marked production-runtime-verified / Preview-runtime-pending; `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` marked production-runtime-verified / Preview-runtime-pending; `DEF-SUPABASE-STAGING-AUTOPAUSE-001` preserved.
 - Epics/features added/updated: none.
-- Product decisions added/updated: fresh Preview runtime verification is required before Preview write testing.
-- Data/sync/environment decisions added/updated: Vercel Production points to production; Vercel Preview and Development are configured to staging for new deployments; no Supabase variables remain scoped to All Environments; old Preview deployments remain production-risk until replaced or verified.
-- Testing requirements added/updated: none.
+- Product decisions added/updated: Production is safe to continue after the env split; fresh Preview runtime verification is still required before Preview write testing.
+- Data/sync/environment decisions added/updated: Production runtime served `87355a4`, referenced `mbjcedhysniabbaigsko`, did not reference `npuankmkxbjtlokbpczz`, and `/api/kpi-export` returned cloud count `21`; Preview/Development runtime verification remains pending.
+- Testing requirements added/updated: production runtime smoke evidence captured; fresh Preview verification remains deferred.
 - Training-plan/source items added/updated: none.
 - Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: runtime verification of fresh Preview deployment, Supabase changes, redeploys, keepalive/billing decisions, app implementation, tests, builds, source JSON edits, commit, push.
+- Items intentionally deferred: runtime verification of fresh Preview deployment, Supabase changes, redeploys, keepalive/billing decisions, app implementation, tests/builds beyond read-only smoke, source JSON edits, commit, push.
