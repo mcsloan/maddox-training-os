@@ -2,71 +2,58 @@
 
 ## Latest Task
 
-Fix Plan/Gantt Sport Load Date Semantics.
+Capture React Duplicate Key Warning For Repeated Easy Spin Instruction.
 
 ## Result
 
-Fixed `DEF-GANTT-SPORTLOAD-DURATION-001` locally.
+Captured `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` as a docs-only P2 UI correctness defect.
 
-Root cause:
+Observed warning:
 
-- Plan/Gantt already sourced Sport Load rows from v8.4, but the Gantt marker cells compressed same-week Sport Loads into week-level labels such as `4v4 x3`, which hid the actual dates.
-- One old static `Chase Hull Camp` Gantt span still rendered as a full-week camp bar instead of relying on the v8.4 Sport Load dates.
-- Multi-day trips/camps needed explicit date-range labels; single-day Sport Loads needed visible date labels.
+`Encountered two children with the same key, \`Easy spin 2 minutes.\`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted.`
 
-Fix summary:
+Interpretation captured:
 
-- `lib/planSportLoadOverlay.ts` now derives date-labelled Sport Load markers from v8.4 records.
-- Single-day Sport Loads remain single-day markers.
-- Consecutive camp/travel Sport Load records collapse into actual date ranges.
-- `app/plan/page.tsx` now renders Sport Load rows as visible date chips/ranges inside week cells.
-- Removed the old static Chase Hull Camp full-week bar so camp timing comes from v8.4 Sport Load data.
+- This is a React rendering-key defect, not a Supabase, data, environment, or training-content issue.
+- The likely root cause is a rendered list using display text as the React `key`.
+- Duplicate instruction text may be valid training content and must not be removed or deduplicated as the fix.
+- A later implementation should use stable contextual keys such as parent ID, section ID, source item identity, or index where appropriate.
 
-Week mapping clarification:
+Current checkpoint:
 
-- Week 7: `2026-07-27` through `2026-08-02`.
-- Week 8: `2026-08-03` through `2026-08-09`.
-- Aug 3 4v4 and Aug 3 Toronto Trip return day are Week 8.
+- Local HEAD: `ec283ce` (`fix(plan): render sport loads with date semantics`).
+- Local `main` is ahead of `origin/main` by 1.
+- The Gantt fix is committed locally but still needs push/deploy/smoke.
 
-Date semantics covered:
-
-- 4v4 dates: Jul 5 W3, Jul 12 W4, Jul 19 W5, Jul 26 W6, Aug 3 W8, Aug 5 W8, Aug 9 W8, Aug 16 W9, Aug 23 W10.
-- Toronto Trip: `Jul 31-Aug 3`, spanning Week 7 and Week 8.
-- Chase Hull Camp: `Jul 6-10`.
-- Carleton Ravens Camp: `Aug 4-7`.
-- Sensplex Camp: `Aug 24-28`.
-- Marc O'Connor Ice remains date-specific: Jul 18, Jul 25, Aug 15, Aug 16.
+No app code, source JSON, Supabase data, Vercel settings, build, commit, or push occurred in this docs-only task.
 
 ## Files Changed
 
-- `app/plan/page.tsx`
-- `lib/planSportLoadOverlay.ts`
-- `lib/planSportLoadOverlay.test.ts`
 - `docs/SCOPE.md`
 - `docs/SESSION_HANDOFF.md`
 - `docs/AGENT_REPORT.md`
 
 ## Status Updates
 
-- Updated `docs/SCOPE.md` to mark `DEF-GANTT-SPORTLOAD-DURATION-001` as completed locally.
-- Updated `docs/SESSION_HANDOFF.md` with the local fix and date/Week 7-8 clarification.
-- Updated this report with root cause, fix, and test scope.
+- Added detailed `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` record to `docs/SCOPE.md`.
+- Added the defect to the active queue after Gantt push/smoke.
+- Added the defect to the compact defect ledger.
+- Updated `docs/SESSION_HANDOFF.md` to preserve `ec283ce` push/smoke as the next step and this React key defect as the following P2 backlog item.
 
 Recommended next order:
 
-1. Review and commit this local fix.
-2. Deploy and run read-only `/plan` smoke.
-3. Verify a fresh Preview deployment uses staging before any Preview write testing.
-4. Implement `QA-PLAYWRIGHT-SMOKE-001` under `QA-AUTOMATION-OWNERSHIP-001`.
-5. Then return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032`.
+1. Push/deploy `ec283ce`, then run read-only `/plan` smoke.
+2. If the warning persists, fix `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` with stable contextual keys.
+3. Verify a fresh Preview deployment uses staging before Preview write testing.
+4. Continue QA automation ownership work.
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-GANTT-SPORTLOAD-DURATION-001` fixed locally; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`, and `DEF-SUPABASE-STAGING-AUTOPAUSE-001` preserved.
+- Defects added/updated: `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` added; `DEF-GANTT-SPORTLOAD-DURATION-001` preserved as committed locally at `ec283ce`.
 - Epics/features added/updated: none.
-- Product decisions added/updated: Plan/Gantt Sport Load rows should show real dates/ranges from v8.4 rather than week-duration bars.
-- Data/sync/environment decisions added/updated: none; Preview/Development runtime verification remains pending before Preview write testing.
-- Testing requirements added/updated: `lib/planSportLoadOverlay.test.ts` now covers single-day Sport Load markers, multi-day ranges, 4v4 date-to-week mapping, Aug 3 as Week 8, and forbidden wording absence.
-- Training-plan/source items added/updated: no source data changed; v8.4 remains source of truth.
+- Product decisions added/updated: duplicate instruction text should not be removed solely to satisfy React key uniqueness.
+- Data/sync/environment decisions added/updated: none.
+- Testing requirements added/updated: future key fix should include a narrow regression if the renderer is testable.
+- Training-plan/source items added/updated: none; no source JSON changed.
 - Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: production smoke after deploy, Preview runtime verification, Playwright smoke suite, source JSON changes, Supabase/Vercel changes, completed logs, commit, push.
+- Items intentionally deferred: app-code fix, source JSON edits, Supabase/Vercel changes, build, commit, push.
