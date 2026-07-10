@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { buildPlanSportLoadOverlayRows, getPlanSportLoadOverlayItems, getPlanSportLoadOverlayItemsForWeek } from "./planSportLoadOverlay";
+import {
+  buildPlanSportLoadOverlayRows,
+  getDayColumnIndex,
+  getPlanSportLoadOverlayItems,
+  getPlanSportLoadOverlayItemsForWeek,
+  getSpanGridColumns,
+  getTimelineDays,
+  getWeekForDate,
+} from "./planSportLoadOverlay";
 
 const fourVFourDates = [
   "2026-07-05",
@@ -26,7 +34,32 @@ const fourVFourWeekMap = new Map([
   ["2026-08-23", 10],
 ]);
 
+const fourVFourDayMap = new Map([
+  ["2026-07-05", "S"],
+  ["2026-07-12", "S"],
+  ["2026-07-19", "S"],
+  ["2026-07-26", "S"],
+  ["2026-08-03", "M"],
+  ["2026-08-05", "W"],
+  ["2026-08-09", "S"],
+  ["2026-08-16", "S"],
+  ["2026-08-23", "S"],
+]);
+
 describe("Plan Sport Load overlay", () => {
+  it("builds a daily 12-week Gantt timeline from v8.4 phase dates", () => {
+    const timeline = getTimelineDays();
+    const weekSeven = timeline.filter((day) => day.week === 7).map((day) => day.date);
+    const weekEight = timeline.filter((day) => day.week === 8).map((day) => day.date);
+    const augThree = timeline.find((day) => day.date === "2026-08-03");
+
+    expect(timeline).toHaveLength(84);
+    expect(weekSeven).toEqual(["2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02"]);
+    expect(weekEight).toEqual(["2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07", "2026-08-08", "2026-08-09"]);
+    expect(getWeekForDate("2026-08-03")).toBe(8);
+    expect(augThree).toMatchObject({ week: 8, dayOfWeek: 0, dayLabel: "M", dayOfMonth: 3 });
+  });
+
   it("derives the Bell Sensplex 4v4 overlay from v8.4 Sport Loads", () => {
     const items = getPlanSportLoadOverlayItems();
     const fourVFourItems = items.filter((item) => item.title === "4v4 Hockey" && item.details.includes("Bell Sensplex"));
@@ -72,11 +105,28 @@ describe("Plan Sport Load overlay", () => {
       week: 8,
       dateLabel: "Aug 3",
       durationKind: "single-day",
+      displayKind: "marker",
       startDate: "2026-08-03",
       endDate: "2026-08-03",
+      startOffset: getDayColumnIndex("2026-08-03"),
+      endOffset: getDayColumnIndex("2026-08-03"),
     });
+    expect(getSpanGridColumns("2026-08-03", "2026-08-03")).toEqual({ startColumn: 50, endColumn: 51 });
     expect(marcRow?.markers.map((marker) => marker.dateLabel)).toEqual(["Jul 18", "Jul 25", "Aug 15", "Aug 16"]);
     expect(marcRow?.markers.every((marker) => marker.durationKind === "single-day")).toBe(true);
+    expect(marcRow?.markers.every((marker) => marker.displayKind === "marker")).toBe(true);
+  });
+
+  it("maps each approved 4v4 date to the expected week and daily Gantt column", () => {
+    const timeline = getTimelineDays();
+
+    for (const date of fourVFourDates) {
+      const day = timeline.find((entry) => entry.date === date);
+
+      expect(day?.week, date).toBe(fourVFourWeekMap.get(date));
+      expect(day?.dayLabel, date).toBe(fourVFourDayMap.get(date));
+      expect(getDayColumnIndex(date), date).toBe(timeline.findIndex((entry) => entry.date === date));
+    }
   });
 
   it("keeps multi-day Sport Loads as actual date ranges", () => {
@@ -91,25 +141,22 @@ describe("Plan Sport Load overlay", () => {
         week: 7,
         startDate: "2026-07-31",
         endDate: "2026-08-03",
+        startOffset: getDayColumnIndex("2026-07-31"),
+        endOffset: getDayColumnIndex("2026-08-03"),
         dateLabel: "Jul 31-Aug 3",
         durationKind: "multi-day",
-      }),
-      expect.objectContaining({
-        week: 8,
-        startDate: "2026-07-31",
-        endDate: "2026-08-03",
-        dateLabel: "Jul 31-Aug 3",
-        durationKind: "multi-day",
+        displayKind: "bar",
       }),
     ]);
+    expect(getSpanGridColumns("2026-07-31", "2026-08-03")).toEqual({ startColumn: 47, endColumn: 51 });
     expect(chaseCamp?.markers).toEqual([
-      expect.objectContaining({ week: 4, startDate: "2026-07-06", endDate: "2026-07-10", dateLabel: "Jul 6-10", durationKind: "multi-day" }),
+      expect.objectContaining({ week: 4, startDate: "2026-07-06", endDate: "2026-07-10", dateLabel: "Jul 6-10", durationKind: "multi-day", displayKind: "bar" }),
     ]);
     expect(carletonCamp?.markers).toEqual([
-      expect.objectContaining({ week: 8, startDate: "2026-08-04", endDate: "2026-08-07", dateLabel: "Aug 4-7", durationKind: "multi-day" }),
+      expect.objectContaining({ week: 8, startDate: "2026-08-04", endDate: "2026-08-07", dateLabel: "Aug 4-7", durationKind: "multi-day", displayKind: "bar" }),
     ]);
     expect(sensplexCamp?.markers).toEqual([
-      expect.objectContaining({ week: 11, startDate: "2026-08-24", endDate: "2026-08-28", dateLabel: "Aug 24-28", durationKind: "multi-day" }),
+      expect.objectContaining({ week: 11, startDate: "2026-08-24", endDate: "2026-08-28", dateLabel: "Aug 24-28", durationKind: "multi-day", displayKind: "bar" }),
     ]);
   });
 

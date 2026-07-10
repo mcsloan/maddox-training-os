@@ -2,7 +2,15 @@ import Link from "next/link";
 import { LoadChip, LoadChipLegend, PhaseChip, PlanTagChip } from "@/components/LoadChips";
 import { WeeklyLoadChart } from "@/components/WeeklyLoadChart";
 import { ganttModel, phaseLabels, phaseMap } from "@/lib/imports/v8_4";
-import { buildPlanSportLoadOverlayRows, getPlanSportLoadOverlayItemsForWeek, type PlanSportLoadOverlayKind } from "@/lib/planSportLoadOverlay";
+import {
+  buildPlanSportLoadOverlayRows,
+  formatShortDate,
+  getPlanSportLoadOverlayItemsForWeek,
+  getSpanGridColumns,
+  getTimelineDays,
+  type PlanGanttDisplayKind,
+  type PlanSportLoadOverlayKind,
+} from "@/lib/planSportLoadOverlay";
 import { formatPlanDate, getWeekPlanSummary, trainingPlan } from "@/lib/trainingData";
 
 export default function PlanPage() {
@@ -139,35 +147,92 @@ function MethodologyPanel() {
   );
 }
 
+const TIMELINE_DAY_COUNT = 84;
+const GANTT_LABEL_COLUMN_WIDTH = "12rem";
+const GANTT_DAY_COLUMN_WIDTH = "1.1rem";
+const GANTT_GRID_TEMPLATE_COLUMNS = `${GANTT_LABEL_COLUMN_WIDTH} repeat(${TIMELINE_DAY_COUNT}, ${GANTT_DAY_COLUMN_WIDTH})`;
+
 function PhaseGantt() {
   ensureLockedGanttLaneCount();
   const weekLabels = new Map(phaseLabels.map((entry) => [entry.week, entry.appLabel]));
   const phaseNames = new Map(phaseMap.map((entry) => [entry.week, entry.trainingPhase]));
-  const rows = buildLockedGanttRows();
+  const timelineDays = getTimelineDays();
+  const sections = buildLockedGanttSections();
 
   return (
     <section className="card mt-6 bg-white">
       <p className="label">Methodology first</p>
       <h2 className="text-2xl font-black">Phase Gantt</h2>
-      <p className="mt-2 text-sm text-slate-600">Method phases lead the plan. Sport loads and performance tests are scheduled within them.</p>
+      <p className="mt-2 text-sm text-slate-600">Method phases span real dates. Sport loads appear as exact-day milestones or exact-date bars.</p>
       <div className="mt-5 overflow-x-auto">
-        <div className="min-w-[1120px]">
-          <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] gap-0.5 border-b border-slate-300 pb-2 text-[11px] font-black uppercase tracking-wide text-slate-500">
-            <div />
-            {ganttModel.weeks.map((week) => {
+        <div className="w-max">
+          <div className="grid border-b border-slate-300 pb-1 text-[10px] font-black uppercase text-slate-500" style={{ gridTemplateColumns: GANTT_GRID_TEMPLATE_COLUMNS }}>
+            <div className="sticky left-0 z-40 border-r border-slate-300 bg-white pr-3 shadow-[2px_0_0_rgba(15,23,42,0.06)]" />
+            {ganttModel.weeks.map((week, index) => {
               const weekNumber = Number(week.slice(1));
               const weekLabel = weekLabels.get(weekNumber) || week;
               const phaseName = phaseNames.get(weekNumber);
+              const startColumn = index * 7 + 2;
               return (
-                <Link key={week} className="text-center text-blue" href={`/calendar#week-${weekNumber}`} title={phaseName ? `${phaseName} · ${weekLabel}` : weekLabel}>
-                  {week}
+                <Link
+                  key={week}
+                  className="border border-slate-200 bg-ice py-1 text-center text-blue"
+                  href={`/calendar#week-${weekNumber}`}
+                  style={{ gridColumn: `${startColumn} / span 7` }}
+                  title={phaseName ? `${phaseName} · ${weekLabel}` : weekLabel}
+                >
+                  {week} · {formatShortDate(phaseLabels[index]?.start ?? timelineDays[index * 7]?.date ?? trainingPlan.overview.startDate)}
                 </Link>
               );
             })}
+            <div className="sticky left-0 z-40 border-r border-slate-300 bg-white pr-3 shadow-[2px_0_0_rgba(15,23,42,0.06)]" style={{ gridColumn: "1", gridRow: "2 / span 2" }} />
+            {timelineDays.map((day) => (
+              <div
+                key={day.date}
+                className="border-x border-t border-slate-200 bg-white py-0.5 text-center leading-tight text-slate-500"
+                style={{ gridColumn: dayColumn(day.date), gridRow: 2 }}
+                title={`${day.shortDate} · W${day.week}`}
+              >
+                {day.dayLabel}
+              </div>
+            ))}
+            {timelineDays.map((day) => (
+              <div
+                key={`${day.date}-day`}
+                className="border-x border-b border-slate-200 bg-white py-0.5 text-center text-[10px] font-semibold leading-tight text-slate-500"
+                style={{ gridColumn: dayColumn(day.date), gridRow: 3 }}
+                title={`${day.shortDate} · W${day.week}`}
+              >
+                {day.dayOfMonth}
+              </div>
+            ))}
           </div>
 
-          <div className="mt-3 space-y-1">
-            {rows.map((row) => ("markers" in row ? <GanttMarkerRow key={row.label} row={row} /> : <GanttSpanRow key={`${row.label}-${row.startWeek}-${row.endWeek}`} row={row} />))}
+          <div className="relative mt-2">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-0 top-0 z-0"
+              style={{
+                left: GANTT_LABEL_COLUMN_WIDTH,
+                width: `calc(${TIMELINE_DAY_COUNT} * ${GANTT_DAY_COLUMN_WIDTH})`,
+                backgroundImage: `linear-gradient(to right, transparent calc(${GANTT_DAY_COLUMN_WIDTH} - 1px), rgba(226, 232, 240, 0.8) calc(${GANTT_DAY_COLUMN_WIDTH} - 1px))`,
+                backgroundSize: `${GANTT_DAY_COLUMN_WIDTH} 100%`,
+              }}
+            />
+            {Array.from({ length: 13 }, (_, index) => (
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute bottom-0 top-0 z-30 w-px bg-slate-300"
+                key={index}
+                style={{ left: `calc(${GANTT_LABEL_COLUMN_WIDTH} + (${index * 7} * ${GANTT_DAY_COLUMN_WIDTH}))` }}
+              />
+            ))}
+            {sections.map((section) => (
+              <div key={section.label}>
+                <GanttSectionHeader section={section} />
+                {section.rows.map((row) => <GanttDailyRow key={row.label} row={row} sectionTone={section.tone} />)}
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -175,21 +240,30 @@ function PhaseGantt() {
   );
 }
 
-type GanttRow =
-  | {
-      label: string;
-      kind: "testing" | "sportMarkers" | "campMarkers" | "onIceMarkers" | "travelMarkers";
-      markers: { week: number; label: string; shortLabel: string; dateLabel: string; title: string }[];
-    }
-  | {
-      label: string;
-      shortLabel: string;
-      startWeek: number;
-      endWeek: number;
-      kind: "phase" | "sport" | "camp" | "onIce" | "deload" | "taper";
-    };
+type GanttRowKind = "testing" | "phase" | "sport" | "camp" | "onIce" | "travel" | "deload" | "taper";
+type GanttSectionTone = "events" | "methodology";
 
-function buildLockedGanttRows(): GanttRow[] {
+type GanttSection = {
+  label: string;
+  detail: string;
+  tone: GanttSectionTone;
+  rows: GanttRow[];
+};
+
+type GanttRow = {
+  label: string;
+  kind: GanttRowKind;
+  items: {
+    label: string;
+    shortLabel: string;
+    startDate: string;
+    endDate: string;
+    displayKind: PlanGanttDisplayKind;
+    title: string;
+  }[];
+};
+
+function buildLockedGanttSections(): GanttSection[] {
   const sourceLaneNames = new Set(ganttModel.lanes.map((lane) => lane.lane));
   const requiredLaneNames = [
     "Perf Testing",
@@ -217,113 +291,190 @@ function buildLockedGanttRows(): GanttRow[] {
     }
   }
 
-  const sportLoadRows = buildPlanSportLoadOverlayRows().map((row): Extract<GanttRow, { markers: unknown[] }> => ({
+  const sportLoadRows = buildPlanSportLoadOverlayRows().map((row): GanttRow => ({
     label: row.label,
     kind: markerKindFor(row.kind),
-    markers: row.markers.map((marker) => ({
-      week: marker.week,
+    items: row.markers.map((marker) => ({
       label: marker.label,
       shortLabel: marker.shortLabel,
-      dateLabel: marker.dateLabel,
       title: marker.title,
+      startDate: marker.startDate,
+      endDate: marker.endDate,
+      displayKind: marker.displayKind,
     })),
   }));
 
-  return [
-    { label: "Perf Testing", kind: "testing", markers: [1, 3, 5, 7, 10, 12].map((week) => ({ week, label: "Perf Testing", shortLabel: "Test", dateLabel: `W${week}`, title: "Perf Testing" })) },
-    { label: "GPP / Foundation", shortLabel: "GPP / Foundation", startWeek: 1, endWeek: 2, kind: "phase" },
+  const eventRows: GanttRow[] = [
+    { label: "Perf Testing", kind: "testing", items: [1, 3, 5, 7, 10, 12].map((week) => milestoneForWeek(week, "Perf Testing", "Test")) },
     ...sportLoadRows,
-    { label: "Strength + Acceleration", shortLabel: "Strength + Accel", startWeek: 3, endWeek: 4, kind: "phase" },
-    { label: "Power Transition", shortLabel: "Power Transition", startWeek: 5, endWeek: 6, kind: "phase" },
-    { label: "Deload", shortLabel: "Deload", startWeek: 7, endWeek: 7, kind: "deload" },
-    { label: "Power/Agility + Carleton", shortLabel: "Power/Agility", startWeek: 8, endWeek: 10, kind: "phase" },
-    { label: "Game-Speed / Sprint", shortLabel: "Game-Speed / Sprint", startWeek: 9, endWeek: 10, kind: "phase" },
-    { label: "Tryout Sim", shortLabel: "Tryout Sim", startWeek: 11, endWeek: 11, kind: "phase" },
-    { label: "Taper + Peak", shortLabel: "Taper", startWeek: 12, endWeek: 12, kind: "taper" },
+  ];
+
+  const methodologyRows: GanttRow[] = [
+    phaseSpan("GPP / Foundation", "GPP / Foundation", 1, 2, "phase"),
+    phaseSpan("Strength + Acceleration", "Strength + Accel", 3, 4, "phase"),
+    phaseSpan("Power Transition", "Power Transition", 5, 6, "phase"),
+    phaseSpan("Deload", "Deload", 7, 7, "deload"),
+    phaseSpan("Power/Agility + Carleton", "Power/Agility", 8, 8, "phase"),
+    phaseSpan("Game-Speed / Sprint", "Game-Speed / Sprint", 9, 10, "phase"),
+    phaseSpan("Tryout Sim", "Tryout Sim", 11, 11, "phase"),
+    phaseSpan("Taper + Peak", "Taper", 12, 12, "taper"),
+  ];
+
+  return [
+    {
+      label: "Sport Loads / Events / Testing",
+      detail: "dated markers and exact-date event bars",
+      tone: "events",
+      rows: eventRows,
+    },
+    {
+      label: "Methodology Phases",
+      detail: "training blocks across the 12-week plan",
+      tone: "methodology",
+      rows: methodologyRows,
+    },
   ];
 }
 
-function GanttSpanRow({ row }: { row: Extract<GanttRow, { kind: Exclude<GanttRow["kind"], "testing"> }> }) {
+function phaseSpan(label: string, shortLabel: string, startWeek: number, endWeek: number, kind: GanttRowKind): GanttRow {
+  const start = phaseLabels.find((entry) => entry.week === startWeek);
+  const end = phaseLabels.find((entry) => entry.week === endWeek);
+  if (!start || !end) {
+    throw new Error(`Cannot render Gantt phase ${label}; missing v8.4 week ${startWeek}-${endWeek}.`);
+  }
+
+  return {
+    label,
+    kind,
+    items: [{
+      label,
+      shortLabel,
+      startDate: start.start,
+      endDate: end.end,
+      displayKind: "bar",
+      title: `${label} · ${formatShortDate(start.start)}-${formatShortDate(end.end)}`,
+    }],
+  };
+}
+
+function milestoneForWeek(weekNumber: number, label: string, shortLabel: string): GanttRow["items"][number] {
+  const week = phaseLabels.find((entry) => entry.week === weekNumber);
+  if (!week) {
+    throw new Error(`Cannot render Gantt milestone ${label}; missing v8.4 week ${weekNumber}.`);
+  }
+
+  return {
+    label: `${label} · W${weekNumber}`,
+    shortLabel,
+    startDate: week.start,
+    endDate: week.start,
+    displayKind: "marker",
+    title: `${label} · W${weekNumber} · ${formatShortDate(week.start)}`,
+  };
+}
+
+function GanttSectionHeader({ section }: { section: GanttSection }) {
+  const toneClass = section.tone === "events" ? "border-violet-200 bg-violet-50 text-violet-950" : "border-cyan-200 bg-cyan-50 text-cyan-950";
+
   return (
-    <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] items-center gap-0.5">
-      <div className="pr-2 text-[12px] font-black leading-tight text-slate-800">{row.label}</div>
-      <div className="grid h-5 grid-cols-12 gap-0.5" style={{ gridColumn: "2 / span 12" }}>
-        {Array.from({ length: 12 }, (_, index) => {
-          const week = index + 1;
-          const isCovered = week >= row.startWeek && week <= row.endWeek;
-          return <div key={week} className={`h-5 border ${isCovered ? "border-transparent bg-transparent" : "border-slate-200 bg-white"}`} />;
-        })}
-        <div
-          className="pointer-events-none z-10 h-5 border px-2 py-0.5 text-[11px] font-black leading-tight shadow-sm"
-          style={{ ...ganttFillStyleFor(row.kind), gridColumn: `${row.startWeek} / ${row.endWeek + 1}`, gridRow: 1 }}
-          title={row.label}
-        >
-          <span className="block truncate">{row.shortLabel}</span>
-        </div>
+    <div className={`relative z-20 mt-1 grid h-6 items-center border-y text-[10px] font-black uppercase ${toneClass}`} style={{ gridTemplateColumns: GANTT_GRID_TEMPLATE_COLUMNS }}>
+      <div className="sticky left-0 z-40 flex h-6 items-center border-r border-slate-300 bg-inherit px-2 tracking-wide shadow-[2px_0_0_rgba(15,23,42,0.06)]">{section.label}</div>
+      <div className="flex h-6 items-center px-2 text-[9px] font-semibold normal-case tracking-normal opacity-80" style={{ gridColumn: "2 / span 84" }}>{section.detail}</div>
+    </div>
+  );
+}
+
+function GanttDailyRow({ row, sectionTone }: { row: GanttRow; sectionTone: GanttSectionTone }) {
+  const labelTone = sectionTone === "events" ? "bg-violet-50" : "bg-cyan-50";
+
+  return (
+    <div className="relative z-10 grid h-[22px] items-center border-b border-slate-100" style={{ gridTemplateColumns: GANTT_GRID_TEMPLATE_COLUMNS }}>
+      <div className={`sticky left-0 z-40 flex h-[22px] items-center overflow-hidden border-r border-slate-300 px-2 text-[10px] font-black leading-none text-slate-800 shadow-[2px_0_0_rgba(15,23,42,0.06)] ${labelTone}`}>{row.label}</div>
+      <div className="relative grid h-[22px] grid-cols-subgrid" style={{ gridColumn: "2 / span 84" }}>
+        {Array.from({ length: 84 }, (_, index) => (
+          <div key={index} className="h-[22px]" />
+        ))}
+        {row.items.map((item) => (
+          item.displayKind === "marker"
+            ? <GanttMilestone key={`${item.startDate}-${item.label}`} item={item} kind={row.kind} />
+            : <GanttBar key={`${item.startDate}-${item.endDate}-${item.label}`} item={item} kind={row.kind} />
+        ))}
       </div>
     </div>
   );
 }
 
-function GanttMarkerRow({ row }: { row: Extract<GanttRow, { markers: unknown[] }> }) {
+function GanttBar({ item, kind }: { item: GanttRow["items"][number]; kind: GanttRowKind }) {
+  const columns = getSpanGridColumns(item.startDate, item.endDate);
+
   return (
-    <div className="grid grid-cols-[11rem_repeat(12,minmax(3.75rem,1fr))] items-stretch gap-0.5">
-      <div className="pr-2 text-[12px] font-black leading-tight text-slate-800">{row.label}</div>
-      <div className="grid min-h-8 grid-cols-12 gap-0.5" style={{ gridColumn: "2 / span 12" }}>
-        {Array.from({ length: 12 }, (_, index) => {
-          const week = index + 1;
-          const markers = row.markers.filter((item) => item.week === week);
-          const markerTitle = markers.map((marker) => marker.label).join("; ");
-          return (
-            <div key={week} className="min-h-8 border border-slate-200 bg-white p-0.5">
-              {markers.map((marker) => (
-                <div
-                  className="mb-0.5 w-full border px-1 py-0.5 text-[9px] font-black leading-tight shadow-sm last:mb-0"
-                  key={`${marker.dateLabel}-${marker.shortLabel}`}
-                  style={ganttMarkerStyleFor(row.kind)}
-                  title={markerTitle}
-                >
-                  <span className="block truncate">{marker.dateLabel}</span>
-                  <span className="block truncate">{marker.shortLabel}</span>
-                </div>
-              ))}
-            </div>
-          );
-        })}
-      </div>
+    <div
+      className="z-10 my-auto h-3 border px-1 text-[8px] font-black leading-3 shadow-sm"
+      style={{ ...ganttFillStyleFor(kind), gridColumn: `${columns.startColumn} / ${columns.endColumn}`, gridRow: 1 }}
+      title={item.title}
+    >
+      <span className="block truncate">{item.shortLabel}</span>
     </div>
   );
 }
 
-function markerKindFor(kind: PlanSportLoadOverlayKind): Extract<GanttRow, { markers: unknown[] }>["kind"] {
+function GanttMilestone({ item, kind }: { item: GanttRow["items"][number]; kind: GanttRowKind }) {
+  const columns = getSpanGridColumns(item.startDate, item.endDate);
+  const label = kind === "testing" ? "★" : "◆";
+
+  return (
+    <div
+      className="z-20 flex items-center justify-center"
+      style={{ gridColumn: `${columns.startColumn} / ${columns.endColumn}`, gridRow: 1 }}
+      title={item.title}
+    >
+      <span className="flex h-4 w-4 items-center justify-center text-[11px] font-black leading-none" style={ganttMarkerStyleFor(kind)} aria-label={item.label}>
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function markerKindFor(kind: PlanSportLoadOverlayKind): GanttRowKind {
   switch (kind) {
     case "camp":
-      return "campMarkers";
+      return "camp";
     case "onIce":
-      return "onIceMarkers";
+      return "onIce";
     case "travel":
-      return "travelMarkers";
+      return "travel";
     case "sport":
-      return "sportMarkers";
+      return "sport";
   }
 }
 
-function ganttMarkerStyleFor(kind: Extract<GanttRow, { markers: unknown[] }>["kind"]) {
+function dayColumn(date: string) {
+  const columns = getSpanGridColumns(date, date);
+  return `${columns.startColumn + 1} / ${columns.endColumn + 1}`;
+}
+
+function ganttMarkerStyleFor(kind: GanttRowKind) {
   switch (kind) {
     case "testing":
-      return { backgroundColor: "#06b6d4", borderColor: "rgba(22, 78, 99, 0.15)", color: "#083344" };
-    case "sportMarkers":
-      return { backgroundColor: "#ddd6fe", borderColor: "#7c3aed", color: "#3b0764" };
-    case "campMarkers":
-      return { backgroundColor: "#fdba74", borderColor: "#ea580c", color: "#7c2d12" };
-    case "onIceMarkers":
-      return { backgroundColor: "#c7d2fe", borderColor: "#4338ca", color: "#312e81" };
-    case "travelMarkers":
-      return { backgroundColor: "#99f6e4", borderColor: "#0f766e", color: "#134e4a" };
+      return { backgroundColor: "#06b6d4", border: "1px solid rgba(22, 78, 99, 0.25)", color: "#083344" };
+    case "sport":
+      return { backgroundColor: "#ddd6fe", border: "1px solid #7c3aed", color: "#3b0764" };
+    case "camp":
+      return { backgroundColor: "#fdba74", border: "1px solid #ea580c", color: "#7c2d12" };
+    case "onIce":
+      return { backgroundColor: "#c7d2fe", border: "1px solid #4338ca", color: "#312e81" };
+    case "travel":
+      return { backgroundColor: "#99f6e4", border: "1px solid #0f766e", color: "#134e4a" };
+    case "phase":
+      return { backgroundColor: "#0f6f9f", border: "1px solid #075985", color: "#ffffff" };
+    case "deload":
+      return { backgroundColor: "#99f6e4", border: "1px solid #0f766e", color: "#134e4a" };
+    case "taper":
+      return { backgroundColor: "#fde68a", border: "1px solid #d97706", color: "#78350f" };
   }
 }
 
-function ganttFillStyleFor(kind: Exclude<GanttRow["kind"], "testing">) {
+function ganttFillStyleFor(kind: GanttRowKind) {
   switch (kind) {
     case "phase":
       return { backgroundColor: "#0f6f9f", borderColor: "#075985", color: "#ffffff", fontWeight: 800, borderRadius: 0 as const };
@@ -333,10 +484,14 @@ function ganttFillStyleFor(kind: Exclude<GanttRow["kind"], "testing">) {
       return { backgroundColor: "#fdba74", borderColor: "#ea580c", color: "#7c2d12", fontWeight: 800, borderRadius: 0 as const };
     case "onIce":
       return { backgroundColor: "#c7d2fe", borderColor: "#4338ca", color: "#312e81", fontWeight: 800, borderRadius: 0 as const };
+    case "travel":
+      return { backgroundColor: "#99f6e4", borderColor: "#0f766e", color: "#134e4a", fontWeight: 800, borderRadius: 0 as const };
     case "deload":
       return { backgroundColor: "#99f6e4", borderColor: "#0f766e", color: "#134e4a", fontWeight: 800, borderRadius: 0 as const };
     case "taper":
       return { backgroundColor: "#fde68a", borderColor: "#d97706", color: "#78350f", fontWeight: 800, borderRadius: 0 as const };
+    case "testing":
+      return { backgroundColor: "#06b6d4", borderColor: "rgba(22, 78, 99, 0.15)", color: "#083344", fontWeight: 800, borderRadius: 0 as const };
   }
 }
 

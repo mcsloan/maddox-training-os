@@ -2,58 +2,62 @@
 
 ## Latest Task
 
-Capture React Duplicate Key Warning For Repeated Easy Spin Instruction.
+Redo Plan/Gantt as daily-scale Gantt with exact date markers.
+
+Scope ID: `DEF-GANTT-SPORTLOAD-DURATION-001`
 
 ## Result
 
-Captured `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` as a docs-only P2 UI correctness defect.
+Corrective implementation completed locally for the rejected `ec283ce` visual result.
 
-Observed warning:
+Root cause of failed first pass:
 
-`Encountered two children with the same key, \`Easy spin 2 minutes.\`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted.`
+- The first fix interpreted date specificity as labels inside weekly cells.
+- That preserved some date information but still looked like a cramped weekly chip table.
+- True Gantt semantics require a daily time scale, point markers for single-day events, and bars spanning exact dates.
 
-Interpretation captured:
+Corrected design model:
 
-- This is a React rendering-key defect, not a Supabase, data, environment, or training-content issue.
-- The likely root cause is a rendered list using display text as the React `key`.
-- Duplicate instruction text may be valid training content and must not be removed or deduplicated as the fix.
-- A later implementation should use stable contextual keys such as parent ID, section ID, source item identity, or index where appropriate.
-
-Current checkpoint:
-
-- Local HEAD: `ec283ce` (`fix(plan): render sport loads with date semantics`).
-- Local `main` is ahead of `origin/main` by 1.
-- The Gantt fix is committed locally but still needs push/deploy/smoke.
-
-No app code, source JSON, Supabase data, Vercel settings, build, commit, or push occurred in this docs-only task.
+- The Phase Gantt now uses a 12-week, 84-day timeline.
+- Week headers span seven daily columns.
+- Header rows now use week label, weekday letters, then day-of-month numbers only.
+- Single-day Sport Loads render as point markers.
+- Multi-day Sport Loads render as exact-date bars.
+- Methodology phases render as bars across their actual week/date spans.
+- After Mike's local visual review failed the first daily-scale pass, rows were tightened to compact 28px lanes with centered 16px bars and 20px markers.
+- After Mike's second visual review failed, the exact remaining whitespace cause was identified as the row body classes still forcing 28px empty bands: `h-7` on the label, `min-h-7` on the timeline grid, and `h-7` on every empty day cell. Those are now replaced by a shared fixed 22px row height, 12px bars, and 16px markers.
+- After Mike's partial visual pass found broken weekly separators, the exact grid-line cause was identified as vertical lines being drawn as `border-r`/weekly `border-l` on individual empty day cells inside each row. Those row-local borders were visually fragmented by row rendering and event overlays. The body now uses a continuous chart-level daily background grid plus full-height weekly separator rules.
+- After Mike's next visual review found header/body misalignment, the exact cause was identified as different coordinate systems: the header used CSS grid columns with `gap-x-0.5` and flexible `minmax` day columns, while body vertical rules used independent percentage math from `100% - 12rem`. Header and body now share one fixed grid geometry: `12rem` label column plus 84 `1.1rem` day columns.
+- Current refinement organizes the chart into two compact visual sections: `Sport Loads / Events / Testing` first and `Methodology Phases` second.
+- Current sticky-label correction: only section labels stayed frozen because normal row labels were inside row containers with `overflow-hidden`, which clipped sticky positioning. The row clipping is removed, and all header/section/activity label cells now use sticky left positioning, opaque backgrounds, a right border, and a subtle separation shadow.
 
 ## Files Changed
 
-- `docs/SCOPE.md`
-- `docs/SESSION_HANDOFF.md`
-- `docs/AGENT_REPORT.md`
+- `app/plan/page.tsx` — replaced weekly-cell Gantt rows with an 84-day grid, sticky activity labels, daily week headers, compact row spacing, day-number header cells, 22px body rows, shared header/body timeline geometry, continuous body grid lines, two visual sections, sticky label column, phase bars, Sport Load markers, Sport Load bars, and test milestone markers.
+- `lib/planSportLoadOverlay.ts` — added daily timeline/date helpers, day-of-month header support, date-to-week/day mapping, grid span helpers, and marker/bar display classification while keeping v8.4 Sport Loads as the source.
+- `lib/planSportLoadOverlay.test.ts` — added coverage for 84-day timeline, Week 7/8 boundaries, day-of-month header data, Aug 3 W8 Monday mapping, 4v4 week/day mapping, marker/bar display kind, multi-day spans, and forbidden wording.
+- `docs/SCOPE.md` — marked the `ec283ce` visual implementation as rejected and recorded the corrected daily-scale Gantt acceptance.
+- `docs/SESSION_HANDOFF.md` — recorded current corrective task and status.
+- `docs/TEST_CASES.md` — added compact test group `TCG-011` for Plan/Gantt daily Sport Load timing.
+- `docs/AGENT_REPORT.md` — replaced previous report with this task report.
 
-## Status Updates
+## Checks
 
-- Added detailed `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` record to `docs/SCOPE.md`.
-- Added the defect to the active queue after Gantt push/smoke.
-- Added the defect to the compact defect ledger.
-- Updated `docs/SESSION_HANDOFF.md` to preserve `ec283ce` push/smoke as the next step and this React key defect as the following P2 backlog item.
-
-Recommended next order:
-
-1. Push/deploy `ec283ce`, then run read-only `/plan` smoke.
-2. If the warning persists, fix `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` with stable contextual keys.
-3. Verify a fresh Preview deployment uses staging before Preview write testing.
-4. Continue QA automation ownership work.
+- `npx vitest run lib/planSportLoadOverlay.test.ts` — passed, 8 tests.
+- `npm run lint` — passed.
+- `npm run build` — passed.
+- `node scripts/verify-v8.4-import.mjs` — passed; v8.4 counts preserved, including 17 Gantt lanes and 84 sessions.
+- `git diff --check` — passed.
+- Local route check: built app started at `http://localhost:3001`; `curl -I http://localhost:3001/plan` returned `HTTP/1.1 200 OK`.
+- `git status --short` — modified files only; no commit or push.
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` added; `DEF-GANTT-SPORTLOAD-DURATION-001` preserved as committed locally at `ec283ce`.
+- Defects added/updated: `DEF-GANTT-SPORTLOAD-DURATION-001` updated after Mike rejected the `ec283ce` visual result.
 - Epics/features added/updated: none.
-- Product decisions added/updated: duplicate instruction text should not be removed solely to satisfy React key uniqueness.
+- Product decisions added/updated: true daily-scale Gantt semantics are required for Plan/Gantt acceptance.
 - Data/sync/environment decisions added/updated: none.
-- Testing requirements added/updated: future key fix should include a narrow regression if the renderer is testable.
-- Training-plan/source items added/updated: none; no source JSON changed.
-- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: app-code fix, source JSON edits, Supabase/Vercel changes, build, commit, push.
+- Testing requirements added/updated: focused Vitest coverage added for daily timeline, date mapping, marker/bar display kind, and exact multi-day spans; `TCG-011` added.
+- Training-plan/source items added/updated: none; v8.4 source data remains unchanged.
+- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/TEST_CASES.md`, `docs/AGENT_REPORT.md`.
+- Items intentionally deferred: duplicate-key defect, Supabase, Vercel, deploy, commit, push, source JSON edits, KPI, Weakness Overlay, Day, Calendar.

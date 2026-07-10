@@ -9,10 +9,11 @@ Other planning docs may retain historical detail temporarily, but active scope d
 ## Current Checkpoint
 
 - Branch: `main`.
-- Current checkpoint before this docs-only capture: `ec283ce` (`fix(plan): render sport loads with date semantics`), local `main` is ahead of `origin/main` by 1, and the working tree was clean.
+- Current checkpoint before this corrective implementation: `ec283ce` (`fix(plan): render sport loads with date semantics`), local `main` is ahead of `origin/main` by 1, and the working tree was clean.
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
 - Next environment-safety scope: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` are Production-runtime-verified and awaiting fresh Preview runtime verification before Preview write-capable testing.
-- `DEF-GANTT-SPORTLOAD-DURATION-001` is fixed and committed locally at `ec283ce`: Plan/Gantt Sport Loads now render as date-specific chips/ranges instead of week-duration bars. It still needs push/deploy/smoke.
+- `DEF-GANTT-SPORTLOAD-DURATION-001` prior implementation at `ec283ce` is rejected by Mike as visually insufficient: it rendered date text inside weekly cells and still looked like a cramped weekly chip table, not a real Gantt.
+- Current corrective task for `DEF-GANTT-SPORTLOAD-DURATION-001`: replace the Phase Gantt visual model with a true daily-scale 12-week Gantt using 84 day columns, week headers spanning 7 days, exact-day Sport Load markers, exact-date multi-day bars, and phase bars spanning actual dates.
 - `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` is captured as a P2 UI correctness defect after a dev-server React duplicate key warning for repeated `Easy spin 2 minutes.` instruction text.
 - Previously captured next-scope items remain: `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001`.
 - Earlier docs capture after commit `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`); Vercel Preview for `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
@@ -147,7 +148,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 4.6 | PLAN-GANTT-SPORTLOAD-V84-001 | Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads | P1 | Completed | Fast lane | Plan/Gantt now derives Sport Load overlay rows and week summaries from v8.4 `sportLoads`. |
 | 4.7 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | P1 | Production runtime verified / Preview runtime pending | Docs-only / environment-safety | Production served `87355a4`, referenced production ref, and did not reference staging ref; fresh Preview verification remains pending. |
 | 4.8 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Production runtime smoke passed after env split; verify a fresh Preview deployment uses staging before write testing. |
-| 4.9 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | P1 | Completed locally | Fast lane | Commit/deploy after review, then smoke `/plan` for date-specific Sport Load chips/ranges. |
+| 4.9 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads without true daily Gantt semantics | P1 | Completed locally | Fast lane | Review the corrective daily-scale Gantt locally, then commit if accepted; no push/deploy unless Mike asks. |
 | 4.9.1 | DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001 | React duplicate key warning for repeated Easy Spin instruction text | P2 | Not started | Fast lane | After Gantt push/smoke, inspect list rendering and fix keys with stable contextual IDs; do not deduplicate valid instruction text. |
 | 4.10 | QA-AUTOMATION-OWNERSHIP-001 | Shift recurring smoke/regression testing from Codex to deterministic scripts and CI | P1 | Not started | Docs-only / QA ownership | Define ownership model: Codex writes tests, scripts/CI run repeatable tests, Codex analyzes failures, Mike does product acceptance. |
 | 4.11 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | Not started | Safe lane / QA automation | Add read-only smoke coverage for Today, Day, Calendar, Plan/Gantt, and KPI visibility after ownership scope is captured. |
@@ -191,14 +192,14 @@ Every active scope item should use this structure, either as a detailed record b
 
 ## Current Sprint / Next Codex Task
 
-Current sprint: tactical 4v4 Sport Load sourcing is complete through `f247959`, and Plan/Gantt date-semantics cleanup is fixed locally. The remaining step for this defect is commit/deploy plus read-only production smoke after review.
+Current sprint: tactical 4v4 Sport Load sourcing is complete through `f247959`. The first Plan/Gantt date-semantics cleanup at `ec283ce` is rejected by Mike because it still looked like a weekly chip table. The corrective daily-scale Gantt visual model for `DEF-GANTT-SPORTLOAD-DURATION-001` is completed locally and awaiting review/commit.
 
 Next task brief:
 
 - Read `AGENTS.md`, `docs/SESSION_HANDOFF.md`, and this file first.
 - First verify a fresh Preview deployment uses staging before any Preview write testing.
-- Push/deploy `ec283ce`, then smoke `DEF-GANTT-SPORTLOAD-DURATION-001` on `/plan`.
-- Capture/fix `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` after Gantt smoke if the warning persists in the relevant rendering path.
+- Review the locally completed daily-scale Gantt correction for `DEF-GANTT-SPORTLOAD-DURATION-001`; commit only if accepted and do not push/deploy unless Mike asks.
+- Do not work on `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` during the Gantt visual correction.
 - Then implement `QA-PLAYWRIGHT-SMOKE-001` under `QA-AUTOMATION-OWNERSHIP-001` so recurring route smoke checks move to deterministic scripts/CI.
 - Then capture/implement `DEF-QA-USAGE-LEDGER-001`.
 - Preserve the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATION-001` remains the next bounded discovery task for `DEF-029`, `DEF-030`, `DEF-031`, and `DEF-032` after the newly captured environment/Gantt/QA sequencing work.
@@ -830,7 +831,7 @@ Ground Truth Baseline:
 - Type: Epic
 - Parent: KPI system
 - Priority: P1
-- Status: In progress
+- Status: Completed locally
 - Lane: Safe lane
 - Owner: Mike / Codex
 - Source: KPI roadmap reconciliation
@@ -1281,35 +1282,44 @@ Scheduling interactions to consider, not automatic risk dates:
 ### DEF-GANTT-SPORTLOAD-DURATION-001
 
 - ID: DEF-GANTT-SPORTLOAD-DURATION-001
-- Title: Plan/Gantt displays day-specific Sport Loads as full-week duration bars
+- Title: Plan/Gantt displays day-specific Sport Loads without true daily Gantt semantics
 - Type: Defect
 - Parent: Plan/Gantt / Sport Load presentation
 - Priority: P1
-- Status: Completed locally
+- Status: In progress
 - Lane: Fast lane
 - Owner: Mike / Codex
 - Source: Mike product QA after `f247959`.
-- Problem: Daily Sport Loads such as 4v4 Hockey, lacrosse, and Marc O'Connor ice should not render as full-week duration bars. They occur on specific dates inside a week and need date-specific markers/chips. Multi-day Sport Loads such as Toronto Trip should show actual date ranges, not full-week duration.
-- Desired outcome: Plan/Gantt date semantics distinguish single-day Sport Loads from multi-day Sport Loads while preserving v8.4 as the source of truth.
-- In scope: bounded Plan/Gantt presentation fix, v8.4-derived Sport Load date/span logic, focused tests, and no data mutation.
+- Problem: Daily Sport Loads such as 4v4 Hockey, lacrosse, and Marc O'Connor ice should not render as full-week duration bars or as text labels crammed into weekly cells. The prior `ec283ce` fix correctly derived date semantics but failed the visual model: Mike rejected it because it still looked like a weekly chip table, not a real Gantt.
+- Desired outcome: Plan/Gantt renders a true daily-scale Gantt for the 12-week plan while preserving v8.4 as the source of truth.
+- In scope: bounded Plan/Gantt presentation fix, 84-day timeline helper logic, v8.4-derived Sport Load date/span logic, focused tests, required docs updates, and no data mutation.
 - Out of scope: source JSON edits, import count changes, Supabase, completed logs, Calendar/Day/KPI changes, broad Gantt redesign, or new training content.
 - Acceptance criteria:
-  - Single-day Sport Loads render as date-specific markers/chips.
-  - Multi-day Sport Loads render as actual date spans.
-  - 4v4 appears in every scheduled date's correct week.
+  - Time axis has 12 week headers and 84 daily sub-columns.
+  - Week 7 is `2026-07-27` through `2026-08-02`; Week 8 is `2026-08-03` through `2026-08-09`.
+  - Single-day Sport Loads render as date-specific markers, not rectangular weekly chips or duration bars.
+  - Multi-day Sport Loads render as bars spanning exact dates.
+  - 4v4 appears in every scheduled date's correct week/day, including Aug 3 as Week 8 Monday.
   - Lacrosse appears only on actual lacrosse dates.
   - Marc O'Connor appears only on actual Marc O'Connor dates.
-  - Toronto Trip shows its real multi-day range.
-  - Camps show actual camp date ranges.
-  - Gantt must not imply a single-day Sport Load lasts a full week.
+  - Toronto Trip spans Jul 31 through Aug 3.
+  - Chase Hull Camp spans Jul 6-10; Carleton Ravens Camp spans Aug 4-7; Sensplex Camp spans Aug 24-28.
+  - Methodology phases render as bars spanning true week/date ranges.
+  - Gantt must visually resemble a real Gantt chart, with readable rows, daily grid, and horizontal scroll if needed.
 - Dependencies: `PLAN-GANTT-SPORTLOAD-V84-001`; v8.4 `sportLoads`; existing Plan/Gantt helper.
 - Risks: week-wide bars can mislead Mike/Maddox into thinking a single-day Sport Load lasts all week.
-- Findings: Plan/Gantt already derived Sport Load rows from v8.4, but marker cells compressed same-week events into week-level labels and one old static Chase Hull Camp row still rendered a full-week camp bar. Multi-day Sport Loads needed explicit date-range labels, and single-day Sport Loads needed visible date labels.
+- Findings: Plan/Gantt already derived Sport Load rows from v8.4, but marker cells compressed same-week events into week-level labels and one old static Chase Hull Camp row still rendered a full-week camp bar. The first fix at `ec283ce` added visible date labels/ranges but still used weekly cells and was rejected visually.
 - Week mapping clarification: app week boundaries are Week 7 `2026-07-27` to `2026-08-02` and Week 8 `2026-08-03` to `2026-08-09`; therefore Aug 3 4v4 and Aug 3 Toronto Trip return day are Week 8.
-- Local fix: `lib/planSportLoadOverlay.ts` now derives date-labelled Sport Load markers from v8.4 data. Single-day Sport Loads stay single-day markers. Consecutive camp/travel records collapse into actual date ranges such as `Jul 31-Aug 3`, `Jul 6-10`, `Aug 4-7`, and `Aug 24-28`.
-- UI fix: `app/plan/page.tsx` renders Sport Load marker rows as visible date chips/ranges inside week cells and no longer renders the old static Chase Hull Camp full-week bar.
-- Tests: `lib/planSportLoadOverlay.test.ts` covers 4v4 date-to-week mapping, Aug 3 as Week 8, single-day markers, multi-day ranges, and forbidden wording absence.
-- Next action: commit/deploy after review, then run read-only `/plan` smoke to confirm date chips/ranges in production.
+- Rejected local fix: `ec283ce` rendered date-specific chips/ranges inside week cells; Mike rejected the visual result as not true Gantt semantics.
+- Corrective implementation: `lib/planSportLoadOverlay.ts` now exposes daily timeline helpers, date-to-week/day mapping, grid-column span helpers, and marker/bar display classification. `app/plan/page.tsx` renders an 84-day daily grid with week headers spanning 7 day columns, phase bars across real dates, diamond markers for single-day Sport Loads, star markers for test milestones, and bars for multi-day Sport Loads.
+- Visual-review correction: Mike's local review of the first daily-scale pass found excessive vertical whitespace and clipped full date labels in daily header cells. The current local correction uses compact row spacing, 28px Gantt rows, centered 16px bars, centered 20px markers, and day-of-month header numbers below weekday letters.
+- Second visual-review correction: remaining row whitespace came from `h-7`/`min-h-7`/empty-cell `h-7` in the Gantt body. Current body rows now use a shared 22px height, 12px bars, and 16px markers.
+- Third visual-review correction: weekly separators looked broken because daily and weekly vertical lines were row-local borders on empty day cells. Current body grid uses a continuous chart-level daily background and full-height weekly separator rules through all activity rows.
+- Fourth visual-review correction: weekly separators did not line up with headers because the header used CSS grid/gap/flexible columns while the body overlay used independent percentage math. Current header, body rows, background grid, weekly rules, bars, and markers share one fixed timeline geometry: `12rem` label column plus 84 `1.1rem` day columns.
+- Refinement pass: the Gantt is now visually organized into two compact sections: `Sport Loads / Events / Testing` above `Methodology Phases`. Dated items and one-off markers stay in the upper section; methodology phase bars run from GPP/Foundation through Taper + Peak in the lower section.
+- Sticky-label correction: normal activity labels were clipped during horizontal scroll because their row container used `overflow-hidden`; section headers did not have the same clipping. Current label cells use sticky left positioning with opaque backgrounds, a right border, and subtle shadow.
+- Tests: `lib/planSportLoadOverlay.test.ts` covers 84 day columns, Week 7/Week 8 boundaries, Aug 3 as Week 8 Monday, 4v4 date-to-week/day mapping, marker vs bar display kind, Toronto Trip and camp spans, and forbidden wording absence.
+- Next action: review `/plan` locally, then commit if accepted; do not push/deploy unless Mike asks.
 - Links / evidence: Mike scope-capture request after production smoke passed for `/plan`; local files `app/plan/page.tsx`, `lib/planSportLoadOverlay.ts`, `lib/planSportLoadOverlay.test.ts`.
 
 ### DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001
@@ -1806,7 +1816,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-007 | Calendar June 15 Sport Load showed not logged despite logged data | Defect | Calendar | P1 | Completed | Fast lane | Codex | Defect log | Calendar did not show logged state. | logged state preserved. | Completed. | none. | state accepted. | regression coverage | regression risk. | Preserve in future. | former defect log stub; use git history only |
 | DEF-4V4-DAY-STACK-001 | Day page only renders first planned Sport Load on stacked Sport Load days | Defect | Day / Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | Production smoke after `0bba866`; `/day/2026-08-03`, `/day/2026-08-05`, `/day/2026-08-16` | Calendar rendered stacked Sport Loads correctly, but Day simple-plan rendering used the first planned Sport Load for the main card/action and hid the added 4v4 item on stacked dates. | Day page renders every planned Sport Load for a date as visible/actionable planned Sport Load work without creating completed logs. | Bounded Day presentation fix and regression tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | Aug 3 shows Toronto Trip + 4v4; Aug 5 shows Carleton Ravens Camp + 4v4; Aug 16 shows Marc O'Connor Ice + 4v4; Jul 5 still shows 4v4. | SPORT-LOAD-4V4-SUMMER-2026 | stacked Sport Loads can be hidden if render paths collapse to first record. | Post-deploy smoke after fix. | local fix in current worktree |
 | DEF-4V4-DAY-LABEL-001 | Today/Day page shows stale or incorrect Lacrosse Sport Load chip when no lacrosse is planned | Defect | Day / Today Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | UAT after stacked Sport Load fix | Day Sport Load summary label could show a lacrosse-derived/hardcoded summary instead of the actual planned Sport Load title/count for the date. | Visible Sport Load labels derive from the actual planned Sport Load records; `Lacrosse` appears only when a planned lacrosse Sport Load exists. | Bounded Day label-rule fix and helper tests. | source JSON edits, Supabase writes, completed logs, KPI changes, Calendar redesign, Plan/Gantt work. | `/today` via Day route and `/day/2026-07-05` do not show Lacrosse unless lacrosse is planned; stacked dates still show individual Sport Load titles. | DEF-4V4-DAY-STACK-001, SPORT-LOAD-4V4-SUMMER-2026 | stale/hardcoded labels can misrepresent planned sport work. | Post-deploy smoke after fix. | local fix in current worktree |
-| DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads as full-week duration bars | Defect | Plan/Gantt / Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | Mike QA after `f247959` | Daily Sport Loads such as 4v4, lacrosse, and Marc O'Connor ice should be date-specific markers/chips, while multi-day trips/camps should show actual spans. | Gantt date semantics reflect real single-day and multi-day Sport Load timing. | bounded Plan/Gantt presentation fix and tests. | source JSON edits, Supabase writes, completed logs, broad Gantt redesign. | single-day markers/chips; multi-day actual spans; 4v4, lacrosse, Marc O'Connor, Toronto Trip, and camps render on correct dates/ranges; Aug 3 is Week 8 by app week boundaries. | PLAN-GANTT-SPORTLOAD-V84-001 | full-week bars misrepresent daily Sport Loads. | Commit/deploy after review, then smoke `/plan`. | local fix in current worktree |
+| DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads without true daily Gantt semantics | Defect | Plan/Gantt / Sport Load presentation | P1 | Completed locally | Fast lane | Mike / Codex | Mike QA after rejected `ec283ce` visual result | Daily Sport Loads such as 4v4, lacrosse, and Marc O'Connor ice should be exact-day markers, while multi-day trips/camps should show exact spans on a daily-scale Gantt. | Gantt uses 84 daily columns, week headers spanning 7 days, marker/bar display semantics, and phase bars across real dates. | bounded Plan/Gantt visual model fix and tests. | source JSON edits, Supabase writes, completed logs, KPI, Weakness Overlay, Day, Calendar, commits, pushes. | timeline has 84 days; Week 7/8 boundaries correct; Aug 3 is W8 Monday; 4v4 date mapping correct; single-day events are markers; multi-day events are bars; forbidden wording absent. | PLAN-GANTT-SPORTLOAD-V84-001 | weekly chips misrepresent exact-day timing and failed product acceptance. | Review locally, then commit if accepted; no push/deploy unless Mike asks. | current corrective implementation |
 | DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001 | React duplicate key warning for repeated Easy Spin instruction text | Defect | UI rendering correctness / React list keys | P2 | Not started | Fast lane | Mike / Codex | Terminal 1 dev-server warning after `ec283ce` | React warned: `Encountered two children with the same key, \`Easy spin 2 minutes.\``; repeated display text is likely being used as a React key. | Repeated valid instruction text renders without duplicate-key warnings or child identity instability. | inspect relevant list renderer and replace display-text-only keys with stable contextual keys. | deleting/deduplicating training content, source JSON edits, Supabase, Vercel. | repeated `Easy spin 2 minutes.` content remains intact if valid; warning is gone. | React list rendering path | data risk low; UI correctness risk medium. | Address after Gantt push/smoke. | docs-only capture |
 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | Defect | Environment safety | P1 | Production runtime verified / Preview runtime pending | Docs-only / environment-safety | Mike / Codex | Preview DB concern, Mike Vercel dashboard confirmation, production runtime smoke | Vercel Preview and Development previously inherited production Supabase ref `mbjcedhysniabbaigsko`; Mike split Vercel variables by environment and Production runtime smoke passed. | Document final mapping, Production runtime evidence, and Preview runtime caveat. | docs capture of completed split, Production smoke, and risk. | env var changes, key rotation, Supabase writes, Vercel changes. | Production served `87355a4`; production ref present; staging ref absent; KPI export returned cloud count `21`; Preview runtime pending. | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | old Preview deployments may still be production-risk until replaced or verified. | Verify fresh Preview deployment uses staging before write testing. | current docs capture plus production smoke |
 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | Defect / Task | Environment safety | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Mike / Codex | Confirmed `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` finding and production runtime smoke | Vercel Supabase variables were scoped to All Environments, so Preview and Development inherited production. | Production remains on `mbjcedhysniabbaigsko`; Preview and Development use staging ref `npuankmkxbjtlokbpczz`. | docs capture of Mike-completed Vercel env split, Production runtime smoke, and future Preview verification. | this docs-only task, Supabase writes, app code changes, key rotation unless explicitly approved. | Preview/Development point to staging for new deployments; Production runtime passed; no All Environments Supabase rows; no secrets exposed; no Supabase writes. | staging project, production project, Vercel settings access | old Preview deployments may still point to production until replaced. | Verify a fresh Preview deployment uses staging before Preview write testing. | Mike manual Vercel config update and production smoke on 2026-07-09 |
