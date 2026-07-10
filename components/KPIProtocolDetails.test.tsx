@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { KPIProtocolDetails } from "./KPIProtocolDetails";
 import kpisJson from "../data/kpis.json";
@@ -15,17 +15,23 @@ function renderProtocol(kpiId: string) {
 
 describe("KPIProtocolDetails", () => {
   it("renders Zwift protocol details from the KPI registry", () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => undefined);
     const html = renderProtocol("kpi-zwift-bike-3x10s-peak-power");
 
-    expect(html).toContain("Protocol details");
-    expect(html).toContain("Free Ride");
-    expect(html).toContain("not ERG");
-    expect(html).toContain("Power Source");
-    expect(html).toContain("Controllable");
-    expect(html).toContain("10 seconds");
-    expect(html).toContain("2 minutes");
-    expect(html).toContain("Wahoo KICKR CORE");
-    expect(html).toContain("Tempus Fugit");
+    try {
+      expect(html).toContain("Protocol details");
+      expect(html).toContain("Free Ride");
+      expect(html).toContain("not ERG");
+      expect(html).toContain("Power Source");
+      expect(html).toContain("Controllable");
+      expect(html).toContain("10 seconds");
+      expect(html.match(/Easy spin 2 minutes\./g)).toHaveLength(2);
+      expect(html).toContain("Wahoo KICKR CORE");
+      expect(html).toContain("Tempus Fugit");
+      expect(consoleError).not.toHaveBeenCalled();
+    } finally {
+      consoleError.mockRestore();
+    }
   });
 
   it("renders Puck-Control Weave deferral wording from the KPI registry", () => {

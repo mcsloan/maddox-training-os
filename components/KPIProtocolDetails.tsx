@@ -8,7 +8,7 @@ export function KPIProtocolDetails({ kpi }: { kpi: KPI }) {
         <section>
           <p className="label">How to run</p>
           <ol className="mt-2 list-inside list-decimal space-y-1 text-slate-700">
-            {kpi.instructions.map((instruction) => <li key={instruction}>{instruction}</li>)}
+            {kpi.instructions.map((instruction, index) => <li key={`${kpi.id}-instruction-${index}`}>{instruction}</li>)}
           </ol>
         </section>
         <section>

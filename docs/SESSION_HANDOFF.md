@@ -3,7 +3,7 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Current clean checkpoint: `8c51cc8` (`fix(plan): render daily gantt with sticky labels`).
+- Current clean checkpoint before this focused fix: `3d4c1d2` (`docs(gantt): record accepted production smoke`).
 - The accepted daily-scale Gantt is pushed to `main`, live in production, and production-smoked.
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering and stale Lacrosse label risk, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
 - Historical KPI preview checkpoint: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
@@ -16,7 +16,7 @@
 - Bell Sensplex 4v4 summer hockey schedule for July-August 2026 is captured in `docs/SCOPE.md` as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item.
 - `SPORT-LOAD-4V4-SUMMER-2026` implementation chain is pushed through source import + Day/Today + Calendar + Plan/Gantt v8.4 Sport Load sourcing.
 - `DEF-GANTT-SPORTLOAD-DURATION-001` is fixed: Mike visually accepted the daily Gantt locally, and `8c51cc8` was pushed and production-smoked.
-- `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` is captured as a P2 UI correctness defect after a React duplicate key warning for repeated `Easy spin 2 minutes.` instruction text.
+- `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` is fixed locally: KPI instruction renderers use contextual KPI ID plus instruction index keys, and both valid repeated `Easy spin 2 minutes.` entries remain visible.
 - New environment/data-safety defects: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-SUPABASE-STAGING-AUTOPAUSE-001`.
 - New QA automation ownership scope: `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001`.
 
@@ -34,7 +34,7 @@
 - `PLAN-GANTT-SPORTLOAD-V84-001` completed: Plan/Gantt Sport Load overlays now derive from v8.4 `sportLoads` instead of stale hardcoded rows.
 - `DEF-GANTT-SPORTLOAD-DURATION-001` completed: production served `8c51cc8`; `/plan` returned 200; `Phase Gantt`, `Sport Loads / Events / Testing`, `Methodology Phases`, exact-day milestones, and exact-date bars were present.
 - Gantt production smoke confirmed production Supabase ref `mbjcedhysniabbaigsko` present and staging ref `npuankmkxbjtlokbpczz` absent.
-- `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` added: React warned `Encountered two children with the same key, \`Easy spin 2 minutes.\``. Treat this as a rendering-key defect, not a content defect; do not remove duplicate instruction text if it is valid training content.
+- `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` fixed locally: `KPIProtocolDetails` and `SessionKPIForm` used `key={instruction}` for a KPI whose valid protocol repeats `Easy spin 2 minutes.`; both now use `${kpi.id}-instruction-${index}` without changing content.
 - `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` added: Local, Vercel Preview, Vercel Production, staging, and production Supabase mapping must be documented without env changes or writes.
 - `DEF-SUPABASE-STAGING-AUTOPAUSE-001` added: Supabase staging project `maddox-training-os-staging` / `npuankmkxbjtlokbpczz` may auto-pause from inactivity; decide whether to allow manual resume, add a safe read-only health check, or upgrade if uptime matters.
 - `QA-AUTOMATION-OWNERSHIP-001` added: recurring smoke/regression work should shift from Codex-as-runner to deterministic scripts and CI.
@@ -123,7 +123,7 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Recommended next implementation order:
 
-1. `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` — inspect the list renderer and replace display-text-only keys with stable contextual keys without removing valid repeated content.
+1. Review the locally completed `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` fix and commit if accepted; do not push unless Mike asks.
 2. Verify a fresh Preview runtime uses staging before Preview write testing.
 3. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
 4. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
@@ -158,10 +158,10 @@ After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATI
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-GANTT-SPORTLOAD-DURATION-001` is fixed, visually accepted by Mike, pushed at `8c51cc8`, and production-smoked; `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` is the next app-code candidate; environment mapping items still await fresh Preview runtime verification.
+- Defects added/updated: `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` fixed locally with contextual KPI instruction keys; duplicate valid content is preserved.
 - Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` planned Sport Load integration pushed through source import, Day/Today, Calendar, and Plan/Gantt v8.4 Sport Load sourcing; `PLAN-GANTT-SPORTLOAD-V84-001` completed; `QA-AUTOMATION-OWNERSHIP-001` and `QA-PLAYWRIGHT-SMOKE-001` added.
 - Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation; 4v4 is planned Sport Load, not non-plan work or an automatic load-risk trigger.
 - Data/sync/environment decisions added/updated: Gantt production smoke confirmed production ref `mbjcedhysniabbaigsko` present and staging ref `npuankmkxbjtlokbpczz` absent; no Supabase/data mutation or configuration change occurred.
-- Testing requirements added/updated: accepted daily Gantt production evidence recorded; future `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` fix should include a narrow regression if a testable renderer is identified; fresh Preview runtime verification remains required before Preview write testing.
-- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, and `docs/AGENT_REPORT.md` record the accepted Gantt production smoke.
-- Items intentionally deferred: duplicate-key implementation, fresh Preview runtime verification, Vercel changes, app code, tests, builds, source JSON edits, Supabase changes, staging keepalive/billing decision, methodology implementation, final domain/source/stack choices.
+- Testing requirements added/updated: focused KPI protocol render regression proves repeated text remains twice and no duplicate-key error is emitted; `TCG-006` traceability updated.
+- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`, and `docs/TEST_CASES.md`.
+- Items intentionally deferred: fresh Preview runtime verification, Playwright smoke implementation, Supabase/Vercel changes, source JSON edits, and unrelated product work.

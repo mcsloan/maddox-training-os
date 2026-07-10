@@ -2,46 +2,51 @@
 
 ## Latest Task
 
-Document the accepted daily Gantt production smoke.
+Fix the duplicate React key warning for repeated Easy Spin instruction text.
 
-Scope ID: `DEF-GANTT-SPORTLOAD-DURATION-001`
+Scope ID: `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001`
 
 ## Result
 
-`DEF-GANTT-SPORTLOAD-DURATION-001` is fixed, visually accepted by Mike, pushed to `main` at `8c51cc8` (`fix(plan): render daily gantt with sticky labels`), and production-smoked.
+Fixed locally. Both valid `Easy spin 2 minutes.` instructions remain unchanged and visible.
 
-## Production Smoke Method And Evidence
+## Root Cause And Fix
 
-- Used read-only production route and deployed-output/chunk checks after deployment.
-- Production routes returned 200: `/`, `/today`, `/plan`, `/calendar`, `/dashboard`, `/kpis`, `/history`.
-- Production output/chunks contained `8c51cc8`.
-- `/plan` returned 200.
-- Accepted Gantt indicators were present: `Phase Gantt`, `Sport Loads / Events / Testing`, `Methodology Phases`, exact-day milestones, and exact-date bars.
-- Production Supabase ref `mbjcedhysniabbaigsko` was present.
-- Staging Supabase ref `npuankmkxbjtlokbpczz` was absent.
-- No writes, config changes, redeploys, file edits, Supabase mutations, Vercel setting changes, commits, pushes, or secrets occurred during the smoke.
+- KPI `kpi-zwift-bike-3x10s-peak-power` validly contains `Easy spin 2 minutes.` twice.
+- `KPIProtocolDetails` and `SessionKPIForm` rendered `kpi.instructions` with `key={instruction}`, assigning both siblings the same visible-text key.
+- Both renderers now use `${kpi.id}-instruction-${index}`, combining stable parent/section context with source order.
+- No workout/KPI instruction was removed, deduplicated, or rewritten.
 
 ## Files Changed
 
-- `docs/SCOPE.md` — completed the Gantt defect and recorded acceptance, release, production evidence, and next action.
-- `docs/SESSION_HANDOFF.md` — recorded the clean checkpoint, live production status, and next candidates.
-- `docs/AGENT_REPORT.md` — recorded the production smoke method, evidence, and guardrail compliance.
+- `components/KPIProtocolDetails.tsx` — replaced display-text-only instruction keys with contextual keys.
+- `components/SessionKPIForm.tsx` — applied the same contextual key strategy to session KPI instructions.
+- `components/KPIProtocolDetails.test.tsx` — verifies both repeated instructions render and React reports no duplicate-key error.
+- `docs/TEST_CASES.md` — linked the focused regression to `TCG-006`.
+- `docs/SCOPE.md` — marked the defect fixed locally and recorded root cause, fix, and next action.
+- `docs/SESSION_HANDOFF.md` — recorded local completion and the next recommended step.
+- `docs/AGENT_REPORT.md` — recorded this result and verification evidence.
 
 ## Checks
 
-- `git status --short` — run before edits; clean.
-- `git log --oneline -6` — confirmed current checkpoint `8c51cc8` and recent history.
+- `npx vitest run components/KPIProtocolDetails.test.tsx` — passed, 2 tests.
+- `npx vitest run` — did not pass globally: 20 files / 100 tests passed; Vitest also collected the existing Playwright spec `e2e/activity-presentation-proof.spec.ts`, the existing broken `.wip/activity-prescription-wip-c3351f5/session.test.ts`, and one unrelated `SessionSummary` test timed out under the full run.
+- `npx vitest run components/SessionSummary.test.tsx` — passed, 2 tests; confirms the full-run timeout was not reproducible in isolation.
+- `npm run lint` — passed.
+- `npm run build` — passed.
+- `node scripts/verify-v8.4-import.mjs` — passed; v8.4 counts preserved, including 84 sessions, 154 drill cards, 154 video-map entries, and 17 Gantt lanes.
 - `git diff --check` — passed.
-- `git status --short` — only the three requested docs are modified.
-- No build run; this was docs-only.
+- `git status --short` — seven expected component/test/docs files modified; no source JSON changes.
+
+No source JSON, Supabase data/configuration, Vercel settings, Gantt behavior, KPI behavior beyond React list identity, or Weakness Overlay behavior changed. No deploy, commit, or push occurred.
 
 ## Scope Capture Check
 
-- Defects added/updated: `DEF-GANTT-SPORTLOAD-DURATION-001` marked completed, visually accepted, pushed, and production-smoked.
+- Defects added/updated: `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` marked fixed locally.
 - Epics/features added/updated: none.
-- Product decisions added/updated: accepted daily-scale Gantt is the live production presentation.
-- Data/sync/environment decisions added/updated: production smoke confirmed production Supabase ref present and staging ref absent; no mutations or config changes.
-- Testing requirements added/updated: production acceptance evidence recorded; fresh Preview runtime verification remains required before Preview write testing.
-- Training-plan/source items added/updated: none; source JSON was not edited.
-- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`.
-- Items intentionally deferred: `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` implementation and fresh Preview runtime verification before Preview write testing.
+- Product decisions added/updated: repeated valid display content must retain contextual React identity and must not be deduplicated to silence warnings.
+- Data/sync/environment decisions added/updated: none; no Supabase or Vercel changes.
+- Testing requirements added/updated: focused repeated-instruction render regression added and `TCG-006` updated; global Vitest discovery issues remain outside this scope.
+- Training-plan/source items added/updated: none; source JSON unchanged.
+- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, `docs/AGENT_REPORT.md`, `docs/TEST_CASES.md`.
+- Items intentionally deferred: global Vitest discovery/configuration cleanup, fresh Preview runtime verification before Preview write testing, and unrelated product work.

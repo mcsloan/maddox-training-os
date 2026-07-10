@@ -29,7 +29,7 @@ export function SessionKPIForm({ kpi, result, onChange }: { kpi: KPI; result?: K
       <p className="label">{kpi.category} KPI</p>
       <h2 className="text-3xl font-black">{kpi.name}</h2>
       <ol className="mt-4 list-inside list-decimal space-y-1 text-slate-600">
-        {kpi.instructions.map((instruction) => <li key={instruction}>{instruction}</li>)}
+        {kpi.instructions.map((instruction, index) => <li key={`${kpi.id}-instruction-${index}`}>{instruction}</li>)}
       </ol>
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         {attempts.map((attempt, index) => (
