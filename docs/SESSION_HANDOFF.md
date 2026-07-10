@@ -3,8 +3,8 @@
 ## Current Verified Checkpoint
 
 - Branch: `main`.
-- Current local checkpoint before this corrective task: `ec283ce` (`fix(plan): render sport loads with date semantics`).
-- Local `main` is ahead of `origin/main` by 1. Mike rejected the `ec283ce` Gantt visual result because it still looked like a weekly chip table rather than a real daily-scale Gantt.
+- Current clean checkpoint: `8c51cc8` (`fix(plan): render daily gantt with sticky labels`).
+- The accepted daily-scale Gantt is pushed to `main`, live in production, and production-smoked.
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering and stale Lacrosse label risk, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.
 - Historical KPI preview checkpoint: `1c336a0` (`feat(kpis): show protocols and compute shuttle distance`).
 - Vercel Preview branch `preprod/kpi-protocols-2026-06-30` showed badge `1c336a0 · preview`.
@@ -15,7 +15,7 @@
 - v8.4 app import package remains authoritative for current app training data.
 - Bell Sensplex 4v4 summer hockey schedule for July-August 2026 is captured in `docs/SCOPE.md` as `SPORT-LOAD-4V4-SUMMER-2026`, a P1 planned Sport Load integration scope item.
 - `SPORT-LOAD-4V4-SUMMER-2026` implementation chain is pushed through source import + Day/Today + Calendar + Plan/Gantt v8.4 Sport Load sourcing.
-- `DEF-GANTT-SPORTLOAD-DURATION-001` corrective implementation is completed locally: Plan/Gantt now renders a true 84-day daily-scale Gantt with exact-day Sport Load markers and exact-date multi-day bars.
+- `DEF-GANTT-SPORTLOAD-DURATION-001` is fixed: Mike visually accepted the daily Gantt locally, and `8c51cc8` was pushed and production-smoked.
 - `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` is captured as a P2 UI correctness defect after a React duplicate key warning for repeated `Easy spin 2 minutes.` instruction text.
 - New environment/data-safety defects: `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-SUPABASE-STAGING-AUTOPAUSE-001`.
 - New QA automation ownership scope: `QA-AUTOMATION-OWNERSHIP-001`, `QA-PLAYWRIGHT-SMOKE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001`.
@@ -32,7 +32,8 @@
 - `AUDIT-LOAD-CLASSIFICATION-001` is the next bounded discovery task for these defects. It is discovery only and must not implement the future methodology architecture.
 - `SPORT-LOAD-4V4-SUMMER-2026` added: Bell Sensplex 4v4 summer hockey should be integrated as planned Sport Load. It is a high-value hockey stimulus for game-speed decisions, puck touches under pressure, compete, scanning, shift-like conditioning, and confidence attacking space, not an automatic overload emergency.
 - `PLAN-GANTT-SPORTLOAD-V84-001` completed: Plan/Gantt Sport Load overlays now derive from v8.4 `sportLoads` instead of stale hardcoded rows.
-- `DEF-GANTT-SPORTLOAD-DURATION-001` prior local fix rejected: date chips/ranges inside weekly cells were not acceptable. Corrected acceptance is daily-scale Gantt semantics: 12 week headers, 84 day columns, exact-day markers, exact-date bars, and phase bars across actual dates.
+- `DEF-GANTT-SPORTLOAD-DURATION-001` completed: production served `8c51cc8`; `/plan` returned 200; `Phase Gantt`, `Sport Loads / Events / Testing`, `Methodology Phases`, exact-day milestones, and exact-date bars were present.
+- Gantt production smoke confirmed production Supabase ref `mbjcedhysniabbaigsko` present and staging ref `npuankmkxbjtlokbpczz` absent.
 - `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` added: React warned `Encountered two children with the same key, \`Easy spin 2 minutes.\``. Treat this as a rendering-key defect, not a content defect; do not remove duplicate instruction text if it is valid training content.
 - `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` added: Local, Vercel Preview, Vercel Production, staging, and production Supabase mapping must be documented without env changes or writes.
 - `DEF-SUPABASE-STAGING-AUTOPAUSE-001` added: Supabase staging project `maddox-training-os-staging` / `npuankmkxbjtlokbpczz` may auto-pause from inactivity; decide whether to allow manual resume, add a safe read-only health check, or upgrade if uptime matters.
@@ -122,11 +123,10 @@ See `docs/SCOPE.md` for the Active Execution Queue and Current Sprint / Next Cod
 
 Recommended next implementation order:
 
-1. Review the locally completed `DEF-GANTT-SPORTLOAD-DURATION-001` daily-scale Gantt; commit only if accepted and do not push/deploy unless Mike asks.
-2. Keep `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` separate; do not fix it during the daily-scale Gantt task.
-3. Later verify a fresh Preview deployment uses staging before Preview write testing.
-4. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
-5. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
+1. `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` — inspect the list renderer and replace display-text-only keys with stable contextual keys without removing valid repeated content.
+2. Verify a fresh Preview runtime uses staging before Preview write testing.
+3. `QA-PLAYWRIGHT-SMOKE-001` — create deterministic Playwright smoke suite.
+4. `DEF-QA-USAGE-LEDGER-001` — create Codex usage ledger.
 
 Plan/Gantt date-semantics notes:
 
@@ -158,10 +158,10 @@ After those items, return to the broader pre-4v4 queue: `AUDIT-LOAD-CLASSIFICATI
 
 ## Scope Capture Check
 
-- Defects added/updated: `ENV-PREVIEW-DB-001` added/completed; `DEF-029` reopened; `DEF-030`, `DEF-031`, `DEF-032` added; `DEF-GANTT-SPORTLOAD-DURATION-001` updated after Mike rejected `ec283ce`; `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` added and remains separate; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`, `DEF-SUPABASE-STAGING-AUTOPAUSE-001`, `DEF-QA-CODEX-RUNNER-001`, and `DEF-QA-USAGE-LEDGER-001` added; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001` and `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` are production-runtime-verified and awaiting fresh Preview runtime verification.
+- Defects added/updated: `DEF-GANTT-SPORTLOAD-DURATION-001` is fixed, visually accepted by Mike, pushed at `8c51cc8`, and production-smoked; `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` is the next app-code candidate; environment mapping items still await fresh Preview runtime verification.
 - Epics/features added/updated: Closed-Loop methodology Epic group and design-governance records added in `docs/SCOPE.md`; `SPORT-LOAD-4V4-SUMMER-2026` planned Sport Load integration pushed through source import, Day/Today, Calendar, and Plan/Gantt v8.4 Sport Load sourcing; `PLAN-GANTT-SPORTLOAD-V84-001` completed; `QA-AUTOMATION-OWNERSHIP-001` and `QA-PLAYWRIGHT-SMOKE-001` added.
 - Product decisions added/updated: design gate, no silent rewrites, parent approval, current-app protection, LLM/scoring separation, baseline/effective-load separation; 4v4 is planned Sport Load, not non-plan work or an automatic load-risk trigger.
-- Data/sync/environment decisions added/updated: local development maps to staging ref `npuankmkxbjtlokbpczz`; Supabase staging is `maddox-training-os-staging` / `npuankmkxbjtlokbpczz`; Supabase production ref is `mbjcedhysniabbaigsko`; Vercel Production points to production and production runtime smoke passed on `87355a4`; Vercel Preview and Development are configured to staging for new deployments; no Supabase variables remain scoped to All Environments; old Preview deployments remain production-risk until replaced or verified; no Supabase/data mutation.
-- Testing requirements added/updated: adversarial QA/safety design captured for future methodology; all-day classification audit remains pending; Plan/Gantt Sport Load overlay tests updated for daily timeline length, Week 7/8 boundaries, single-day markers, multi-day bars, 4v4 week/day mapping, Aug 3 Week 8 Monday mapping, and forbidden wording; future `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` fix should include a narrow regression if a testable renderer is identified; deterministic Playwright smoke scope added through `QA-PLAYWRIGHT-SMOKE-001`.
-- Docs updated: `docs/SCOPE.md`, `docs/design/`, `docs/DOCUMENTATION_INVENTORY.md`, `docs/SESSION_HANDOFF.md`; later source-capture update added the 4v4 schedule and this capture added Gantt duration, environment-safety, and QA automation ownership scope.
-- Items intentionally deferred: Vercel env changes, behavior fixes, app code, tests, Playwright implementation, builds, source JSON edits, Supabase changes, staging keepalive/billing decision, methodology implementation, final domain/source/stack choices.
+- Data/sync/environment decisions added/updated: Gantt production smoke confirmed production ref `mbjcedhysniabbaigsko` present and staging ref `npuankmkxbjtlokbpczz` absent; no Supabase/data mutation or configuration change occurred.
+- Testing requirements added/updated: accepted daily Gantt production evidence recorded; future `DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001` fix should include a narrow regression if a testable renderer is identified; fresh Preview runtime verification remains required before Preview write testing.
+- Docs updated: `docs/SCOPE.md`, `docs/SESSION_HANDOFF.md`, and `docs/AGENT_REPORT.md` record the accepted Gantt production smoke.
+- Items intentionally deferred: duplicate-key implementation, fresh Preview runtime verification, Vercel changes, app code, tests, builds, source JSON edits, Supabase changes, staging keepalive/billing decision, methodology implementation, final domain/source/stack choices.
