@@ -1,13 +1,18 @@
 [
   {
     "metric": "Total exercise/video-map rows",
-    "count": 154,
+    "count": 161,
     "notes": "Rows in EXERCISE_VIDEO_MAP."
   },
   {
     "metric": "Exact source video rows",
     "count": 149,
     "notes": "Direct source videos mapped; includes human-confirmed v8.2 updates."
+  },
+  {
+    "metric": "Parent-approved Skill/Shot/IQ video rows",
+    "count": 7,
+    "notes": "Exact mappings approved by the parent for forward Skill/Shot/IQ detail IDs."
   },
   {
     "metric": "Not video required rows",

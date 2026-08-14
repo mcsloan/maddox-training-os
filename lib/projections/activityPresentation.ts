@@ -1,5 +1,6 @@
 import planJson from "../../data/plan.json";
-import { dayExecutionPlan, drillCards, exerciseVideoMap, sessions, speedStackPrescriptions } from "../imports/v8_4";
+import { dayExecutionPlan, drillCards, exerciseVideoMap, sessions, skillShotIqLibrary, speedStackPrescriptions, speedStackSupportModules } from "../imports/v8_4";
+import { getApprovedWeaknessModule } from "../weaknessOverlay";
 import type { V84DayExecutionPlanEntry, V84SessionEntry } from "../imports/v8_4/types";
 import type { Drill, TrainingPlan } from "../types";
 
@@ -38,6 +39,7 @@ export type ActivityPresentation = {
     dayExecutionPlanId?: string;
     sessionId?: string;
     drillIds?: string[];
+    detailIds?: string[];
   };
   athleteTitle: string;
   parentTitle?: string;
@@ -46,9 +48,27 @@ export type ActivityPresentation = {
   instruction?: string;
   coachingCue?: string;
   logType: ActivityPresentationLogType;
+  executable: boolean;
+  summaryVisible: boolean;
   required: boolean;
   optional: boolean;
+  focus?: string;
+  eventDependent?: boolean;
   children?: ActivityPresentationChild[];
+  supportModules?: ActivityPresentationSupportModule[];
+};
+
+export type ActivityPresentationSupportModule = {
+  id: string;
+  title: string;
+  position: "before" | "after";
+  groups: Array<{
+    title: string;
+    dose?: string;
+    exercises: Array<{ id: string; title: string; dose?: string }>;
+  }>;
+  instructions: string[];
+  sourceDemo?: { href: string; label: string };
 };
 
 export type ActivityPresentationChild = {
@@ -59,6 +79,8 @@ export type ActivityPresentationChild = {
   plannedReps?: string;
   plannedDurationMinutes?: number;
   coachingCue?: string;
+  tempo?: string;
+  rest?: string;
   videoUrl?: string;
   sourceTrace?: {
     drillId?: string;
@@ -94,7 +116,7 @@ export function projectDayPresentationContext(date: string): DayPresentationCont
   const weekNumber = day?.weekNumber || trainingPlan.weeks.find((week) => date >= week.startDate && date <= week.endDate)?.weekNumber || session?.week || 1;
   const phaseLabel = weekLoadLabel(weekNumber);
   const dayRoleLabel = day ? contextUserFacingPlanText(day.dayRole) : undefined;
-  const heroTitle = isJune30KpiHotfixDate(date) ? JUNE_30_KPI_TITLE : day?.primarySession || session?.summary || "Recovery / planning day";
+  const heroTitle = isJune30KpiHotfixDate(date) ? JUNE_30_KPI_TITLE : session?.summary || day?.primarySession || "Recovery / planning day";
   const eyebrow = day
     ? `Week ${day.weekNumber} · ${phaseLabel} · ${dayRoleLabel}`
     : session
@@ -119,9 +141,11 @@ export function projectPlannedDayActivities(date: string): ActivityPresentation[
   const session = sessions.find((item) => item.date === date) || null;
   const activities = entries.map((entry) => {
     const category = activityCategory(entry);
-    const children = category === "speed_stack" && session ? speedStackChildren(entry) : [];
+    const executable = entry.executable !== false && !isExplicitNonExecutableEntry(entry);
+    const isForwardCutover = entry.date >= "2026-08-14";
+    const children = category === "speed_stack" && session ? speedStackChildren(entry) : forwardDetailChildren(entry);
     return {
-      id: `planned:${entry.date}:${entry.sequence}`,
+      id: entry.activityId || `planned:${entry.date}:${entry.sequence}`,
       date: entry.date,
       sequenceOrder: entry.sequence,
       sourceBlockId: entry.sourceBlock,
@@ -129,17 +153,37 @@ export function projectPlannedDayActivities(date: string): ActivityPresentation[
         dayExecutionPlanId: `${entry.date}:${entry.sequence}`,
         sessionId: session?.sessionId,
         drillIds: children.map((child) => child.sourceTrace?.drillId).filter((value): value is string => Boolean(value)),
+        detailIds: entry.detailIds,
       },
-      athleteTitle: activityTitle(entry),
+      athleteTitle: isForwardCutover ? entry.entryTitle : activityTitle(entry),
       parentTitle: entry.entryType,
       category,
-      plannedDurationMinutes: plannedDurationMinutes(entry, session),
-      instruction: activityInstruction(entry),
-      coachingCue: activityCue(entry),
-      logType: activityLogType(entry),
-      required: /^required$/i.test(entry.requiredOptional),
-      optional: /^optional$/i.test(entry.requiredOptional),
+      plannedDurationMinutes: executable ? plannedDurationMinutes(entry, session) : undefined,
+      instruction: isForwardCutover ? cleanInstruction(entry.notes) : activityInstruction(entry),
+      coachingCue: isForwardCutover ? undefined : activityCue(entry),
+      logType: executable ? activityLogType(entry) : "none" as const,
+      executable,
+      summaryVisible: executable && category !== "readiness" && category !== "reflection",
+      required: executable && /^required$/i.test(entry.requiredOptional),
+      optional: executable && /^optional$/i.test(entry.requiredOptional),
+      focus: entry.focus || undefined,
+      eventDependent: entry.eventDependent,
       children,
+      supportModules: category === "speed_stack" ? speedStackSupportModules
+        .filter((module) => module.session === "A")
+        .map((module) => ({
+          id: module.moduleId,
+          title: module.title,
+          position: module.position,
+          groups: module.groups.map((group) => ({
+            title: group.title,
+            dose: group.dose ?? undefined,
+            exercises: group.exercises.map((exercise) => ({ id: exercise.exerciseId, title: exercise.title, dose: exercise.dose ?? undefined })),
+          })),
+          instructions: module.instructions,
+          sourceDemo: { href: module.sourceDemoUrl, label: "Watch Speed Stack A warm-up and cooldown demonstrations" },
+        }))
+        : undefined,
     };
   });
   return isJune30KpiHotfixDate(date) ? june30KpiChecklistActivities(activities) : activities;
@@ -164,6 +208,7 @@ function june30KpiActivity(activity: ActivityPresentation): ActivityPresentation
 }
 
 function plannedDurationMinutes(entry: V84DayExecutionPlanEntry, session: V84SessionEntry | null) {
+  if (entry.date >= "2026-08-14") return entry.plannedDurationMin ?? undefined;
   if (!isControlledBikeTreadmillEntry(entry)) return entry.plannedDurationMin ?? undefined;
   const dayLoad = controlledCardioDayLoad(entry, session);
   if (dayLoad === "easy") return 45;
@@ -224,16 +269,17 @@ export function remainingPlannedMinutesFromStep(activities: ActivityPresentation
 
 function activityCategory(entry: V84DayExecutionPlanEntry): ActivityPresentationCategory {
   const text = normalizedEntryText(entry);
-  if (/readiness/.test(text)) return "readiness";
-  if (entry.logType === "sportLoadLog" || entry.entryType.toLowerCase().includes("sport load")) return "sport_load";
-  if (entry.logType === "kpiLog" || /\bkpi\b|baseline|test/.test(text)) return "kpi";
-  if (/speed stack|ss-[abc]/.test(text)) return "speed_stack";
-  if (/warmup|wu-?10|wup-?10|activation/.test(text)) return "warmup";
-  if (/shoot|shot/.test(text)) return "shooting";
-  if (/bike|treadmill|conditioning|zone 2|rsa|shift/.test(text)) return "conditioning";
-  if (/skill|iq|head-up|head up|puck touch|skl-hu/.test(text)) return "iq";
-  if (/mobility|mob-?15|mob-?20|cooldown|recovery|walk/.test(text)) return "mobility";
-  if (/reflection/.test(text)) return "reflection";
+  const entryType = entry.entryType.toLowerCase();
+  if (entryType.includes("readiness")) return "readiness";
+  if (entry.logType === "sportLoadLog" || entryType.includes("sport load")) return "sport_load";
+  if (entry.logType === "kpiLog" || entryType === "kpi") return "kpi";
+  if (entryType.includes("speed stack") || /speed stack|ss-[abc]/.test(text)) return "speed_stack";
+  if (entryType.includes("warmup") || /warmup|wu-?10|wup-?10|activation/.test(text)) return "warmup";
+  if (entryType.includes("shooting") || /shoot|shot/.test(text)) return "shooting";
+  if (entryType.includes("conditioning") || /bike|treadmill|conditioning|zone 2|rsa|shift/.test(text)) return "conditioning";
+  if (entryType.includes("skill") || /skill|iq|head-up|head up|puck touch|skl-hu/.test(text)) return "iq";
+  if (entryType.includes("recovery") || /mobility|mob-?15|mob-?20|cooldown|recovery|walk/.test(text)) return "mobility";
+  if (entryType.includes("reflection") || /reflection/.test(text)) return "reflection";
   return "other";
 }
 
@@ -249,8 +295,9 @@ function activityLogType(entry: V84DayExecutionPlanEntry): ActivityPresentationL
 }
 
 function activityTitle(entry: V84DayExecutionPlanEntry) {
+  if (isExplicitNonExecutableEntry(entry)) return humanize(entry.entryTitle);
   const text = normalizedEntryText(entry);
-  if (/readiness/.test(text)) return "Readiness check";
+  if (entry.entryType.toLowerCase().includes("readiness")) return "Readiness check";
   if (activityCategory(entry) === "speed_stack") return speedStackTitle(entry.sourceBlock || entry.entryTitle);
   if (/wu-?10|wup-?10|warmup/.test(text)) return "Warm-up / mobility";
   if (/skl-hu10|head-up|head up/.test(text)) return "Head-up puck touches";
@@ -267,8 +314,9 @@ function activityTitle(entry: V84DayExecutionPlanEntry) {
 }
 
 function activityInstruction(entry: V84DayExecutionPlanEntry) {
+  if (isExplicitNonExecutableEntry(entry)) return cleanInstruction(entry.notes) || "No additional conditioning is prescribed.";
   const category = activityCategory(entry);
-  if (/readiness/.test(normalizedEntryText(entry))) return "Check energy, soreness, sleep, and mood before starting.";
+  if (category === "readiness") return "Check energy, soreness, sleep, and mood before starting.";
   if (category === "warmup") return "Prepare to move well. Keep it easy and focused.";
   if (category === "speed_stack") return "Complete the planned Speed Stack work. Keep every rep clean.";
   if (category === "shooting") return "Shoot with clean mechanics. Reset between shots and stop if technique breaks.";
@@ -282,7 +330,7 @@ function activityInstruction(entry: V84DayExecutionPlanEntry) {
 
 function activityCue(entry: V84DayExecutionPlanEntry) {
   const category = activityCategory(entry);
-  if (/readiness/.test(normalizedEntryText(entry))) return "Reduce the plan if soreness, fatigue, or focus is off.";
+  if (category === "readiness") return "Reduce the plan if soreness, fatigue, or focus is off.";
   if (category === "iq") return "Stay low intensity and focus on awareness.";
   if (category === "mobility") return "Do light mobility or stretching. No hard conditioning here.";
   if (category === "shooting") return "Call the target and reset before the next shot.";
@@ -312,6 +360,8 @@ function speedStackChildren(entry: V84DayExecutionPlanEntry): ActivityPresentati
         plannedReps: parsed.reps ?? undefined,
         plannedDurationMinutes: parsed.durationSeconds ? Math.ceil(parsed.durationSeconds / 60) : undefined,
         coachingCue: cleanInstruction(prescription?.coachingNotes || ""),
+        tempo: prescription?.tempo,
+        rest: prescription?.rest,
         videoUrl: exerciseVideoMap.find((video) => video.canonicalExerciseId === card.drillId)?.primaryVideoUrl ?? undefined,
         sourceTrace: {
           drillId: card.drillId,
@@ -319,6 +369,32 @@ function speedStackChildren(entry: V84DayExecutionPlanEntry): ActivityPresentati
         },
       };
     });
+}
+
+function forwardDetailChildren(entry: V84DayExecutionPlanEntry): ActivityPresentationChild[] {
+  if (entry.date < "2026-08-14") return [];
+  const children = (entry.detailIds ?? []).flatMap((id): ActivityPresentationChild[] => {
+    const drill = skillShotIqLibrary.find((candidate) => candidate.drillID === id);
+    if (drill) return [{
+      id: drill.drillID,
+      title: drill.drill,
+      instruction: `${drill.setup} ${drill.executionSteps}`,
+      plannedReps: drill.prescription,
+      coachingCue: drill.coachingCue,
+      videoUrl: exerciseVideoMap.find((video) => video.canonicalExerciseId === drill.drillID)?.primaryVideoUrl ?? undefined,
+      sourceTrace: { drillId: drill.drillID, sourceBlockId: entry.sourceBlock },
+    }];
+    const module = getApprovedWeaknessModule(id);
+    if (module) return (module.exercises ?? []).map((exercise, index) => ({
+      id: `${module.id}:${index + 1}`,
+      title: exercise,
+      instruction: (module.safety ?? []).join(" · "),
+      coachingCue: module.cue,
+      sourceTrace: { drillId: module.id, sourceBlockId: entry.sourceBlock },
+    }));
+    return [];
+  });
+  return children;
 }
 
 function speedStackSelection(entry: V84DayExecutionPlanEntry) {
@@ -383,7 +459,7 @@ function categoryLabel(category: ActivityPresentationCategory) {
   return labels[category];
 }
 
-function weekLoadLabel(weekNumber: number) {
+export function weekLoadLabel(weekNumber: number) {
   const labels: Record<number, string> = {
     1: "Foundation + Acceleration",
     2: "Foundation + Acceleration",
@@ -399,6 +475,10 @@ function weekLoadLabel(weekNumber: number) {
     12: "Taper + Peak",
   };
   return labels[weekNumber] || "Offseason Plan";
+}
+
+function isExplicitNonExecutableEntry(entry: V84DayExecutionPlanEntry) {
+  return entry.entryType.toLowerCase().includes("conditioning") && /^none\s*-\s*camp provides sport conditioning$/i.test(entry.entryTitle.trim());
 }
 
 function contextUserFacingPlanText(text: string) {

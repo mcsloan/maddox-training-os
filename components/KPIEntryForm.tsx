@@ -9,7 +9,7 @@ import { saveStandaloneKpiResult } from "../lib/storage/cloudKpiRepository";
 
 const SHUTTLE_KPI_ID = "kpi-45-second-shuttle";
 
-export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: () => void; existing?: KPIResult }) {
+export function KPIEntryForm({ kpi, onSaved, existing, resultDate, allowDeferred = false }: { kpi: KPI; onSaved: () => void; existing?: KPIResult; resultDate?: string; allowDeferred?: boolean }) {
   const empty = Array.from({ length: kpi.attempts }, () => ({ result: "" }));
   const [attempts, setAttempts] = useState<KPIAttempt[]>(existing?.attempts || empty);
   const [notes, setNotes] = useState(existing?.notes || "");
@@ -17,6 +17,8 @@ export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: ()
   const [shuttlePartial, setShuttlePartial] = useState(String(existing?.attempts?.[0]?.partialFinalMetres ?? ""));
   const [status, setStatus] = useState("Ready");
   const [saving, setSaving] = useState(false);
+  const [deferred, setDeferred] = useState(existing?.testStatus === "deferred");
+  const [deferredReason, setDeferredReason] = useState(existing?.deferredReason || "");
 
   const isShuttle = kpi.id === SHUTTLE_KPI_ID;
   const shuttleTotal = isShuttle ? calculateShuttleTotalMetres(shuttleLengths, shuttlePartial) : null;
@@ -40,11 +42,13 @@ export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: ()
     const result = {
       id: existing?.id || `${kpi.id}-${Date.now()}`,
       kpiId: kpi.id,
-      date: existing?.date || getLocalDateString(now),
+      date: existing?.date || resultDate || getLocalDateString(now),
       enteredAt: existing?.enteredAt || now.toISOString(),
       attempts: displayAttempts,
       bestResult: best,
       notes,
+      testStatus: deferred ? "deferred" : "completed",
+      deferredReason: deferred ? deferredReason : undefined,
     } satisfies KPIResult;
 
     try {
@@ -77,9 +81,10 @@ export function KPIEntryForm({ kpi, onSaved, existing }: { kpi: KPI; onSaved: ()
         </div>
       )}
       <label className="mt-3 block"><span className="label">Notes</span><input className="field" value={notes} onChange={(event) => setNotes(event.target.value)} /></label>
+      {allowDeferred && <div className="mt-3 rounded-xl border border-rink bg-white p-3"><label className="flex items-center gap-2 font-bold"><input checked={deferred} onChange={(event) => setDeferred(event.target.checked)} type="checkbox" />Deferred / Not Tested</label>{deferred && <label className="mt-3 block"><span className="label">Reason</span><input className="field" required value={deferredReason} onChange={(event) => setDeferredReason(event.target.value)} /></label>}</div>}
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <p className="font-black">Best: {best ?? "—"} {best !== null ? kpi.units : ""}</p>
-        <button className="btn-primary" disabled={best === null || saving} onClick={save}>{saving ? "Saving..." : existing ? "Update Result" : "Save Result"}</button>
+        <button className="btn-primary" disabled={(!deferred && best === null) || (deferred && !deferredReason.trim()) || saving} onClick={save}>{saving ? "Saving..." : existing ? "Update Result" : deferred ? "Save Deferred Test" : "Save Result"}</button>
       </div>
       <p className="mt-2 text-sm font-semibold text-slate-600">{status}</p>
     </div>

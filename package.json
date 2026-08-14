@@ -10,6 +10,7 @@
     "ios:test": "npm run build && npm run start:lan",
     "vercel:build": "npm run build",
     "test": "vitest run",
+    "qa:forward": "playwright test --config=playwright.forward.config.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

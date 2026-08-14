@@ -57,7 +57,7 @@ export default function SessionPage() {
   const legacyWorkout = getWorkout(routeId);
   const workout = useMemo(() => v84Session ? getV84SessionWorkout(routeId) : legacyWorkout, [routeId, v84Session, legacyWorkout]);
   const dayContext = useMemo(() => v84Session ? projectDayPresentationContext(v84Session.date) : null, [v84Session]);
-  const plannedActivities = useMemo(() => v84Session ? projectPlannedDayActivities(v84Session.date) : [], [v84Session]);
+  const plannedActivities = useMemo(() => v84Session ? projectPlannedDayActivities(v84Session.date).filter((activity) => activity.executable) : [], [v84Session]);
   const drills = useMemo(() => v84Session ? plannedActivities.map(activityToDrill) : workout ? getWorkoutDrills(workout) : [], [v84Session, plannedActivities, workout]);
   const workoutKpis = useMemo(() => v84Session ? [] : workout ? workout.kpiTestIds.map((id) => allKpis.find((kpi) => kpi.id === id)).filter((kpi): kpi is (typeof allKpis)[number] => Boolean(kpi)) : [], [v84Session, workout]);
   const [session, setSession] = useState<SessionLog | null>(null);

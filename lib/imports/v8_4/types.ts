@@ -41,6 +41,11 @@ export interface V84DayExecutionPlanEntry {
   loadImpact: string;
   notes: string;
   appRenderHint: string;
+  activityId?: string;
+  detailIds?: string[];
+  focus?: string | null;
+  executable?: boolean;
+  eventDependent?: boolean;
 }
 
 export interface V84SessionEntry {
@@ -97,6 +102,23 @@ export interface V84SpeedStackPrescription {
   extractionStatus: string;
 }
 
+export interface V84SpeedStackSupportModule {
+  moduleId: string;
+  title: string;
+  session: string;
+  position: "before" | "after";
+  groups: Array<{
+    title: string;
+    dose: string | null;
+    exercises: Array<{ exerciseId: string; title: string; dose: string | null }>;
+  }>;
+  instructions: string[];
+  sourceDocument: string;
+  sourceSection: string;
+  sourceLabel: string;
+  sourceDemoUrl: string;
+}
+
 export interface V84ExerciseVideoMap {
   canonicalExerciseId: string;
   exerciseName: string;
@@ -149,6 +171,24 @@ export interface V84KpiProtocol {
   appLoggingFields: string[];
   videoStatus: string;
   notes: string;
+}
+
+export interface V84SkillShotIqDrill {
+  drillID: string;
+  domain: string;
+  drill: string;
+  purpose: string;
+  equipment: string;
+  setup: string;
+  executionSteps: string;
+  prescription: string;
+  progression: string;
+  iQMindsetCue: string;
+  coachingCue: string;
+  commonMistake: string;
+  appInputs: string;
+  videoStatus: string;
+  sourceNotes: string;
 }
 
 export interface V84SportLoad {

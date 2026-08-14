@@ -88,8 +88,8 @@ describe("v8.4 calendar coverage", () => {
     expect(JSON.stringify(sportLoads)).not.toContain("external_load");
   });
 
-  it("keeps updated v8.4 import counts aligned with the 4v4 source import", () => {
-    expect(sportLoads).toHaveLength(37);
-    expect(dayExecutionPlan).toHaveLength(630);
+  it("keeps updated v8.4 import counts aligned with the approved forward cutover", () => {
+    expect(sportLoads).toHaveLength(38);
+    expect(dayExecutionPlan).toHaveLength(544);
   });
 });

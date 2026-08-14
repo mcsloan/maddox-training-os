@@ -14,6 +14,8 @@ import sessionsJson from "../../../imports/v8.4/data/sessions.json";
 import sportLoadsJson from "../../../imports/v8.4/data/sportLoads.json";
 import sourceOfTruthLockJson from "../../../imports/v8.4/data/sourceOfTruthLock.json";
 import speedStackPrescriptionsJson from "../../../imports/v8.4/data/speedStackPrescriptions.json";
+import speedStackSupportModulesJson from "../../../imports/v8.4/data/speedStackSupportModules.json";
+import skillShotIqLibraryJson from "../../../imports/v8.4/data/skillShotIqLibrary.json";
 import manifestJson from "../../../imports/v8.4/manifest.json";
 import {
   V84DayExecutionPlanEntry,
@@ -31,7 +33,9 @@ import {
   V84SessionEntry,
   V84SourceOfTruthLock,
   V84SpeedStackPrescription,
+  V84SpeedStackSupportModule,
   V84SportLoad,
+  V84SkillShotIqDrill,
   V84ValidationIssue,
 } from "./types";
 
@@ -43,6 +47,8 @@ export const dayExecutionPlan = normalizeDayExecutionPlan(dayExecutionPlanJson a
 export const sessions = normalizeSessions(sessionsJson as Array<Record<string, unknown>>);
 export const drillCards = normalizeDrillCards(drillCardsJson as Array<Record<string, unknown>>);
 export const speedStackPrescriptions = normalizeSpeedStackPrescriptions(speedStackPrescriptionsJson as Array<Record<string, unknown>>);
+export const speedStackSupportModules = speedStackSupportModulesJson as V84SpeedStackSupportModule[];
+export const skillShotIqLibrary = skillShotIqLibraryJson as V84SkillShotIqDrill[];
 export const exerciseVideoMap = normalizeExerciseVideoMap(exerciseVideoMapJson as Array<Record<string, unknown>>);
 export const kpis = normalizeKpis(kpisJson as Array<Record<string, unknown>>);
 export const kpiProtocols = normalizeKpiProtocols(kpiProtocolsJson as Array<Record<string, unknown>>);
@@ -102,6 +108,11 @@ function normalizeDayExecutionPlan(records: Array<Record<string, unknown>>): V84
       loadImpact: String(record.loadImpact),
       notes: String(record.notes),
       appRenderHint: String(record.appRenderHint),
+      activityId: toNullableString(record.activityId) ?? undefined,
+      detailIds: toStringArray(record.detailIds),
+      focus: toNullableString(record.focus),
+      executable: "executable" in record ? toBoolean(record.executable) : undefined,
+      eventDependent: toBoolean(record.eventDependent),
     };
   });
 }
@@ -269,8 +280,8 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
     issues.push({ file: "data/ganttModel.json", message: "Locked Gantt model is missing required weeks or lanes." });
   }
 
-  if (exerciseVideoMap.length !== 154) {
-    issues.push({ file: "data/exerciseVideoMap.json", message: "Video map should contain 154 records." });
+  if (exerciseVideoMap.length !== 161) {
+    issues.push({ file: "data/exerciseVideoMap.json", message: "Video map should contain 161 records." });
   }
 
   if (dayExecutionPlan.length !== 630) {
@@ -291,6 +302,9 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
 
   if (speedStackPrescriptions.length !== 616) {
     issues.push({ file: "data/speedStackPrescriptions.json", message: "Speed Stack prescriptions should contain 616 records." });
+  }
+  if (speedStackSupportModules.length !== 2) {
+    issues.push({ file: "data/speedStackSupportModules.json", message: "Speed Stack support modules should contain WU-10 and MOB-15." });
   }
 
   if (kpis.length !== 7) {

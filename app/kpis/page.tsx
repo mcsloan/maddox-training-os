@@ -8,7 +8,8 @@ import packageJson from "@/package.json";
 import { readableError } from "@/lib/errorMessage";
 import { buildKpiHydratedExport } from "@/lib/kpiExport";
 import { kpiNextTestDate, kpiTargetDisplay } from "@/lib/kpiDisplay";
-import { formatPlanDate, kpis, trainingPlan, userFacingPlanText } from "@/lib/trainingData";
+import { canonicalKpiTestDates } from "@/lib/kpiSchedule";
+import { formatPlanDate, kpis, trainingPlan } from "@/lib/trainingData";
 import { kpiBaseline, kpiBest, kpiTargetProgress, kpiTrend } from "@/lib/trainingMetrics";
 import { deleteStandaloneKpiResult, loadStandaloneKpiResults, SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
 
@@ -18,6 +19,7 @@ export default function KpisPage() {
   const [syncStatus, setSyncStatus] = useState("Loading KPI history...");
   const [exportStatus, setExportStatus] = useState("");
   const today = new Date().toISOString().slice(0, 10);
+  const futureTests = canonicalKpiTestDates().filter((test) => test.date >= today);
   const environmentBadge = `v${packageJson.version} · ${(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || process.env.NEXT_PUBLIC_LOCAL_GIT_COMMIT_SHA || "local").slice(0, 7)} · ${process.env.NEXT_PUBLIC_VERCEL_ENV || "local"}`;
   const refresh = () => {
     loadStandaloneKpiResults().then((result) => {
@@ -94,7 +96,7 @@ export default function KpisPage() {
         </div>
         {exportStatus && <p className="mt-3 text-sm font-black text-blue">{exportStatus}</p>}
       </section>
-      <section className="card mb-6 border-2 border-cyan-200"><h2 className="text-xl font-black">Planned KPI Checkpoints</h2><div className="mt-4 rounded-2xl bg-cyan-50 p-4 text-sm"><p className="font-black">Beat your best cleanly.</p><p>Clean technique beats ugly numbers.</p><p className="font-semibold text-red-700">Do not test hard if sore, sick, tired, or low energy.</p></div><div className="mt-4 space-y-3">{trainingPlan.days.filter((day) => day.kpiTestIds?.length).map((day) => <Link className="block rounded-2xl bg-ice p-4 hover:ring-2 hover:ring-blue" href={`/day/${day.date}`} key={day.date}><p className="label">{formatPlanDate(day.date)} · Week {day.weekNumber}</p><p className="font-black">{day.primarySession}</p><p className="mt-2 text-sm text-amber-900">{userFacingPlanText(day.recoveryRule)}</p></Link>)}</div></section>
+      <section className="card mb-6 border-2 border-cyan-200"><h2 className="text-xl font-black">Planned KPI Test</h2><div className="mt-4 rounded-2xl bg-cyan-50 p-4 text-sm"><p className="font-black">Beat your best cleanly.</p><p>Clean technique beats ugly numbers.</p><p className="font-semibold text-red-700">Do not test hard if sore, sick, tired, or low energy.</p></div><div className="mt-4 space-y-3">{futureTests.map((test) => <Link className="block rounded-2xl bg-ice p-4 hover:ring-2 hover:ring-blue" href={`/day/${test.date}`} key={test.date}><p className="label">{formatPlanDate(test.date)}</p><p className="font-black">KPI Test · {test.kpiIds.length} KPIs</p></Link>)}</div></section>
       <section className="card mb-6">
         <p className="label">Plan vs actual</p><h2 className="text-2xl font-black">Offseason KPI Scoreboard</h2>
         <div className="mt-4 overflow-x-auto"><table className="w-full min-w-[760px] text-left text-sm"><thead><tr className="border-b border-rink"><th className="p-2">KPI</th><th className="p-2">Direction</th><th className="p-2">Baseline</th><th className="p-2">Current best</th><th className="p-2">Target</th><th className="p-2">Next test</th><th className="p-2">Progress</th></tr></thead><tbody>{kpis.map((kpi) => {

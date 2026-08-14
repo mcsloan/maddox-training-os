@@ -1,4 +1,5 @@
 import type { KPI, PlanDay } from "./types";
+import { nextCanonicalKpiTestDate } from "./kpiSchedule";
 
 export const JUNE_30_NEW_KPI_DATE = "2026-06-30";
 
@@ -17,8 +18,6 @@ export function kpiTargetDisplay(kpi: KPI) {
 }
 
 export function kpiNextTestDate(kpi: KPI, days: PlanDay[], today: string) {
-  const scheduled = days.find((day) => day.date >= today && day.kpiTestIds?.includes(kpi.id));
-  if (scheduled) return scheduled.date;
-  if (JUNE_30_NEW_KPI_IDS.includes(kpi.id)) return JUNE_30_NEW_KPI_DATE;
-  return null;
+  void days;
+  return nextCanonicalKpiTestDate(kpi.id, today);
 }

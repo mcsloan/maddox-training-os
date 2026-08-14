@@ -331,5 +331,14 @@
     "details": "All day camp; 2–3 hours ice/day",
     "intensity15": 5,
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+  },
+  {
+    "date": "2026-09-01",
+    "week": 12,
+    "day": "Tuesday",
+    "sportLoad": "Tryout",
+    "details": "Tryout begins; exact time to be confirmed.",
+    "intensity15": 5,
+    "planRule": "Sport Load is the program for this date; no additional workout."
   }
 ]

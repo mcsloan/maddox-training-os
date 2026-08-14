@@ -2,7 +2,8 @@ import Link from "next/link";
 import type { V84DayExecutionPlanEntry } from "@/lib/imports/v8_4/types";
 import type { DayExecutionStepPresentation } from "@/lib/projections/dayPresentation";
 
-function durationLabel(minutes: number | null) {
+function durationLabel(minutes: number | null, executable = true) {
+  if (!executable) return "No additional work";
   return minutes ? `${minutes} min` : "Duration to confirm";
 }
 
@@ -57,7 +58,10 @@ export function DayExecutionSequence({
                   </p>
                   <h3 className="font-black">{presentation?.title || entry.entryTitle}</h3>
                 </div>
-                <span className="text-sm font-bold text-slate-600">{durationLabel(entry.plannedDurationMin)}</span>
+                <div className="text-right">
+                  <span className="block text-sm font-bold text-slate-600">{durationLabel(presentation?.plannedDurationMinutes ?? entry.plannedDurationMin, presentation?.executable)}</span>
+                  <span className="block text-xs font-bold text-slate-500">{presentation?.executable === false ? "Not applicable" : presentation?.optional ? "Optional" : "Required"}</span>
+                </div>
               </div>
               <p className="mt-2 text-sm text-slate-700">{presentation?.loadImpact || entry.loadImpact}</p>
               {!compact && <p className="mt-2 text-sm text-slate-600">{presentation?.note ?? entry.notes}</p>}

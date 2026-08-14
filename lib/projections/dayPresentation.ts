@@ -36,6 +36,10 @@ export interface DayExecutionStepPresentation {
   blockLabels: string[];
   guidance: string[];
   videos: VideoReference[];
+  plannedDurationMinutes: number | null;
+  executable: boolean;
+  required: boolean;
+  optional: boolean;
 }
 
 export interface DayPresentation {
@@ -82,6 +86,9 @@ export interface BuildDayPresentationArgs {
   trainingWorkLogHref?: string;
   fallbackTitle?: string;
   dayContext?: DayPresentationContext;
+  canonicalKpiState?: boolean;
+  canonicalTitle?: string;
+  canonicalHasTrainingWork?: boolean;
 }
 
 const CONTROLLED_CARDIO_COPY = "Controlled cardio only. Bike preferred; treadmill walk/light jog is okay. No treadmill sprinting.";
@@ -186,16 +193,16 @@ export function buildDayPresentation(args: BuildDayPresentationArgs): DayPresent
   const plannedKpis = args.plannedKpis ?? [];
   const evidence = args.evidence;
   const isSportLoadDay = sportLoads.length > 0;
-  const hasPlannedTrainingWork = Boolean(args.workout || args.workoutBlocks?.length || executionEntries.some((entry) => entry.logType === "trainingWorkLog") || (args.day?.durationMinutes || 0) > 0);
+  const hasPlannedTrainingWork = args.canonicalHasTrainingWork ?? Boolean(args.workout || args.workoutBlocks?.length || executionEntries.some((entry) => entry.logType === "trainingWorkLog") || (args.day?.durationMinutes || 0) > 0);
   const conflictItems = detectPlanConflicts({ day: args.day, executionEntries, plannedKpis });
-  const isKpiDay = isKpiTestingDay({ day: args.day, display: args.display, executionEntries });
+  const isKpiDay = args.canonicalKpiState ?? isKpiTestingDay({ day: args.day, display: args.display, executionEntries });
   const kpiCount = evidence?.records.kpiResults.length ?? 0;
   const sportLoadCount = evidence?.records.sportLoadLogs.length ?? 0;
   const trainingWorkCount = evidence ? evidence.records.sessionAttempts.length + evidence.records.drillLogs.length : 0;
   const reflectionCount = evidence?.records.reflections.length ?? 0;
   const kpiPartial = isKpiDay && plannedKpis.length > 0 && kpiCount > 0 && kpiCount < plannedKpis.length;
   const sharedHeroTitle = dayContext.heroTitle === "Recovery / planning day" ? "" : dayContext.heroTitle;
-  const dayTitle = displayDayTitle(sharedHeroTitle || args.day?.primarySession || args.fallbackTitle || sportLoads[0]?.title || "Recovery / planning day", isKpiDay);
+  const dayTitle = displayDayTitle(args.canonicalTitle || sharedHeroTitle || args.day?.primarySession || args.fallbackTitle || sportLoads[0]?.title || "Recovery / planning day", isKpiDay);
   const guidance = dedupeGuidance([
     args.day?.parentCue,
     args.day?.doNotDo,
@@ -212,7 +219,7 @@ export function buildDayPresentation(args: BuildDayPresentationArgs): DayPresent
     normalizedGuidance: guidance,
     equipmentSummary: computeEquipmentSummary({ drills: args.drills, executionEntries, plannedKpis, workoutBlocks: args.workoutBlocks }),
     equipmentSetupNotes: equipmentSetupNotes({ executionEntries, plannedKpis, workoutBlocks: args.workoutBlocks }),
-    plannedWorkSummary: plannedWorkSummary({ day: args.day, hasPlannedTrainingWork, isSportLoadDay, plannedKpis, isKpiDay }),
+    plannedWorkSummary: plannedWorkSummary({ day: args.day, canonicalTitle: args.canonicalTitle, hasPlannedTrainingWork, isSportLoadDay, plannedKpis, isKpiDay }),
     sportLoadEvidenceSummary: {
       label: "Sport Load evidence",
       count: sportLoadCount,
@@ -240,20 +247,21 @@ export function buildDayPresentation(args: BuildDayPresentationArgs): DayPresent
     loadRule: loadRule(args.day, sportLoads[0], isKpiDay),
     recovery: recoveryCopy(args.day, sportLoads[0], isKpiDay),
     parentExplanation: parentExplanation(args.day, sportLoads[0]),
-    athleteActionSummary: athleteActionSummary({ day: args.day, isSportLoadDay, plannedKpis, isKpiDay }),
+    athleteActionSummary: athleteActionSummary({ day: args.day, canonicalTitle: args.canonicalTitle, isSportLoadDay, plannedKpis, isKpiDay }),
     isKpiTestingDay: isKpiDay,
     showSourceExecutionInDetails: !isSportLoadDay,
-    executionSteps: buildExecutionSteps({ day: args.day, executionEntries, plannedActivities, plannedKpis, videos: args.videos ?? [], workoutBlocks: args.workoutBlocks ?? [], conflictItems }),
+    executionSteps: buildExecutionSteps({ day: args.day, executionEntries, plannedActivities, plannedKpis, videos: args.videos ?? [], workoutBlocks: args.workoutBlocks ?? [], conflictItems, suppressSportLoadEntries: isSportLoadDay }),
   };
 }
 
-function buildExecutionSteps(args: { day?: PlanDay; executionEntries: V84DayExecutionPlanEntry[]; plannedActivities: ActivityPresentation[]; plannedKpis: KPI[]; videos: VideoReference[]; workoutBlocks: WorkoutBlock[]; conflictItems: string[] }) {
+function buildExecutionSteps(args: { day?: PlanDay; executionEntries: V84DayExecutionPlanEntry[]; plannedActivities: ActivityPresentation[]; plannedKpis: KPI[]; videos: VideoReference[]; workoutBlocks: WorkoutBlock[]; conflictItems: string[]; suppressSportLoadEntries: boolean }) {
   const result: Record<number, DayExecutionStepPresentation> = {};
   let displaySequence = 0;
   const plannedDisplaySequences = new Map(args.plannedActivities.map((activity, index) => [activity.sequenceOrder, index + 1]));
   for (const entry of args.executionEntries) {
     const activity = args.plannedActivities.find((item) => item.sequenceOrder === entry.sequence);
-    const hidden = shouldHideExecutionEntry({ entry, plannedKpis: args.plannedKpis, conflictItems: args.conflictItems })
+    const hidden = (args.suppressSportLoadEntries && entry.logType === "sportLoadLog")
+      || shouldHideExecutionEntry({ entry, plannedKpis: args.plannedKpis, conflictItems: args.conflictItems })
       || (isJune30KpiHotfixDate(entry.date) && !activity);
     if (!hidden) displaySequence += 1;
     const projectedDisplaySequence = isJune30KpiHotfixDate(entry.date) ? plannedDisplaySequences.get(entry.sequence) : undefined;
@@ -268,6 +276,10 @@ function buildExecutionSteps(args: { day?: PlanDay; executionEntries: V84DayExec
       blockLabels: blocks.map((block) => plainBlockName(block)),
       guidance: activityGuidance(activity) || stepGuidance({ day: args.day, entry, conflictItems: args.conflictItems }),
       videos: matchingVideos(entry, args.videos),
+      plannedDurationMinutes: activity?.plannedDurationMinutes ?? entry.plannedDurationMin,
+      executable: activity?.executable ?? true,
+      required: activity?.required ?? /^required$/i.test(entry.requiredOptional),
+      optional: activity?.optional ?? /^optional$/i.test(entry.requiredOptional),
     };
   }
   return result;
@@ -318,10 +330,10 @@ function stepGuidance(args: { day?: PlanDay; entry: V84DayExecutionPlanEntry; co
   return dedupeGuidance(values);
 }
 
-function plannedWorkSummary(args: { day?: PlanDay; hasPlannedTrainingWork: boolean; isSportLoadDay: boolean; plannedKpis: KPI[]; isKpiDay: boolean }) {
+function plannedWorkSummary(args: { day?: PlanDay; canonicalTitle?: string; hasPlannedTrainingWork: boolean; isSportLoadDay: boolean; plannedKpis: KPI[]; isKpiDay: boolean }) {
   if (args.isSportLoadDay) return "Sport Load is the main workload; support work should stay skill and recovery focused.";
   if (args.isKpiDay && args.plannedKpis.length > 0) return `${args.plannedKpis.length} planned KPI checks plus any supporting training work.`;
-  if (args.hasPlannedTrainingWork) return args.day?.primarySession || "Planned training work";
+  if (args.hasPlannedTrainingWork) return args.canonicalTitle || args.day?.primarySession || "Planned training work";
   return "No planned training work today; recovery and readiness come first.";
 }
 
@@ -374,10 +386,10 @@ function parentExplanation(day?: PlanDay, sportLoad?: PlannedExternalLoad) {
   return dedupeGuidance([day?.parentCue, loadRule, recovery]).join(" ");
 }
 
-function athleteActionSummary(args: { day?: PlanDay; isSportLoadDay: boolean; plannedKpis: KPI[]; isKpiDay: boolean }) {
+function athleteActionSummary(args: { day?: PlanDay; canonicalTitle?: string; isSportLoadDay: boolean; plannedKpis: KPI[]; isKpiDay: boolean }) {
   if (args.isSportLoadDay) return "Complete the sport load, then keep extra work light, skilled, and recovery focused.";
   if (args.isKpiDay && args.plannedKpis.length > 0) return "Do KPI checks while fresh, then only log supporting training work if it was actually completed.";
-  return args.day?.primarySession || "Follow today's planned work and log what actually happened.";
+  return args.canonicalTitle || args.day?.primarySession || "Follow today's planned work and log what actually happened.";
 }
 
 function phaseChip(phase: string): PresentationChip {
@@ -505,8 +517,7 @@ function isKpiTestingDay(args: { day?: PlanDay; display?: PlanDayDisplayModel; e
   const dayText = `${args.day?.primarySession || ""} ${args.day?.dayRole || ""} ${(args.day?.tags ?? []).join(" ")}`.toLowerCase();
   if (/\b(kpi baseline|kpi test|performance test|baseline testing|perf testing)\b/.test(dayText)) return true;
   return (args.executionEntries ?? []).some((entry) => {
-    const entryText = `${entry.entryType} ${entry.entryTitle} ${entry.sourceBlock} ${entry.appRenderHint}`.toLowerCase();
-    return entry.entryType === "KPI" || entry.logType === "kpiLog" || /\b(kpi|baseline testing|performance test|perf testing)\b/.test(entryText);
+    return entry.entryType.toLowerCase() === "kpi" || entry.logType === "kpiLog";
   });
 }
 

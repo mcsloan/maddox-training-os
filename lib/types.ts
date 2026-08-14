@@ -286,6 +286,9 @@ export interface TrainingWorkLog {
   updatedAt: string;
   schemaVersion: number;
   source: "training_work";
+  readiness?: Readiness;
+  reflection?: Reflection;
+  activityResults?: Record<string, ExerciseCompletion>;
 }
 
 export interface Reflection {
@@ -331,6 +334,8 @@ export interface KPIResult {
   attempts: KPIAttempt[];
   bestResult: number | null;
   notes: string;
+  testStatus?: "completed" | "deferred";
+  deferredReason?: string;
 }
 
 export interface StandaloneKPIResultSnapshot {

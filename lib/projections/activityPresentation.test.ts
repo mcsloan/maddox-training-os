@@ -55,7 +55,7 @@ describe("planned activity presentation", () => {
 
     expect(dayContext).toEqual(sessionContext);
     expect(dayContext).toMatchObject({
-      heroTitle: "Acceleration and accurate shooting",
+      heroTitle: "Speed Stack C, conditioning, and shooting.",
       eyebrow: "Week 1 · Foundation + Acceleration · Skill day",
       phaseLabel: "Foundation + Acceleration",
       dayRoleLabel: "Skill day",
@@ -214,7 +214,7 @@ describe("planned activity presentation", () => {
   });
 
   it("keeps Day and active Session planned activity displays aligned for every v8.4 active session date", () => {
-    expect(activeSessionDates).toHaveLength(84);
+    expect(activeSessionDates).toHaveLength(75);
 
     for (const date of activeSessionDates) {
       const executionEntries = getV84DayExecutionEntries(date);
@@ -253,7 +253,7 @@ describe("planned activity presentation", () => {
         expect(dayStep?.subtitle, `${date} sequence ${activity.sequenceOrder}`).toBe(categoryLabelForTest(activity.category));
         const executionEntry = executionEntries.find((entry) => entry.sequence === activity.sequenceOrder);
         if (!isControlledBikeTreadmillFixture(executionEntry)) {
-          expect(executionEntry?.plannedDurationMin ?? undefined, `${date} sequence ${activity.sequenceOrder}`).toBe(activity.plannedDurationMinutes);
+          expect(executionEntry?.plannedDurationMin ?? undefined, `${date} sequence ${activity.sequenceOrder}`).toBe(activity.executable ? activity.plannedDurationMinutes : executionEntry?.plannedDurationMin ?? undefined);
         }
       }
 
@@ -377,7 +377,7 @@ describe("planned activity presentation", () => {
     const travelWalk = projectPlannedDayActivities("2026-07-31").find((activity) => activity.category === "conditioning");
 
     expect(shiftConditioning?.plannedDurationMinutes).toBe(20);
-    expect(campConditioning?.plannedDurationMinutes).toBe(20);
+    expect(campConditioning).toMatchObject({ executable: false, logType: "none", plannedDurationMinutes: undefined });
     expect(travelWalk?.plannedDurationMinutes).toBe(20);
   });
 
@@ -458,7 +458,7 @@ function categoryLabelForTest(category: ActivityPresentation["category"]) {
     kpi: "KPI",
     sport_load: "Sport Load",
     reflection: "Reflection",
-    other: "Planned work",
+    other: "Training",
   };
   return labels[category];
 }

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import kpisJson from "../data/kpis.json";
 import planJson from "../data/plan.json";
-import { JUNE_30_NEW_KPI_DATE, JUNE_30_NEW_KPI_IDS, kpiNextTestDate, kpiTargetDisplay } from "./kpiDisplay";
+import { JUNE_30_NEW_KPI_IDS, kpiNextTestDate, kpiTargetDisplay } from "./kpiDisplay";
 import type { KPI, TrainingPlan } from "./types";
 
 const kpis = kpisJson as KPI[];
@@ -23,24 +23,21 @@ function byId(id: string) {
 }
 
 describe("KPI display helpers", () => {
-  it("shows new KPIs with exact targets scheduled for June 30", () => {
+  it("shows new KPIs with exact targets and the canonical Aug 20 schedule", () => {
     for (const id of JUNE_30_NEW_KPI_IDS) {
       const kpi = byId(id);
 
       expect(kpiTargetDisplay(kpi), id).toBe(newKpiTargets[id]);
       expect(kpiTargetDisplay(kpi), id).not.toBe("Set after baseline");
-      expect(kpiNextTestDate(kpi, trainingPlan.days, "2026-06-30"), id).toBe(JUNE_30_NEW_KPI_DATE);
+      expect(kpiNextTestDate(kpi, trainingPlan.days, "2026-08-13"), id).toBe("2026-08-20");
     }
   });
 
-  it("keeps existing KPI target values and plan-derived next test dates", () => {
+  it("keeps existing KPI target values and uses the same canonical schedule", () => {
     const sprint = byId("kpi-10-yard");
-    const expectedNextTest = trainingPlan.days.find((day) => day.date >= "2026-06-30" && day.kpiTestIds?.includes(sprint.id));
-
     expect(typeof sprint.targetValue).toBe("number");
     expect(kpiTargetDisplay(sprint)).toBe(`${sprint.targetValue} ${sprint.units}`);
-    expect(expectedNextTest?.date).toBe("2026-06-30");
-    expect(kpiNextTestDate(sprint, trainingPlan.days, "2026-06-30")).toBe(expectedNextTest?.date);
+    expect(kpiNextTestDate(sprint, trainingPlan.days, "2026-08-13")).toBe("2026-08-20");
   });
 
   it("does not introduce an active Pull-Up KPI", () => {

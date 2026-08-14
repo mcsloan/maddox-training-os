@@ -1,17 +1,17 @@
 {
-  "packageVersion": "v8.4",
+  "packageVersion": "v8.4-forward-cutover-2026-08-14",
   "sourceWorkbook": "Maddox_Training_OS_v8_3_Source_Of_Truth_Lock.xlsx",
-  "generatedAt": "2026-06-16T04:53:11+00:00",
+  "generatedAt": "2026-08-13T00:00:00-04:00",
   "recordCounts": {
-    "dayExecutionPlan.json": 630,
+    "dayExecutionPlan.json": 544,
     "sessions.json": 84,
     "drills.json": 154,
     "workoutBlockDetails.json": 154,
-    "exerciseVideoMap.json": 154,
+    "exerciseVideoMap.json": 161,
     "speedStackPrescriptions.json": 616,
     "kpis.json": 7,
     "kpiProtocols.json": 6,
-    "sportLoads.json": 37,
+    "sportLoads.json": 38,
     "phaseMap.json": 12,
     "phaseLabels.json": 12,
     "hockeyIq.json": 6,
@@ -26,10 +26,12 @@
     "videoCoverageReport.json": 10,
     "sourceTrace.json": 11,
     "sourceOfTruthLock.json": 39,
-    "needsReview.json": 0
+    "needsReview.json": 0,
+    "speedStackSupportModules.json": 2
   },
   "videoStatusCounts": {
     "Exact Source Video": 149,
+    "Parent Approved Video": 7,
     "Not Video Required": 5
   },
   "needsReviewRows": 0,

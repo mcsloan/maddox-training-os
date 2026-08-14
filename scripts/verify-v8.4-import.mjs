@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import crypto from "node:crypto";
 
 const root = process.cwd();
 const packageDir = path.join(root, "imports/v8.4");
@@ -35,17 +36,28 @@ const normalizedNeedsReviewCount = Array.isArray(needsReview)
   ? needsReview.filter((row) => String(row?.canonicalExerciseId || "") !== "NO_REMAINING_REVIEW_ROWS").length
   : null;
 
-if (!Array.isArray(dayExecutionPlan) || dayExecutionPlan.length !== 630) issues.push("dayExecutionPlan.json should contain 630 records.");
+if (!Array.isArray(dayExecutionPlan) || dayExecutionPlan.length !== 544) issues.push("dayExecutionPlan.json should contain 544 records after the approved forward cutover.");
 if (!Array.isArray(sessions) || sessions.length !== 84) issues.push("sessions.json should contain 84 records.");
 if (!Array.isArray(drillCards) || drillCards.length !== 154) issues.push("drillCards.json should contain 154 records.");
-if (!Array.isArray(exerciseVideoMap) || exerciseVideoMap.length !== 154) issues.push("exerciseVideoMap.json should contain 154 records.");
+if (!Array.isArray(exerciseVideoMap) || exerciseVideoMap.length !== 161) issues.push("exerciseVideoMap.json should contain 161 records.");
 const sportLoads = readJson(path.join(packageDir, "data/sportLoads.json"));
-if (!Array.isArray(sportLoads) || sportLoads.length !== 37) issues.push("sportLoads.json should contain 37 records.");
+const speedStackSupportModules = readJson(path.join(packageDir, "data/speedStackSupportModules.json"));
+if (!Array.isArray(sportLoads) || sportLoads.length !== 38) issues.push("sportLoads.json should contain 38 records after the approved forward cutover.");
+if (!Array.isArray(speedStackSupportModules) || speedStackSupportModules.length !== 2) issues.push("speedStackSupportModules.json should contain WU-10 and MOB-15.");
+if (importQaReport.packageVersion !== "v8.4-forward-cutover-2026-08-14") issues.push("importQaReport packageVersion should identify the approved forward cutover.");
+if (importQaReport.recordCounts?.["dayExecutionPlan.json"] !== dayExecutionPlan.length) issues.push("importQaReport dayExecutionPlan count mismatch.");
+if (importQaReport.recordCounts?.["sessions.json"] !== sessions.length) issues.push("importQaReport sessions count mismatch.");
+if (importQaReport.recordCounts?.["sportLoads.json"] !== sportLoads.length) issues.push("importQaReport Sport Load count mismatch.");
+if (importQaReport.recordCounts?.["speedStackSupportModules.json"] !== speedStackSupportModules.length) issues.push("importQaReport Speed Stack support module count mismatch.");
+verifyProtectedHistory("sessions.json", sessions, 60, "12ce2f9c571e9072a6a378d0ee849db8f5fad3ccc62aa35a0b82d97cae031366");
+verifyProtectedHistory("dayExecutionPlan.json", dayExecutionPlan, 450, "a724044dbf59751c4c96190fb7b39562bc30f0f0b2e76155b5a36e2ec9e8d6a4");
+verifyProtectedHistory("sportLoads.json", sportLoads, 28, "0484bf52f40d1d5639b10992c661ca7abd36ac5c416069d7d83cc13c42c0dfd3");
 if (normalizedNeedsReviewCount !== 0) issues.push("needsReview.json should normalize to 0 active records.");
 if (!ganttModel || !Array.isArray(ganttModel.weeks) || !Array.isArray(ganttModel.lanes)) issues.push("ganttModel.json should include weeks and lanes.");
 if (!ganttModel || ganttModel.lanes.length !== 17) issues.push("ganttModel.json should contain 17 lanes.");
 if (importQaReport.needsReviewRows !== 0) issues.push(`importQaReport.needsReviewRows expected 0, found ${importQaReport.needsReviewRows}.`);
 if (importQaReport.videoStatusCounts?.["Exact Source Video"] !== 149) issues.push("importQaReport video coverage count mismatch.");
+if (importQaReport.videoStatusCounts?.["Parent Approved Video"] !== 7) issues.push("importQaReport parent-approved video coverage count mismatch.");
 
 if (issues.length) {
   console.error("v8.4 import smoke test failed:");
@@ -75,4 +87,10 @@ function countFile(file, value) {
   if (Array.isArray(value)) return value.length;
   if (value && typeof value === "object") return Object.keys(value).length;
   return null;
+}
+
+function verifyProtectedHistory(file, rows, expectedCount, expectedHash) {
+  const protectedRows = Array.isArray(rows) ? rows.filter((row) => String(row?.date || "") < "2026-08-14") : [];
+  const hash = crypto.createHash("sha256").update(JSON.stringify(protectedRows)).digest("hex");
+  if (protectedRows.length !== expectedCount || hash !== expectedHash) issues.push(`${file}: protected history before 2026-08-14 changed.`);
 }

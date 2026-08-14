@@ -64,6 +64,9 @@ export function createTrainingWorkLog(date: string, workoutId: string | null, ti
     updatedAt: now,
     schemaVersion: SCHEMA_VERSION,
     source: "training_work",
+    readiness: previous?.readiness ?? { energy: null, soreness: null, focus: null, notes: "" },
+    reflection: previous?.reflection ?? { energy: null, confidence: null, difficulty: null, improvement: "", notes: "" },
+    activityResults: previous?.activityResults ?? {},
   };
 }
 

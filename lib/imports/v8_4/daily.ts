@@ -48,7 +48,7 @@ function toPlannedSportLoad(load: V84SportLoad, index = 0): PlannedExternalLoad 
   const title = load.sportLoad;
   const provider = inferProvider(title);
   const timeLabel = inferTimeLabel(load.details);
-  const duration = inferDurationMinutes(load.details);
+  const duration = inferDurationMinutes(load.details, load.date);
   return {
     id: `v84-sport-load:${load.date}:${index}:${slugify(title)}`,
     date: load.date,
@@ -99,7 +99,21 @@ function inferTimeLabel(details: string) {
   return "Confirm time";
 }
 
-function inferDurationMinutes(details: string) {
+function inferDurationMinutes(details: string, date: string) {
+  if (date >= "2026-08-14") {
+    if (/2\s*[–-]\s*3 hours/i.test(details) || /2\s*[–-]\s*3h/i.test(details)) return null;
+    const ranges = Array.from(details.matchAll(/(\d{1,2}):(\d{2})\s*(?:AM|PM)?\s*[-–]\s*(\d{1,2}):(\d{2})\s*(AM|PM)?/gi));
+    if (ranges.length) return ranges.reduce((sum, match) => {
+      let start = Number(match[1]) * 60 + Number(match[2]);
+      let end = Number(match[3]) * 60 + Number(match[4]);
+      if (match[5]?.toUpperCase() === "PM") {
+        if (start < 12 * 60) start += 12 * 60;
+        if (end < 12 * 60) end += 12 * 60;
+      }
+      while (end < start) end += 12 * 60;
+      return sum + end - start;
+    }, 0);
+  }
   if (/two 22-minute games/i.test(details)) return 44;
   if (/2\s*[–-]\s*3 hours/i.test(details) || /2\s*[–-]\s*3h/i.test(details)) return 150;
   if (/approx\.\s*2 hours/i.test(details)) return 120;

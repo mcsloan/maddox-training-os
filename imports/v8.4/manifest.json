@@ -1,14 +1,14 @@
 {
   "packageName": "Maddox Training OS v8.4 App Import Package",
-  "packageVersion": "v8.4",
+  "packageVersion": "v8.4-forward-cutover-2026-08-14",
   "sourceWorkbook": "Maddox_Training_OS_v8_3_Source_Of_Truth_Lock.xlsx",
   "sourceWorkbookSha256": "96cabdd23c4a45c5bd7d7dad9bb1b1d4252cef12ab72528e20df1ef092c15e5b",
-  "generatedAt": "2026-06-16T04:53:35+00:00",
+  "generatedAt": "2026-08-13T00:00:00-04:00",
   "files": [
     {
       "file": "data/dayExecutionPlan.json",
-      "recordCount": 630,
-      "sha256": "05c47ff86e7d729797fdbc71d05a9ee07a86b070cef386519b351084c058d008"
+      "recordCount": 544,
+      "sha256": "8aeea33d2a59e05978994203a9053cd238a5f33c1d87123ab0a8bc1012bd59ca"
     },
     {
       "file": "data/drillCards.json",
@@ -22,8 +22,8 @@
     },
     {
       "file": "data/exerciseVideoMap.json",
-      "recordCount": 154,
-      "sha256": "8f9f4825692dca777d0b933ffea72fa10b8c84900736db35ed80e74c93c7f9e7"
+      "recordCount": 161,
+      "sha256": "fe19ee842072011ad7890ba22faf4bdd4c1140dd76e4151d9dc7e0c238ab0147"
     },
     {
       "file": "data/ganttModel.json",
@@ -37,8 +37,8 @@
     },
     {
       "file": "data/importQaReport.json",
-      "recordCount": 7,
-      "sha256": "e9e257aa57ea9eb110ffcc5a0ba58d4fd2c9273f3ca03d18d94747246153b425"
+      "sha256": "0726e162503ecef886e3dc0a0c7a97ba49345a9f35ee2240b04f15d09a1d3bca",
+      "recordCount": 7
     },
     {
       "file": "data/integratedSkillSessions.json",
@@ -83,7 +83,7 @@
     {
       "file": "data/sessions.json",
       "recordCount": 84,
-      "sha256": "c7c78d0b2582b3cb4884aedbb740d0b93a6881bf346a3fa9e3d6149c11a6b5b1"
+      "sha256": "def776bf3f383fd1412bfcb75ca65deee74105c1d70729754f7bebb2f1f47942"
     },
     {
       "file": "data/shootingProgression.json",
@@ -117,18 +117,23 @@
     },
     {
       "file": "data/sportLoads.json",
-      "recordCount": 37,
-      "sha256": "1b19fc7e0d31d78265abae5b223fe7bfb2031652d79753669b6c1f30cd80c4d5"
+      "recordCount": 38,
+      "sha256": "02e9f2b445437d39ce5e87ede27a78af35b427577758766b6c5e52f66e63c5f9"
     },
     {
       "file": "data/videoCoverageReport.json",
-      "recordCount": 10,
-      "sha256": "85e3e012e9d36ffe96d3b8f5f46d5f80161a1e2287871dd433eba1706f3168ce"
+      "recordCount": 11,
+      "sha256": "b992f34af9e7a42241e2533bae09c27798ac1e889f2fbec000b93d82066ebfca"
     },
     {
       "file": "data/workoutBlockDetails.json",
       "recordCount": 154,
       "sha256": "f7b372ea694753516f56f99515ace505900b3473803261d121e73279ea4ea5b4"
+    },
+    {
+      "file": "data/speedStackSupportModules.json",
+      "recordCount": 2,
+      "sha256": "52232a33018071fa57b55b47b3e353125559163e481a59ecf06a69a84afd7769"
     }
   ],
   "importOrder": [
@@ -139,6 +144,7 @@
     "sessions.json",
     "dayExecutionPlan.json",
     "speedStackPrescriptions.json",
+    "speedStackSupportModules.json",
     "exerciseVideoMap.json",
     "workoutBlockDetails.json",
     "drills.json",

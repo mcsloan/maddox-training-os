@@ -1,0 +1,82 @@
+[
+  {
+    "moduleId": "WU-10",
+    "title": "Warm-up",
+    "session": "A",
+    "position": "before",
+    "groups": [
+      {
+        "title": "Get Mobile",
+        "dose": "8 reps unless otherwise noted",
+        "exercises": [
+          { "exerciseId": "WU-10-MOB-01", "title": "Wall Ankle Mobility", "dose": null },
+          { "exerciseId": "WU-10-MOB-02", "title": "Box Quad w/ OH Reach", "dose": null },
+          { "exerciseId": "WU-10-MOB-03", "title": "Quadruped Posterior Hip Mobility", "dose": null },
+          { "exerciseId": "WU-10-MOB-04", "title": "Lateral Kneeling Adductor w/ Reach Under", "dose": null },
+          { "exerciseId": "WU-10-MOB-05", "title": "Quadruped T-Spine Rotation", "dose": null },
+          { "exerciseId": "WU-10-MOB-06", "title": "1/2 Kneel Pec Mobility", "dose": null }
+        ]
+      },
+      {
+        "title": "Get Stable",
+        "dose": "8 reps unless otherwise noted",
+        "exercises": [
+          { "exerciseId": "WU-10-STABLE-01", "title": "2-Leg Hip Lift", "dose": null },
+          { "exerciseId": "WU-10-STABLE-02", "title": "Plank", "dose": "30 sec" },
+          { "exerciseId": "WU-10-STABLE-03", "title": "Scap Push Up", "dose": null }
+        ]
+      },
+      {
+        "title": "Get Warm",
+        "dose": "10 yards unless otherwise noted",
+        "exercises": [
+          { "exerciseId": "WU-10-WARM-01", "title": "Linear March", "dose": null },
+          { "exerciseId": "WU-10-WARM-02", "title": "Straight Leg March", "dose": null },
+          { "exerciseId": "WU-10-WARM-03", "title": "Linear Skip", "dose": null },
+          { "exerciseId": "WU-10-WARM-04", "title": "Straight Leg Skip", "dose": null },
+          { "exerciseId": "WU-10-WARM-05", "title": "High Knees", "dose": null },
+          { "exerciseId": "WU-10-WARM-06", "title": "Butt Kicks", "dose": null },
+          { "exerciseId": "WU-10-WARM-07", "title": "Backpedal", "dose": null },
+          { "exerciseId": "WU-10-WARM-08", "title": "Power Skip (Height)", "dose": null }
+        ]
+      },
+      {
+        "title": "Get Activated",
+        "dose": null,
+        "exercises": [
+          { "exerciseId": "WU-10-ACTIVE-01", "title": "Lateral Wall Push", "dose": "5 sec/side" }
+        ]
+      }
+    ],
+    "instructions": [],
+    "sourceDocument": "Off-Season Domination 2025 Full Bodyweight Program",
+    "sourceSection": "Speed Stack A warm-up/cooldown page",
+    "sourceLabel": "View Exercise Demonstrations",
+    "sourceDemoUrl": "https://www.youtube.com/playlist?list=PLAMIllZnMikBopeN4A4PgKYT8AImGsJEN"
+  },
+  {
+    "moduleId": "MOB-15",
+    "title": "Cooldown",
+    "session": "A",
+    "position": "after",
+    "groups": [
+      {
+        "title": "Cooldown",
+        "dose": "2:00 OR 1:00/side",
+        "exercises": [
+          { "exerciseId": "MOB-15-01", "title": "Lying Figure 4 Glute Stretch", "dose": null },
+          { "exerciseId": "MOB-15-02", "title": "Bretzel", "dose": null },
+          { "exerciseId": "MOB-15-03", "title": "Kneeling Lat Stretch", "dose": null }
+        ]
+      }
+    ],
+    "instructions": [
+      "During cooldown, perform box breathing: 5-second inhale, 5-second hold, 5-second exhale, 5-second hold. Continue for the duration of the stretch.",
+      "If possible without losing balance, you may close your eyes."
+    ],
+    "sourceDocument": "Off-Season Domination 2025 Full Bodyweight Program",
+    "sourceSection": "Speed Stack A warm-up/cooldown page",
+    "sourceLabel": "View Exercise Demonstrations",
+    "sourceDemoUrl": "https://www.youtube.com/playlist?list=PLAMIllZnMikBopeN4A4PgKYT8AImGsJEN"
+  }
+]

@@ -57,3 +57,7 @@ export function getWeaknessOverlayForDate(date: string) {
 export function getWeaknessOverlaySchedule() {
   return overlay.schedule;
 }
+
+export function getApprovedWeaknessModule(id: string) {
+  return overlay.modules.find((module) => module.id === id) || null;
+}
