@@ -800,14 +800,15 @@ Ground Truth Baseline:
 - Status: Completed locally
 - Lane: Fast lane
 - Owner: Mike / Codex
-- Source: Parent-approved forward plan cutover on 2026-08-13
+- Source: Parent-approved forward plan cutover on 2026-08-13; parent-confirmed Week 9 Sport Load correction on 2026-08-15
 - Problem: Some day titles may imply work that is not represented in executable blocks.
 - Desired outcome: source-plan mismatches are identified honestly and resolved through approved source-update process.
 - In scope: replace contradictory future rows from 2026-08-14 through 2026-09-06, retain fixed Sport Loads and locked phase/Gantt truth, and verify exact source prescriptions.
 - Out of scope: silent content invention or source JSON edits without explicit approval.
-- Acceptance criteria: mismatches are logged with proposed source-review action.
+- Acceptance criteria: Aug 14 is Marc O’Connor Ice only at 90 minutes; Aug 15 Marc is 120 minutes; Aug 16 contains one 60-minute Marc load plus the unchanged scheduled 4v4; no displaced work becomes training debt.
 - Dependencies: v8.4 source package and Mike approval for any source update.
 - Risks: UI workarounds could hide real data-integrity issues.
+- Findings: the forward generator omitted the Aug 14 Marc O’Connor load and retained stale/non-duration Marc details for Aug 15-16. The local correction replaces Aug 14 training work with one 90-minute Marc Sport Load, sets Aug 15 to 120 minutes, and sets Aug 16 Marc to 60 minutes without changing its 4v4 source row.
 - Next action: complete automated integrity checks and parent visual acceptance before commit.
 - Links / evidence: v8.4 dayExecutionPlan/session data.
 

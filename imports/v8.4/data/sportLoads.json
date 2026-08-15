@@ -252,11 +252,20 @@
     "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
   },
   {
+    "date": "2026-08-14",
+    "week": 9,
+    "day": "Friday",
+    "sportLoad": "Marc O’Connor Ice",
+    "details": "90 minutes",
+    "intensity15": 4,
+    "planRule": "Sport Load is the program for this date; no additional workout."
+  },
+  {
     "date": "2026-08-15",
     "week": 9,
     "day": "Saturday",
     "sportLoad": "Marc O’Connor Ice",
-    "details": "Advanced Skills 10:15-11:15",
+    "details": "120 minutes",
     "intensity15": 4,
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
   },
@@ -265,7 +274,7 @@
     "week": 9,
     "day": "Sunday",
     "sportLoad": "Marc O’Connor Ice",
-    "details": "Tryout session 3-4",
+    "details": "60 minutes",
     "intensity15": 4,
     "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
   },

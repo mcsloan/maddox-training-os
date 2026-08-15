@@ -11,6 +11,14 @@ import CanonicalDayLogPage from "./page";
 async function renderLog(date: string) { return renderToStaticMarkup(await CanonicalDayLogPage({ params: Promise.resolve({ date }) })); }
 
 describe("unified canonical date logging route", () => {
+  it("shows only the corrected 90-minute Marc Sport Load on Aug 14", async () => {
+    const html = await renderLog("2026-08-14");
+    expect(html.match(/>Marc O’Connor Ice</g)).toHaveLength(1);
+    expect(html).toContain("90 minutes");
+    expect(html).not.toContain("Game-Speed Puck + Shot");
+    expect(html).not.toContain("Completed?");
+  });
+
   it("shows exact Phase 5 Week 2 A source dose on Aug 18", async () => {
     const html = await renderLog("2026-08-18");
     for (const value of ["Lateral Cross Under Start", "3 sets", "15yd/side", "Rest 30s", "Wall March Hold", "Tempo 0-5-0", "Towel ISO Lateral Squat", "Towel Body Saw to Pike Up", "1.5 Rep Towel Leg Curl", "Split Squat Wall Anti-Rotation Press Hold", "50-Yard Shuttle Run", "52s/2min"]) expect(html).toContain(value);

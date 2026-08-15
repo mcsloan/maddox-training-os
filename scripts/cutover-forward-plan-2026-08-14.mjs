@@ -8,8 +8,13 @@ const cutoff = "2026-08-14";
 const end = "2026-09-06";
 
 const dates = enumerateDates(cutoff, end);
+const correctedMarcLoads = new Map([
+  ["2026-08-14", { details: "90 minutes", intensity15: 4 }],
+  ["2026-08-15", { details: "120 minutes", intensity15: 4 }],
+  ["2026-08-16", { details: "60 minutes", intensity15: 4 }],
+]);
 const approved = new Map([
-  ["2026-08-14", day("Game-Speed Puck + Shot", [work("SKL-HU-15", "Stickhandling", "Head-up stickhandling", 15, "SKL-HU-001;SKL-HU-002"), work("SKL-GS-REACTIVE-15", "Puck Skill", "Speed-with-puck / reactive deking", 15, "SKL-GS-001;SKL-GS-002;SKL-DEKE-001;SKL-DEKE-002;SKL-DEKE-003"), work("SHOT-ACC-20", "Shooting", "Shooting accuracy", 20, "SHOT-ACC-001", "Shot accuracy")])],
+  ["2026-08-14", day("Marc O'Connor Hockey", [sport("MARC-OCONNOR-2026-08-14", "Marc O’Connor Ice")])],
   ["2026-08-15", day("Marc O'Connor Hockey", [sport("MARC-OCONNOR-2026-08-15", "Marc O’Connor Ice")])],
   ["2026-08-16", day("Marc + 4v4 Game-Speed Day", [sport("MARC-OCONNOR-2026-08-16", "Marc O’Connor Ice"), sport("4V4-2026-08-16", "4v4 Hockey")])],
   ["2026-08-17", technicalWeaknessDay()],
@@ -85,7 +90,7 @@ for (const [date, definition] of approved) {
   const existingSession = oldSessions.find((session) => session.date === date);
   for (const item of definition.items.filter((candidate) => candidate.logType === "sportLoadLog")) {
     const old = sportByDateTitle.get(`${date}|${item.entryTitle}`);
-    requiredSports.push(old || {
+    const base = old || {
       date,
       week: existingSession.week,
       day: existingSession.day,
@@ -93,7 +98,9 @@ for (const [date, definition] of approved) {
       details: item.entryTitle === "Tryout" ? "Tryout begins; exact time to be confirmed." : "Approved planned Sport Load.",
       intensity15: item.entryTitle === "Tryout" ? 5 : 4,
       planRule: "Sport Load is the program for this date; no additional workout.",
-    });
+    };
+    const marcCorrection = item.entryTitle === "Marc O’Connor Ice" ? correctedMarcLoads.get(date) : null;
+    requiredSports.push(marcCorrection ? { ...base, ...marcCorrection } : base);
   }
 }
 
@@ -125,9 +132,9 @@ function updateImportQaReport() {
   const report = read("importQaReport.json");
   report.packageVersion = "v8.4-forward-cutover-2026-08-14";
   report.generatedAt = "2026-08-13T00:00:00-04:00";
-  report.recordCounts["dayExecutionPlan.json"] = 544;
-  report.recordCounts["sessions.json"] = 84;
-  report.recordCounts["sportLoads.json"] = 38;
+  report.recordCounts["dayExecutionPlan.json"] = read("dayExecutionPlan.json").length;
+  report.recordCounts["sessions.json"] = read("sessions.json").length;
+  report.recordCounts["sportLoads.json"] = read("sportLoads.json").length;
   write("importQaReport.json", report);
 }
 function updateManifest(files) {

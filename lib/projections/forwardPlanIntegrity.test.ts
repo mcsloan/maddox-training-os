@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { buildForwardPlanIntegrityMatrix, inspectForwardDate } from "./forwardPlanIntegrity";
 import { projectCanonicalDay } from "./canonicalDay";
+import { sportLoads } from "../imports/v8_4";
 
 describe("parent-approved forward plan integrity", () => {
   it("passes every Aug 14-Sep 6 date or marks the approved unknown tryout window event-dependent", () => {
@@ -13,10 +14,26 @@ describe("parent-approved forward plan integrity", () => {
   });
 
   it.each([
-    ["2026-08-14", 50], ["2026-08-17", 47], ["2026-08-18", 75], ["2026-08-19", 55],
+    ["2026-08-14", 0], ["2026-08-17", 47], ["2026-08-18", 75], ["2026-08-19", 55],
     ["2026-08-20", 50], ["2026-08-21", 47], ["2026-08-22", 20], ["2026-08-29", 35],
     ["2026-08-30", 30], ["2026-08-31", 26], ["2026-09-02", 20],
   ])("locks displayed training duration for %s", (date, total) => expect(inspectForwardDate(date).trainingTotal).toBe(total));
+
+  it("locks the parent-confirmed Aug 14-16 Marc O’Connor Sport Loads without changing Sunday 4v4", () => {
+    const expected = [
+      ["2026-08-14", 90, ["MARC-OCONNOR-2026-08-14"]],
+      ["2026-08-15", 120, ["MARC-OCONNOR-2026-08-15"]],
+      ["2026-08-16", 60, ["MARC-OCONNOR-2026-08-16", "4V4-2026-08-16"]],
+    ] as const;
+    for (const [date, marcMinutes, ids] of expected) {
+      const day = projectCanonicalDay(date);
+      expect(day.activities.filter((activity) => activity.summaryVisible).map((activity) => activity.id)).toEqual(ids);
+      expect(day.sportLoads.find((load) => load.title === "Marc O’Connor Ice")?.plannedDurationMinutes).toBe(marcMinutes);
+      expect(day.duration.projectedExecution.trainingWorkMinutes).toBe(0);
+    }
+    const sunday4v4 = sportLoads.find((load) => load.date === "2026-08-16" && load.sportLoad === "4v4 Hockey");
+    expect(sunday4v4?.details).toBe("Bell Sensplex Myers Automotive Arena: 6:55-7:20 PM and 7:55-8:20 PM. Planned 4v4 hockey stimulus; possible Marc O’Connor same-day on-ice stack.");
+  });
 
   it("references the exact existing Phase 5 Week 2 Speed Stack A prescription", () => {
     const day = projectCanonicalDay("2026-08-18");

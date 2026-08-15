@@ -4,7 +4,6 @@ const dates = enumerateDates("2026-08-14", "2026-09-06");
 const screenshotDates = new Set(["2026-08-14", "2026-08-16", "2026-08-18", "2026-08-24", "2026-08-31"]);
 const forbidden = /Use the referenced approved source drill\/module|Quality first|Weakness Overlay|None Camp Provides Conditioning|source missing|approved module reference|content gap|unresolved mapping/i;
 const expectedDemoCounts: Record<string, number> = {
-  "2026-08-14": 3,
   "2026-08-17": 1,
   "2026-08-18": 9,
   "2026-08-19": 3,
@@ -44,11 +43,11 @@ test("all forward Day and Log routes satisfy the read-only product contract", as
 });
 
 test("approved Skill/Shot/IQ videos use the accessible puck control", async ({ page }) => {
-  await page.goto("/log/2026-08-14");
+  await page.goto("/log/2026-08-19");
   const expected = [
-    ["Number/Finger Callout Handling", "https://www.youtube.com/watch?v=t1yWo7DUx_M"],
     ["Read-React Puck Carry", "https://www.icehockeysystems.com/practice/1/85576"],
     ["Backhand Toe-Drag Escape", "https://www.youtube.com/watch?v=zQgpIbT5K3A&t=7s"],
+    ["Sprint-In Shot", "https://www.icehockeysystems.com/skill-development-videos/shooting-stride"],
   ] as const;
   for (const [name, url] of expected) {
     const link = page.getByRole("link", { name: `Watch demo: ${name}` });

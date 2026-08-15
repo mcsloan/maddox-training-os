@@ -112,7 +112,7 @@ describe("Plan Sport Load overlay", () => {
       endOffset: getDayColumnIndex("2026-08-03"),
     });
     expect(getSpanGridColumns("2026-08-03", "2026-08-03")).toEqual({ startColumn: 50, endColumn: 51 });
-    expect(marcRow?.markers.map((marker) => marker.dateLabel)).toEqual(["Jul 18", "Jul 25", "Aug 15", "Aug 16"]);
+    expect(marcRow?.markers.map((marker) => marker.dateLabel)).toEqual(["Jul 18", "Jul 25", "Aug 14", "Aug 15", "Aug 16"]);
     expect(marcRow?.markers.every((marker) => marker.durationKind === "single-day")).toBe(true);
     expect(marcRow?.markers.every((marker) => marker.displayKind === "marker")).toBe(true);
   });

@@ -101,6 +101,10 @@ function inferTimeLabel(details: string) {
 
 function inferDurationMinutes(details: string, date: string) {
   if (date >= "2026-08-14") {
+    const explicitMinutes = details.match(/\b(\d+)\s*minutes?\b/i);
+    if (explicitMinutes) return Number(explicitMinutes[1]);
+    const explicitHours = details.match(/\b(\d+(?:\.\d+)?)\s*hours?\b/i);
+    if (explicitHours) return Number(explicitHours[1]) * 60;
     if (/2\s*[–-]\s*3 hours/i.test(details) || /2\s*[–-]\s*3h/i.test(details)) return null;
     const ranges = Array.from(details.matchAll(/(\d{1,2}):(\d{2})\s*(?:AM|PM)?\s*[-–]\s*(\d{1,2}):(\d{2})\s*(AM|PM)?/gi));
     if (ranges.length) return ranges.reduce((sum, match) => {

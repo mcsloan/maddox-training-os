@@ -214,7 +214,7 @@ describe("planned activity presentation", () => {
   });
 
   it("keeps Day and active Session planned activity displays aligned for every v8.4 active session date", () => {
-    expect(activeSessionDates).toHaveLength(75);
+    expect(activeSessionDates).toHaveLength(74);
 
     for (const date of activeSessionDates) {
       const executionEntries = getV84DayExecutionEntries(date);

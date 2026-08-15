@@ -89,7 +89,7 @@ describe("v8.4 calendar coverage", () => {
   });
 
   it("keeps updated v8.4 import counts aligned with the approved forward cutover", () => {
-    expect(sportLoads).toHaveLength(38);
-    expect(dayExecutionPlan).toHaveLength(544);
+    expect(sportLoads).toHaveLength(39);
+    expect(dayExecutionPlan).toHaveLength(542);
   });
 });

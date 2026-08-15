@@ -19,7 +19,7 @@ describe("compact canonical Day route", () => {
   });
 
   it.each([
-    ["2026-08-14", "Game-Speed Puck + Shot", "Training total: 50 min"],
+    ["2026-08-14", "Marc O&#x27;Connor Hockey", "90 min"],
     ["2026-08-15", "Marc O&#x27;Connor Hockey", "Marc O’Connor Ice"],
     ["2026-08-16", "Marc + 4v4 Game-Speed Day", "4v4 Hockey"],
     ["2026-08-18", "Speed Stack A + Puck Quality", "Training total: 75 min"],
@@ -38,9 +38,17 @@ describe("compact canonical Day route", () => {
   });
 
   it("integrates shooting focus and never duplicates it as a second workout", async () => {
-    const html = await renderDay("2026-08-14");
+    const html = await renderDay("2026-08-17");
     expect(html).toContain("Focus: Shot accuracy");
     expect(html.match(/Shooting accuracy/g)).toHaveLength(1);
+  });
+
+  it("renders the corrected Aug 14 Marc Sport Load without displaced training debt", async () => {
+    const html = await renderDay("2026-08-14");
+    expect(html.match(/>Marc O’Connor Ice</g)).toHaveLength(1);
+    expect(html).toContain("90 min");
+    expect(html).not.toContain("Game-Speed Puck + Shot");
+    expect(html).not.toContain("Training total:");
   });
 
   it("renders stacked Aug 16 Sport Loads once each and no training total", async () => {

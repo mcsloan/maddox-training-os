@@ -72,7 +72,7 @@ export function inspectForwardDate(date: string): ForwardPlanIntegrityRow {
 }
 
 function isSportOnlyDate(date: string) {
-  return ["2026-08-15", "2026-08-16", "2026-08-23", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-09-01"].includes(date);
+  return ["2026-08-14", "2026-08-15", "2026-08-16", "2026-08-23", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-09-01"].includes(date);
 }
 
 function enumerateDates(start: string, end: string) {

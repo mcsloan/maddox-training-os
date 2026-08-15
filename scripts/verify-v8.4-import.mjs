@@ -36,13 +36,13 @@ const normalizedNeedsReviewCount = Array.isArray(needsReview)
   ? needsReview.filter((row) => String(row?.canonicalExerciseId || "") !== "NO_REMAINING_REVIEW_ROWS").length
   : null;
 
-if (!Array.isArray(dayExecutionPlan) || dayExecutionPlan.length !== 544) issues.push("dayExecutionPlan.json should contain 544 records after the approved forward cutover.");
+if (!Array.isArray(dayExecutionPlan) || dayExecutionPlan.length !== 542) issues.push("dayExecutionPlan.json should contain 542 records after the approved Week 9 Sport Load correction.");
 if (!Array.isArray(sessions) || sessions.length !== 84) issues.push("sessions.json should contain 84 records.");
 if (!Array.isArray(drillCards) || drillCards.length !== 154) issues.push("drillCards.json should contain 154 records.");
 if (!Array.isArray(exerciseVideoMap) || exerciseVideoMap.length !== 161) issues.push("exerciseVideoMap.json should contain 161 records.");
 const sportLoads = readJson(path.join(packageDir, "data/sportLoads.json"));
 const speedStackSupportModules = readJson(path.join(packageDir, "data/speedStackSupportModules.json"));
-if (!Array.isArray(sportLoads) || sportLoads.length !== 38) issues.push("sportLoads.json should contain 38 records after the approved forward cutover.");
+if (!Array.isArray(sportLoads) || sportLoads.length !== 39) issues.push("sportLoads.json should contain 39 records after the approved Week 9 Sport Load correction.");
 if (!Array.isArray(speedStackSupportModules) || speedStackSupportModules.length !== 2) issues.push("speedStackSupportModules.json should contain WU-10 and MOB-15.");
 if (importQaReport.packageVersion !== "v8.4-forward-cutover-2026-08-14") issues.push("importQaReport packageVersion should identify the approved forward cutover.");
 if (importQaReport.recordCounts?.["dayExecutionPlan.json"] !== dayExecutionPlan.length) issues.push("importQaReport dayExecutionPlan count mismatch.");

@@ -284,8 +284,8 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
     issues.push({ file: "data/exerciseVideoMap.json", message: "Video map should contain 161 records." });
   }
 
-  if (dayExecutionPlan.length !== 630) {
-    issues.push({ file: "data/dayExecutionPlan.json", message: "Day execution plan should contain 630 records." });
+  if (dayExecutionPlan.length !== 542) {
+    issues.push({ file: "data/dayExecutionPlan.json", message: "Day execution plan should contain 542 records." });
   }
 
   if (needsReview.length !== 0) {
