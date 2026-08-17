@@ -27,6 +27,8 @@ export interface CalendarDayScreenProjection extends ScreenProjectionBase {
   isStarted: boolean;
   isCompleted: boolean;
   hasLoggedSportLoad: boolean;
+  evidenceLabel: "Logged" | "Partially logged" | "KPI" | "Sport Load" | "Not logged";
+  primaryAction: "Update" | "Log";
 }
 
 export interface HistoryDayScreenProjection extends ScreenProjectionBase {
@@ -93,12 +95,33 @@ export function buildTodayScreenProjection(day: DayProjection): TodayScreenProje
 }
 
 export function buildCalendarDayProjection(day: DayProjection): CalendarDayScreenProjection {
+  const evidencePresentation = calendarEvidencePresentation(day);
   return {
     ...baseProjection(day),
     isStarted: day.status.hasAnyRecord,
     isCompleted: day.status.statuses.includes("completed") || day.status.statuses.includes("completed_with_deferred"),
     hasLoggedSportLoad: day.status.statuses.includes("sport_load_logged"),
+    ...evidencePresentation,
   };
+}
+
+function calendarEvidencePresentation(day: DayProjection): Pick<CalendarDayScreenProjection, "evidenceLabel" | "primaryAction"> {
+  const requiredTraining = day.plannedActivities.some((activity) => activity.kind === "training_work" && activity.required !== false);
+  const requiredSportLoads = day.plannedActivities.filter((activity) => activity.kind === "sport_load" && activity.required !== false).length;
+  const requiredKpis = day.plannedActivities.filter((activity) => activity.kind === "kpi" && activity.required !== false).length;
+  const completedTraining = day.records.sessionAttempts.some((record) => record.status === "completed" || (record.completionPercent ?? 0) >= 100);
+  const completedSportLoads = day.records.sportLoadLogs.filter((record) => record.status === "logged" || (record.completionPercent ?? 0) >= 100).length;
+  const addressedKpis = day.records.kpiResults.filter((record) => record.status === "completed" || record.status === "deferred" || record.deferred).length;
+  const requiredStreamsComplete =
+    (!requiredTraining || completedTraining)
+    && (!requiredSportLoads || completedSportLoads >= requiredSportLoads)
+    && (!requiredKpis || addressedKpis >= requiredKpis);
+
+  if (day.status.hasAnyRecord && requiredStreamsComplete) return { evidenceLabel: "Logged", primaryAction: "Update" };
+  if (day.status.hasAnyRecord) return { evidenceLabel: "Partially logged", primaryAction: "Update" };
+  if (requiredKpis) return { evidenceLabel: "KPI", primaryAction: "Log" };
+  if (requiredSportLoads) return { evidenceLabel: "Sport Load", primaryAction: "Log" };
+  return { evidenceLabel: "Not logged", primaryAction: "Log" };
 }
 
 export function buildHistoryDayProjection(day: DayProjection): HistoryDayScreenProjection {

@@ -1,84 +1,115 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { LoadChip } from "@/components/LoadChips";
+import { useEffect, useMemo, useState } from "react";
+import { conciseCalendarPhase, findCalendarSportLoadLog, localCalendarDate, orderCalendarWeeks } from "@/lib/calendarCompact";
 import { getV84CalendarWeeks } from "@/lib/imports/v8_4/calendar";
-import { getV84SportLoadsForDate } from "@/lib/imports/v8_4/daily";
-import { getV84SessionByDate } from "@/lib/imports/v8_4/session";
-import { formatPlanDate, getDayTags, getPlanDay, getPlanDayDisplayModel, getWeekLoadLabel, userFacingLoadRule, userFacingPlanText } from "@/lib/trainingData";
-import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
-import { ExternalLoadLog } from "@/lib/types";
+import { projectCanonicalDay } from "@/lib/projections/canonicalDay";
 import { buildDayEvidenceProjection } from "@/lib/projections/dayEvidence";
 import { buildCalendarDayProjection } from "@/lib/projections/screenProjections";
-import { loadStandaloneKpiResults, SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
-import { buildDayPresentation } from "@/lib/projections/dayPresentation";
+import { loadStandaloneKpiResults, type SyncedKPIResult } from "@/lib/storage/cloudKpiRepository";
+import { loadTrainingHistory } from "@/lib/storage/completedSessionRepository";
+import { loadExternalLoadLogs } from "@/lib/storage/externalLoadRepository";
+import { loadTrainingWorkLogs } from "@/lib/storage/trainingWorkRepository";
+import { formatPlanDate } from "@/lib/trainingData";
+import type { ExternalLoadLog, SessionLog, TrainingWorkLog } from "@/lib/types";
 
 export default function CalendarPage() {
-  const [logs, setLogs] = useState<ExternalLoadLog[]>([]);
+  const [today] = useState(localCalendarDate);
+  const [expandedDate, setExpandedDate] = useState<string | null>(null);
+  const [sportLogs, setSportLogs] = useState<ExternalLoadLog[]>([]);
+  const [trainingLogs, setTrainingLogs] = useState<TrainingWorkLog[]>([]);
+  const [sessionLogs, setSessionLogs] = useState<SessionLog[]>([]);
   const [kpiResults, setKpiResults] = useState<SyncedKPIResult[]>([]);
+  const weeks = useMemo(() => orderCalendarWeeks(getV84CalendarWeeks(), today), [today]);
+
   useEffect(() => {
-    loadExternalLoadLogs().then((result) => setLogs(result.logs));
-    loadStandaloneKpiResults().then((result) => setKpiResults(result.results));
+    let active = true;
+    setTrainingLogs(loadTrainingWorkLogs());
+    loadExternalLoadLogs().then((result) => { if (active) setSportLogs(result.logs); });
+    loadStandaloneKpiResults().then((result) => { if (active) setKpiResults(result.results); });
+    loadTrainingHistory().then((result) => { if (active) setSessionLogs(result.sessions); });
+    return () => { active = false; };
   }, []);
-  return (
-    <div>
-      <div className="mb-6">
-        <p className="label">Daily calendar</p>
-        <h1 className="text-4xl font-black">Training Days</h1>
-        <p className="mt-2 text-slate-600">Open any scheduled day to inspect the complete plan before starting.</p>
-      </div>
-      <div className="space-y-8">
-        {getV84CalendarWeeks().map((week) => {
-          return (
-            <section id={`week-${week.weekNumber}`} className="scroll-mt-24" key={week.weekNumber}>
-              <div className="mb-3 flex flex-wrap items-end justify-between gap-2"><div><p className="label">Week {week.weekNumber} · {getWeekLoadLabel(week.weekNumber)}</p><h2 className="text-2xl font-black">{getWeekLoadLabel(week.weekNumber)}</h2></div><p className="text-sm font-semibold text-slate-500">{formatPlanDate(week.startDate)} to {formatPlanDate(week.endDate)}</p></div>
-              <div className="grid gap-4 lg:grid-cols-2">
-                {week.dates.map((date) => {
-                  const day = getPlanDay(date);
-                  const v84Session = getV84SessionByDate(date);
-                  const loads = getV84SportLoadsForDate(date);
-                  const tags = getDayTags(date);
-                  const display = getPlanDayDisplayModel(date);
-                  const intensity = Math.max(day?.intensity || (v84Session?.hasTrainingWork ? 3 : 0), ...loads.map((load) => load.plannedIntensity));
-                  const dayTitle = day?.primarySession || v84Session?.summary || loads[0]?.title || "Recovery / planning day";
-                  const dayType = day ? userFacingPlanText(day.dayRole) : v84Session?.dayType;
-                  const offIceSummary = day?.primarySession || v84Session?.summary || "None planned";
-                  const recoverySummary = day?.recovery || v84Session?.speedStackAlignment || loads[0]?.recoveryRule || "Recovery as needed";
-                  const evidenceProjection = buildDayEvidenceProjection({
-                    date,
-                    weekNumber: week.weekNumber,
-                    sportLoadLogs: logs,
-                    kpiResults,
-                    projection: "preview",
-                  });
-                  const calendarProjection = buildCalendarDayProjection(evidenceProjection);
-                  const presentation = buildDayPresentation({
-                    date,
-                    day,
-                    display,
-                    tags,
-                    sportLoads: loads,
-                    evidence: evidenceProjection,
-                    fallbackTitle: v84Session?.summary,
-                  });
-                  return <article className="card border-2 border-transparent transition hover:border-blue" key={date}>
-                    <Link href={`/day/${date}`} className="block"><div className="flex items-start justify-between gap-3"><div><p className="label">{formatPlanDate(date, { weekday: "long", month: "short", day: "numeric" })} · Week {week.weekNumber}</p><h3 className="text-xl font-black">{dayTitle}</h3></div><div className="flex flex-wrap justify-end gap-2">{dayType && <span className="rounded-full bg-ice px-3 py-1 text-xs font-black text-blue">{dayType}</span>}<span className="rounded-full bg-lime/20 px-3 py-1 text-xs font-black text-navy">{calendarProjection.summaryLabel}</span></div></div>
-                    <div className="mt-3 flex flex-wrap gap-2">{presentation.chips.map((chip) => <LoadChip key={chip.key} kind={chip.kind} label={chip.label} />)}</div>
-                    <div className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
-                      <p><strong>Method phase:</strong> {display.methodologyPhase}</p><p><strong>Load:</strong> {intensity}/5</p>
-                      <p><strong>Off-ice:</strong> {offIceSummary}</p><p><strong>Sport Load:</strong> {calendarProjection.hasLoggedSportLoad ? "Logged" : loads.length ? `${loads.length} planned` : "None planned"}</p>
-                      <p><strong>Recovery:</strong> {userFacingPlanText(recoverySummary)}</p><p><strong>Parent cue:</strong> {userFacingPlanText(day?.parentCue || v84Session?.trainingPhase || "Prioritize recovery and ask about energy.")}</p>
-                    </div>
-                    <p className="mt-3 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900"><strong>Load rule:</strong> {userFacingLoadRule(loads[0]?.doNotDoRule || day?.doNotDo, loads.length > 0)}</p></Link>
-                    {loads.length > 0 && <div className="mt-3 space-y-2">{loads.map((load) => { const log = logs.find((item) => item.externalLoadId === load.id); return <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-ice p-3" key={load.id}><p className="text-sm font-semibold">{log ? `Logged: effort ${log.effort ?? "—"}/5 · energy ${log.energyAfter ?? "—"}/5 · confidence ${log.confidence ?? "—"}/5 · soreness ${log.soreness}/5${log.painFlag ? " · pain flagged" : ""}` : "Not logged"}</p><Link className={log ? "btn-secondary" : "btn-primary"} href={`/external-load/${encodeURIComponent(load.id)}`}>{log ? `Update ${load.title}` : `Log ${load.title}`}</Link></div>; })}</div>}
-                  </article>;
-                })}
+
+  return <div>
+    <header className="mb-5">
+      <p className="label">12-week plan</p>
+      <h1 className="text-4xl font-black">Calendar</h1>
+      <p className="mt-2 text-slate-600">Find a date, review the essentials, and go straight to today&apos;s logging flow.</p>
+    </header>
+    <div className="space-y-6">
+      {weeks.map((week, weekIndex) => <section data-calendar-week={week.weekNumber} id={`week-${week.weekNumber}`} key={week.weekNumber}>
+        <div className="mb-2 flex flex-wrap items-end justify-between gap-1 border-b border-rink pb-2">
+          <h2 className="text-lg font-black">Week {week.weekNumber} · {conciseCalendarPhase(week.trainingPhase)}</h2>
+          <p className="text-xs font-semibold text-slate-500">{weekRange(week.startDate, week.endDate)}</p>
+        </div>
+        {weekIndex === 0 && today >= week.startDate && today <= week.endDate && <p className="sr-only">Current week</p>}
+        <div className="overflow-hidden rounded-2xl border border-rink bg-white">
+          <div aria-hidden="true" className="hidden grid-cols-[8rem_minmax(0,2fr)_minmax(10rem,1.4fr)_5rem_8rem_5rem_4rem] gap-3 bg-ice px-3 py-2 text-xs font-black uppercase tracking-wide text-slate-500 md:grid">
+            <span>Day</span><span>Plan</span><span>Week / Phase</span><span>Load</span><span>Status</span><span>Action</span><span>Expand</span>
+          </div>
+          {week.dates.map((date) => {
+            const day = projectCanonicalDay(date);
+            const isToday = date === today;
+            const training = day.activities.filter((activity) => activity.summaryVisible && !["sport_load_log", "kpi_log"].includes(activity.logType));
+            const evidence = buildDayEvidenceProjection({
+              date,
+              weekNumber: week.weekNumber,
+              sportLoadLogs: sportLogs,
+              kpiResults,
+              sessionAttempts: sessionLogs,
+              trainingWorkLogs: trainingLogs,
+              projection: "preview",
+            });
+            const calendarProjection = buildCalendarDayProjection(evidence);
+            const sportForDate = day.sportLoads
+              .map((load) => findCalendarSportLoadLog(load, sportLogs))
+              .filter((log): log is ExternalLoadLog => log !== null);
+            const expanded = expandedDate === date;
+            return <article className={isToday ? "border-l-4 border-blue bg-cyan-50" : "border-l-4 border-transparent"} data-calendar-date={date} data-today={isToday ? "true" : undefined} key={date}>
+              <div className="grid gap-2 border-t border-rink px-3 py-3 first:border-t-0 md:grid-cols-[8rem_minmax(0,2fr)_minmax(10rem,1.4fr)_5rem_8rem_5rem_4rem] md:items-center md:gap-3">
+                <div className="flex items-center gap-2 md:block"><p className="font-black">{formatPlanDate(date, { weekday: "short", month: "short", day: "numeric" })}</p>{isToday && <span className="rounded bg-blue px-2 py-0.5 text-[10px] font-black text-white">TODAY</span>}</div>
+                <h3 className="font-black leading-tight">{day.title}</h3>
+                <p className="text-sm text-slate-600"><span className="md:hidden">W{week.weekNumber} · </span>{conciseCalendarPhase(day.phase)}</p>
+                <p className="text-sm font-bold"><span className="md:hidden">Load </span>{day.intensity}/5</p>
+                <p><span className="inline-flex rounded-full bg-ice px-2 py-1 text-xs font-black text-navy">{calendarProjection.evidenceLabel}</span></p>
+                <Link aria-label={`${calendarProjection.primaryAction} training for ${formatPlanDate(date, { weekday: "long", month: "long", day: "numeric" })}`} className="font-black text-blue" href={`/log/${date}`}>{calendarProjection.primaryAction} ›</Link>
+                <button aria-expanded={expanded} aria-label={`${expanded ? "Hide" : "Show"} details for ${formatPlanDate(date, { weekday: "long", month: "long", day: "numeric" })}`} className="justify-self-start rounded-lg border border-rink px-2 py-1 text-sm font-black hover:bg-ice md:justify-self-center" onClick={() => setExpandedDate(expanded ? null : date)} type="button">{expanded ? "▴" : "▾"}<span className="ml-1 md:sr-only">Details</span></button>
               </div>
-            </section>
-          );
-        })}
-      </div>
+              {expanded && <CalendarDetails date={date} day={day} sportLogs={sportForDate} trainingTitles={training.map((activity) => activity.athleteTitle)} />}
+            </article>;
+          })}
+        </div>
+      </section>)}
     </div>
-  );
+  </div>;
+}
+
+function CalendarDetails({ date, day, sportLogs, trainingTitles }: { date: string; day: ReturnType<typeof projectCanonicalDay>; sportLogs: ExternalLoadLog[]; trainingTitles: string[] }) {
+  return <div className="border-t border-rink bg-slate-50 px-4 py-4 text-sm" data-calendar-details={date}>
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <Detail label="Methodology" value={day.phase} />
+      {trainingTitles.length > 0 && <Detail label="Training" value={trainingTitles.join(" · ")} />}
+      {day.kpi.isCheckpoint && <Detail label="Testing" value={`${day.kpi.kpiIds.length}-item KPI Test`} />}
+      {day.sportLoads.map((load) => {
+        const log = findCalendarSportLoadLog(load, sportLogs);
+        return <div key={load.id}><p className="label">Sport Load</p><p className="font-black">{load.title}</p><p className="mt-1 text-slate-600">{load.notes}</p>{log && <p className={`mt-1 font-semibold ${log.attended ? "text-green-800" : "text-amber-800"}`}>{log.attended ? "Logged" : "Partially logged"} · {log.actualDuration ?? "—"} min · effort {log.effort ?? "—"}/5</p>}</div>;
+      })}
+      <Detail label="Recovery" value={day.presentation.recovery} />
+      <Detail label="Parent cue" value={day.presentation.parentCue} />
+      <Detail label="Load rule" value={day.presentation.loadRule} />
+    </div>
+  </div>;
+}
+
+function Detail({ label, value }: { label: string; value?: string | null }) {
+  if (!value) return null;
+  return <div><p className="label">{label}</p><p className="font-semibold text-slate-700">{value}</p></div>;
+}
+
+function weekRange(startDate: string, endDate: string) {
+  const start = formatPlanDate(startDate, { month: "short", day: "numeric" });
+  const end = formatPlanDate(endDate, { month: "short", day: "numeric" });
+  return `${start}–${end}`;
 }

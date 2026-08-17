@@ -149,6 +149,52 @@ describe("screen projections", () => {
     expect(buildHistoryDayProjection(notStarted).groups.trainingWork.count).toBe(0);
   });
 
+  it("owns Calendar evidence labels and actions for training, Sport Load, KPI, and mixed days", () => {
+    const completedTraining = buildCalendarDayProjection(buildDayProjection({
+      date: "fixture-training-complete",
+      plannedActivities: [{ kind: "training_work" }],
+      sessionAttempts: [{ kind: "training_work", status: "completed", completionPercent: 100 }],
+    }));
+    const partialTraining = buildCalendarDayProjection(buildDayProjection({
+      date: "fixture-training-partial",
+      plannedActivities: [{ kind: "training_work" }],
+      sessionAttempts: [{ kind: "training_work", status: "in-progress", completionPercent: 40 }],
+    }));
+    const unstartedTraining = buildCalendarDayProjection(buildDayProjection({
+      date: "fixture-training-unstarted",
+      plannedActivities: [{ kind: "training_work" }],
+      projection: "preview",
+    }));
+    const unloggedSport = buildCalendarDayProjection(buildDayProjection({
+      date: "fixture-sport-unlogged",
+      plannedActivities: [{ kind: "sport_load" }],
+      projection: "preview",
+    }));
+    const loggedSport = buildCalendarDayProjection(buildDayProjection({
+      date: "fixture-sport-logged",
+      plannedActivities: [{ kind: "sport_load" }],
+      sportLoadLogs: [{ kind: "sport_load", status: "logged", completionPercent: 100 }],
+    }));
+    const unstartedKpi = buildCalendarDayProjection(buildDayProjection({
+      date: "fixture-kpi-unstarted",
+      plannedActivities: [{ kind: "kpi" }],
+      projection: "preview",
+    }));
+    const mixedPartial = buildCalendarDayProjection(buildDayProjection({
+      date: "fixture-mixed-partial",
+      plannedActivities: [{ kind: "training_work" }, { kind: "sport_load" }],
+      sessionAttempts: [{ kind: "training_work", status: "completed", completionPercent: 100 }],
+    }));
+
+    expect(completedTraining).toMatchObject({ evidenceLabel: "Logged", primaryAction: "Update" });
+    expect(partialTraining).toMatchObject({ evidenceLabel: "Partially logged", primaryAction: "Update" });
+    expect(unstartedTraining).toMatchObject({ evidenceLabel: "Not logged", primaryAction: "Log" });
+    expect(unloggedSport).toMatchObject({ evidenceLabel: "Sport Load", primaryAction: "Log" });
+    expect(loggedSport).toMatchObject({ evidenceLabel: "Logged", primaryAction: "Update" });
+    expect(unstartedKpi).toMatchObject({ evidenceLabel: "KPI", primaryAction: "Log" });
+    expect(mixedPartial).toMatchObject({ evidenceLabel: "Partially logged", primaryAction: "Update" });
+  });
+
   it("builds a week dashboard rollup from day projections", () => {
     const week = buildWeekDashboardProjection([
       buildDayProjection({

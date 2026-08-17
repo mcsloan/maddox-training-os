@@ -91,7 +91,7 @@ export function mapSportLoadLogToProjectionRecord(log: SportLoadProjectionSource
 }
 
 export function mapKpiResultToProjectionRecord(result: KpiProjectionSource): DayStatusRecord {
-  const deferred = result.deferred === true || result.status === "deferred";
+  const deferred = result.deferred === true || result.status === "deferred" || result.testStatus === "deferred";
   return {
     id: result.id,
     kind: "kpi",
