@@ -11,6 +11,7 @@
     "vercel:build": "npm run build",
     "test": "vitest run",
     "qa:forward": "playwright test --config=playwright.forward.config.ts",
+    "checkpoint:status": "node scripts/checkpoint-status.mjs",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

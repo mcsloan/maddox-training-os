@@ -48,6 +48,18 @@ This is not just a checklist app. It is intended to become a professional-grade 
 - Vercel Production must point to production.
 - No fake/test records in production.
 
+## Work Branch and Remote Continuity Policy
+
+- `main` is the Production release branch. Normal feature, fix, infrastructure, and documentation work must begin on `work/<short-task-name>`.
+- Direct development on `main` is forbidden unless Mike explicitly authorizes an emergency Production correction.
+- A validated `work/*` checkpoint may be committed and pushed to GitHub without Production approval. Push is continuity and review; it is not release.
+- The default flow is `main` -> `work/<task>` -> local/Codespaces QA -> validated commit -> GitHub push -> Vercel Preview -> Mike review -> explicit release approval -> `main` -> Production.
+- Local, Codespaces, and Vercel Preview development must target staging. An `unknown` environment is unsafe for write-capable testing.
+- On an authorized `work/*` task, Codex may commit and push meaningful validated checkpoints without further Production approval.
+- Codex must not merge to `main`, push work onto `main`, deploy Production, alter Production environment variables, or write/migrate/seed Production Supabase without Mike's explicit authorization.
+- Prefer unattended completion as validated, committed, pushed to the work branch, and ready for remote review—not uncommitted local WIP.
+- Operational commands, Codespaces setup, Preview safety, and recovery steps live in `docs/CLOUD_DEVELOPMENT.md`.
+
 ## Agentic Workflow v1
 
 Use repo files as the handoff contract between ChatGPT, Codex, Terminal, GitHub, Vercel, and Supabase.

@@ -153,6 +153,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 4.8 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Production runtime smoke passed after env split; verify a fresh Preview deployment uses staging before write testing. |
 | 4.9 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads without true daily Gantt semantics | P1 | Completed | Fast lane | Fixed at `8c51cc8`, visually accepted by Mike, pushed, and production-smoked. |
 | 4.9.1 | DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001 | React duplicate key warning for repeated Easy Spin instruction text | P2 | Completed | Fast lane | Fixed at `7a70272`, pushed, and production-smoked with clean KPI browser console; repeated valid content remains twice. |
+| 4.9.2 | CLOUD-CONTINUITY-001 | Cloud Development & Remote Continuity | P1 | In progress | Safe lane | Review the pushed Phase 1 foundation, then verify a fresh Vercel Preview resolves to staging before write-capable Preview QA. |
 | 4.10 | QA-AUTOMATION-OWNERSHIP-001 | Shift recurring smoke/regression testing from Codex to deterministic scripts and CI | P1 | Not started | Docs-only / QA ownership | Define ownership model: Codex writes tests, scripts/CI run repeatable tests, Codex analyzes failures, Mike does product acceptance. |
 | 4.11 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | Not started | Safe lane / QA automation | Add read-only smoke coverage for Today, Day, Calendar, Plan/Gantt, and KPI visibility after ownership scope is captured. |
 | 4.12 | DEF-QA-CODEX-RUNNER-001 | Codex is being used as a recurring manual smoke-test runner | P1 | Not started | Docs-only / QA workflow | Capture the workflow defect and move repeat smoke checks into deterministic scripts/CI. |
@@ -231,7 +232,7 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 
 | Status | IDs |
 | --- | --- |
-| In progress | KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
+| In progress | CLOUD-CONTINUITY-001, KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
 | Production runtime verified / Preview runtime pending | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 |
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026 |
@@ -259,6 +260,37 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | Scope review required | AGENTIC-WORKFLOW-001, AGENTIC-WORKFLOW-002 |
 
 ## Detailed Scope Records
+
+### CLOUD-CONTINUITY-001
+
+- ID: CLOUD-CONTINUITY-001
+- Title: Cloud Development & Remote Continuity
+- Type: Epic
+- Parent: None / Engineering Infrastructure
+- Priority: P1
+- Status: In progress
+- Lane: Safe lane
+- Owner: Mike / Codex
+- Source: Parent-approved infrastructure initiative after the 2026-08-16 Calendar V2 release and the discovery that validated work could remain accessible only in the local iMac working tree.
+- Problem: Meaningful development work can exist only as uncommitted local state on one physical Mac. If that Mac is unavailable, Mike cannot inspect, preserve, continue, preview, or release that work remotely. Current direct-main/localhost development also conflates "push" with "production" and discourages safe remote checkpointing.
+- Desired outcome: Create a durable development model in which work-in-progress is preserved on GitHub work branches, can be developed from a reproducible cloud environment, can be reviewed through non-production previews from mobile/remote devices, and cannot reach Production without explicit release approval.
+- In scope: `work/<task>` branch model; GitHub-backed WIP checkpoints; GitHub Codespaces / devcontainer foundation; staging-only cloud development environment; Vercel Preview workflow verification; Codex unattended checkpoint policy; remote/mobile review continuity; documentation and lightweight safety/status tooling; explicit separation of push/checkpoint from Production release.
+- Out of scope: application feature changes; training-plan changes; Production Supabase writes; database migrations; copying Production data into staging; changing Production credentials; automatic merge to main; automatic Production deployment without Mike approval; replacing the existing staging/production environment truth system.
+- Acceptance criteria:
+  1. Normal feature/fix work occurs on `work/<task>`, not `main`.
+  2. A validated work branch can be committed and pushed without Production deployment.
+  3. `main` remains the Production release branch.
+  4. A reproducible cloud development environment can be created from the repo.
+  5. Cloud development is explicitly staging-only and cannot silently target Production Supabase.
+  6. Work-branch pushes can be remotely reviewed, preferably via Vercel Preview.
+  7. Codex may commit/push validated unattended work on `work/*` but may not merge or deploy Production without Mike's explicit approval.
+  8. If the local Mac becomes unavailable after checkpointing, work remains recoverable/continuable from GitHub.
+  9. No secrets are committed.
+  10. Repository documentation explains the complete local/cloud/preview/release workflow.
+- Dependencies: existing GitHub repository; existing staging Supabase project `npuankmkxbjtlokbpczz`; existing Production Supabase project `mbjcedhysniabbaigsko`; existing GitHub -> Vercel Production deployment; Preview environment mapping must be verified before write-capable Preview QA.
+- Risks: accidental Production deployment if development remains on `main`; Preview accidentally targeting Production data; secrets committed to repository; cloud/local environment drift; unattended Codex crossing the work-branch release boundary.
+- Next action: Review the pushed Phase 1 foundation and verify a fresh Vercel Preview runtime resolves to staging before any write-capable Preview QA.
+- Links / evidence: Current Production checkpoint `4f8862f`; `docs/CLOUD_DEVELOPMENT.md`; `.devcontainer/devcontainer.json`; `scripts/checkpoint-status.mjs`; `DEC-QA-LOCAL-001`; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`; `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`; `AGENTS.md`; parent approval in current session.
 
 ### SCOPE-CONSOLIDATION-001
 
