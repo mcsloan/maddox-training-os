@@ -153,6 +153,7 @@ Every active scope item should use this structure, either as a detailed record b
 | 4.8 | DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 | Configure Vercel Preview and Development Supabase variables to use staging | P1 | Production runtime verified / Preview runtime pending | Environment safety / config change | Production runtime smoke passed after env split; verify a fresh Preview deployment uses staging before write testing. |
 | 4.9 | DEF-GANTT-SPORTLOAD-DURATION-001 | Plan/Gantt displays day-specific Sport Loads without true daily Gantt semantics | P1 | Completed | Fast lane | Fixed at `8c51cc8`, visually accepted by Mike, pushed, and production-smoked. |
 | 4.9.1 | DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001 | React duplicate key warning for repeated Easy Spin instruction text | P2 | Completed | Fast lane | Fixed at `7a70272`, pushed, and production-smoked with clean KPI browser console; repeated valid content remains twice. |
+| 4.9.2 | CAL-UX-MOBILE-DAY-ROWS-001 | Compact mobile Calendar day rows | P1 | Completed locally | Fast lane | Compact mobile rows are validated on the work branch; Mike reviews the Vercel Preview before any release. |
 | 4.10 | QA-AUTOMATION-OWNERSHIP-001 | Shift recurring smoke/regression testing from Codex to deterministic scripts and CI | P1 | Not started | Docs-only / QA ownership | Define ownership model: Codex writes tests, scripts/CI run repeatable tests, Codex analyzes failures, Mike does product acceptance. |
 | 4.11 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | Not started | Safe lane / QA automation | Add read-only smoke coverage for Today, Day, Calendar, Plan/Gantt, and KPI visibility after ownership scope is captured. |
 | 4.12 | DEF-QA-CODEX-RUNNER-001 | Codex is being used as a recurring manual smoke-test runner | P1 | Not started | Docs-only / QA workflow | Capture the workflow defect and move repeat smoke checks into deterministic scripts/CI. |
@@ -235,7 +236,7 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | Production runtime verified / Preview runtime pending | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 |
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026 |
-| Completed locally | DEF-GANTT-SPORTLOAD-DURATION-001, DEF-DAY-KPI-TRUTH-DIVERGENCE-001, DEF-TRAINING-WORK-CANONICAL-DAY-001, DEF-SPORTLOAD-CONDITIONING-CONTRADICTION-001, DEF-SPEEDSTACK-WARMUP-DETAIL-001, PLAN-CONTENT-001, ACTIVITY-LOGGING-001, DEF-031 |
+| Completed locally | CAL-UX-MOBILE-DAY-ROWS-001, DEF-GANTT-SPORTLOAD-DURATION-001, DEF-DAY-KPI-TRUTH-DIVERGENCE-001, DEF-TRAINING-WORK-CANONICAL-DAY-001, DEF-SPORTLOAD-CONDITIONING-CONTRADICTION-001, DEF-SPEEDSTACK-WARMUP-DETAIL-001, PLAN-CONTENT-001, ACTIVITY-LOGGING-001, DEF-031 |
 | Not started | QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-032 |
 | Scope review required | TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
@@ -259,6 +260,37 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 | Scope review required | AGENTIC-WORKFLOW-001, AGENTIC-WORKFLOW-002 |
 
 ## Detailed Scope Records
+
+### CAL-UX-MOBILE-DAY-ROWS-001
+
+- ID: CAL-UX-MOBILE-DAY-ROWS-001
+- Title: Compact mobile Calendar day rows
+- Type: Defect / UX
+- Parent: Calendar V2 / `DEC-CALENDAR-002`
+- Priority: P1
+- Status: Completed locally
+- Lane: Fast lane
+- Owner: Mike / Codex
+- Source: Mike mobile Calendar review on 2026-08-18.
+- Problem: Mobile Calendar renders individual dates as large stacked cards, defeating the compact Calendar V2 scanning model.
+- Desired outcome: On mobile, Calendar preserves one compact horizontal row per day inside a seven-row week group.
+- In scope: responsive Calendar row presentation; compact day/date, title, load, status, action, Today marker, and Details control; mobile density and overflow regression coverage.
+- Out of scope: data architecture changes; evidence projection changes; persistence changes; Supabase changes; training-plan changes; deleting `/day` routes; unnecessary desktop redesign.
+- Acceptance criteria:
+  1. One day renders per compact horizontal row; no giant mobile day cards.
+  2. Each week remains a grouped block of seven rows.
+  3. Date/day and plan title remain immediately identifiable.
+  4. Load, status, direct `/log/<date>` action, and Details remain compactly visible.
+  5. Today is highlighted without materially increasing row height or duplicating its label.
+  6. Only the selected row expands; collapsed rows do not duplicate expanded details.
+  7. Touch controls remain semantic, accessible, and usable.
+  8. Mobile has no horizontal page overflow and supports rapid multi-date scanning.
+  9. Desktop/tablet Calendar behavior remains intact.
+  10. Canonical evidence/status logic remains untouched.
+- Dependencies: accepted Calendar V2 implementation; `DEC-CALENDAR-002`; TCG-005 and TCG-007.
+- Risks: over-compression could reduce legibility or touch usability; responsive changes could unintentionally alter desktop grid placement.
+- Next action: Mike reviews the work-branch Vercel Preview before separately authorizing any merge/release.
+- Links / evidence: Parent-approved overnight work order; `app/calendar/page.tsx`; `e2e/calendar-compact.spec.ts`; 390x844 browser measurement showed seven 73.5–74px current-week rows in a 515px region, six fully visible before the fixed navigation, zero horizontal overflow, and Today height parity; focused Calendar Playwright 4/4 and forward QA 7/7 passed.
 
 ### SCOPE-CONSOLIDATION-001
 

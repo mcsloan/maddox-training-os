@@ -68,14 +68,21 @@ export default function CalendarPage() {
               .filter((log): log is ExternalLoadLog => log !== null);
             const expanded = expandedDate === date;
             return <article className={isToday ? "border-l-4 border-blue bg-cyan-50" : "border-l-4 border-transparent"} data-calendar-date={date} data-today={isToday ? "true" : undefined} key={date}>
-              <div className="grid gap-2 border-t border-rink px-3 py-3 first:border-t-0 md:grid-cols-[8rem_minmax(0,2fr)_minmax(10rem,1.4fr)_5rem_8rem_5rem_4rem] md:items-center md:gap-3">
-                <div className="flex items-center gap-2 md:block"><p className="font-black">{formatPlanDate(date, { weekday: "short", month: "short", day: "numeric" })}</p>{isToday && <span className="rounded bg-blue px-2 py-0.5 text-[10px] font-black text-white">TODAY</span>}</div>
-                <h3 className="font-black leading-tight">{day.title}</h3>
-                <p className="text-sm text-slate-600"><span className="md:hidden">W{week.weekNumber} · </span>{conciseCalendarPhase(day.phase)}</p>
-                <p className="text-sm font-bold"><span className="md:hidden">Load </span>{day.intensity}/5</p>
-                <p><span className="inline-flex rounded-full bg-ice px-2 py-1 text-xs font-black text-navy">{calendarProjection.evidenceLabel}</span></p>
-                <Link aria-label={`${calendarProjection.primaryAction} training for ${formatPlanDate(date, { weekday: "long", month: "long", day: "numeric" })}`} className="font-black text-blue" href={`/log/${date}`}>{calendarProjection.primaryAction} ›</Link>
-                <button aria-expanded={expanded} aria-label={`${expanded ? "Hide" : "Show"} details for ${formatPlanDate(date, { weekday: "long", month: "long", day: "numeric" })}`} className="justify-self-start rounded-lg border border-rink px-2 py-1 text-sm font-black hover:bg-ice md:justify-self-center" onClick={() => setExpandedDate(expanded ? null : date)} type="button">{expanded ? "▴" : "▾"}<span className="ml-1 md:sr-only">Details</span></button>
+              <div className="grid min-h-16 grid-cols-[4.25rem_minmax(0,1fr)_auto] items-center gap-x-2 gap-y-1 border-t border-rink px-2 py-2 first:border-t-0 md:min-h-0 md:grid-cols-[8rem_minmax(0,2fr)_minmax(10rem,1.4fr)_5rem_8rem_5rem_4rem] md:gap-3 md:px-3 md:py-3" data-calendar-row>
+                <div className="row-span-2 self-center md:row-span-1">
+                  <p className="text-[11px] font-black uppercase tracking-wide text-slate-500 md:hidden">{formatPlanDate(date, { weekday: "short" })}</p>
+                  <p className="text-sm font-black leading-tight md:text-base"><span className="md:hidden">{formatPlanDate(date, { month: "short", day: "numeric" })}</span><span className="hidden md:inline">{formatPlanDate(date, { weekday: "short", month: "short", day: "numeric" })}</span></p>
+                  {isToday && <span className="mt-0.5 inline-flex rounded bg-blue px-1.5 py-px text-[9px] font-black leading-4 text-white">TODAY</span>}
+                </div>
+                <h3 className="col-span-2 min-w-0 truncate text-sm font-black leading-tight md:col-span-1 md:text-base">{day.title}</h3>
+                <p className="hidden text-sm text-slate-600 md:block">{conciseCalendarPhase(day.phase)}</p>
+                <p className="hidden text-sm font-bold md:block">{day.intensity}/5</p>
+                <p className="min-w-0 truncate text-[11px] font-semibold text-slate-600 md:hidden" data-calendar-mobile-meta>Load {day.intensity}/5 · {calendarProjection.evidenceLabel}</p>
+                <p className="hidden md:block"><span className="inline-flex rounded-full bg-ice px-2 py-1 text-xs font-black text-navy">{calendarProjection.evidenceLabel}</span></p>
+                <div className="col-start-3 row-start-2 flex items-center justify-end gap-1 md:contents">
+                  <Link aria-label={`${calendarProjection.primaryAction} training for ${formatPlanDate(date, { weekday: "long", month: "long", day: "numeric" })}`} className="whitespace-nowrap rounded-md px-1 py-2 text-xs font-black text-blue md:p-0 md:text-base" href={`/log/${date}`}>{calendarProjection.primaryAction} ›</Link>
+                  <button aria-expanded={expanded} aria-label={`${expanded ? "Hide" : "Show"} details for ${formatPlanDate(date, { weekday: "long", month: "long", day: "numeric" })}`} className="min-h-9 min-w-9 rounded-lg border border-rink px-2 text-sm font-black hover:bg-ice md:min-h-0 md:min-w-0 md:justify-self-center md:py-1" onClick={() => setExpandedDate(expanded ? null : date)} type="button">{expanded ? "▴" : "▾"}<span className="sr-only">Details</span></button>
+                </div>
               </div>
               {expanded && <CalendarDetails date={date} day={day} sportLogs={sportForDate} trainingTitles={training.map((activity) => activity.athleteTitle)} />}
             </article>;

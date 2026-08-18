@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("Calendar opens on the current week and expands one canonical date at a time", async ({ page }) => {
   await page.goto("/calendar");
   const weeks = page.locator("section[data-calendar-week]");
-  await expect(weeks.first()).toHaveAttribute("data-calendar-week", "9");
+  await expect(weeks.first().locator('[data-today="true"]')).toHaveCount(1);
   await expect(page.locator("[data-calendar-date]")).toHaveCount(84);
   await expect(page.locator('[data-today="true"]')).toHaveCount(1);
   await expect(page.locator('[data-today="true"] [data-calendar-details]')).toHaveCount(0);
@@ -41,12 +41,42 @@ test("Calendar opens on the current week and expands one canonical date at a tim
 test("Calendar remains compact without horizontal overflow at iPhone width", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/calendar");
-  await expect(page.locator("section[data-calendar-week]").first()).toHaveAttribute("data-calendar-week", "9");
-  await expect(page.locator('[data-calendar-date="2026-08-16"]')).toBeVisible();
-  const rowBox = await page.locator('[data-calendar-date="2026-08-16"] > div').first().boundingBox();
-  expect(rowBox?.height ?? 9999).toBeLessThan(260);
+  const currentWeek = page.locator("section[data-calendar-week]").first();
+  await expect(currentWeek.locator('[data-today="true"]')).toHaveCount(1);
+  const rows = currentWeek.locator("[data-calendar-row]");
+  await expect(rows).toHaveCount(7);
+  const firstFiveBoxes = await Promise.all(Array.from({ length: 5 }, (_, index) => rows.nth(index).boundingBox()));
+  for (const box of firstFiveBoxes) expect(box?.height ?? 9999).toBeLessThan(90);
+  const firstTop = firstFiveBoxes[0]?.y ?? 0;
+  const fifthBottom = (firstFiveBoxes[4]?.y ?? 9999) + (firstFiveBoxes[4]?.height ?? 9999);
+  expect(fifthBottom - firstTop).toBeLessThan(410);
+  expect(fifthBottom).toBeLessThan(844);
+  const todayBox = await currentWeek.locator('[data-today="true"] [data-calendar-row]').boundingBox();
+  const ordinaryBox = await rows.first().boundingBox();
+  expect(Math.abs((todayBox?.height ?? 9999) - (ordinaryBox?.height ?? 0))).toBeLessThanOrEqual(8);
+  await expect(currentWeek.locator('[data-today="true"]')).toContainText("TODAY");
+  await expect(currentWeek.locator('[data-today="true"] a[href^="/log/"]')).toHaveCount(1);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test("Calendar preserves its desktop grid while mobile rows stay independently expandable", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/calendar");
+  await expect(page.getByText("Week / Phase", { exact: true }).first()).toBeVisible();
+  const currentWeek = page.locator("section[data-calendar-week]").first();
+  const rows = currentWeek.locator("[data-calendar-row]");
+  await expect(rows).toHaveCount(7);
+  const desktopBox = await rows.first().boundingBox();
+  expect(desktopBox?.height ?? 9999).toBeLessThan(100);
+
+  const firstToggle = currentWeek.getByRole("button", { name: /^Show details/ }).first();
+  const secondToggle = currentWeek.getByRole("button", { name: /^Show details/ }).nth(1);
+  await firstToggle.click();
+  await expect(currentWeek.locator("[data-calendar-details]")).toHaveCount(1);
+  await secondToggle.click();
+  await expect(currentWeek.locator("[data-calendar-details]")).toHaveCount(1);
+  await expect(firstToggle).toHaveAttribute("aria-expanded", "false");
 });
 
 test("Calendar status combines completed-session and distinct Sport Load evidence", async ({ page }) => {
