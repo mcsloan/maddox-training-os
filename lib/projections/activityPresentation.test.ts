@@ -367,8 +367,10 @@ describe("planned activity presentation", () => {
     expect(mediumBikeFlush?.plannedDurationMinutes).toBe(30);
     expect(hardCardio?.plannedDurationMinutes).toBe(20);
     expect(hardKpiCardio?.plannedDurationMinutes).toBe(20);
+    expect(hardCardio?.instruction).toBe(controlledCardioCopy);
     expect(hardCardio?.coachingCue).toBe(controlledCardioCopy);
-    expect(activityToDrill(hardCardio!).coachingCues).toEqual([controlledCardioCopy]);
+    expect(activityToDrill(hardCardio!).instructions).toEqual([controlledCardioCopy]);
+    expect(activityToDrill(hardCardio!).coachingCues).toEqual([]);
   });
 
   it("does not change non-bike/treadmill conditioning durations", () => {
