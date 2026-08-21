@@ -31,6 +31,21 @@ describe("unified canonical date logging route", () => {
     expect(html).toContain("Watch Speed Stack A warm-up and cooldown demonstrations");
   });
 
+  it("shows source-backed equipment and space requirements for Aug 19 forward drills", async () => {
+    const html = await renderLog("2026-08-19");
+    expect(html).toContain("Full-Speed Weave with Scan");
+    expect(html).toContain("Read-React Puck Carry");
+    expect(html).toContain("Sprint-In Shot");
+    expect(html).toContain("Equipment / space:");
+    expect(html).toContain("Stick, puck/ball, 4–6 cones.");
+    expect(html).toContain("Stick, puck/ball, colored cones or parent point.");
+    expect(html).toContain("10–15 yd lane, puck, net.");
+    expect(html).toContain("Cones in line or staggered.");
+    expect(html).toContain("Set 3 exits left/straight/right.");
+    expect(html).toContain("Start away from puck/net.");
+    expect(html).not.toContain("Basement substitute");
+  });
+
   it("shows each Aug 16 Sport Load once in the unified form", async () => {
     const html = await renderLog("2026-08-16");
     expect(html.match(/>Marc O’Connor Ice</g)).toHaveLength(1);
