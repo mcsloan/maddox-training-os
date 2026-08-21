@@ -156,7 +156,8 @@ Every active scope item should use this structure, either as a detailed record b
 | 4.9.1 | DEF-REACT-DUPLICATE-KEY-EASY-SPIN-001 | React duplicate key warning for repeated Easy Spin instruction text | P2 | Completed | Fast lane | Fixed at `7a70272`, pushed, and production-smoked with clean KPI browser console; repeated valid content remains twice. |
 | 4.9.2 | CAL-UX-MOBILE-DAY-ROWS-001 | Compact mobile Calendar day rows | P1 | Completed | Fast lane | Parent mobile QA accepted the compact rows; released to Production and retained under CI/Playwright Calendar coverage. |
 | 4.10 | QA-AUTOMATION-OWNERSHIP-001 | Shift recurring smoke/regression testing from Codex to deterministic scripts and CI | P1 | In progress | Docs-only / QA ownership | GitHub Actions now owns Vitest, TypeScript, clean production build, and forward Playwright QA; finish remaining explicit core-route/release-gate coverage. |
-| 4.11 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | In progress | Safe lane / QA automation | Forward Day/Log, Calendar/mobile, video, and KPI contracts run in GitHub Actions; add explicit Today and Plan/Gantt smoke coverage before closing the task. |
+| 4.11 | QA-PLAYWRIGHT-SMOKE-001 | Create deterministic Playwright smoke suite for core routes | P1 | Completed | Safe lane / QA automation | Forward Day/Log, Calendar/mobile, video, KPI, Today redirect, and Plan/Gantt contracts now run in GitHub Actions; PR #6 final-head Playwright passed. |
+| 4.11.1 | DEF-PLAN-GANTT-14WEEK-SPAN-001 | Plan/Gantt retained legacy 12-week/84-day assumptions after approved Sep 18 extension | P1 | CI verified / Production pending | Fast lane | Final PR #6 head renders authoritative v8.4 W1-W14 / 96-day coverage through Sep 18; unit/typecheck/build/Playwright are green; merge and Production smoke remain. |
 | 4.12 | DEF-QA-CODEX-RUNNER-001 | Codex is being used as a recurring manual smoke-test runner | P1 | In progress | Docs-only / QA workflow | Repeated forward browser regression is CI-owned; remove the remaining recurring manual core-route smoke burden. |
 | 4.13 | DEF-SUPABASE-STAGING-AUTOPAUSE-001 | Supabase staging project at risk of inactivity auto-pause | P2 | In progress | Docs-only / environment-safety | Warning and project ref are documented; decision remains whether to allow manual resume, add a safe read-only staging health check, or upgrade if staging uptime matters. |
 | 4.14 | DEF-QA-USAGE-LEDGER-001 | No prompt-level Codex usage ledger exists | P2 | Not started | Docs-only / workflow | Define a lightweight usage ledger after the environment and Gantt duration items are handled. |
@@ -210,8 +211,8 @@ Next task brief:
 
 - Read `AGENTS.md`, `docs/SESSION_HANDOFF.md`, and this file first.
 - Environment isolation is complete for current Production and fresh Preview deployments; keep normal no-secret/no-production-write guardrails.
-- Finish `QA-PLAYWRIGHT-SMOKE-001` by adding explicit Today and Plan/Gantt read-only browser coverage; the forward Day/Log, Calendar, video, and KPI contracts are already CI-owned.
-- Then prioritize `DEF-DAY-DURATION-CONTRACT-001` as the next athlete-facing P1: define authoritative duration scopes without forcing unlike totals to match or inventing a replacement total.
+- `QA-PLAYWRIGHT-SMOKE-001` is complete on PR #6 final head: Today redirect and Plan/Gantt read-only browser coverage are CI-owned and green.
+- Merge and Production-smoke `DEF-PLAN-GANTT-14WEEK-SPAN-001`; then prioritize `DEF-DAY-DURATION-CONTRACT-001` as the next athlete-facing P1: define authoritative duration scopes without forcing unlike totals to match or inventing a replacement total.
 - Keep `DEF-QA-USAGE-LEDGER-001` as P2 workflow cleanup after the remaining P1 QA/duration work.
 - Do not implement Closed-Loop methodology architecture during any of these current-app tasks.
 - Do not edit `imports/v8.4/data/*.json` unless a later task explicitly asks.
@@ -234,14 +235,14 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 
 | Status | IDs |
 | --- | --- |
-| In progress | QA-SYSTEM-001, QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
+| In progress | QA-SYSTEM-001, QA-AUTOMATION-OWNERSHIP-001, DEF-PLAN-GANTT-14WEEK-SPAN-001, DEF-QA-CODEX-RUNNER-001, KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
 | Production runtime verified / Preview runtime pending | None |
 | Reopened / product QA found incomplete rendering-path coverage | None |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026 |
 | Completed locally | DEF-DAY-KPI-TRUTH-DIVERGENCE-001, DEF-TRAINING-WORK-CANONICAL-DAY-001, DEF-SPORTLOAD-CONDITIONING-CONTRADICTION-001, DEF-SPEEDSTACK-WARMUP-DETAIL-001, ACTIVITY-LOGGING-001 |
 | Not started | TEST-FIXTURE-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, DEF-014, DEF-016, DEF-018 |
 | Scope review required | TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
-| Completed | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001, SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, CAL-UX-MOBILE-DAY-ROWS-001, PLAN-CONTENT-001, PLAN-TRYOUT-EXTENSION-2026-001, DEF-FORWARD-DRILL-ENVIRONMENT-FIT-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-029, DEF-030, DEF-031, DEF-032, CODE-COMMENT-AUDIT-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
+| Completed | QA-PLAYWRIGHT-SMOKE-001, ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001, SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, CAL-UX-MOBILE-DAY-ROWS-001, PLAN-CONTENT-001, PLAN-TRYOUT-EXTENSION-2026-001, DEF-FORWARD-DRILL-ENVIRONMENT-FIT-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-029, DEF-030, DEF-031, DEF-032, CODE-COMMENT-AUDIT-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
 ### P2
 
@@ -1969,6 +1970,27 @@ This is a multi-Epic architecture track governed by DESIGN-GATE-001. Implementat
 - Risks: another narrow fix could miss a rendering path without this audit.
 - Next action: Audit is closed; preserve the easy 45 / medium 30 / hard 20 regression matrix and corrected category/copy behavior.
 - Links / evidence: Production `/day/2026-06-18`, `/day/2026-06-23`, `/day/2026-06-29`, `/day/2026-06-30`; PR #3; Production `59558f2` and later.
+
+### DEF-PLAN-GANTT-14WEEK-SPAN-001
+
+- ID: DEF-PLAN-GANTT-14WEEK-SPAN-001
+- Title: Plan/Gantt retained legacy 12-week/84-day assumptions after approved Sep 18 extension
+- Type: Defect
+- Parent: PLAN-CONTENT-001 / QA-PLAYWRIGHT-SMOKE-001
+- Priority: P1
+- Status: CI verified / Production pending
+- Lane: Fast lane
+- Owner: Mike / Codex
+- Source: Product-truth discovery while adding explicit Plan browser smoke on 2026-08-21.
+- Problem: v8.4 defines W1-W14 and 96 plan dates through 2026-09-18, while the Plan page still labeled itself 12 weeks, used an 84-day Gantt grid, scoped Taper + Peak to W12 only, and sourced overview/week-card coverage from legacy data ending 2026-09-06.
+- Desired outcome: /plan visibly represents the authoritative 14-week / 96-day performance period through Sep 18 without rewriting v8.4 or inventing W13/W14 legacy metrics.
+- In scope: derive Plan heading/date range and Gantt geometry from v8.4 phase dates; span Taper + Peak through W14; surface source-backed W13/W14 phase notes and Sport Loads; explicitly label the legacy Weekly Load chart W1-W12; add Today + Plan Playwright smoke.
+- Out of scope: edits to imports/v8.4/data/*.json, invented W13/W14 planned-load scores or coaching copy, Day/Calendar/KPI behavior, Supabase writes/config.
+- Acceptance evidence: PR #6 final head f86611f; exact net product diff app/plan/page.tsx, components/WeeklyLoadChart.tsx, e2e/forward-product-quality.spec.ts; unit/projection tests passed; TypeScript passed; clean production build passed; full forward Playwright passed; exact-head Vercel Preview READY.
+- Remaining gate: merge PR #6 and verify resulting Production deployment before marking Completed.
+- Dependencies: v8.4 phaseLabels, ganttModel, Sport Loads; existing legacy W1-W12 descriptive plan copy.
+- Risks: duplicating or inventing late-period plan values would violate v8.4 source authority.
+- Next action: merge after this scope update, then Production-smoke /plan and verify release SHA.
 
 ### DEF-DAY-DURATION-CONTRACT-001
 
