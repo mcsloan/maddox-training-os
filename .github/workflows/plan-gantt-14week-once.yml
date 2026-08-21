@@ -35,3 +35,5 @@ jobs:
           git add app/plan/page.tsx components/WeeklyLoadChart.tsx e2e/forward-product-quality.spec.ts docs/SCOPE.md scripts/fix-plan-gantt-14week-2026-08-21.mjs .github/workflows/plan-gantt-14week-once.yml
           git commit -m "fix(plan): render canonical 14-week performance period [plan-gantt-patched]"
           git push
+
+# retrigger after workflow exists on branch parent
