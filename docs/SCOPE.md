@@ -176,8 +176,8 @@ Every active scope item should use this structure, either as a detailed record b
 | 17 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
 | 18 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
 | 19 | KPI-HISTORY-DASHBOARD-001 | KPI/History/Dashboard reconciliation | P1 | Not started | Safe lane | Reconcile projections after day evidence model stabilizes. |
-| 20 | QA-SYSTEM-001 | QA/testing system | P1 | Not started | Safe lane | Route/component ownership is recorded; latest projection proofs cover DEF-028 and Day/active Session parity without manual UAT. |
-| 21 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Playwright installed Chrome channel proof-of-life passed locally; use it as a base for targeted DEF-028 regression after display/projection repair. |
+| 20 | QA-SYSTEM-001 | QA/testing system | P1 | In progress | Safe lane | GitHub Actions now owns deterministic unit/typecheck/build/forward-browser QA; finish fixture/core-route/release-gate coverage before closing. |
+| 21 | QA-AUTOMATION-002 | Playwright proof-of-life strategy | P1 | Completed | Safe lane | Local Chrome proof-of-life has evolved into GitHub-owned Chromium browser QA; PR #4 proved the suite green in CI. |
 | 22 | SESSION-UX-001 | Medium Session UX backlog | P2 | Completed locally | Fast lane | Compact Day and unified logging routes are complete locally; parent visual acceptance remains. |
 | 23 | SOURCE-INGEST-OTA-001 | OvertimeAthlete source ingestion | P2 | Scope review required | Source-review | Ingest/review source later; do not replace v8.4. |
 | 24 | RECOVERY-READINESS-001 | Recovery/readiness system | P2 | Not started | Safe lane | Add readiness fields and parent review model later. |
@@ -234,12 +234,12 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 
 | Status | IDs |
 | --- | --- |
-| In progress | QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
+| In progress | QA-SYSTEM-001, QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
 | Production runtime verified / Preview runtime pending | None |
 | Reopened / product QA found incomplete rendering-path coverage | None |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026 |
 | Completed locally | DEF-DAY-KPI-TRUTH-DIVERGENCE-001, DEF-TRAINING-WORK-CANONICAL-DAY-001, DEF-SPORTLOAD-CONDITIONING-CONTRADICTION-001, DEF-SPEEDSTACK-WARMUP-DETAIL-001, ACTIVITY-LOGGING-001 |
-| Not started | TEST-FIXTURE-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, DEF-014, DEF-016, DEF-018 |
+| Not started | TEST-FIXTURE-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, DEF-014, DEF-016, DEF-018 |
 | Scope review required | TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001, SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, CAL-UX-MOBILE-DAY-ROWS-001, PLAN-CONTENT-001, PLAN-TRYOUT-EXTENSION-2026-001, DEF-FORWARD-DRILL-ENVIRONMENT-FIT-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-029, DEF-030, DEF-031, DEF-032, CODE-COMMENT-AUDIT-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
@@ -333,7 +333,7 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 - Acceptance criteria: package scripts are classified; Supabase/Vercel/env references are identified by file path and purpose; key names are listed without values; forbidden write/deploy/backfill actions are blocked pending explicit approval.
 - Dependencies: docs-only review; no production action.
 - Risks: stale docs could lead to accidental production writes if not reconciled.
-- Next action: Mike reviews these findings, then explicitly approves any future write/deploy/backfill work before it starts.
+- Next action: Maintain the established target-confirmation and no-secret/no-production-write guardrails for future environment-sensitive work.
 - Links / evidence: `scripts/confirm-write-target.mjs`, `scripts/env-whoami.mjs`, `scripts/preflight.mjs`, `stash`.
 
 Ground Truth Baseline:
@@ -467,7 +467,7 @@ Environment Safety Findings:
 - Desired outcome: Preview database target is verified before any Preview write testing.
 - In scope: docs capture of unverified risk, no-write operational rule, and verification task.
 - Out of scope: env var changes, Vercel configuration changes, Supabase changes, app code, tests, deploys, or writes.
-- Acceptance criteria: Preview write testing remains blocked until `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` configures Preview to staging or Preview is explicitly treated as read-only.
+- Acceptance criteria: Met. Fresh Preview is verified against staging; historical pre-split Preview deployments remain unsafe for write testing.
 - Dependencies: Vercel environment variable inspection or safe runtime evidence that does not expose secret values.
 - Risks: Preview KPI saves or other write flows could mutate production data if Preview env vars point to production Supabase.
 - Next action: Resolved. Use only fresh/current Preview deployments for staging tests and retain target checks before any write-capable QA.
@@ -533,7 +533,7 @@ Operational rule:
 - Acceptance criteria: produce a list of stale/suspicious comments and recommended action; no behavior changes.
 - Dependencies: `docs/SCOPE.md` remains the only active scope authority.
 - Risks: stale implementation notes may be mistaken for planned product work.
-- Next action: run inspect-only comment audit before the next app-code implementation task if time allows.
+- Next action: Completed; revisit only if new stale TODO/comment risk is discovered.
 - Links / evidence: targeted comment-risk scan from this docs-only hardening task.
 
 Known comment-risk findings:
@@ -1077,7 +1077,7 @@ Advanced KPI scope:
 - Type: Initiative
 - Parent: Quality system
 - Priority: P1
-- Status: Not started
+- Status: In progress
 - Lane: Safe lane
 - Owner: Mike / Codex
 - Source: QA strategy/status docs
