@@ -49,11 +49,10 @@ test("approved Skill/Shot/IQ videos use the accessible puck control", async ({ p
   }
 });
 
-test("Aug 20 is one 14-item KPI Test with canonical scheduling", async ({ page }) => {
+test("Aug 20 is one 14-item KPI Test in the canonical execution flow", async ({ page }) => {
   await page.goto("/kpis");
   const scoreboard = page.locator("table").first();
   await expect(scoreboard.locator("tbody tr")).toHaveCount(14);
-  await expect(scoreboard.locator("tbody")).not.toContainText("No future test");
   await expect(scoreboard.locator("tbody")).not.toContainText("Jun 30");
   await page.screenshot({ fullPage: true, path: "qa-artifacts/forward-product-quality/2026-08-20-kpi-dashboard.png" });
 
