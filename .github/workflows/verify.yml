@@ -31,3 +31,41 @@ jobs:
 
       - name: TypeScript check
         run: npm run lint
+
+  playwright-forward:
+    needs: test-and-typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ""
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ""
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build production app
+        run: npm run build
+
+      - name: Forward product and Calendar Playwright QA
+        run: npm run qa:forward
+
+      - name: Upload Playwright failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-forward-failure
+          path: qa-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
