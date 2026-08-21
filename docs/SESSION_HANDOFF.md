@@ -2,7 +2,11 @@
 
 ## Current Verified Checkpoint
 
-- Branch: `main`.
+- Local schedule-extension checkpoint: branch `work/calendar-mobile-day-rows`, base HEAD `2371cdd`, with uncommitted `PLAN-TRYOUT-EXTENSION-2026-001` changes awaiting Mike review.
+- v8.4 canonical coverage is locally extended from 84 dates ending `2026-09-06` to 96 dates ending `2026-09-18`; the obsolete Sep 1 tryout is removed and approved Pathway/U12B tryout Sport Loads are reconciled.
+- Local verification: lint passed; 160 Vitest tests passed; production build passed; v8.4 import verification passed; read-only forward Playwright QA passed 7/7 after local-port approval.
+- No commit, push, deploy, Supabase write, production mutation, schema change, or data backfill occurred. Mike source-diff and product review is the stop gate.
+- Last pushed baseline described below was on `main`; current local work is on `work/calendar-mobile-day-rows` at base `2371cdd`.
 - Current clean checkpoint: `7a70272` (`fix(kpis): use contextual instruction keys`).
 - The accepted daily-scale Gantt is pushed to `main`, live in production, and production-smoked.
 - Completed chain: `e838ced` captured summer 4v4 scope, `0bba866` imported the 4v4 Sport Loads, `d922217` fixed Day stacked Sport Load rendering and stale Lacrosse label risk, and `f247959` fixed Plan/Gantt Sport Load sourcing from v8.4.

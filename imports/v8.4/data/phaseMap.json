@@ -94,5 +94,21 @@
     "trainingPhase": "Taper + Peak",
     "speedStackAlignment": "Speed Stack Phase 6 taper / peak",
     "intent": "Fresh legs, short speed primers, confidence touches, no grinding."
+  },
+  {
+    "week": 13,
+    "start": "2026-09-07",
+    "end": "2026-09-13",
+    "trainingPhase": "Taper + Peak",
+    "speedStackAlignment": "Pathway / tryout support",
+    "intent": "Pathway sessions and tryout evaluations are the primary stimuli; preserve freshness and recovery."
+  },
+  {
+    "week": 14,
+    "start": "2026-09-14",
+    "end": "2026-09-18",
+    "trainingPhase": "Taper + Peak",
+    "speedStackAlignment": "Tryout support",
+    "intent": "Between-tryout recovery and conditional evaluations; no appended hard conditioning."
   }
 ]

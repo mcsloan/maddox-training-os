@@ -4,7 +4,7 @@ test("Calendar opens on the current week and expands one canonical date at a tim
   await page.goto("/calendar");
   const weeks = page.locator("section[data-calendar-week]");
   await expect(weeks.first().locator('[data-today="true"]')).toHaveCount(1);
-  await expect(page.locator("[data-calendar-date]")).toHaveCount(84);
+  await expect(page.locator("[data-calendar-date]")).toHaveCount(96);
   await expect(page.locator('[data-today="true"]')).toHaveCount(1);
   await expect(page.locator('[data-today="true"] [data-calendar-details]')).toHaveCount(0);
   const todayBox = await page.locator('[data-today="true"]').boundingBox();

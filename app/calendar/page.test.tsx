@@ -11,11 +11,11 @@ describe("compact expandable Calendar route", () => {
 
   it("renders all plan dates as collapsed canonical rows with one Log action", () => {
     const html = renderToStaticMarkup(<CalendarPage />);
-    expect(html.match(/data-calendar-date=/g)).toHaveLength(84);
-    expect(html.match(/href="\/log\/2026-/g)).toHaveLength(84);
-    expect(html.match(/aria-expanded="false"/g)).toHaveLength(84);
-    expect(html.match(/data-calendar-row="true"/g)).toHaveLength(84);
-    expect(html.match(/data-calendar-mobile-meta="true"/g)).toHaveLength(84);
+    expect(html.match(/data-calendar-date=/g)).toHaveLength(96);
+    expect(html.match(/href="\/log\/2026-/g)).toHaveLength(96);
+    expect(html.match(/aria-expanded="false"/g)).toHaveLength(96);
+    expect(html.match(/data-calendar-row="true"/g)).toHaveLength(96);
+    expect(html.match(/data-calendar-mobile-meta="true"/g)).toHaveLength(96);
     expect(html).not.toContain("data-calendar-details=");
     expect(html).not.toContain("Method phase:");
     expect(html).not.toContain("Open any scheduled day");

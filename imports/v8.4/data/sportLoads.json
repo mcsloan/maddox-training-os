@@ -288,66 +288,192 @@
     "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
   },
   {
+    "date": "2026-08-22",
+    "week": 10,
+    "day": "Saturday",
+    "sportLoad": "Marc O'Connor Ice",
+    "details": "Carleton: 9:00-10:00 AM Powerskating & Pucks; 10:00-11:00 AM Battle and Small Area Games. Total planned ice: 120 minutes.",
+    "intensity15": 5,
+    "planRule": "Sport Load is the primary physical stimulus; do not prescribe additional hard conditioning."
+  },
+  {
     "date": "2026-08-23",
     "week": 10,
     "day": "Sunday",
     "sportLoad": "4v4 Hockey",
-    "details": "Bell Sensplex Myers Automotive Arena: 3:25-3:50 PM and 4:00-4:25 PM. Planned 4v4 hockey stimulus; day before Sensplex camp.",
+    "details": "Bell Sensplex Myers Automotive Arena: 3:25-3:50 PM and 4:00-4:25 PM; 45-minute game window. Maddox normally plays every other shift when there are two lines.",
     "intensity15": 3,
-    "planRule": "4v4 is planned hockey stimulus; adjust surrounding work only based on readiness, soreness, camp stacking, travel, or parent observation."
+    "planRule": "4v4 is the primary planned hockey stimulus; do not add hard conditioning."
   },
   {
     "date": "2026-08-24",
     "week": 11,
     "day": "Monday",
-    "sportLoad": "Sensplex Camp",
-    "details": "All day camp; 2–3 hours ice/day",
+    "sportLoad": "Sensplex Competitive Player Development Camp",
+    "details": "Full-day camp, 8:00 AM-5:15 PM; includes on-ice and off-ice conditioning.",
     "intensity15": 5,
-    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+    "planRule": "Camp is the primary training stimulus; no additional hard workout."
   },
   {
     "date": "2026-08-25",
     "week": 11,
     "day": "Tuesday",
-    "sportLoad": "Sensplex Camp",
-    "details": "All day camp; 2–3 hours ice/day",
+    "sportLoad": "Sensplex Competitive Player Development Camp",
+    "details": "Full-day camp, 8:00 AM-5:15 PM; includes on-ice and off-ice conditioning.",
     "intensity15": 5,
-    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+    "planRule": "Camp is the primary training stimulus; no additional hard workout."
   },
   {
     "date": "2026-08-26",
     "week": 11,
     "day": "Wednesday",
-    "sportLoad": "Sensplex Camp",
-    "details": "All day camp; 2–3 hours ice/day",
+    "sportLoad": "Sensplex Competitive Player Development Camp",
+    "details": "Full-day camp, 8:00 AM-5:15 PM; includes on-ice and off-ice conditioning.",
     "intensity15": 5,
-    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+    "planRule": "Camp is the primary training stimulus; no additional hard workout."
   },
   {
     "date": "2026-08-27",
     "week": 11,
     "day": "Thursday",
-    "sportLoad": "Sensplex Camp",
-    "details": "All day camp; 2–3 hours ice/day",
+    "sportLoad": "Sensplex Competitive Player Development Camp",
+    "details": "Full-day camp, 8:00 AM-5:15 PM; includes on-ice and off-ice conditioning.",
     "intensity15": 5,
-    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+    "planRule": "Camp is the primary training stimulus; no additional hard workout."
   },
   {
     "date": "2026-08-28",
     "week": 11,
     "day": "Friday",
-    "sportLoad": "Sensplex Camp",
-    "details": "All day camp; 2–3 hours ice/day",
+    "sportLoad": "Sensplex Competitive Player Development Camp",
+    "details": "Full-day camp, 8:00 AM-5:15 PM; includes on-ice and off-ice conditioning.",
     "intensity15": 5,
-    "planRule": "Sport load is part of the plan; adjust dryland around it. Do not call it external load."
+    "planRule": "Camp is the primary training stimulus; no additional hard workout."
   },
   {
-    "date": "2026-09-01",
-    "week": 12,
-    "day": "Tuesday",
-    "sportLoad": "Tryout",
-    "details": "Tryout begins; exact time to be confirmed.",
+    "date": "2026-08-29",
+    "week": 11,
+    "day": "Saturday",
+    "sportLoad": "Marc O'Connor Ice",
+    "details": "Carleton: 10:15-11:15 AM Tryout Prep; 11:15 AM-12:15 PM Battle and Small Area Games. Total planned ice: 120 minutes.",
     "intensity15": 5,
-    "planRule": "Sport Load is the program for this date; no additional workout."
+    "planRule": "Sport Load is the primary physical stimulus; no additional hard workout."
+  },
+  {
+    "date": "2026-08-30",
+    "week": 11,
+    "day": "Sunday",
+    "sportLoad": "4v4 Hockey",
+    "details": "45-minute game. Maddox normally plays every other shift when there are two lines. Arena and time to be confirmed.",
+    "intensity15": 3,
+    "planRule": "4v4 is the primary planned hockey stimulus; do not add hard conditioning."
+  },
+  {
+    "date": "2026-09-05",
+    "week": 12,
+    "day": "Saturday",
+    "sportLoad": "Marc O'Connor Ice",
+    "details": "Carleton: 8:45-9:45 AM Advanced Skills; 9:45-10:45 AM Tryout Prep. Total planned ice: 120 minutes.",
+    "intensity15": 5,
+    "planRule": "Sharpening / tryout-prep Sport Load; do not append hard conditioning."
+  },
+  {
+    "date": "2026-09-06",
+    "week": 12,
+    "day": "Sunday",
+    "sportLoad": "Marc O'Connor Ice",
+    "details": "Carleton: 6:15-7:15 PM Tryout Prep. Total planned ice: 60 minutes.",
+    "intensity15": 4,
+    "planRule": "Sport Load is primary; no additional hard workout and no Sep 7 Marc ice assumption."
+  },
+  {
+    "date": "2026-09-07",
+    "week": 13,
+    "day": "Monday",
+    "sportLoad": "NMHA Player Pathway / Pre-Tryout Conditioning",
+    "details": "Time / group assignment TBD. One 50-minute session; approximately 7/10 effort and generally basic/non-maximal.",
+    "intensity15": 4,
+    "planRule": "Pathway is the primary ice/training stimulus; no added hard conditioning."
+  },
+  {
+    "date": "2026-09-08",
+    "week": 13,
+    "day": "Tuesday",
+    "sportLoad": "NMHA Player Pathway / Pre-Tryout Conditioning",
+    "details": "Time / group assignment TBD. One 50-minute session; approximately 7/10 effort and generally basic/non-maximal.",
+    "intensity15": 4,
+    "planRule": "Pathway is the primary ice/training stimulus; no added hard conditioning."
+  },
+  {
+    "date": "2026-09-09",
+    "week": 13,
+    "day": "Wednesday",
+    "sportLoad": "NMHA Player Pathway / Pre-Tryout Conditioning",
+    "details": "Time / group assignment TBD. One 50-minute session; approximately 7/10 effort and generally basic/non-maximal.",
+    "intensity15": 4,
+    "planRule": "Pathway is the primary ice/training stimulus; no added hard conditioning."
+  },
+  {
+    "date": "2026-09-10",
+    "week": 13,
+    "day": "Thursday",
+    "sportLoad": "NMHA Player Pathway / Pre-Tryout Conditioning",
+    "details": "Time / group assignment TBD. One 50-minute session; approximately 7/10 effort and generally basic/non-maximal.",
+    "intensity15": 4,
+    "planRule": "Pathway is the primary ice/training stimulus; no added hard conditioning."
+  },
+  {
+    "date": "2026-09-11",
+    "week": 13,
+    "day": "Friday",
+    "sportLoad": "NMHA Player Pathway / Pre-Tryout Conditioning",
+    "details": "Time / group assignment TBD. One 50-minute session; approximately 7/10 effort and generally basic/non-maximal.",
+    "intensity15": 4,
+    "planRule": "Pathway is the primary ice/training stimulus; no added hard conditioning."
+  },
+  {
+    "date": "2026-09-12",
+    "week": 13,
+    "day": "Saturday",
+    "sportLoad": "Nepean Raiders U12B Tryout — Skills",
+    "details": "Planned evaluation window: 11:00 AM-1:00 PM. NMHA lists two one-hour Skills sessions; assigned session(s) to be confirmed. Do not assume both hours were attended when logging actual duration.",
+    "intensity15": 5,
+    "planRule": "Tryout Sport Load is primary; recovery/support only."
+  },
+  {
+    "date": "2026-09-13",
+    "week": 13,
+    "day": "Sunday",
+    "sportLoad": "Nepean Raiders U12B Tryout — Scrimmage",
+    "details": "1:00-3:00 PM. Total planned evaluation window: 120 minutes.",
+    "intensity15": 5,
+    "planRule": "Tryout Sport Load is primary; recovery/support only."
+  },
+  {
+    "date": "2026-09-15",
+    "week": 14,
+    "day": "Tuesday",
+    "sportLoad": "Nepean Raiders U12B Tryout — Scrimmage",
+    "details": "6:00-8:00 PM. Total planned evaluation window: 120 minutes.",
+    "intensity15": 5,
+    "planRule": "Tryout Sport Load is primary; recovery/support only."
+  },
+  {
+    "date": "2026-09-17",
+    "week": 14,
+    "day": "Thursday",
+    "sportLoad": "Nepean Raiders U12B Tryout — Invite Only / Intersquad",
+    "details": "7:00-8:00 PM. Total planned evaluation window: 60 minutes. Event-dependent / invite-only; conditional on advancement.",
+    "intensity15": 5,
+    "planRule": "Conditional tryout Sport Load; recovery/support only when applicable."
+  },
+  {
+    "date": "2026-09-18",
+    "week": 14,
+    "day": "Friday",
+    "sportLoad": "Nepean Raiders U12B Tryout — Balance",
+    "details": "5:00-6:30 PM. Total planned evaluation window: 90 minutes. Conditional on advancement where appropriate.",
+    "intensity15": 5,
+    "planRule": "Conditional tryout Sport Load; recovery/support only when applicable."
   }
 ]

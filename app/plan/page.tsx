@@ -329,7 +329,7 @@ function buildLockedGanttSections(): GanttSection[] {
     },
     {
       label: "Methodology Phases",
-      detail: "training blocks across the 12-week plan",
+      detail: "training blocks across the 14-week performance period",
       tone: "methodology",
       rows: methodologyRows,
     },

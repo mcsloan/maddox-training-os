@@ -66,7 +66,7 @@ function NoSessionState({ nextDate }: { nextDate?: string }) {
 }
 
 function PlanCompleteState() {
-  return <section className="card"><p className="label">12-week plan</p><h2 className="text-4xl font-black">Plan complete</h2><p className="mt-3 text-slate-600">Review completed work, history, and export-ready summaries.</p><div className="mt-5 flex flex-wrap gap-3"><Link className="btn-primary" href="/dashboard">Dashboard</Link><Link className="btn-secondary" href="/history">History</Link><Link className="btn-secondary" href="/exports">Exports</Link></div></section>;
+  return <section className="card"><p className="label">14-week performance period</p><h2 className="text-4xl font-black">Plan complete</h2><p className="mt-3 text-slate-600">Review completed work, history, and export-ready summaries.</p><div className="mt-5 flex flex-wrap gap-3"><Link className="btn-primary" href="/dashboard">Dashboard</Link><Link className="btn-secondary" href="/history">History</Link><Link className="btn-secondary" href="/exports">Exports</Link></div></section>;
 }
 
 function SessionMap({ workoutId }: { workoutId: string }) {

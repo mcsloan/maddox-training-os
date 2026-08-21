@@ -27,7 +27,7 @@ This section is the current checkpoint. Historical June 17/18 state is preserved
 - Current commit: `7b48a3e` (`Render calendar from v8.4 day coverage`).
 - Calendar coverage from v8.4 is fixed and accepted.
 - v8.4 app import package is authoritative for training plan data.
-- Active v8.4 plan range: `2026-06-15` through `2026-09-06`.
+- Active v8.4 plan range: `2026-06-15` through `2026-09-18`.
 - v8.4 has 84/84 `dayExecutionPlan` dates and 84/84 session dates.
 - Current active product issue after docs reconciliation: Activity Prescription Display Layer.
 - KPI cloud-sync stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
@@ -53,7 +53,7 @@ The system is intended to become a professional-grade training operating system 
 - `/today` routes to canonical Day flow.
 - Friday June 19 is usable enough for training.
 - Direct `/day/2026-06-20` works and shows `Game-speed skill and shooting volume.`
-- Calendar renders all 84 v8.4 dates, including June 20 and June 21.
+- Calendar renders all 96 v8.4 dates, including June 20 and June 21.
 - Sport Load logging and Training Work logging remain separate.
 - v8.4 source JSON remains unchanged for recent projection/navigation fixes.
 - `docs/SCOPE.md` is the only active scope source and identifies the Active Execution Queue and Current Sprint / Next Codex Task.

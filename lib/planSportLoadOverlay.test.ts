@@ -32,6 +32,7 @@ const fourVFourWeekMap = new Map([
   ["2026-08-09", 8],
   ["2026-08-16", 9],
   ["2026-08-23", 10],
+  ["2026-08-30", 11],
 ]);
 
 const fourVFourDayMap = new Map([
@@ -44,16 +45,17 @@ const fourVFourDayMap = new Map([
   ["2026-08-09", "S"],
   ["2026-08-16", "S"],
   ["2026-08-23", "S"],
+  ["2026-08-30", "S"],
 ]);
 
 describe("Plan Sport Load overlay", () => {
-  it("builds a daily 12-week Gantt timeline from v8.4 phase dates", () => {
+  it("builds the extended daily Gantt timeline from v8.4 phase dates", () => {
     const timeline = getTimelineDays();
     const weekSeven = timeline.filter((day) => day.week === 7).map((day) => day.date);
     const weekEight = timeline.filter((day) => day.week === 8).map((day) => day.date);
     const augThree = timeline.find((day) => day.date === "2026-08-03");
 
-    expect(timeline).toHaveLength(84);
+    expect(timeline).toHaveLength(96);
     expect(weekSeven).toEqual(["2026-07-27", "2026-07-28", "2026-07-29", "2026-07-30", "2026-07-31", "2026-08-01", "2026-08-02"]);
     expect(weekEight).toEqual(["2026-08-03", "2026-08-04", "2026-08-05", "2026-08-06", "2026-08-07", "2026-08-08", "2026-08-09"]);
     expect(getWeekForDate("2026-08-03")).toBe(8);
@@ -78,7 +80,7 @@ describe("Plan Sport Load overlay", () => {
     expect(visibleText).toContain("Toronto Trip");
     expect(visibleText).toContain("Carleton Ravens Camp");
     expect(visibleText).toContain("Marc O’Connor Ice");
-    expect(visibleText).toContain("Sensplex Camp");
+    expect(visibleText).toContain("Sensplex Competitive Player Development Camp");
   });
 
   it("builds Gantt marker rows from v8.4 data without forbidden user-facing wording", () => {
@@ -90,6 +92,7 @@ describe("Plan Sport Load overlay", () => {
       "2026-06-15",
       "2026-06-22",
       ...fourVFourDates,
+      "2026-08-30",
     ]);
     expect(fourVFourRow?.markers.map((marker) => marker.dateLabel)).toContain("Aug 3");
     expect(visibleText).not.toMatch(/external load|overload|protected|limit extra work/i);
@@ -134,7 +137,7 @@ describe("Plan Sport Load overlay", () => {
     const torontoTrip = rows.find((row) => row.label === "Toronto Trip");
     const chaseCamp = rows.find((row) => row.label === "Chase Hull Camp");
     const carletonCamp = rows.find((row) => row.label === "Carleton Ravens Camp");
-    const sensplexCamp = rows.find((row) => row.label === "Sensplex Camp");
+    const sensplexCamp = rows.find((row) => row.label === "Sensplex Competitive Player Development Camp");
 
     expect(torontoTrip?.markers).toEqual([
       expect.objectContaining({

@@ -8,9 +8,9 @@ import legacyPlanJson from "../../../data/plan.json";
 import legacyExternalLoadsJson from "../../../data/externalLoads.json";
 
 describe("v8.4 calendar coverage", () => {
-  it("uses the v8.4 plan range and includes all 84 planned dates", () => {
-    expect(getV84PlanDateRange()).toEqual({ startDate: "2026-06-15", endDate: "2026-09-06" });
-    expect(getV84CalendarDates()).toHaveLength(84);
+  it("uses the v8.4 plan range and includes all 96 planned dates", () => {
+    expect(getV84PlanDateRange()).toEqual({ startDate: "2026-06-15", endDate: "2026-09-18" });
+    expect(getV84CalendarDates()).toHaveLength(96);
   });
 
   it("includes v8.4-only June 20 and June 21 in Week 1", () => {
@@ -72,9 +72,8 @@ describe("v8.4 calendar coverage", () => {
       expect(fourOnFour?.notes, date).toContain(arena);
       expect(fourOnFour?.notes, date).toContain(firstSlot);
       expect(fourOnFour?.notes, date).toContain(secondSlot);
-      expect(fourOnFour?.notes, date).toMatch(/planned 4v4 hockey stimulus/i);
       expect(fourOnFour?.notes, date).not.toMatch(/external|protected|risk|limit extra work/i);
-      expect(sourceLoad?.planRule, date).toContain("4v4 is planned hockey stimulus");
+      expect(sourceLoad?.planRule, date).toMatch(/4v4 is (?:the )?(?:primary )?planned hockey stimulus/);
       expect(sourceLoad?.planRule, date).not.toMatch(/external|protected|risk|limit extra work/i);
       expect(entries.some((entry) => entry.entryType === "Sport Load" && entry.entryTitle === "4v4 Hockey"), date).toBe(true);
     }
@@ -89,7 +88,7 @@ describe("v8.4 calendar coverage", () => {
   });
 
   it("keeps updated v8.4 import counts aligned with the approved forward cutover", () => {
-    expect(sportLoads).toHaveLength(39);
-    expect(dayExecutionPlan).toHaveLength(542);
+    expect(sportLoads).toHaveLength(53);
+    expect(dayExecutionPlan).toHaveLength(570);
   });
 });

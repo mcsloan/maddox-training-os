@@ -90,9 +90,10 @@ export function buildPlanSportLoadOverlayRows(): PlanSportLoadOverlayRow[] {
 
 export function getTimelineDays(): PlanTimelineDay[] {
   const firstWeek = phaseLabels[0];
-  if (!firstWeek) return [];
+  const lastWeek = phaseLabels[phaseLabels.length - 1];
+  if (!firstWeek || !lastWeek) return [];
 
-  return Array.from({ length: phaseLabels.length * 7 }, (_, offset) => {
+  return Array.from({ length: daysBetween(firstWeek.start, lastWeek.end) + 1 }, (_, offset) => {
     const date = addDays(firstWeek.start, offset);
     return {
       date,
@@ -108,7 +109,7 @@ export function getTimelineDays(): PlanTimelineDay[] {
 export function getWeekForDate(date: string) {
   const matchingWeek = phaseLabels.find((week) => date >= week.start && date <= week.end);
   if (!matchingWeek) {
-    throw new Error(`Date ${date} is outside the v8.4 12-week plan.`);
+    throw new Error(`Date ${date} is outside the v8.4 ${phaseLabels.length}-week plan.`);
   }
   return matchingWeek.week;
 }
@@ -121,7 +122,7 @@ export function getDayColumnIndex(date: string) {
 
   const offset = daysBetween(firstWeek.start, date);
   if (offset < 0 || offset >= phaseLabels.length * 7) {
-    throw new Error(`Date ${date} is outside the v8.4 12-week plan.`);
+    throw new Error(`Date ${date} is outside the v8.4 ${phaseLabels.length}-week plan.`);
   }
   return offset;
 }

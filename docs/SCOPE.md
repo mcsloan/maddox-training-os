@@ -31,15 +31,15 @@ Other planning docs may retain historical detail temporarily, but active scope d
 - Git state is the repo source of truth; browser/build badges are runtime context only.
 - Phase 1 docs/scope-control checkpoint is complete.
 - Calendar coverage from v8.4 was fixed and accepted.
-- v8.4 covers all 84 dates from `2026-06-15` through `2026-09-06`.
+- v8.4 covers all 96 dates from `2026-06-15` through `2026-09-18`.
 - v8.4 app import package remains authoritative for app training data.
 - Stash exists and must not be applied unless explicitly requested: `stash@{0} WIP KPI cloud sync before master reconciliation`.
 - ACTIVITY-PRESCRIPTION-001A/B/C produced local uncommitted app-code WIP, but it is blocked and not commit-ready.
 - `SURFACE-PRESENTATION-CONSUMER-AUDIT-001` is completed as an inspect-only audit; no files were changed during the audit.
 - `QA-AUTOMATION-002` Playwright proof-of-life is completed: installed Google Chrome channel launched successfully on macOS Catalina `10.15.8` without bundled browser install.
 - `DEF-028` is fixed, automated-tested, committed, and pushed at `9fd4c73`; completed-session/read-only now prefers canonical day/session presentation title without mutating saved records.
-- Day + active Session planned-activity parity is verified across all 84 v8.4 active session dates by `05019f5`.
-- All 84 v8.4 plan dates from `2026-06-15` through `2026-09-06` are verified athlete-usable at the Day projection layer by `6ab3f5e`; no manual UAT is required for this risk.
+- Day + active Session planned-activity parity is verified across all 96 v8.4 active session dates; the original 84-date baseline was established by `05019f5` and extended under `PLAN-TRYOUT-EXTENSION-2026-001`.
+- All 96 v8.4 plan dates from `2026-06-15` through `2026-09-18` are verified athlete-usable at the Day projection layer; the original 84-date baseline was established by `6ab3f5e` and extended under `PLAN-TRYOUT-EXTENSION-2026-001`.
 - QA Contract Framework Loop 1B completed as inspect-only route/component discovery.
 - QA Contract Framework Loop 1C records discovered route/component ownership in QA docs only; no app behavior or test generation.
 - Next stabilization lane should be selected from the remaining P1 queue; data-write/sync tasks still require separate approval.
@@ -135,6 +135,7 @@ Every active scope item should use this structure, either as a detailed record b
 | DEC-CURRENT-APP-001 | Current Maddox Training OS remains the production system; v8.4 remains authoritative while future methodology architecture is designed in parallel. | In progress | `TRANSITION-001`, `docs/design/DESIGN_GATE.md` |
 | DEC-METHODOLOGY-001 | No silent plan rewrites; future recommendation-driven adjustments require parent approval and audit trail. | In progress | `MODEL-GOVERNANCE-001`, `docs/design/DECISION_LOG.md` |
 | DEC-FORWARD-PLAN-001 | Parent-approved forward plan cutover begins 2026-08-14; dates through 2026-08-13 remain protected history. | In progress | `PLAN-CONTENT-001`, parent approval on 2026-08-13 |
+| DEC-FORWARD-PLAN-002 | The parent-approved 2026 performance period continues through 2026-09-18, with Pathway and U12B tryout Sport Loads replacing the obsolete Sep 1 tryout assumption. | In progress | `PLAN-TRYOUT-EXTENSION-2026-001`, parent approval on 2026-08-19 |
 | DEC-SCORING-001 | LLMs may extract structured exercise attributes, but final exercise-domain scores must come from deterministic, testable scoring rules plus review/approval gates. | In progress | `KNOWLEDGE-INGESTION-001`, `HEURISTIC-SCORING-001` |
 | DEC-LOAD-VECTOR-001 | Expert/rule-derived baseline domain vectors and athlete-specific personalized effective load vectors are separate concepts; athlete output must not mutate the global baseline matrix. | In progress | `ATHLETE-PERSONALIZATION-001` |
 | DEC-RESEARCH-001 | Open-source/research repositories may inform validation and thresholds, but no repository, dataset, commercial API, graph DB, vector DB, ML service, or final domain count is selected by this docs capture. | In progress | `RESEARCH-REPOSITORIES-001`, `DOMAIN-DECISION-001`, `docs/design/DECISION_LOG.md` |
@@ -162,14 +163,15 @@ Every active scope item should use this structure, either as a detailed record b
 | 5 | CODE-COMMENT-AUDIT-001 | Stale Inline Comment / TODO Audit | P1 | Not started | Fast lane | Run inspect-only comment audit before the next app-code implementation task if time allows. |
 | 6 | FORENSIC-DAY-SESSION-MISMATCH-001 | Forensic Day/Session data-flow audit | P1 | Completed | Fast lane | Audit found Day and Session use divergent presentation paths; use findings to drive canonical contract. |
 | 7 | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | Site-wide activity presentation consumer audit | P1 | Completed | Fast lane | Audit completed; use findings to constrain the next Day + Session parity implementation. |
-| 8 | ACTIVITY-PRESENTATION-CONTRACT-001 | Planned activity presentation contract, Day + Session parity only | P1 | Completed | Fast lane | Implemented and pushed through `c20432c`; all 84 v8.4 active session dates are covered by `05019f5`. |
+| 8 | ACTIVITY-PRESENTATION-CONTRACT-001 | Planned activity presentation contract, Day + Session parity only | P1 | Completed | Fast lane | Implemented and pushed through `c20432c`; all 96 v8.4 active session dates are covered after the tryout extension. |
 | 9 | ACTIVITY-PRESCRIPTION-001 | Activity Prescription Display Layer | P1 | Blocked | Fast lane | Current WIP is not commit-ready; address DEF-021 through DEF-027 before acceptance or commit. |
 | 10 | TEST-FIXTURE-001 | Verify and Establish Test Fixture Structure | P1 | Not started | Fast lane | Inspect-only QA fixture discovery before or alongside the first Activity Prescription implementation task. |
-| 11 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Completed | Fast lane | Automated proof at `6ab3f5e` verifies all 84 v8.4 plan dates are athlete-usable at the Day projection layer. |
+| 11 | FUTURE-DAY-READINESS-001 | Future-day readiness audit from June 23 onward | P1 | Completed | Fast lane | Automated proof verifies all 96 v8.4 plan dates are athlete-usable at the Day projection layer. |
 | 12 | CONDITIONING-CARDIO-DURATION-001 | Permanent load-based controlled bike/treadmill duration rule | P1 | Completed | Fast lane / canonical plan-source or projection-rule implementation | Completed by `a01beca`; shared planned-activity projection now applies load-based controlled cardio durations while preserving Day/active Session parity. |
 | 13 | ACTIVITY-LOGGING-001 | Activity-specific logging fields | P1 | Completed locally | Safe lane | Unified date-level logging is implemented; parent visual acceptance remains. |
-| 14 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 84 v8.4 active session dates. |
+| 14 | DAY-SESSION-PARITY-001 | Day/Session sequence parity | P1 | Completed | Fast lane | Day + active Session planned-activity parity is projection-verified across all 96 v8.4 active session dates. |
 | 15 | PLAN-CONTENT-001 | Plan content/title correctness | P1 | Completed locally | Source-review | Approved Aug 14-Sep 6 cutover and protected-history verification are complete locally; parent visual acceptance remains. |
+| 15.1 | PLAN-TRYOUT-EXTENSION-2026-001 | Late-August Ice / Pathway / U12B Tryout Plan Extension | P1 | In progress | Source-review -> Fast lane | Reconcile parent-confirmed Aug 22-Sep 18 Sport Loads and extend canonical Day coverage through Sep 18. |
 | 16 | RECOVERY-DAY-MODEL-001 | Recovery-day model completion | P1 | Not started | Source-review | Ensure intentional recovery prescriptions are represented from source. |
 | 17 | KPI-ROADMAP-001 | KPI roadmap and advanced KPI scope | P1 | In progress | Safe lane | Preserve scope; implement only after sync/model review. |
 | 18 | DAY-FIRST-ARCH-001 | Day-first architecture docs/test fixtures | P1 | Not started | Docs-only | Add fixtures and acceptance docs around canonical Day projection. |
@@ -232,12 +234,12 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
 
 | Status | IDs |
 | --- | --- |
-| In progress | KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
+| In progress | PLAN-TRYOUT-EXTENSION-2026-001, KPI-ROADMAP-001, DESIGN-GATE-001, TRANSITION-001, DATA-GOV-001, SOURCE-VALIDATION-001, RESEARCH-REPOSITORIES-001, KNOWLEDGE-INGESTION-001, HEURISTIC-SCORING-001, ATHLETE-PERSONALIZATION-001, SENSOR-FEEDBACK-001, MODEL-GOVERNANCE-001, STACK-EVOLUTION-001, DEF-DAY-DURATION-CONTRACT-001, DEF-027 |
 | Production runtime verified / Preview runtime pending | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001, DEF-ENV-PREVIEW-STAGING-OVERRIDE-001 |
 | Reopened / product QA found incomplete rendering-path coverage | DEF-029 |
 | Blocked | ACTIVITY-PRESCRIPTION-001, DEF-021, DEF-022, DEF-023, DEF-024, DEF-025, DEF-026 |
 | Completed locally | CAL-UX-MOBILE-DAY-ROWS-001, DEF-GANTT-SPORTLOAD-DURATION-001, DEF-DAY-KPI-TRUTH-DIVERGENCE-001, DEF-TRAINING-WORK-CANONICAL-DAY-001, DEF-SPORTLOAD-CONDITIONING-CONTRADICTION-001, DEF-SPEEDSTACK-WARMUP-DETAIL-001, PLAN-CONTENT-001, ACTIVITY-LOGGING-001, DEF-031 |
-| Not started | QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-032 |
+| Not started | QA-AUTOMATION-OWNERSHIP-001, QA-PLAYWRIGHT-SMOKE-001, DEF-QA-CODEX-RUNNER-001, CODE-COMMENT-AUDIT-001, TEST-FIXTURE-001, RECOVERY-DAY-MODEL-001, DAY-FIRST-ARCH-001, KPI-HISTORY-DASHBOARD-001, QA-SYSTEM-001, AUDIT-LOAD-CLASSIFICATION-001, DEF-FORWARD-DRILL-ENVIRONMENT-FIT-001, DEF-014, DEF-016, DEF-018, DEF-030, DEF-032 |
 | Scope review required | TRAINING-SAFETY-U12-001, CONDITIONING-MODEL-001, METHODOLOGY-001, DOMAIN-001, DOMAIN-DECISION-001, LOAD-001, ANALYTICS-001, PHASE-001, KPI-DOMAIN-001, READINESS-001, VISUALIZATION-001, RECOMMENDATION-001, QA-SAFETY-001, MLOPS-001, DEF-002, DEF-003, DEF-005, DEF-006, DEF-013, DEF-017, DEF-019, DEF-020 |
 | Completed | ENV-PREVIEW-DB-001, ENV-PREVIEW-DB-AUDIT-001, SPORT-LOAD-4V4-SUMMER-2026, PLAN-GANTT-SPORTLOAD-V84-001, FORENSIC-DAY-SESSION-MISMATCH-001, SURFACE-PRESENTATION-CONSUMER-AUDIT-001, ACTIVITY-PRESENTATION-CONTRACT-001, FUTURE-DAY-READINESS-001, DAY-SESSION-PARITY-001, CONDITIONING-CARDIO-DURATION-001, QA-AUTOMATION-002, DEF-007, DEF-028 |
 
@@ -775,7 +777,7 @@ Ground Truth Baseline:
 - Desired outcome: future days load, communicate day type, show executable content when planned, and avoid misleading statuses.
 - In scope: inspect Day/Calendar/Session projections for upcoming dates; add narrow fixes only if requested.
 - Out of scope: source-plan rewrite, broad redesign, Playwright unless separately approved.
-- Acceptance criteria: all 84 v8.4 plan dates from `2026-06-15` through `2026-09-06` project athlete-usable Day readiness with nonblank titles, guidance, visible planned elements, and forbidden source/internal label filtering.
+- Acceptance criteria: all 96 v8.4 plan dates from `2026-06-15` through `2026-09-18` project athlete-usable Day readiness with nonblank titles, guidance, visible planned elements, and forbidden source/internal label filtering.
 - Dependencies: Activity Prescription may expose more day usability gaps.
 - Risks: source gaps may be confused with app projection gaps.
 - Next action: maintain as regression proof before broader Day/Calendar/Session readiness work.
@@ -844,6 +846,48 @@ Ground Truth Baseline:
 - Findings: the forward generator omitted the Aug 14 Marc O’Connor load and retained stale/non-duration Marc details for Aug 15-16. The local correction replaces Aug 14 training work with one 90-minute Marc Sport Load, sets Aug 15 to 120 minutes, and sets Aug 16 Marc to 60 minutes without changing its 4v4 source row.
 - Next action: complete automated integrity checks and parent visual acceptance before commit.
 - Links / evidence: v8.4 dayExecutionPlan/session data.
+
+### PLAN-TRYOUT-EXTENSION-2026-001
+
+- ID: PLAN-TRYOUT-EXTENSION-2026-001
+- Title: Late-August Ice / Pathway / U12B Tryout Plan Extension
+- Type: Source Review
+- Parent: PLAN-CONTENT-001
+- Priority: P1
+- Status: In progress
+- Lane: Source-review -> Fast lane
+- Owner: Mike / Codex
+- Source: Parent-confirmed future schedule and explicit v8.4 source-update authorization on 2026-08-19.
+- Problem: v8.4 ends on Sep 6, contains a stale Sep 1 tryout assumption, and does not include confirmed late-August Marc ice, Aug 30 4v4, Sep 5-6 Marc ice, Sep 7-11 Pathway, or Sep 12-18 U12B tryout events.
+- Desired outcome: one canonical Day truth from Aug 22 through Sep 18, with confirmed Sport Loads rendered once and no hard workout appended on primary Sport Load or between-tryout recovery days.
+- In scope: reconcile approved Sport Loads from Aug 22 through Sep 18; remove the Sep 1 tryout; reconcile Aug 31-Sep 4 roles; extend canonical Day, session, Calendar, and required Plan/Gantt date/week coverage; add focused regression coverage and update legitimate import counts.
+- Out of scope: Supabase writes, production mutation, schema/KPI/log-stream changes, AI Coach, methodology redesign, unrelated surface redesign, invented exercises, dates on or before 2026-08-19, commit, push, or deploy.
+- Acceptance criteria: confirmed late-August and Sep Sport Loads render exactly once; no Sep 1 tryout remains; every Sep 7-18 date has a meaningful canonical Day state; conditional tryout sessions are visible as conditional; Sport Load and Training Work evidence remain separate; required verification passes.
+- Dependencies: v8.4 source package, existing approved drill library, `DEC-FORWARD-PLAN-001`, `DEC-SPORTLOAD-001`, `DEC-RECOVERY-001`.
+- Risks: stale hard-coded Sep 6/84-date assumptions or forward-plan rules could hide valid extended dates; assigned Sep 12 Skills attendance remains unknown.
+- Next action: inspect and implement the bounded source/projection extension, run required checks, then hold for Mike's source-diff and product review.
+- Links / evidence: `imports/v8.4/data/`, `lib/imports/v8_4/`, `lib/projections/forwardPlanIntegrity.ts`.
+
+### DEF-FORWARD-DRILL-ENVIRONMENT-FIT-001
+
+- ID: DEF-FORWARD-DRILL-ENVIRONMENT-FIT-001
+- Title: Forward training drill may require ice/open-space environment without a usable at-home regression
+- Type: Defect
+- Parent: PLAN-CONTENT-001
+- Priority: P1
+- Status: Not started
+- Lane: Source-review
+- Owner: Mike / Codex
+- Source: Parent product-trust observation for 2026-08-19.
+- Problem: Full-Speed Weave with Scan, Read-React Puck Carry, and Sprint-In Shot do not make the space/environment requirement clear enough for basement execution.
+- Desired outcome: source review determines an approved environment-fit presentation or regression without Codex inventing training content.
+- In scope: capture only in this work order; later source review of environment requirements and approved regressions.
+- Out of scope: changing the Aug 19 plan or fixing the drill presentation during `PLAN-TRYOUT-EXTENSION-2026-001`.
+- Acceptance criteria: defect remains visible as open P1 product-trust source review and no Aug 19 source content changes in the schedule reconciliation.
+- Dependencies: parent/coach-approved drill library guidance.
+- Risks: an invented regression would violate source authority and could misrepresent safe execution.
+- Next action: schedule separate source review after the tryout extension is accepted.
+- Links / evidence: canonical Day for 2026-08-19.
 
 ### RECOVERY-DAY-MODEL-001
 
@@ -1418,7 +1462,7 @@ Scheduling interactions to consider, not automatic risk dates:
 - Owner: Mike / Codex
 - Source: Mike product QA after `f247959`.
 - Problem: Daily Sport Loads such as 4v4 Hockey, lacrosse, and Marc O'Connor ice should not render as full-week duration bars or as text labels crammed into weekly cells. The prior `ec283ce` fix correctly derived date semantics but failed the visual model: Mike rejected it because it still looked like a weekly chip table, not a real Gantt.
-- Desired outcome: Plan/Gantt renders a true daily-scale Gantt for the 12-week plan while preserving v8.4 as the source of truth.
+- Desired outcome: Plan/Gantt renders a true daily-scale Gantt for the 14-week performance period while preserving v8.4 as the source of truth.
 - In scope: bounded Plan/Gantt presentation fix, 84-day timeline helper logic, v8.4-derived Sport Load date/span logic, focused tests, required docs updates, and no data mutation.
 - Out of scope: source JSON edits, import count changes, Supabase, completed logs, Calendar/Day/KPI changes, broad Gantt redesign, or new training content.
 - Acceptance criteria:
@@ -2102,7 +2146,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 | DEF-025 | Session form leaks stale/internal/source language | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Session form showed labels/copy such as `IQ 5 daily cue`, `Skill IQ Mindset`, `Recovery Rules`, and older scan/support/talk style copy. | Session form does not expose raw/source/workbook labels as athlete-facing primary labels or instructions. | audit Session projection output and add parity tests. | source JSON edits or invented instructions. | known forbidden/internal phrases are covered by tests in Session projection output. | FORENSIC-DAY-SESSION-MISMATCH-001 | session execution remains confusing during live training. | Audit Session form source path and display transformations. | Mike browser QA |
 | DEF-026 | Current ACTIVITY-PRESCRIPTION WIP is not commit-ready | Defect | Activity Prescription | P1 | Blocked | Fast lane | Mike / Codex | June 19 browser QA | Browser QA failed across Day/Session consistency and missing loggable steps. | Current WIP is not committed until architecture mismatch is resolved. | forensic audit, fix plan approval, Day/Session parity implementation, browser verification. | committing or pushing current WIP. | forensic data-flow audit completed, fix plan approved, Day and Session parity implemented and browser-verified. | DEF-021, DEF-022, DEF-023, DEF-024, DEF-025 | committing WIP would preserve known critical defects. | Keep WIP uncommitted; start forensic audit. | Mike browser QA |
 | DEF-027 | Site-wide activity presentation drift risk | Defect | Activity Prescription | P1 | In progress | Fast lane | Mike / Codex | FORENSIC-DAY-SESSION-MISMATCH-001 and Mike review | Day and Session already diverged for June 19; similar display/data drift may exist wherever the app renders plan/activity/session labels, including Today, Calendar, Dashboard, History, Library, exports, and reports. | Every athlete-facing consumer of plan/activity/session display data uses or is intentionally classified against the canonical activity presentation contract. | site-wide consumer audit, canonical presentation rules for label, duration, description, source-language filtering, loggable classification, and trace fields. | unapproved broad surface rewrites; source JSON edits. | every athlete-facing consumer is identified and classified as must consume canonical activity presentation contract now, can consume summary projection from the same contract, admin/source/reference-only exception, or deferred with explicit rationale; tests or fixtures prevent drift for critical surfaces. | SURFACE-PRESENTATION-CONSUMER-AUDIT-001 | surface-specific cosmetic patches may keep creating inconsistent athlete instructions and logging representations. | Calendar slice completed locally through canonical compact rows, direct unified-log navigation, expandable details, canonical forward/historical planned-work discovery, and shared Day/Calendar evidence projections; continue only with separately approved surface loops. | `DEC-CALENDAR-002`; Calendar Vitest/render/Playwright coverage; other broad surfaces remain deferred |
-| DEF-028 | Completed-session surfaces bypass ActivityPresentation context | Defect | Activity Presentation | P1 | Completed | Fast lane | Mike / Codex | Production browser QA after `9964e52`; commits `9fd4c73`, `05019f5` | Completed-session/read-only flow previously showed stale legacy title `Speed Stack C, conditioning, and shooting.` while Day and reopened/edit Session showed `Acceleration and accurate shooting.` | Completed-session and previous-attempt surfaces use the same presentation contract where appropriate without mutating saved historical records. | completed-session/read-only display path repaired to prefer canonical day/session presentation title; automated component proof added. | saved session mutation, Supabase writes, backfill, delete, migration, or changing transactional session records to fix display. | Completed-session/read-only title no longer contradicts canonical Day / active Session title when canonical context is available; saved data remains intact. | ACTIVITY-PRESENTATION-CONTRACT-001, QA-AUTOMATION-002 | route-state browser visibility remains state-dependent, but the display fallback behavior is covered by component-level automated proof. | Keep saved records immutable; use targeted fixture work only if future browser coverage is needed. | Commit `9fd4c73` fixed and tested DEF-028; commit `05019f5` verifies Day + active Session planned-activity parity across all 84 v8.4 active session dates. |
+| DEF-028 | Completed-session surfaces bypass ActivityPresentation context | Defect | Activity Presentation | P1 | Completed | Fast lane | Mike / Codex | Production browser QA after `9964e52`; commits `9fd4c73`, `05019f5` | Completed-session/read-only flow previously showed stale legacy title `Speed Stack C, conditioning, and shooting.` while Day and reopened/edit Session showed `Acceleration and accurate shooting.` | Completed-session and previous-attempt surfaces use the same presentation contract where appropriate without mutating saved historical records. | completed-session/read-only display path repaired to prefer canonical day/session presentation title; automated component proof added. | saved session mutation, Supabase writes, backfill, delete, migration, or changing transactional session records to fix display. | Completed-session/read-only title no longer contradicts canonical Day / active Session title when canonical context is available; saved data remains intact. | ACTIVITY-PRESENTATION-CONTRACT-001, QA-AUTOMATION-002 | route-state browser visibility remains state-dependent, but the display fallback behavior is covered by component-level automated proof. | Keep saved records immutable; use targeted fixture work only if future browser coverage is needed. | Commit `9fd4c73` fixed and tested DEF-028; Day + active Session planned-activity parity now covers all 96 v8.4 active session dates. |
 | DOC-DRIFT-001 | Documentation current-state drift | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs diverged from current reality. | docs are trustworthy. | docs consolidation. | app changes. | active scope centralized. | SCOPE-CONSOLIDATION-001 | wrong next work. | Use `docs/SCOPE.md` as canonical active scope source. | `docs/DOCUMENTATION_INVENTORY.md` |
 | DOC-INV-001 | Documentation inventory/consolidation needed | Defect | Scope control | P0 | Completed | Docs-only | Mike / Codex | Docs reconciliation | Docs lacked inventory. | inventory guides archive/merge. | inventory update. | deletion. | inventory reflects SCOPE canonical. | SCOPE-CONSOLIDATION-001 | stale ownership. | Use `docs/DOCUMENTATION_INVENTORY.md` for inventory only. | `docs/DOCUMENTATION_INVENTORY.md` |
 

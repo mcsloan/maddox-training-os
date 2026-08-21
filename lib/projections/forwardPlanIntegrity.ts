@@ -1,7 +1,7 @@
 import { projectCanonicalDay } from "./canonicalDay";
 
 export const FORWARD_PLAN_START = "2026-08-14";
-export const FORWARD_PLAN_END = "2026-09-06";
+export const FORWARD_PLAN_END = "2026-09-18";
 
 export type ForwardPlanIntegrityRow = {
   date: string;
@@ -43,13 +43,13 @@ export function inspectForwardDate(date: string): ForwardPlanIntegrityRow {
   if (executable.some((activity) => activity.sourceTrace?.sessionId !== day.sessionId)) issues.push("source_session_identity_mismatch");
   if (isSportOnlyDate(date) && training.length) issues.push("sport_only_day_has_training");
   if (date === "2026-08-20" && (training.length !== 1 || training[0].category !== "kpi")) issues.push("kpi_day_has_appended_work");
-  if (date === "2026-08-31" && training.some((activity) => activity.category === "conditioning" || activity.category === "speed_stack")) issues.push("taper_has_hard_conditioning_or_full_stack");
+  if (["2026-08-31", "2026-09-14", "2026-09-16"].includes(date) && training.some((activity) => activity.category === "conditioning" || activity.category === "speed_stack")) issues.push("recovery_day_has_hard_conditioning_or_full_stack");
   if (["2026-08-17", "2026-08-21"].includes(date) && training.filter((activity) => activity.id === "WEAK-PULL-12").length !== 1) issues.push("pull_weakness_module_missing_or_duplicate");
   if (!["2026-08-17", "2026-08-21"].includes(date) && training.some((activity) => activity.id === "WEAK-PULL-12")) issues.push("pull_weakness_module_wrong_date");
   if (training.filter((activity) => activity.focus === "Shot accuracy").length > 1) issues.push("shooting_weakness_duplicate");
   const speed = training.filter((activity) => activity.category === "speed_stack");
   if (speed.length > 1) issues.push("multiple_speed_stacks");
-  if (eventDependent && (date < "2026-09-02" || date > "2026-09-06")) issues.push("event_dependency_wrong_date");
+  if (eventDependent && !["2026-09-17", "2026-09-18"].includes(date)) issues.push("event_dependency_wrong_date");
 
   return {
     date,
@@ -72,7 +72,10 @@ export function inspectForwardDate(date: string): ForwardPlanIntegrityRow {
 }
 
 function isSportOnlyDate(date: string) {
-  return ["2026-08-14", "2026-08-15", "2026-08-16", "2026-08-23", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-09-01"].includes(date);
+  return [
+    "2026-08-14", "2026-08-15", "2026-08-16", "2026-08-22", "2026-08-23", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-29", "2026-08-30",
+    "2026-09-05", "2026-09-06", "2026-09-07", "2026-09-08", "2026-09-09", "2026-09-10", "2026-09-11", "2026-09-12", "2026-09-13", "2026-09-15", "2026-09-17", "2026-09-18",
+  ].includes(date);
 }
 
 function enumerateDates(start: string, end: string) {

@@ -4,20 +4,36 @@ import { projectCanonicalDay } from "./canonicalDay";
 import { sportLoads } from "../imports/v8_4";
 
 describe("parent-approved forward plan integrity", () => {
-  it("passes every Aug 14-Sep 6 date or marks the approved unknown tryout window event-dependent", () => {
+  it("passes every Aug 14-Sep 18 date and marks only conditional advancement events event-dependent", () => {
     const matrix = buildForwardPlanIntegrityMatrix();
-    expect(matrix).toHaveLength(24);
+    expect(matrix).toHaveLength(36);
     expect(matrix.filter((row) => row.verdict === "FAIL")).toEqual([]);
     expect(matrix.filter((row) => row.verdict === "INTENTIONAL_EVENT_DEPENDENT").map((row) => row.date)).toEqual([
-      "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05", "2026-09-06",
+      "2026-09-17", "2026-09-18",
     ]);
   });
 
   it.each([
     ["2026-08-14", 0], ["2026-08-17", 47], ["2026-08-18", 75], ["2026-08-19", 55],
-    ["2026-08-20", 50], ["2026-08-21", 47], ["2026-08-22", 20], ["2026-08-29", 35],
-    ["2026-08-30", 30], ["2026-08-31", 26], ["2026-09-02", 20],
+    ["2026-08-20", 50], ["2026-08-21", 47], ["2026-08-22", 0], ["2026-08-29", 0],
+    ["2026-08-30", 0], ["2026-08-31", 10], ["2026-09-02", 30], ["2026-09-14", 10], ["2026-09-16", 10],
   ])("locks displayed training duration for %s", (date, total) => expect(inspectForwardDate(date).trainingTotal).toBe(total));
+
+  it("reconciles the approved late-August and tryout Sport Loads without duplicates or stale Sep 1 truth", () => {
+    const expected = new Map([
+      ["2026-08-22", "Marc O'Connor Ice"], ["2026-08-23", "4v4 Hockey"], ["2026-08-29", "Marc O'Connor Ice"], ["2026-08-30", "4v4 Hockey"],
+      ["2026-09-05", "Marc O'Connor Ice"], ["2026-09-06", "Marc O'Connor Ice"], ["2026-09-07", "NMHA Player Pathway / Pre-Tryout Conditioning"],
+      ["2026-09-12", "Nepean Raiders U12B Tryout — Skills"], ["2026-09-17", "Nepean Raiders U12B Tryout — Invite Only / Intersquad"], ["2026-09-18", "Nepean Raiders U12B Tryout — Balance"],
+    ]);
+    for (const [date, title] of Array.from(expected)) {
+      expect(sportLoads.filter((load) => load.date === date && load.sportLoad === title), date).toHaveLength(1);
+      expect(projectCanonicalDay(date).sportLoads.map((load) => load.title), date).toContain(title);
+    }
+    expect(sportLoads.filter((load) => load.date === "2026-09-01")).toEqual([]);
+    expect(JSON.stringify(sportLoads)).not.toContain("Tryout begins");
+    expect(inspectForwardDate("2026-09-17").eventDependent).toBe(true);
+    expect(inspectForwardDate("2026-09-18").eventDependent).toBe(true);
+  });
 
   it("locks the parent-confirmed Aug 14-16 Marc O’Connor Sport Loads without changing Sunday 4v4", () => {
     const expected = [

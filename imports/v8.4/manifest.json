@@ -7,8 +7,8 @@
   "files": [
     {
       "file": "data/dayExecutionPlan.json",
-      "recordCount": 542,
-      "sha256": "87fed7cf949b8820fe2378837bf47ab9c083f808aa44e14d4b136a3c74763fd5"
+      "recordCount": 570,
+      "sha256": "47eac8ab5a49d3af2d4e7ff4f3e2f090c69116eaf31beb247e308aee200ddea3"
     },
     {
       "file": "data/drillCards.json",
@@ -28,7 +28,7 @@
     {
       "file": "data/ganttModel.json",
       "recordCount": 17,
-      "sha256": "dff8cc869be3e0b82d1b9d3a06335bd65bfeb7fc70c9230d00e44cf615b0c2fc"
+      "sha256": "d9b16c501161ce8b62ad783595fc1fa0125937adceda653efd4af098cdb232bd"
     },
     {
       "file": "data/hockeyIq.json",
@@ -37,7 +37,7 @@
     },
     {
       "file": "data/importQaReport.json",
-      "sha256": "e2212e4f44ca0ba4816332502521e3ce17dc24c0c60a16feb3e89707cc4c655d",
+      "sha256": "a9cdad9da3ffe1122694a131a6aac4bf8b4438018b83bffa90c73eb8d70250f2",
       "recordCount": 7
     },
     {
@@ -67,13 +67,13 @@
     },
     {
       "file": "data/phaseLabels.json",
-      "recordCount": 12,
-      "sha256": "2907e11d2dcd1114896a7933ee28700ad8a65317c34642c0067ac8c6f36d61fb"
+      "recordCount": 14,
+      "sha256": "063fe4329223015222bf36fdb4371f4ce36928d0ee6238c43b99f18deda08b40"
     },
     {
       "file": "data/phaseMap.json",
-      "recordCount": 12,
-      "sha256": "a903e6330d8697085d985043d3453be37e7a06b50a437dbb95f1f01dfd6657ab"
+      "recordCount": 14,
+      "sha256": "c8e4bc3cc4c262d6740f38a5d1aa040a3f767b74bd0937c4efcbc27fe6a6f814"
     },
     {
       "file": "data/recoveryRules.json",
@@ -82,8 +82,8 @@
     },
     {
       "file": "data/sessions.json",
-      "recordCount": 84,
-      "sha256": "762504ee9414b7ec93ed1447f1a5afaaa7738b5e29e29ff307fd85a70dbec3c9"
+      "recordCount": 96,
+      "sha256": "1e7b2fbd76676710a5342984135586276beca1a2d99b697a3eb31827ef945136"
     },
     {
       "file": "data/shootingProgression.json",
@@ -117,8 +117,8 @@
     },
     {
       "file": "data/sportLoads.json",
-      "recordCount": 39,
-      "sha256": "f8562c28b4f3370113332af15bb753dca3f51c473e8c965129a68951f432f518"
+      "recordCount": 53,
+      "sha256": "adb913cec11cbd33024a72d4f837970032b46198fee852a0215d5a80b79f52c9"
     },
     {
       "file": "data/videoCoverageReport.json",

@@ -17,10 +17,10 @@ const unresolvedIds = ["SKL-HU-001", "SKL-GS-001", "SKL-DEKE-001", "SKL-DEKE-002
 describe("forward execution content completeness", () => {
   it("records honest content and video gaps without filler", () => {
     const matrix = buildForwardContentCompletenessMatrix();
-    expect(matrix).toHaveLength(44);
-    expect(matrix.filter((row) => row.verdict === "PASS")).toHaveLength(15);
-    expect(matrix.filter((row) => row.verdict === "CONTENT GAP" || row.verdict === "CONTENT + VIDEO GAP")).toHaveLength(2);
-    expect(matrix.filter((row) => row.verdict === "VIDEO GAP" || row.verdict === "CONTENT + VIDEO GAP")).toHaveLength(29);
+    expect(matrix).toHaveLength(48);
+    expect(matrix.filter((row) => row.verdict === "PASS")).toHaveLength(28);
+    expect(matrix.filter((row) => row.verdict === "CONTENT GAP" || row.verdict === "CONTENT + VIDEO GAP")).toHaveLength(8);
+    expect(matrix.filter((row) => row.verdict === "VIDEO GAP" || row.verdict === "CONTENT + VIDEO GAP")).toHaveLength(14);
     expect(matrix.every((row) => row.loggingIdentityValid && row.loggingFieldsAvailable)).toBe(true);
     expect(matrix.find((row) => row.activityId === "SS-A-P5W2")?.verdict).toBe("PASS");
     expect(matrix.some((row) => row.issues.includes("approved_video_mapping_incomplete"))).toBe(true);

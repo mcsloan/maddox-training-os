@@ -276,7 +276,7 @@ function normalizeNeedsReview(records: Array<Record<string, unknown>>) {
 
 export function validateV84ImportPackage({ strict = true }: { strict?: boolean } = {}) {
   const issues: V84ValidationIssue[] = [];
-  if (!ganttModel || ganttModel.weeks.length !== 12 || ganttModel.lanes.length !== 17) {
+  if (!ganttModel || ganttModel.weeks.length !== 14 || ganttModel.lanes.length !== 17) {
     issues.push({ file: "data/ganttModel.json", message: "Locked Gantt model is missing required weeks or lanes." });
   }
 
@@ -284,16 +284,16 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
     issues.push({ file: "data/exerciseVideoMap.json", message: "Video map should contain 161 records." });
   }
 
-  if (dayExecutionPlan.length !== 542) {
-    issues.push({ file: "data/dayExecutionPlan.json", message: "Day execution plan should contain 542 records." });
+  if (dayExecutionPlan.length !== 570) {
+    issues.push({ file: "data/dayExecutionPlan.json", message: "Day execution plan should contain 570 records." });
   }
 
   if (needsReview.length !== 0) {
     issues.push({ file: "data/needsReview.json", message: "needsReview should contain 0 records." });
   }
 
-  if (sessions.length !== 84) {
-    issues.push({ file: "data/sessions.json", message: "Sessions should contain 84 records." });
+  if (sessions.length !== 96) {
+    issues.push({ file: "data/sessions.json", message: "Sessions should contain 96 records." });
   }
 
   if (drillCards.length !== 154) {
@@ -315,12 +315,12 @@ export function validateV84ImportPackage({ strict = true }: { strict?: boolean }
     issues.push({ file: "data/kpiProtocols.json", message: "KPI protocols should contain 6 records." });
   }
 
-  if (sportLoads.length !== 37) {
-    issues.push({ file: "data/sportLoads.json", message: "Sport loads should contain 37 records." });
+  if (sportLoads.length !== 53) {
+    issues.push({ file: "data/sportLoads.json", message: "Sport loads should contain 53 records." });
   }
 
-  if (phaseMap.length !== 12 || phaseLabels.length !== 12) {
-    issues.push({ file: "data/phaseMap.json", message: "Phase map and labels should contain 12 records each." });
+  if (phaseMap.length !== 14 || phaseLabels.length !== 14) {
+    issues.push({ file: "data/phaseMap.json", message: "Phase map and labels should contain 14 records each." });
   }
 
   if (hockeyIq.length !== 6) {

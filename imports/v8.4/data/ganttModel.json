@@ -14,7 +14,9 @@
     "W9",
     "W10",
     "W11",
-    "W12"
+    "W12",
+    "W13",
+    "W14"
   ],
   "lanes": [
     {
@@ -143,6 +145,14 @@
         {
           "week": "W12",
           "label": "Taper"
+        },
+        {
+          "week": "W13",
+          "label": "Pathway / Tryout"
+        },
+        {
+          "week": "W14",
+          "label": "Tryout"
         }
       ]
     },

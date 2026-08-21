@@ -47,9 +47,9 @@ describe("day presentation", () => {
   it("projects every v8.4 date into a usable athlete-facing Day payload", () => {
     const dates = getV84CalendarDates();
 
-    expect(dates).toHaveLength(84);
+    expect(dates).toHaveLength(96);
     expect(dates[0]).toBe("2026-06-15");
-    expect(dates[dates.length - 1]).toBe("2026-09-06");
+    expect(dates[dates.length - 1]).toBe("2026-09-18");
 
     for (const date of dates) {
       const routeData = buildRouteLikeDayPresentation(date);

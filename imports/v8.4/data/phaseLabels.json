@@ -118,5 +118,25 @@
     "dashboardMonthlyLabel": "Taper + Peak",
     "appLabel": "Taper + Peak",
     "notes": "Fresh legs and confidence into tryouts."
+  },
+  {
+    "week": 13,
+    "start": "2026-09-07",
+    "end": "2026-09-13",
+    "canonicalPhaseLabel": "Taper + Peak",
+    "shortGanttLabel": "Pathway + Tryout",
+    "dashboardMonthlyLabel": "Taper + Peak",
+    "appLabel": "Taper + Peak",
+    "notes": "Pathway and opening U12B evaluations are the primary stimuli."
+  },
+  {
+    "week": 14,
+    "start": "2026-09-14",
+    "end": "2026-09-18",
+    "canonicalPhaseLabel": "Taper + Peak",
+    "shortGanttLabel": "Tryout",
+    "dashboardMonthlyLabel": "Taper + Peak",
+    "appLabel": "Taper + Peak",
+    "notes": "Recovery between conditional U12B evaluations; performance period ends Sep 18."
   }
 ]

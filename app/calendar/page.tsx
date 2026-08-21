@@ -34,7 +34,7 @@ export default function CalendarPage() {
 
   return <div>
     <header className="mb-5">
-      <p className="label">12-week plan</p>
+      <p className="label">14-week performance period</p>
       <h1 className="text-4xl font-black">Calendar</h1>
       <p className="mt-2 text-slate-600">Find a date, review the essentials, and go straight to today&apos;s logging flow.</p>
     </header>

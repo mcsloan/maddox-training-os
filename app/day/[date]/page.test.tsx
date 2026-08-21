@@ -24,10 +24,14 @@ describe("compact canonical Day route", () => {
     ["2026-08-16", "Marc + 4v4 Game-Speed Day", "4v4 Hockey"],
     ["2026-08-18", "Speed Stack A + Puck Quality", "Training total: 75 min"],
     ["2026-08-20", "KPI Retest", "Training total: 50 min"],
-    ["2026-08-24", "Sensplex Camp", "Sensplex Camp"],
-    ["2026-08-29", "Technical Reset", "Training total: 35 min"],
-    ["2026-08-31", "Tryout Primer", "Training total: 26 min"],
-    ["2026-09-01", "Tryout", "Tryout"],
+    ["2026-08-24", "Sensplex Competitive Player Development Camp", "Sensplex Competitive Player Development Camp"],
+    ["2026-08-29", "Marc O&#x27;Connor Ice", "120 min"],
+    ["2026-08-31", "Recovery / Absorb", "Training total: 10 min"],
+    ["2026-09-01", "Speed/Power Primer + Shot", "Training total: 16 min"],
+    ["2026-09-07", "NMHA Player Pathway / Pre-Tryout Conditioning", "50 min"],
+    ["2026-09-12", "Nepean Raiders U12B Tryout — Skills", "120 min"],
+    ["2026-09-17", "Invite Only / Intersquad", "60 min"],
+    ["2026-09-18", "U12B Tryout — Balance", "90 min"],
   ])("renders approved forward summary for %s", async (date, title, expected) => {
     const html = await renderDay(date);
     expect(html).toContain(title);

@@ -167,7 +167,7 @@ Before deploying:
 ## Main Screens
 
 - `/today`: today's workout, focus, phase, cues, and session start
-- `/plan`: 12-week plan overview, weekly objectives, loads, KPI checkpoints, and parent watch-outs
+- `/plan`: 14-week performance-period overview, weekly objectives, loads, KPI checkpoints, and parent watch-outs
 - `/calendar`: all currently modeled scheduled training days grouped by week
 - `/day/[date]`: read-only any-day preview with training, external loads, blocks, drills, rules, equipment, and start action
 - `/external-load/[id]`: mobile external-load reflection and recovery logging

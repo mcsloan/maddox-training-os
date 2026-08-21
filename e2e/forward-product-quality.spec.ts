@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const dates = enumerateDates("2026-08-14", "2026-09-06");
+const dates = enumerateDates("2026-08-14", "2026-09-18");
 const screenshotDates = new Set(["2026-08-14", "2026-08-16", "2026-08-18", "2026-08-24", "2026-08-31"]);
 const forbidden = /Use the referenced approved source drill\/module|Quality first|Weakness Overlay|None Camp Provides Conditioning|source missing|approved module reference|content gap|unresolved mapping/i;
 const expectedDemoCounts: Record<string, number> = {
@@ -8,15 +8,8 @@ const expectedDemoCounts: Record<string, number> = {
   "2026-08-18": 9,
   "2026-08-19": 3,
   "2026-08-21": 1,
-  "2026-08-22": 1,
-  "2026-08-29": 1,
-  "2026-08-30": 4,
-  "2026-08-31": 3,
-  "2026-09-02": 1,
-  "2026-09-03": 1,
-  "2026-09-04": 1,
-  "2026-09-05": 1,
-  "2026-09-06": 1,
+  "2026-09-01": 2,
+  "2026-09-03": 2,
 };
 
 test("all forward Day and Log routes satisfy the read-only product contract", async ({ page }) => {
