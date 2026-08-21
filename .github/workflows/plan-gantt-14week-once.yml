@@ -1,0 +1,37 @@
+name: Plan Gantt 14 Week Once
+
+on:
+  push:
+    branches:
+      - fix/plan-gantt-14week-and-core-smoke
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[plan-gantt-patched]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: fix/plan-gantt-14week-and-core-smoke
+          fetch-depth: 0
+      - name: Apply guarded Plan/Gantt patch
+        run: node scripts/fix-plan-gantt-14week-2026-08-21.mjs
+      - name: Verify patch
+        run: |
+          git diff --check
+          git diff -- app/plan/page.tsx components/WeeklyLoadChart.tsx e2e/forward-product-quality.spec.ts docs/SCOPE.md
+      - name: Remove one-shot machinery
+        run: |
+          rm scripts/fix-plan-gantt-14week-2026-08-21.mjs
+          rm .github/workflows/plan-gantt-14week-once.yml
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/plan/page.tsx components/WeeklyLoadChart.tsx e2e/forward-product-quality.spec.ts docs/SCOPE.md scripts/fix-plan-gantt-14week-2026-08-21.mjs .github/workflows/plan-gantt-14week-once.yml
+          git commit -m "fix(plan): render canonical 14-week performance period [plan-gantt-patched]"
+          git push
