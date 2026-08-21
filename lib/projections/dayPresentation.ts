@@ -627,7 +627,10 @@ function plannedKpisIncludeShooting(plannedKpis: KPI[]) {
 
 function isEasyConditioningEntry(entry: V84DayExecutionPlanEntry) {
   const text = `${entry.entryType} ${entry.entryTitle} ${entry.notes} ${entry.appRenderHint}`.toLowerCase();
-  return text.includes("bike") || text.includes("treadmill") || (entry.entryType.toLowerCase().includes("conditioning") && text.includes("fresh"));
+  return entry.entryType.toLowerCase().includes("conditioning")
+    && /^optional$/i.test(entry.requiredOptional)
+    && text.includes("fresh")
+    && isControlledBikeTreadmillEntry(entry);
 }
 
 function isControlledBikeTreadmillEntry(entry: V84DayExecutionPlanEntry) {
