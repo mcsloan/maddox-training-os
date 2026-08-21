@@ -64,6 +64,23 @@ test("Aug 20 is one 14-item KPI Test in the canonical execution flow", async ({ 
   await page.screenshot({ fullPage: true, path: "qa-artifacts/forward-product-quality/2026-08-20-log.png" });
 });
 
+test("Today redirects to the canonical dated Day route", async ({ page }) => {
+  await page.goto("/today");
+  await expect(page).toHaveURL(/\/day\/\d{4}-\d{2}-\d{2}$/);
+});
+
+test("Plan renders the canonical 14-week performance period through Sep 18", async ({ page }) => {
+  await page.goto("/plan");
+  await expect(page.getByText("14-week performance plan", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "14-Week Methodology", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^W13 ·/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^W14 ·/ })).toBeVisible();
+  await expect(page.getByText(/Week 13 · Sep 7-Sep 13/)).toBeVisible();
+  await expect(page.getByText(/Week 14 · Sep 14-Sep 18/)).toBeVisible();
+  await expect(page.getByText("Weekly Load · W1-W12", { exact: true })).toBeVisible();
+  await expect(page.locator("body")).not.toContainText("12-week offseason plan");
+});
+
 function enumerateDates(start: string, end: string) {
   const result: string[] = [];
   for (let date = new Date(`${start}T12:00:00Z`); date <= new Date(`${end}T12:00:00Z`); date.setUTCDate(date.getUTCDate() + 1)) result.push(date.toISOString().slice(0, 10));

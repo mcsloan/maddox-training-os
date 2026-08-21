@@ -25,8 +25,8 @@ export function WeeklyLoadChart() {
   return (
     <section className="card mt-6">
       <p className="label">Planned vs actual foundation</p>
-      <h2 className="text-2xl font-black">Weekly Load</h2>
-      <p className="mt-2 text-sm text-slate-600">Planned load reflects the full plan, including dryland, hockey, lacrosse, camps, recovery, and taper.</p>
+      <h2 className="text-2xl font-black">Weekly Load · W1-W12</h2>
+      <p className="mt-2 text-sm text-slate-600">This comparison retains the original W1-W12 planned-load model. W13-W14 Pathway and tryout loads are shown in the canonical Gantt and week cards without inventing legacy load scores.</p>
       <div className="mt-6 overflow-x-auto"><div className="grid min-w-[720px] grid-cols-12 gap-2">
         {trainingPlan.weeks.map((week) => {
           const planned = getWeekPlanSummary(week).loadLevel;

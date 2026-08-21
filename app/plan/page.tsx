@@ -6,6 +6,7 @@ import {
   buildPlanSportLoadOverlayRows,
   formatShortDate,
   getPlanSportLoadOverlayItemsForWeek,
+  getDayColumnIndex,
   getSpanGridColumns,
   getTimelineDays,
   type PlanGanttDisplayKind,
@@ -15,13 +16,17 @@ import { formatPlanDate, getWeekPlanSummary, trainingPlan } from "@/lib/training
 
 export default function PlanPage() {
   const { overview, weeks, version, sourceTag } = trainingPlan;
+  const canonicalStartDate = phaseLabels[0]?.start ?? overview.startDate;
+  const canonicalEndDate = phaseLabels[phaseLabels.length - 1]?.end ?? overview.endDate;
+  const canonicalWeekCount = phaseLabels.length;
+  const extensionWeeks = phaseLabels.filter((phaseWeek) => !weeks.some((week) => week.weekNumber === phaseWeek.week));
 
   return (
     <div>
       <div className="mb-6">
-        <p className="label">12-week offseason plan</p>
+        <p className="label">{canonicalWeekCount}-week performance plan</p>
         <h1 className="text-4xl font-black">Plan</h1>
-        <p className="mt-2 text-slate-600">{formatPlanDate(overview.startDate)} to {formatPlanDate(overview.endDate)}</p>
+        <p className="mt-2 text-slate-600">{formatPlanDate(canonicalStartDate)} to {formatPlanDate(canonicalEndDate)}</p>
       </div>
 
       <section className="card bg-navy text-white">
@@ -55,7 +60,7 @@ export default function PlanPage() {
         <p className="mt-5 rounded-none border-l-4 border-blue bg-ice p-4 text-sm font-semibold">Sport loads are part of the plan. The app adjusts dryland volume around camps, on-ice sessions, lacrosse, and recovery windows.</p>
       </section>
 
-      <MethodologyPanel />
+      <MethodologyPanel weekCount={canonicalWeekCount} />
       <PhaseGantt />
       <WeeklyLoadChart />
 
@@ -124,17 +129,46 @@ export default function PlanPage() {
             </article>
           );
         })}
+        {extensionWeeks.map((phaseWeek) => {
+          const loads = getPlanSportLoadOverlayItemsForWeek(phaseWeek.week);
+          return (
+            <article className="card" key={phaseWeek.week}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="label">Week {phaseWeek.week} · {formatPlanDate(phaseWeek.start, { month: "short", day: "numeric" })}-{formatPlanDate(phaseWeek.end, { month: "short", day: "numeric" })}</p>
+                  <h2 className="text-xl font-black">{phaseWeek.appLabel}</h2>
+                  <div className="mt-2 flex flex-wrap gap-2"><PhaseChip phase={phaseWeek.appLabel} /></div>
+                </div>
+                <Link className="text-sm font-bold text-blue" href={`/calendar#week-${phaseWeek.week}`}>Days</Link>
+              </div>
+              <p className="mt-3 font-semibold">{phaseWeek.notes}</p>
+              {loads.length > 0 && (
+                <div className="mt-4">
+                  <p className="label">Sport load summary</p>
+                  <div className="grid gap-2">
+                    {loads.map((load) => (
+                      <Link className="rounded-xl bg-ice p-3 text-sm font-semibold text-slate-700 hover:text-blue" href={`/day/${load.date}`} key={`${load.date}-${load.title}`}>
+                        <span className="font-black text-navy">{formatPlanDate(load.date, { month: "short", day: "numeric" })} · {load.title}</span>
+                        <span className="mt-1 block">{load.details}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </article>
+          );
+        })}
       </section>
       <p className="mt-6 text-xs text-slate-500">Plan seed {version}. {sourceTag}.</p>
     </div>
   );
 }
 
-function MethodologyPanel() {
+function MethodologyPanel({ weekCount }: { weekCount: number }) {
   return (
     <section className="card mt-6">
       <p className="label">Plan logic</p>
-      <h2 className="text-2xl font-black">12-Week Methodology</h2>
+      <h2 className="text-2xl font-black">{weekCount}-Week Methodology</h2>
       <p className="mt-3 max-w-4xl text-slate-700">This plan blends HockeyTraining-style Speed Stack scheduling, Nike&apos;s 12-week offseason structure, and Maddox&apos;s actual summer sport calendar. The goal is not to do more every week. The goal is to build, express, recover, and peak.</p>
       <ul className="mt-5 list-inside list-disc space-y-2 text-sm font-semibold">
         <li>Build movement quality and acceleration first.</li>
@@ -147,7 +181,7 @@ function MethodologyPanel() {
   );
 }
 
-const TIMELINE_DAY_COUNT = 84;
+const TIMELINE_DAY_COUNT = getTimelineDays().length;
 const GANTT_LABEL_COLUMN_WIDTH = "12rem";
 const GANTT_DAY_COLUMN_WIDTH = "1.1rem";
 const GANTT_GRID_TEMPLATE_COLUMNS = `${GANTT_LABEL_COLUMN_WIDTH} repeat(${TIMELINE_DAY_COUNT}, ${GANTT_DAY_COLUMN_WIDTH})`;
@@ -172,16 +206,20 @@ function PhaseGantt() {
               const weekNumber = Number(week.slice(1));
               const weekLabel = weekLabels.get(weekNumber) || week;
               const phaseName = phaseNames.get(weekNumber);
-              const startColumn = index * 7 + 2;
+              const phaseWeek = phaseLabels[index];
+              if (!phaseWeek) return null;
+              const columns = getSpanGridColumns(phaseWeek.start, phaseWeek.end);
+              const startColumn = columns.startColumn + 1;
+              const dayCount = columns.endColumn - columns.startColumn;
               return (
                 <Link
                   key={week}
                   className="border border-slate-200 bg-ice py-1 text-center text-blue"
                   href={`/calendar#week-${weekNumber}`}
-                  style={{ gridColumn: `${startColumn} / span 7` }}
+                  style={{ gridColumn: `${startColumn} / span ${dayCount}` }}
                   title={phaseName ? `${phaseName} · ${weekLabel}` : weekLabel}
                 >
-                  {week} · {formatShortDate(phaseLabels[index]?.start ?? timelineDays[index * 7]?.date ?? trainingPlan.overview.startDate)}
+                  {week} · {formatShortDate(phaseWeek.start)}
                 </Link>
               );
             })}
@@ -219,12 +257,12 @@ function PhaseGantt() {
                 backgroundSize: `${GANTT_DAY_COLUMN_WIDTH} 100%`,
               }}
             />
-            {Array.from({ length: 13 }, (_, index) => (
+            {[...phaseLabels.map((week) => getDayColumnIndex(week.start)), TIMELINE_DAY_COUNT].map((dayOffset, index) => (
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute bottom-0 top-0 z-30 w-px bg-slate-300"
-                key={index}
-                style={{ left: `calc(${GANTT_LABEL_COLUMN_WIDTH} + (${index * 7} * ${GANTT_DAY_COLUMN_WIDTH}))` }}
+                key={`${dayOffset}-${index}`}
+                style={{ left: `calc(${GANTT_LABEL_COLUMN_WIDTH} + (${dayOffset} * ${GANTT_DAY_COLUMN_WIDTH}))` }}
               />
             ))}
             {sections.map((section) => (
@@ -317,7 +355,7 @@ function buildLockedGanttSections(): GanttSection[] {
     phaseSpan("Power/Agility + Carleton", "Power/Agility", 8, 8, "phase"),
     phaseSpan("Game-Speed / Sprint", "Game-Speed / Sprint", 9, 10, "phase"),
     phaseSpan("Tryout Sim", "Tryout Sim", 11, 11, "phase"),
-    phaseSpan("Taper + Peak", "Taper", 12, 12, "taper"),
+    phaseSpan("Taper + Peak", "Taper + Peak", 12, 14, "taper"),
   ];
 
   return [
@@ -379,7 +417,7 @@ function GanttSectionHeader({ section }: { section: GanttSection }) {
   return (
     <div className={`relative z-20 mt-1 grid h-6 items-center border-y text-[10px] font-black uppercase ${toneClass}`} style={{ gridTemplateColumns: GANTT_GRID_TEMPLATE_COLUMNS }}>
       <div className="sticky left-0 z-40 flex h-6 items-center border-r border-slate-300 bg-inherit px-2 tracking-wide shadow-[2px_0_0_rgba(15,23,42,0.06)]">{section.label}</div>
-      <div className="flex h-6 items-center px-2 text-[9px] font-semibold normal-case tracking-normal opacity-80" style={{ gridColumn: "2 / span 84" }}>{section.detail}</div>
+      <div className="flex h-6 items-center px-2 text-[9px] font-semibold normal-case tracking-normal opacity-80" style={{ gridColumn: `2 / span ${TIMELINE_DAY_COUNT}` }}>{section.detail}</div>
     </div>
   );
 }
@@ -390,8 +428,8 @@ function GanttDailyRow({ row, sectionTone }: { row: GanttRow; sectionTone: Gantt
   return (
     <div className="relative z-10 grid h-[22px] items-center border-b border-slate-100" style={{ gridTemplateColumns: GANTT_GRID_TEMPLATE_COLUMNS }}>
       <div className={`sticky left-0 z-40 flex h-[22px] items-center overflow-hidden border-r border-slate-300 px-2 text-[10px] font-black leading-none text-slate-800 shadow-[2px_0_0_rgba(15,23,42,0.06)] ${labelTone}`}>{row.label}</div>
-      <div className="relative grid h-[22px] grid-cols-subgrid" style={{ gridColumn: "2 / span 84" }}>
-        {Array.from({ length: 84 }, (_, index) => (
+      <div className="relative grid h-[22px] grid-cols-subgrid" style={{ gridColumn: `2 / span ${TIMELINE_DAY_COUNT}` }}>
+        {Array.from({ length: TIMELINE_DAY_COUNT }, (_, index) => (
           <div key={index} className="h-[22px]" />
         ))}
         {row.items.map((item) => (
