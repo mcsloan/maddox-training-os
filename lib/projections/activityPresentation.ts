@@ -320,6 +320,7 @@ function activityInstruction(entry: V84DayExecutionPlanEntry) {
   if (category === "warmup") return "Prepare to move well. Keep it easy and focused.";
   if (category === "speed_stack") return "Complete the planned Speed Stack work. Keep every rep clean.";
   if (category === "shooting") return "Shoot with clean mechanics. Reset between shots and stop if technique breaks.";
+  if (category === "conditioning" && isControlledBikeTreadmillEntry(entry)) return CONTROLLED_CARDIO_COPY;
   if (category === "conditioning") return "Keep this controlled. Skip it if tired, sore, or mechanics are slipping.";
   if (category === "iq") return "Keep this short and low intensity. Focus on seeing the play before making your next move.";
   if (category === "mobility") return "Keep this easy. Bring your breathing down and finish feeling better than when you started.";
