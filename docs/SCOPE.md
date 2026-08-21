@@ -120,14 +120,14 @@ Every active scope item should use this structure, either as a detailed record b
 | DEC-DAY-001 | Today must route to canonical Day page; one day, one truth. | In progress | `AGENTS.md`, `docs/SESSION_HANDOFF.md` |
 | DEC-SOURCE-001 | v8.4 app import package is authoritative for app training data. | Completed | `imports/v8.4/README.md` |
 | DEC-CALENDAR-001 | Calendar date coverage must come from v8.4, not legacy `data/plan.json`. | Completed | Commit `7b48a3e` |
-| DEC-CALENDAR-002 | Calendar is a compact current-week-first index with collapsed rows, inline detail expansion, and one direct `/log/<date>` action; `/day/<date>` remains compatible. Calendar loads Training Work, completed-session, Sport Load, and KPI evidence into `buildDayEvidenceProjection()` and derives status/action only from `buildCalendarDayProjection()` without merging persistence streams. | Completed locally | Parent Calendar V2 decision; `DEF-027` Calendar slice |
+| DEC-CALENDAR-002 | Calendar is a compact current-week-first index with collapsed rows, inline detail expansion, and one direct `/log/<date>` action; `/day/<date>` remains compatible. Calendar loads Training Work, completed-session, Sport Load, and KPI evidence into `buildDayEvidenceProjection()` and derives status/action only from `buildCalendarDayProjection()` without merging persistence streams. | Completed | Parent Calendar V2 decision; Production + Playwright-verified mobile/desktop Calendar |
 | DEC-EVIDENCE-001 | Missing data is not deferred data; deferral must be explicit. | In progress | prior KPI roadmap content merged here; use git history only |
 | DEC-RECOVERY-001 | Recovery days are not blank days; appropriate recovery days include intentional low-intensity development work. | In progress | prior training epics content merged here; use git history only |
 | DEC-SPORTLOAD-001 | Sport Load logging and Training Work logging remain independent. | Completed | `AGENTS.md` |
 | DEC-LANGUAGE-001 | User-facing UI should say `Sport Load`, not `External Load`, except legacy/internal names. | In progress | `AGENTS.md` |
 | DEC-KPI-001 | Compare Maddox against himself over time, not adult/NHL standards. | Completed | KPI roadmap intake |
 | DEC-KPI-002 | Do not use flat 400m as the primary hockey-shift test; prefer a 45-second repeated shuttle / shift simulation. | Completed | KPI roadmap intake |
-| DEC-KPI-003 | There is one 14-item KPI Test; Aug 20, 2026 is the canonical next test date for every active KPI until completed. | Completed locally | Parent product decision; `lib/kpiSchedule.ts` |
+| DEC-KPI-003 | There is one 14-item KPI Test; Aug 20, 2026 is the canonical scheduled test date for every active KPI in the 2026 plan. | Completed | Parent product decision; `lib/kpiSchedule.ts`; deterministic 14-item route/CI coverage |
 | DEC-QA-LOCAL-001 | Codex browser QA uses an ephemeral same-context production server on port 3100 because the command sandbox cannot reach the parent-owned host server on port 3000. | Completed locally | `playwright.forward.config.ts`; localhost diagnostics 2026-08-13 |
 | DEC-AI-001 | AI Coach recommends; parent approves. | Not started | Prior AI Coach strategy content merged here; use git history only |
 | DEC-SOURCE-REVIEW-001 | Gemini/OvertimeAthlete recommendations are source-review inputs only, not source of truth. | Completed | Gemini intake |
@@ -146,8 +146,8 @@ Every active scope item should use this structure, either as a detailed record b
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | SCOPE-CONSOLIDATION-001 | Scope system consolidation | P0 | Completed | Docs-only | Phase 1 docs/scope-control checkpoint is complete after the `f02bff4` pushed/deployed baseline. |
 | 2 | ENV-SAFETY-RECON-001 | Environment/data safety reconciliation | P0 | Completed | Docs-only | Mike review of findings; require explicit approval before any write/deploy/backfill. |
-| 3 | ENV-PREVIEW-DB-001 | Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data | P1 | Completed | Docs-only / environment-safety | Confirmed by Mike dashboard check: Preview currently points to production Supabase; active follow-up is `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`. |
-| 4 | ENV-PREVIEW-DB-AUDIT-001 | Verify Vercel Preview Supabase target | P1 | Completed | Docs-only / environment-safety | Vercel mapping is confirmed; active follow-up is `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`. |
+| 3 | ENV-PREVIEW-DB-001 | Vercel Preview Supabase environment is unverified / may be sharing production-like KPI data | P1 | Completed | Docs-only / environment-safety | Historical risk resolved: Vercel variables were split by environment and a fresh 2026-08-21 Preview build proved staging runtime mapping. |
+| 4 | ENV-PREVIEW-DB-AUDIT-001 | Verify Vercel Preview Supabase target | P1 | Completed | Docs-only / environment-safety | Final mapping: Production -> `mbjcedhysniabbaigsko`; Preview/Development -> `npuankmkxbjtlokbpczz`; fresh Preview proof passed. |
 | 4.5 | SPORT-LOAD-4V4-SUMMER-2026 | Bell Sensplex 4v4 Summer Hockey Integration | P1 | Completed | Source-review -> Safe lane app import | Source import, Day/Today, Calendar, and Plan/Gantt Sport Load sourcing are pushed through `f247959`. |
 | 4.6 | PLAN-GANTT-SPORTLOAD-V84-001 | Render Plan/Gantt Sport Load overlays from v8.4 Sport Loads | P1 | Completed | Fast lane | Plan/Gantt now derives Sport Load overlay rows and week summaries from v8.4 `sportLoads`. |
 | 4.7 | DEF-ENV-PREVIEW-SUPABASE-MAPPING-001 | Preview/Staging/Production Supabase mapping is not sufficiently visible | P1 | Completed | Docs-only / environment-safety | Production remains on `mbjcedhysniabbaigsko`; fresh Preview build `0794f70` proved `VERCEL_ENV=preview` and staging ref `npuankmkxbjtlokbpczz` with a fail-closed assertion. |
@@ -291,8 +291,8 @@ Execution gate: tactical current-app defects may be fixed separately as bounded 
   10. Canonical evidence/status logic remains untouched.
 - Dependencies: accepted Calendar V2 implementation; `DEC-CALENDAR-002`; TCG-005 and TCG-007.
 - Risks: over-compression could reduce legibility or touch usability; responsive changes could unintentionally alter desktop grid placement.
-- Next action: Mike reviews the work-branch Vercel Preview before separately authorizing any merge/release.
-- Links / evidence: Parent-approved overnight work order; `app/calendar/page.tsx`; `e2e/calendar-compact.spec.ts`; 390x844 browser measurement showed seven 73.5–74px current-week rows in a 515px region, six fully visible before the fixed navigation, zero horizontal overflow, and Today height parity; focused Calendar Playwright 4/4 and forward QA 7/7 passed.
+- Next action: Maintain as regression coverage; no further mobile Calendar work is required unless new product QA finds a defect.
+- Links / evidence: Parent-approved overnight work order; Production acceptance; `app/calendar/page.tsx`; `e2e/calendar-compact.spec.ts`; GitHub Actions Playwright gate; 390x844 browser measurement showed seven compact current-week rows with zero horizontal overflow and Today height parity.
 
 ### SCOPE-CONSOLIDATION-001
 
@@ -470,8 +470,8 @@ Environment Safety Findings:
 - Acceptance criteria: Preview write testing remains blocked until `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` configures Preview to staging or Preview is explicitly treated as read-only.
 - Dependencies: Vercel environment variable inspection or safe runtime evidence that does not expose secret values.
 - Risks: Preview KPI saves or other write flows could mutate production data if Preview env vars point to production Supabase.
-- Next action: decide/fix `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` before any Preview save/write testing.
-- Links / evidence: Preview badge `1c336a0 · preview`; Preview `/kpis` production-like KPI results/baselines; Mike manual Vercel Project Settings confirmation.
+- Next action: Resolved. Use only fresh/current Preview deployments for staging tests and retain target checks before any write-capable QA.
+- Links / evidence: historical Preview badge `1c336a0 · preview`; Mike Vercel settings correction; fresh Preview proof `0794f70` on 2026-08-21.
 
 ### ENV-PREVIEW-DB-AUDIT-001
 
@@ -491,31 +491,29 @@ Environment Safety Findings:
 - Acceptance criteria: answers are captured for all required verification questions; Preview writes are either allowed only against staging/non-production or explicitly disabled/treated read-only.
 - Dependencies: access to Vercel env configuration or safe runtime target labeling.
 - Risks: exposing secrets while verifying, or testing writes before target isolation is known.
-- Next action: decide/fix `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001`.
-- Links / evidence: `scripts/env-whoami.mjs`, `scripts/preflight.mjs`, `scripts/confirm-write-target.mjs`, Vercel project env settings.
+- Next action: Resolved; retain target verification before write-capable Preview QA and never reuse historical pre-split Preview deployments.
+- Links / evidence: `scripts/env-whoami.mjs`, `scripts/preflight.mjs`, `scripts/confirm-write-target.mjs`, Vercel project env settings, fresh Preview proof `0794f70`.
 
 Required verification questions:
 
 - What Supabase URL/project ref is configured for Vercel Production?
   - Confirmed: `mbjcedhysniabbaigsko`.
 - What Supabase URL/project ref is configured for Vercel Preview?
-  - Confirmed: `mbjcedhysniabbaigsko`.
+  - Confirmed current mapping: `npuankmkxbjtlokbpczz` (staging); fresh Preview build proof passed on 2026-08-21.
 - What Supabase URL/project ref is configured for Vercel Development?
-  - Confirmed: `mbjcedhysniabbaigsko`.
+  - Confirmed current mapping: `npuankmkxbjtlokbpczz` (staging).
 - What Supabase URL/project ref is configured locally in `.env.local`?
   - Confirmed: `npuankmkxbjtlokbpczz`.
 - Are Preview and Production using different Supabase project refs?
-  - Confirmed: no. Preview and Production both use `mbjcedhysniabbaigsko`.
-- If Preview uses staging, does staging contain copied/backfilled KPI rows that explain the visible data?
-  - Not applicable to current Vercel configuration; Preview currently uses production.
-- Does the app expose a safe non-secret environment label or build badge that indicates DB target?
-  - Not resolved by this docs update.
-- Should preview writes be disabled until staging isolation is proven?
-  - Yes. Preview and Development write-capable flows remain blocked unless treated read-only or `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` is fixed.
+  - Confirmed: yes. Production uses `mbjcedhysniabbaigsko`; fresh Preview uses `npuankmkxbjtlokbpczz`.
+- Does the app expose a safe non-secret environment/build indicator?
+  - Yes for Vercel environment/build SHA; the 2026-08-21 verification additionally proved the non-secret Supabase project ref during build.
+- Should Preview writes require target confirmation?
+  - Yes. Current Preview isolation is proven, but any write-capable QA must still confirm it is a fresh/current Preview targeting staging and must never target Production.
 
 Operational rule:
 
-- Do not save KPI results or perform any write-capable workflow in Vercel Preview or Vercel Development until `DEF-ENV-PREVIEW-STAGING-OVERRIDE-001` maps those environments to staging, or those deployments are explicitly classified as read-only.
+- Current Preview/Development configuration is staging-isolated. Historical pre-split Preview deployments remain read-only/unsafe for writes and must not be reused.
 
 ### CODE-COMMENT-AUDIT-001
 
@@ -811,7 +809,7 @@ Ground Truth Baseline:
 - Type: Feature
 - Parent: Day-first architecture
 - Priority: P1
-- Status: Not started
+- Status: Completed
 - Lane: Fast lane
 - Owner: Mike / Codex
 - Source: Day Presentation Model and Friday QA
@@ -832,7 +830,7 @@ Ground Truth Baseline:
 - Type: Source Review
 - Parent: Training/source system
 - Priority: P1
-- Status: Completed locally
+- Status: Completed
 - Lane: Fast lane
 - Owner: Mike / Codex
 - Source: Parent-approved forward plan cutover on 2026-08-13; parent-confirmed Week 9 Sport Load correction on 2026-08-15
@@ -844,8 +842,8 @@ Ground Truth Baseline:
 - Dependencies: v8.4 source package and Mike approval for any source update.
 - Risks: UI workarounds could hide real data-integrity issues.
 - Findings: the forward generator omitted the Aug 14 Marc O’Connor load and retained stale/non-duration Marc details for Aug 15-16. The local correction replaces Aug 14 training work with one 90-minute Marc Sport Load, sets Aug 15 to 120 minutes, and sets Aug 16 Marc to 60 minutes without changing its 4v4 source row.
-- Next action: complete automated integrity checks and parent visual acceptance before commit.
-- Links / evidence: v8.4 dayExecutionPlan/session data.
+- Next action: Maintain the released forward-plan integrity tests; future schedule changes require a new parent-approved source update.
+- Links / evidence: v8.4 dayExecutionPlan/session data; Production release chain through `38a2751`.
 
 ### PLAN-TRYOUT-EXTENSION-2026-001
 
@@ -865,8 +863,8 @@ Ground Truth Baseline:
 - Acceptance criteria: confirmed late-August and Sep Sport Loads render exactly once; no Sep 1 tryout remains; every Sep 7-18 date has a meaningful canonical Day state; conditional tryout sessions are visible as conditional; Sport Load and Training Work evidence remain separate; required verification passes.
 - Dependencies: v8.4 source package, existing approved drill library, `DEC-FORWARD-PLAN-001`, `DEC-SPORTLOAD-001`, `DEC-RECOVERY-001`.
 - Risks: stale hard-coded Sep 6/84-date assumptions or forward-plan rules could hide valid extended dates; assigned Sep 12 Skills attendance remains unknown.
-- Next action: inspect and implement the bounded source/projection extension, run required checks, then hold for Mike's source-diff and product review.
-- Links / evidence: `imports/v8.4/data/`, `lib/imports/v8_4/`, `lib/projections/forwardPlanIntegrity.ts`.
+- Next action: Maintain the Sep 18 forward integrity/browser coverage; any new tryout/schedule changes require a separately approved source update.
+- Links / evidence: `imports/v8.4/data/`, `lib/imports/v8_4/`, `lib/projections/forwardPlanIntegrity.ts`, Production Calendar through Sep 18.
 
 ### DEF-FORWARD-DRILL-ENVIRONMENT-FIT-001
 
@@ -881,13 +879,13 @@ Ground Truth Baseline:
 - Source: Parent product-trust observation for 2026-08-19.
 - Problem: Full-Speed Weave with Scan, Read-React Puck Carry, and Sprint-In Shot do not make the space/environment requirement clear enough for basement execution.
 - Desired outcome: source review determines an approved environment-fit presentation or regression without Codex inventing training content.
-- In scope: capture only in this work order; later source review of environment requirements and approved regressions.
-- Out of scope: changing the Aug 19 plan or fixing the drill presentation during `PLAN-TRYOUT-EXTENSION-2026-001`.
-- Acceptance criteria: defect remains visible as open P1 product-trust source review and no Aug 19 source content changes in the schedule reconciliation.
+- In scope: source-backed presentation of existing equipment/space and setup requirements; no invented substitute drill.
+- Out of scope: changing the Aug 19 training plan, inventing a basement regression, or editing approved source JSON.
+- Acceptance criteria: athlete-facing drill detail exposes source-backed space/equipment requirements; `Sprint-In Shot` visibly requires a `10–15 yd lane, puck, net`; no fabricated substitute appears.
 - Dependencies: parent/coach-approved drill library guidance.
 - Risks: an invented regression would violate source authority and could misrepresent safe execution.
-- Next action: schedule separate source review after the tryout extension is accepted.
-- Links / evidence: canonical Day for 2026-08-19.
+- Next action: Maintain the regression; add a substitute only if a parent/coach-approved source explicitly supplies one.
+- Links / evidence: canonical Day for 2026-08-19; Production drill detail; regression test released through PR #2.
 
 ### RECOVERY-DAY-MODEL-001
 
@@ -917,7 +915,7 @@ Ground Truth Baseline:
 - Type: Epic
 - Parent: KPI system
 - Priority: P1
-- Status: Completed locally
+- Status: In progress
 - Lane: Safe lane
 - Owner: Mike / Codex
 - Source: KPI roadmap reconciliation
@@ -1375,7 +1373,7 @@ Advanced KPI scope:
 - Type: Source Review / Feature
 - Parent: Training/source system
 - Priority: P1
-- Status: Scope review required
+- Status: Completed
 - Lane: Source-review -> Safe lane app import
 - Owner: Mike / Codex
 - Source: Mike-provided Bell Sensplex 4v4 summer hockey schedule.
@@ -1502,7 +1500,7 @@ Scheduling interactions to consider, not automatic risk dates:
 - Type: Defect
 - Parent: UI rendering correctness / React list keys
 - Priority: P2
-- Status: Not started
+- Status: Completed
 - Lane: Fast lane
 - Owner: Mike / Codex
 - Source: Terminal 1 dev-server React/browser warning after `ec283ce`.
@@ -1545,8 +1543,8 @@ Scheduling interactions to consider, not automatic risk dates:
   - Confirm no Supabase writes are performed.
 - Dependencies: `scripts/preflight.mjs`, `scripts/env-whoami.mjs`, Vercel/Supabase environment access where available.
 - Risks: old Preview deployments may still use production Supabase until redeployed; Preview write testing before runtime verification could still mutate production data.
-- Next action: verify a fresh Preview deployment uses staging before any Preview write testing, then resume `DEF-GANTT-SPORTLOAD-DURATION-001`.
-- Links / evidence: prior `ENV-PREVIEW-DB-001`, `ENV-PREVIEW-DB-AUDIT-001`, and Supabase staging warning for project `npuankmkxbjtlokbpczz`.
+- Next action: Completed; maintain staging target checks before any write-capable Preview QA.
+- Links / evidence: prior `ENV-PREVIEW-DB-001`, `ENV-PREVIEW-DB-AUDIT-001`; fresh Preview `0794f70` proved staging ref `npuankmkxbjtlokbpczz`.
 
 Audit findings on 2026-07-08:
 
@@ -1611,8 +1609,8 @@ Production runtime smoke on 2026-07-09:
 - Acceptance criteria: Production remains mapped to production; Preview and Development map to staging; no Supabase variables remain scoped to All Environments; no secret values are exposed in terminal, docs, screenshots, or commits; no Supabase writes occur during the config change.
 - Dependencies: staging project `npuankmkxbjtlokbpczz`; production project `mbjcedhysniabbaigsko`; Vercel project settings access.
 - Risks: existing old Preview deployments may still point to production until replaced; Preview runtime verification is still required before Preview write testing.
-- Next action: verify a fresh Preview deployment uses staging before Preview write testing, then resume `DEF-GANTT-SPORTLOAD-DURATION-001`.
-- Links / evidence: Mike manual Vercel Project Settings confirmation on 2026-07-09; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`.
+- Next action: Completed; no further environment override work is required unless Vercel variables change.
+- Links / evidence: Mike manual Vercel Project Settings confirmation on 2026-07-09; fresh Preview runtime/build proof `0794f70` on 2026-08-21; `DEF-ENV-PREVIEW-SUPABASE-MAPPING-001`.
 
 ### DEF-SUPABASE-STAGING-AUTOPAUSE-001
 
@@ -1673,8 +1671,8 @@ Decision options:
   - Mike performs product acceptance only.
 - Dependencies: `QA-PLAYWRIGHT-SMOKE-001`, existing QA contract docs.
 - Risks: continued manual smoke work burns Codex usage and increases approval friction.
-- Next action: capture ownership model, then create deterministic smoke suite scope.
-- Links / evidence: post-4v4 smoke workflow and Mike usage concern.
+- Next action: Finish explicit Today and Plan/Gantt browser smoke/release-gate coverage; forward Day/Log, Calendar, video, KPI, build, Vitest, and TypeScript checks are already GitHub-owned.
+- Links / evidence: PR #4; `.github/workflows/ci.yml`; green GitHub Actions run on head `3cbc84e`; Production merge `38a2751`.
 
 ### QA-PLAYWRIGHT-SMOKE-001
 
@@ -1694,8 +1692,8 @@ Decision options:
 - Acceptance criteria: repeatable smoke command validates core route rendering and key labels without mutating data.
 - Dependencies: `QA-AUTOMATION-OWNERSHIP-001`, QA contract docs, existing Playwright proof-of-life.
 - Risks: without deterministic smoke coverage, product acceptance continues to rely on screenshots and one-off Codex runs.
-- Next action: implement after environment mapping and Gantt duration semantics are handled.
-- Links / evidence: `QA-AUTOMATION-002`; repeated post-deploy smoke tasks.
+- Next action: Add explicit read-only Today and Plan/Gantt browser assertions, then consider this core-route smoke task complete.
+- Links / evidence: `QA-AUTOMATION-002`; `e2e/forward-product-quality.spec.ts`; `e2e/calendar-compact.spec.ts`; GitHub Actions PR #4.
 
 ### DEF-QA-CODEX-RUNNER-001
 
@@ -1715,8 +1713,8 @@ Decision options:
 - Acceptance criteria: recurring smoke scope has a deterministic owner and no longer defaults to ad hoc Codex sessions.
 - Dependencies: `QA-AUTOMATION-OWNERSHIP-001`.
 - Risks: Codex usage limits and Mike approval burden continue to be consumed by repeat validation.
-- Next action: include in QA ownership scope.
-- Links / evidence: repeated production smoke requests after 4v4 Day/Plan fixes.
+- Next action: Eliminate the remaining recurring manual Today/Plan-Gantt smoke once those routes are CI-covered.
+- Links / evidence: repeated production smoke requests; PR #4 GitHub-owned browser regression.
 
 ### DEF-QA-USAGE-LEDGER-001
 
@@ -1969,8 +1967,8 @@ This is a multi-Epic architecture track governed by DESIGN-GATE-001. Implementat
 - Acceptance criteria: audit feeds DEF-029/030/031/032 and future design program without implementing the methodology architecture.
 - Dependencies: current app source inspection only.
 - Risks: another narrow fix could miss a rendering path without this audit.
-- Next action: run the audit as the next bounded current-app discovery task.
-- Links / evidence: production `/day/2026-06-30`, `/day/2026-06-29`, `/day/2026-07-06` QA.
+- Next action: Audit is closed; preserve the easy 45 / medium 30 / hard 20 regression matrix and corrected category/copy behavior.
+- Links / evidence: Production `/day/2026-06-18`, `/day/2026-06-23`, `/day/2026-06-29`, `/day/2026-06-30`; PR #3; Production `59558f2` and later.
 
 ### DEF-DAY-DURATION-CONTRACT-001
 
@@ -2152,7 +2150,7 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 
 ## Training / Source Scope
 
-- Activity Prescription Display Layer is the next P1 implementation feature; docs/scope-control and environment safety work are complete.
+- Current-app P1 focus is the remaining QA smoke/release coverage followed by `DEF-DAY-DURATION-CONTRACT-001`; Closed-Loop methodology remains design-gated.
 - Recovery days are not blank days.
 - OvertimeAthlete source ingestion/review is future source-review only.
 - U12 safety guardrails are source-review scope, not immediate app changes.
@@ -2202,10 +2200,10 @@ Detailed defect summary records are owned here. Historical detail is recoverable
 
 - KPI cloud-sync stash.
 - Production/staging write tests.
-- Activity Prescription implementation until docs consolidation and environment safety sequencing are accepted.
-- Activity-specific logging fields.
+- Remaining blocked Activity Prescription follow-ups outside the completed canonical presentation slices.
+- Further activity-specific logging expansion beyond the currently implemented date-level flow.
 - OvertimeAthlete source ingestion.
 - Gemini workflow/tooling setup.
 - Husky/pre-commit hook setup.
-- Playwright setup.
+- Additional Playwright coverage beyond the active core-route smoke task.
 - AI Coach implementation.
