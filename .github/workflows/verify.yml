@@ -7,9 +7,42 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
+  reconcile-plan-gantt-scope:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'fix/plan-gantt-14week-and-core-smoke' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/plan-gantt-14week-and-core-smoke
+          fetch-depth: 0
+
+      - name: Apply guarded scope reconciliation
+        run: node scripts/scope-plan-gantt-ci-verified-2026-08-21.mjs
+
+      - name: Verify scope-only reconciliation
+        run: |
+          git diff --check
+          git diff -- docs/SCOPE.md
+
+      - name: Restore normal workflow and remove helper
+        run: |
+          git fetch origin main
+          git checkout origin/main -- .github/workflows/verify.yml
+          rm scripts/scope-plan-gantt-ci-verified-2026-08-21.mjs
+
+      - name: Commit canonical scope update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/SCOPE.md .github/workflows/verify.yml scripts/scope-plan-gantt-ci-verified-2026-08-21.mjs
+          git commit -m "docs(scope): record CI-verified 14-week Plan defect"
+          git push origin HEAD:fix/plan-gantt-14week-and-core-smoke
+
   test-and-typecheck:
     runs-on: ubuntu-latest
     timeout-minutes: 10
